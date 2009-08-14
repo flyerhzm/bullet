@@ -1,0 +1,8 @@
+--colour
+--format
+specdoc
+--reverse
+--timeout
+20
+--loadby
+mtime
