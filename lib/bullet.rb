@@ -54,10 +54,8 @@ module ActiveRecord
       def preload_associations(records, associations, preload_options={})
         records = [records].flatten.compact.uniq
         return if records.empty?
-        if records.count > 1
-          records.each do |record|
-            Bullet::Association.add_association(record, associations)
-          end
+        records.each do |record|
+          Bullet::Association.add_association(record, associations)
         end
         origin_preload_associations(records, associations, preload_options={})
       end
@@ -69,18 +67,18 @@ module ActiveRecord
       alias_method :origin_collection_reader_method, :collection_reader_method
       
       def collection_reader_method(reflection, association_proxy_class)
-        origin_collection_reader_method(reflection, association_proxy_class)
         Bullet::Association.define_association(self, reflection.name)
+        origin_collection_reader_method(reflection, association_proxy_class)
       end
     end
     
     class AssociationCollection
       alias_method :origin_load_target, :load_target
-      
+
       def load_target
-        origin_load_target
         Bullet::Association.call_association(@owner, @reflection.name)
-      end
+        origin_load_target
+      end  
     end
   end
 end
