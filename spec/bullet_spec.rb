@@ -32,15 +32,11 @@ describe Bullet do
     setup_db
     
     post = Post.create(:name => 'first')
-    Comment.create(:name => 'first', :post => post)
-    Comment.create(:name => 'second', :post => post)
-    # post.comments.create(:name => 'first')
-    # post.comments.create(:name => 'second')
+    post.comments.create(:name => 'first')
+    post.comments.create(:name => 'second')
     post = Post.create(:name => 'second')
-    Comment.create(:name => 'third', :post => post)
-    Comment.create(:name => 'fourth', :post => post)
-    # post.comments.create(:name => 'third')
-    # post.comments.create(:name => 'fourth')
+    post.comments.create(:name => 'third')
+    post.comments.create(:name => 'fourth')
   end
   
   after(:all) do
@@ -50,7 +46,7 @@ describe Bullet do
   it "should detect preload" do
     Bullet::Association.start_request
     Post.find(:all, :include => :comments).each do |post|
-      post.comments
+      post.comments.collect(&:name)
     end
     Bullet::Association.unpreload_associations.should be_empty
     Bullet::Association.end_request
@@ -59,8 +55,9 @@ describe Bullet do
   it "should detect preload" do
     Bullet::Association.start_request
     Post.find(:all).each do |post|
-      post.comments
+      post.comments.collect(&:name)
     end
+    puts Bullet::Association.unpreload_associations.inspect
     Bullet::Association.unpreload_associations.should_not be_empty
     Bullet::Association.end_request
   end
