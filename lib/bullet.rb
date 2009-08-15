@@ -34,7 +34,6 @@ module Bullet
       end
       
       def define_association(klazz, associations)
-        puts "define association: #{klazz} => #{associations}"
         @@klazz_associations ||= {}
         @@klazz_associations[klazz] ||= []
         @@klazz_associations[klazz] << associations
@@ -48,13 +47,11 @@ module Bullet
       end
 
       def add_association(object, associations)
-        puts "add association: #{object} => #{associations}"
         @@object_associations[object] ||= []
         @@object_associations[object] << associations
       end
 
       def call_association(object, associations)
-        puts "call assocation: #{object} => #{associations}"
         klazz = object.class
         if !@@possible_objects[klazz].nil? and@@possible_objects[klazz].include?(object) and (@@object_associations[object].nil? or !@@object_associations[object].include?(associations))
           @@unpreload_associations[klazz] = associations
