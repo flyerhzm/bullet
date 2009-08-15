@@ -4,6 +4,7 @@ module Bullet
       def start_request
         @@object_associations = {}
         @@unpreload_associations = {}
+        @@possible_objects = {}
       end
       
       def unpreload_associations
@@ -25,6 +26,13 @@ module Bullet
         @@klazz_associations[klazz] << associations
       end
 
+      def add_possible_objects(objects)
+        klazz= objects.first.class
+        @@possible_objects[klazz] ||= []
+        @@possible_objects[klazz] << objects
+        @@possible_objects[klazz].flatten!.uniq!
+      end
+
       def add_association(object, associations)
         puts "add association: #{object} => #{associations}"
         @@object_associations[object] ||= []
@@ -33,8 +41,9 @@ module Bullet
 
       def call_association(object, associations)
         puts "call assocation: #{object} => #{associations}"
-        if @@object_associations[object].nil? or !@@object_associations[object].include?(associations)
-          @@unpreload_associations[object.class] = associations
+        klazz = object.class
+        if !@@possible_objects[klazz].nil? and@@possible_objects[klazz].include?(object) and (@@object_associations[object].nil? or !@@object_associations[object].include?(associations))
+          @@unpreload_associations[klazz] = associations
         end
       end
 
@@ -47,6 +56,22 @@ end
 ActiveRecord::ActiveRecordError # An ActiveRecord bug
 
 module ActiveRecord
+  class Base
+    class <<self
+      alias_method :origin_find_every, :find_every
+      
+      def find_every(options)
+        records = origin_find_every(options)
+
+        if records and records.size > 1
+          Bullet::Association.add_possible_objects(records)
+        end
+
+        records
+      end
+    end
+  end
+
   module AssociationPreload
     module ClassMethods
       alias_method :origin_preload_associations, :preload_associations

@@ -51,18 +51,21 @@ describe Bullet do
   before(:all) do
     setup_db
     
-    category = Category.create(:name => 'first')
+    category1 = Category.create(:name => 'first')
+    category2 = Category.create(:name => 'second')
     
-    post = category.posts.create(:name => 'first')
-    post = category.posts.create(:name => 'second')
+    post1 = category1.posts.create(:name => 'first')
+    post2 = category1.posts.create(:name => 'second')
+    post3 = category2.posts.create(:name => 'third')
+    post4 = category2.posts.create(:name => 'fourth')
     
-    post.comments.create(:name => 'first')
-    post.comments.create(:name => 'second')
-    post.comments.create(:name => 'third')
-    post.comments.create(:name => 'fourth')
+    comment1 = post1.comments.create(:name => 'first')
+    comment2 = post1.comments.create(:name => 'second')
+    comment3 = post2.comments.create(:name => 'third')
+    comment4 = post2.comments.create(:name => 'fourth')
     
-    entry = category.entries.create(:name => 'first')
-    entry = category.entries.create(:name => 'second')
+    entry1 = category1.entries.create(:name => 'first')
+    entry2 = category1.entries.create(:name => 'second')
   end
   
   after(:all) do
