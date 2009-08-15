@@ -1,6 +1,8 @@
 module Bullet
   class Association
     class <<self
+      @@bullet_log = Bullet::BulletLogger.new(File.open(Bullet::BulletLogger::LOG_FILE, 'a+'))
+      
       def start_request
         @@object_associations ||= {}
         @@unpreload_associations ||= {}
@@ -24,7 +26,13 @@ module Bullet
       def unpreload_associations_str
         @@unpreload_associations.to_a.collect{|klazz, associations| "model: #{klazz} => assocations: #{associations}"}.join('\\n')
       end
-      
+
+      def log_unpreload_associations(path)
+        @@unpreload_associations.each do |klazz, associations| 
+          @@bullet_log.info "PATH_INFO: #{path}    model: #{klazz} => assocations: #{associations}"
+        end
+      end
+
       def has_klazz_association(klazz)
         !@@klazz_associations[klazz].nil? and @@klazz_associations.keys.include?(klazz)
       end

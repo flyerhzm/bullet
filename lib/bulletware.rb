@@ -15,6 +15,8 @@ class Bulletware
         inserted_value << "</script>\n"
         response_body = response.body[0..-17] + inserted_value + response.body[-16..-1]
         headers['Content-Length'] = response_body.length.to_s
+
+        Bullet::Association.log_unpreload_associations(env['PATH_INFO'])
       end
     end
     response_body ||= response.body
