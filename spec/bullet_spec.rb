@@ -68,91 +68,97 @@ describe Bullet do
   after(:all) do
     teardown_db
   end
+
+  before(:each) do
+    Bullet::Association.start_request
+  end
+
+  after(:each) do
+    Bullet::Association.end_request
+  end
   
   context "post => comments" do
     it "should detect preload with post => comments" do
-      Bullet::Association.start_request
       Post.find(:all, :include => :comments).each do |post|
         post.comments.collect(&:name)
       end
       Bullet::Association.unpreload_associations.should be_empty
-      Bullet::Association.end_request
     end
   
     it "should detect no preload post => comments" do
-      Bullet::Association.start_request
       Post.find(:all).each do |post|
         post.comments.collect(&:name)
       end
       Bullet::Association.unpreload_associations.should_not be_empty
-      Bullet::Association.end_request
     end
   end
   
   context "category => posts => comments" do
     it "should detect preload with category => posts => comments" do
-      Bullet::Association.start_request
       Category.find(:all, :include => {:posts => :comments}) do |category|
         category.posts.each do |post|
           post.comments.collect(&:name)
         end
       end
       Bullet::Association.unpreload_associations.should be_empty
-      Bullet::Association.end_request
     end
   
     it "should detect preload category => posts, but no post => comments" do
-      Bullet::Association.start_request
       Category.find(:all, :include => :posts).each do |category|
         category.posts.each do |post|
           post.comments.collect(&:name)
         end
       end
       Bullet::Association.unpreload_associations.should_not be_empty
-      Bullet::Association.end_request
     end
   
     it "should detect no preload category => posts => comments" do
-      Bullet::Association.start_request
       Category.find(:all).each do |category|
         category.posts.each do |post|
           post.comments.collect(&:name)
         end
       end
       Bullet::Association.unpreload_associations.should_not be_empty
-      Bullet::Association.end_request
     end
   end
   
   context "category => posts, category => entries" do
     it "should detect preload with category => [posts, entries]" do
-      Bullet::Association.start_request
       Category.find(:all, :include => [:posts, :entries]).each do |category|
         category.posts.collect(&:name)
         category.entries.collect(&:name)
       end
       Bullet::Association.unpreload_associations.should be_empty
-      Bullet::Association.end_request
     end
 
     it "should detect preload with category => posts, but no category => entries" do
-      Bullet::Association.start_request
       Category.find(:all, :include => :posts).each do |category|
         category.posts.collect(&:name)
         category.entries.collect(&:name)
       end
       Bullet::Association.unpreload_associations.should_not be_empty
-      Bullet::Association.end_request
     end
 
     it "should detect no preload with category => [posts, entries]" do
-      Bullet::Association.start_request
       Category.find(:all).each do |category|
         category.posts.collect(&:name)
         category.entries.collect(&:name)
       end
       Bullet::Association.unpreload_associations.should_not be_empty
-      Bullet::Association.end_request
+    end
+  end
+
+  context "no preload" do
+    it "should no preload comments => post" do
+      Comment.find(:all).each do |comment|
+        comment.post.name
+      end
+      Bullet::Association.unpreload_associations.should be_empty
+    end
+
+    it "should no preload only one post => commnets" do
+      Post.first.comments.collect(&:name)
+      Bullet::Association.unpreload_associations.should be_empty
     end
   end
 end
