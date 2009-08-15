@@ -15,10 +15,6 @@ module Bullet
         @@possible_objects = nil
       end
       
-      def unpreload_associations
-        @@unpreload_associations
-      end
-
       def has_unpreload_associations?
         !@@unpreload_associations.empty?
       end

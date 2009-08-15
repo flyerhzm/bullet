@@ -85,14 +85,14 @@ describe Bullet do
       Post.find(:all, :include => :comments).each do |post|
         post.comments.collect(&:name)
       end
-      Bullet::Association.unpreload_associations.should be_empty
+      Bullet::Association.should_not be_has_unpreload_associations
     end
   
     it "should detect no preload post => comments" do
       Post.find(:all).each do |post|
         post.comments.collect(&:name)
       end
-      Bullet::Association.unpreload_associations.should_not be_empty
+      Bullet::Association.should be_has_unpreload_associations
     end
   end
   
@@ -103,7 +103,7 @@ describe Bullet do
           post.comments.collect(&:name)
         end
       end
-      Bullet::Association.unpreload_associations.should be_empty
+      Bullet::Association.should_not be_has_unpreload_associations
     end
   
     it "should detect preload category => posts, but no post => comments" do
@@ -112,7 +112,7 @@ describe Bullet do
           post.comments.collect(&:name)
         end
       end
-      Bullet::Association.unpreload_associations.should_not be_empty
+      Bullet::Association.should be_has_unpreload_associations
     end
   
     it "should detect no preload category => posts => comments" do
@@ -121,7 +121,7 @@ describe Bullet do
           post.comments.collect(&:name)
         end
       end
-      Bullet::Association.unpreload_associations.should_not be_empty
+      Bullet::Association.should be_has_unpreload_associations
     end
   end
   
@@ -131,7 +131,7 @@ describe Bullet do
         category.posts.collect(&:name)
         category.entries.collect(&:name)
       end
-      Bullet::Association.unpreload_associations.should be_empty
+      Bullet::Association.should_not be_has_unpreload_associations
     end
 
     it "should detect preload with category => posts, but no category => entries" do
@@ -139,7 +139,7 @@ describe Bullet do
         category.posts.collect(&:name)
         category.entries.collect(&:name)
       end
-      Bullet::Association.unpreload_associations.should_not be_empty
+      Bullet::Association.should be_has_unpreload_associations
     end
 
     it "should detect no preload with category => [posts, entries]" do
@@ -147,7 +147,7 @@ describe Bullet do
         category.posts.collect(&:name)
         category.entries.collect(&:name)
       end
-      Bullet::Association.unpreload_associations.should_not be_empty
+      Bullet::Association.should be_has_unpreload_associations
     end
   end
 
@@ -156,12 +156,12 @@ describe Bullet do
       Comment.find(:all).each do |comment|
         comment.post.name
       end
-      Bullet::Association.unpreload_associations.should be_empty
+      Bullet::Association.should_not be_has_unpreload_associations
     end
 
     it "should no preload only one post => commnets" do
       Post.first.comments.collect(&:name)
-      Bullet::Association.unpreload_associations.should be_empty
+      Bullet::Association.should_not be_has_unpreload_associations
     end
   end
 end
