@@ -5,12 +5,14 @@ module Bullet
       @@alert = true
       
       def start_request
+        puts "start request"
         @@object_associations ||= {}
         @@unpreload_associations ||= {}
         @@possible_objects ||= {}
       end
 
       def end_request
+        puts "end request"
         @@object_associations = nil
         @@unpreload_associations = nil
         @@possible_objects = nil

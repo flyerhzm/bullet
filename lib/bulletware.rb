@@ -4,6 +4,8 @@ class Bulletware
   end
 
   def call(env)
+    return @app.call(env) unless Bullet.enable?
+
     Bullet::Association.start_request
     status, headers, response = @app.call(env)
     return [status, headers, response] if response.empty?
