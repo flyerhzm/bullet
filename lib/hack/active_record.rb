@@ -56,7 +56,7 @@ module ActiveRecord
     end
 
     class BelongsToAssociation
-      # call many to one association
+      # call belongs_to association
       alias_method :origin_find_target, :find_target
 
       def find_target
@@ -66,7 +66,7 @@ module ActiveRecord
     end
 
     class BelongsToPolymorphicAssociation
-      # call many to one association
+      # call belongs_to association
       alias_method :origin_find_target, :find_target
 
       def find_target
