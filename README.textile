@@ -1,4 +1,4 @@
-h2. Bullet
+h1. Bullet
 
 This plugin is aimed to give you some performance hints about ActiveRecord usage,  what should use but not use, such as eager loading, counter cache and so on.
 
@@ -6,25 +6,36 @@ Now it provides you the hint of eager loading.
 
 The others are todo, next may be couter cache.
 
-h3. Install
+********************************************************************************
 
-<code>script/plugin install git://github.com/flyerhzm/bullet.git</code>
+h2. Install
 
-h3. Usage
+<pre><code>script/plugin install git://github.com/flyerhzm/bullet.git</code></pre>
 
-h4. Eager Loading, protect N+1 query
+********************************************************************************
 
-# add configuration to environment (optional)
-<code>
+h2. Usage
+
+* "Eageer Loading, protect N+1 query":#EagerLoading
+
+*********************************************************************************
+
+h3. Eager Loading, protect N+1 query
+<a id="EagerLoading"></a>
+
+* add configuration to environment (optional)
+<pre><code>
 Bullet::Association.logger = true # if logger is true (default value), the N+1 query hints will be appended to log/bullet.log. Otherwise, no hint to log/bullet.log.
 Bullet::Association.alert = true # If alert is true (default value), alert box will popup if there is N+1 query when browsing web page. Otherwise, no alert box.
-</code>
+</code></pre>
 
-# browse the webpage, if there are N+1 queries, alert box and log will generate according to configurations.
+* browse the webpage, if there are N+1 queries, alert box and log will generate according to configurations.
 
-# example of <code>log/bullet.log</code>
-<code>2009-08-16 13:18:53[INFO] PATH_INFO: /posts    model: Post => assocations: comments</code>
+* example of <code>log/bullet.log</code>
+<pre><code>2009-08-16 13:18:53[INFO] PATH_INFO: /posts    model: Post => assocations: comments</code></pre>
 It represents that in page '/posts', there is a N+1 query from Post to comments. It means you may have a logic code in controller <code>@posts = Post.find(:all)</code> should be changed to <code>@posts = Post.find(:all, :include => :comments)</code>
+
+* To see what causes N+1 queries, check the <code>spec/bullet_association_spec.rb</code>
 
 
 Copyright (c) 2009 Richard Huang (flyerhzm@gmail.com), released under the MIT license
