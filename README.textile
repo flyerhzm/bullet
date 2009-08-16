@@ -6,30 +6,32 @@ Now it provides you the hint of eager loading.
 
 The others are todo, next may be couter cache.
 
-********************************************************************************
+****************************************************************************
 
 h2. Install
 
 <pre><code>script/plugin install git://github.com/flyerhzm/bullet.git</code></pre>
 
-********************************************************************************
+****************************************************************************
 
 h2. Usage
 
 * "Eageer Loading, protect N+1 query":#EagerLoading
 
-*********************************************************************************
+****************************************************************************
 
 h3. Eager Loading, protect N+1 query
 <a id="EagerLoading"></a>
 
-* add configuration to environment (optional)
+* add configuration to environment 
 <pre><code>
+Bullet.enable = true
 Bullet::Association.logger = true 
 Bullet::Association.alert = true 
 </code></pre>
-if logger is true (default value), the N+1 query hints will be appended to log/bullet.log. Otherwise, no hint to log/bullet.log.
-If alert is true (default value), alert box will popup if there is N+1 query when browsing web page. Otherwise, no alert box.
+** Bullet.enable (required), if enable is true (default is false), Bullet plugin is enabled. Otherwise, Bullet plugin is disabled.
+** Bullet::Association.logger (optional), if logger is true (default is true), the N+1 query hints will be appended to log/bullet.log. Otherwise, no hint to log/bullet.log.
+** Bullet::Association.alert (optional), if alert is true (default value), alert box will popup if there is N+1 query when browsing web page. Otherwise, no alert box.
 
 * browse the webpage, if there are N+1 queries, alert box and log will generate according to configurations.
 
