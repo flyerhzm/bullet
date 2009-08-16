@@ -25,9 +25,11 @@ h3. Eager Loading, protect N+1 query
 
 * add configuration to environment (optional)
 <pre><code>
-Bullet::Association.logger = true # if logger is true (default value), the N+1 query hints will be appended to log/bullet.log. Otherwise, no hint to log/bullet.log.
-Bullet::Association.alert = true # If alert is true (default value), alert box will popup if there is N+1 query when browsing web page. Otherwise, no alert box.
+Bullet::Association.logger = true 
+Bullet::Association.alert = true 
 </code></pre>
+if logger is true (default value), the N+1 query hints will be appended to log/bullet.log. Otherwise, no hint to log/bullet.log.
+If alert is true (default value), alert box will popup if there is N+1 query when browsing web page. Otherwise, no alert box.
 
 * browse the webpage, if there are N+1 queries, alert box and log will generate according to configurations.
 
