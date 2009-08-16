@@ -1,7 +1,8 @@
 module Bullet
   class Association
     class <<self
-      @@bullet_log = Bullet::BulletLogger.new(File.open(Bullet::BulletLogger::LOG_FILE, 'a+'))
+      @@logger = Bullet::BulletLogger.new(File.open(Bullet::BulletLogger::LOG_FILE, 'a+'))
+      @@alert = true
       
       def start_request
         @@object_associations ||= {}
@@ -14,18 +15,40 @@ module Bullet
         @@unpreload_associations = nil
         @@possible_objects = nil
       end
+
+      def alert=(alert)
+        @@alert = alert
+      end
+
+      def logger=(logger)
+        if logger == false
+          @@logger = nil
+        elsif logger.is_a? Logger
+          @@logger = logger
+        end
+      end
       
       def has_unpreload_associations?
         !@@unpreload_associations.empty?
       end
 
-      def unpreload_associations_str
-        @@unpreload_associations.to_a.collect{|klazz, associations| "model: #{klazz} => assocations: #{associations}"}.join('\\n')
+      def unpreload_associations_alert
+        str = ''
+        if @@alert
+          str = "<script type='text/javascript'>"
+          str << "alert('The request has N+1 queries as follows:\\n"
+          str << @@unpreload_associations.to_a.collect{|klazz, associations| "model: #{klazz} => assocations: #{associations}"}.join('\\n')
+          str << "')"
+          str << "</script>\n"
+        end
+        str
       end
 
       def log_unpreload_associations(path)
-        @@unpreload_associations.each do |klazz, associations| 
-          @@bullet_log.info "PATH_INFO: #{path}    model: #{klazz} => assocations: #{associations}"
+        if @@logger
+          @@unpreload_associations.each do |klazz, associations| 
+            @@logger.info "PATH_INFO: #{path}    model: #{klazz} => assocations: #{associations}"
+          end
         end
       end
 
