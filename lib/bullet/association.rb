@@ -1,7 +1,8 @@
 module Bullet
   class Association
     class <<self
-      @@logger = Bullet::BulletLogger.new(File.open(Bullet::BulletLogger::LOG_FILE, 'a+'))
+      @@logger_file = File.open(Bullet::BulletLogger::LOG_FILE, 'a+')
+      @@logger = Bullet::BulletLogger.new(@@logger_file)
       @@alert = true
       
       def start_request
@@ -25,8 +26,6 @@ module Bullet
       def logger=(logger)
         if logger == false
           @@logger = nil
-        elsif logger.is_a? Logger
-          @@logger = logger
         end
       end
       
@@ -51,6 +50,7 @@ module Bullet
           @@unpreload_associations.each do |klazz, associations| 
             @@logger.info "PATH_INFO: #{path}    model: #{klazz} => assocations: #{associations}"
           end
+          @@logger_file.flush
         end
       end
 
