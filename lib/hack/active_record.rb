@@ -5,6 +5,7 @@ if Bullet.enable?
     class Base
       class <<self
         # if select a collection of objects, then these objects have possible to cause N+1 query
+        # if select only one object, then the only one object has impossible to cause N+1 query
         alias_method :origin_find_every, :find_every
         
         def find_every(options)
