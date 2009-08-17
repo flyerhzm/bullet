@@ -422,3 +422,62 @@ describe Bullet::Association, 'has_many :as' do
     Bullet::Association.should_not be_has_unpreload_associations
   end
 end
+
+describe Bullet::Association, "call one association that in possiable objects" do
+  def setup_db
+    ActiveRecord::Schema.define(:version => 1) do
+      create_table :contacts do |t|
+        t.column :name, :string
+      end
+      
+      create_table :emails do |t|
+        t.column :name, :string
+        t.column :contact_id, :integer
+      end
+    end
+  end
+
+  def teardown_db
+    ActiveRecord::Base.connection.tables.each do |table|
+      ActiveRecord::Base.connection.drop_table(table)
+    end
+  end
+  
+  class Contact < ActiveRecord::Base
+    has_many :emails
+  end
+  
+  class Email < ActiveRecord::Base
+    belongs_to :contact
+  end
+  
+  before(:all) do
+    setup_db
+    
+    contact1 = Contact.create(:name => 'first')
+    contact2 = Contact.create(:name => 'second')
+    
+    email1 = contact1.emails.create(:name => 'first')
+    email2 = contact1.emails.create(:name => 'second')
+    email3 = contact2.emails.create(:name => 'third')
+    email4 = contact2.emails.create(:name => 'fourth')
+  end
+
+  after(:all) do
+    teardown_db
+  end
+
+  before(:each) do
+    Bullet::Association.start_request
+  end
+
+  after(:each) do
+    Bullet::Association.end_request
+  end
+  
+  it "should detect no unpreload association" do
+    Contact.find(:all)
+    Contact.first.emails.collect(&:name)
+    Bullet::Association.should_not be_has_unpreload_associations
+  end
+end

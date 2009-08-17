@@ -10,8 +10,12 @@ if Bullet.enable?
         def find_every(options)
           records = origin_find_every(options)
 
-          if records and records.size > 1
-            Bullet::Association.add_possible_objects(records)
+          if records 
+            if records.size > 1
+              Bullet::Association.add_possible_objects(records)
+            elsif records.size == 1
+              Bullet::Association.add_impossible_object(records.first)
+            end
           end
 
           records

@@ -10,6 +10,7 @@ module Bullet
         @@object_associations ||= {}
         @@unpreload_associations ||= {}
         @@possible_objects ||= {}
+        @@impossible_objects ||= {}
       end
 
       def end_request
@@ -17,6 +18,7 @@ module Bullet
         @@object_associations = nil
         @@unpreload_associations = nil
         @@possible_objects = nil
+        @@impossible_objects = nil
       end
 
       def alert=(alert)
@@ -72,6 +74,13 @@ module Bullet
         @@possible_objects[klazz] << objects
         @@possible_objects[klazz].flatten!.uniq!
       end
+      
+      def add_impossible_object(object)
+        # puts "add impossible object, #{object}"
+        klazz = object.class
+        @@impossible_objects[klazz] ||= []
+        @@impossible_objects[klazz] << object
+      end
 
       def add_association(object, associations)
         # puts "add association, #{object} => #{associations}"
@@ -83,7 +92,8 @@ module Bullet
         # puts "call association, #{object} => #{associations}"
         klazz = object.class
         @@possible_objects ||= {}
-        if !@@possible_objects[klazz].nil? and @@possible_objects[klazz].include?(object) and (@@object_associations[object].nil? or !@@object_associations[object].include?(associations))
+        @@impossible_objects ||= {}
+        if (!@@possible_objects[klazz].nil? and @@possible_objects[klazz].include?(object)) and (@@impossible_objects[klazz].nil? or !@@impossible_objects[klazz].include?(object)) and (@@object_associations[object].nil? or !@@object_associations[object].include?(associations))
           @@unpreload_associations[klazz] ||= []
           @@unpreload_associations[klazz] << associations
           @@unpreload_associations[klazz].uniq!
