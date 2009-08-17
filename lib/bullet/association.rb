@@ -38,7 +38,7 @@ module Bullet
         if @@alert
           str = "<script type='text/javascript'>"
           str << "alert('The request has N+1 queries as follows:\\n"
-          str << @@unpreload_associations.to_a.collect{|klazz, associations| "model: #{klazz} => assocations: #{associations}"}.join('\\n')
+          str << @@unpreload_associations.to_a.collect{|klazz, associations| "model: #{klazz} => assocations: [#{associations.join(', ')}]"}.join('\\n')
           str << "')"
           str << "</script>\n"
         end
@@ -48,7 +48,7 @@ module Bullet
       def log_unpreload_associations(path)
         if @@logger
           @@unpreload_associations.each do |klazz, associations| 
-            @@logger.info "PATH_INFO: #{path}    model: #{klazz} => assocations: #{associations}"
+            @@logger.info "N+1 Query: PATH_INFO: #{path};    model: #{klazz} => assocations: [#{associations.join(', ')}]"
           end
           @@logger_file.flush
         end
@@ -84,7 +84,9 @@ module Bullet
         klazz = object.class
         @@possible_objects ||= {}
         if !@@possible_objects[klazz].nil? and @@possible_objects[klazz].include?(object) and (@@object_associations[object].nil? or !@@object_associations[object].include?(associations))
-          @@unpreload_associations[klazz] = associations
+          @@unpreload_associations[klazz] ||= []
+          @@unpreload_associations[klazz] << associations
+          @@unpreload_associations[klazz].uniq!
         end
       end
     end
