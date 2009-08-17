@@ -61,6 +61,16 @@ if Bullet.enable?
         end  
       end
 
+      class HasOneAssociation
+        # call has_one association
+        alias_method :origin_find_target, :find_target
+
+        def find_target
+          Bullet::Association.call_association(@owner, @reflection.name)
+          origin_find_target
+        end
+      end
+
       class BelongsToAssociation
         # call belongs_to association
         alias_method :origin_find_target, :find_target

@@ -423,6 +423,71 @@ describe Bullet::Association, 'has_many :as' do
   end
 end
 
+describe Bullet::Association, "has_one" do
+  def setup_db
+    ActiveRecord::Schema.define(:version => 1) do
+      create_table :companies do |t|
+        t.column :name, :string
+      end
+
+      create_table :addresses do |t|
+        t.column :name, :string
+        t.column :company_id, :integer
+      end
+    end
+  end
+
+  def teardown_db
+    ActiveRecord::Base.connection.tables.each do |table|
+      ActiveRecord::Base.connection.drop_table(table)
+    end
+  end
+
+  class Company < ActiveRecord::Base
+    has_one :address
+  end
+
+  class Address < ActiveRecord::Base
+    belongs_to :company
+  end
+
+  before(:all) do
+    setup_db
+
+    company1 = Company.create(:name => 'first')
+    company2 = Company.create(:name => 'second')
+
+    Address.create(:name => 'first', :company => company1)
+    Address.create(:name => 'second', :company => company2)
+  end
+
+  after(:all) do
+    teardown_db
+  end
+
+  before(:each) do
+    Bullet::Association.start_request
+  end
+
+  after(:each) do
+    Bullet::Association.end_request
+  end
+
+  it "should detect unpreload association" do
+    Company.find(:all).each do |company|
+      company.address.name
+    end
+    Bullet::Association.should be_has_unpreload_associations
+  end
+
+  it "should detect no unpreload association" do
+    Company.find(:all, :include => :address).each do |company|
+      company.address.name
+    end
+    Bullet::Association.should_not be_has_unpreload_associations
+  end
+end
+
 describe Bullet::Association, "call one association that in possiable objects" do
   def setup_db
     ActiveRecord::Schema.define(:version => 1) do
