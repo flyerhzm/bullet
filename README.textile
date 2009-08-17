@@ -16,11 +16,18 @@ h2. Install
 
 h2. Usage
 
-* "Eageer Loading, protect N+1 query":#EagerLoading
+* "Eager Loading, protect N+1 query":#EagerLoading
 
 ****************************************************************************
 
-h3. Eager Loading, protect N+1 query
+h2. Step by step example
+
+* "Eager Loading, protect N+1 query":#EagerLoadingExample
+
+
+****************************************************************************
+
+h3. Eager Loading, protect N+1 query, usage
 <a id="EagerLoading"></a>
 
 *important*: It is strongly recommended to disable cache in browser.
@@ -42,6 +49,136 @@ Bullet::Association.alert = true
 It represents that in page '/posts', there is a N+1 query from Post to comments. It means you may have a logic code in controller <code>@posts = Post.find(:all)</code> should be changed to <code>@posts = Post.find(:all, :include => :comments)</code>
 
 * To see what causes N+1 queries, check the <code>spec/bullet_association_spec.rb</code>
+
+****************************************************************************
+
+h3. Eager Loading, protect N+1 query, step by step example
+<a id="EagerLoadingExample"></a>
+
+1. setup test environment
+
+<pre><code>
+$ rails test
+$ cd test
+$ script/generate scaffold post name:string 
+$ script/generate scaffold comment name:string post_id:integer
+$ rake db:migrate
+</code></pre>
+
+2. change <code>app/model/post.rb</code> and <code>app/model/comment.rb</code>
+
+<pre><code>
+class Post < ActiveRecord::Base
+  has_many :comments
+end
+
+class Comment < ActiveRecord::Base
+  belongs_to :post
+end
+</code></pre>
+
+3. go to script/console and execute
+
+<pre><code>
+post1 = Post.create(:name => 'first')
+post2 = Post.create(:name => 'second')
+post1.comments.create(:name => 'first')
+post1.comments.create(:name => 'second')
+post2.comments.create(:name => 'third')
+post2.comments.create(:name => 'fourth')
+</code></pre>
+
+4. change the <code>app/views/posts/index.html.erb</code> to produce a N+1 query
+
+<pre><code>
+<h1>Listing posts</h1>
+
+<table>
+  <tr>
+    <th>Name</th>
+  </tr>
+
+<% @posts.each do |post| %>
+  <tr>
+    <td><%=h post.name %></td>
+    <td><%= post.comments.collect(&:name) %></td>
+    <td><%= link_to 'Show', post %></td>
+    <td><%= link_to 'Edit', edit_post_path(post) %></td>
+    <td><%= link_to 'Destroy', post, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New post', new_post_path %>
+</code></pre>
+
+5. add bullet plugin
+
+<pre><code>
+$ script/plugin install git://github.com/flyerhzm/bullet.git
+</code></pre>
+
+6. enable the bullet plugin in development, add a line to <code>config/environments/development.rb</code>
+
+<pre><code>
+Bullet.enable = true
+</code></pre>
+
+7. start server
+
+<pre><code>
+$ script/server
+</code></pre>
+
+8. input http://localhost:3000/posts in browser, then you will see a popup alert box says
+
+<pre><code>
+The request has N+1 queries as follows:
+model: Post => associations: [comment]
+</code></pre>
+
+which means there is a N+1 query from post object to comments associations.
+
+In the meanwhile, there's a log appended into <code>log/bullet.log</code> file
+
+<pre><code>
+2009-08-17 15:07:31[INFO] N+1 Query: PATH_INFO: /posts;    model: Post => assocations: [comments]
+</code></pre>
+
+The generated SQLs are
+
+<pre><code>
+  Post Load (1.0ms)   SELECT * FROM "posts" 
+  Comment Load (0.4ms)   SELECT * FROM "comments" WHERE ("comments".post_id = 1) 
+  Comment Load (0.3ms)   SELECT * FROM "comments" WHERE ("comments".post_id = 2) 
+</code></pre>
+
+
+9. fix the N+1 query, change <code>app/controllers/posts_controller.rb</code> file
+
+<pre><code>
+  def index
+    @posts = Post.find(:all, :include => :comments)
+
+    respond_to do |format|
+      format.html # index.html.erb
+      format.xml  { render :xml => @posts }
+    end 
+  end 
+</code></pre>
+
+10. refresh http://localhost:3000/posts page, no alert box and no log appended.
+
+The generated SQLs are
+
+<pre><code>
+  Post Load (0.5ms)   SELECT * FROM "posts" 
+  Comment Load (0.5ms)   SELECT "comments".* FROM "comments" WHERE ("comments".post_id IN (1,2)) 
+</code></pre>
+
+a N+1 query fixed. Cool!
 
 
 Copyright (c) 2009 Richard Huang (flyerhzm@gmail.com), released under the MIT license
