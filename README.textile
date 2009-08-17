@@ -23,6 +23,8 @@ h2. Usage
 h3. Eager Loading, protect N+1 query
 <a id="EagerLoading"></a>
 
+*important*: It is strongly recommended to disable cache in browser.
+
 * add configuration to environment 
 <pre><code>
 Bullet.enable = true
