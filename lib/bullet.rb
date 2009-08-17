@@ -5,7 +5,7 @@ module Bullet
     end
 
     def enable?
-      !@@enable.nil? and @@enable == true
+      class_variables.include?('@@enable') and @@enable == true
     end
   end
 
