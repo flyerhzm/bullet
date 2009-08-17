@@ -14,9 +14,9 @@ class Bulletware
       if !headers['Content-Type'].nil? and headers['Content-Type'].include? 'text/html'
         response_body = response.body[0..-17] + Bullet::Association.unpreload_associations_alert + response.body[-16..-1]
         headers['Content-Length'] = response_body.length.to_s
-
-        Bullet::Association.log_unpreload_associations(env['PATH_INFO'])
       end
+
+      Bullet::Association.log_unpreload_associations(env['PATH_INFO'])
     end
     response_body ||= response.body
     Bullet::Association.end_request
