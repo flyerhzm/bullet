@@ -12,7 +12,7 @@ class Bulletware
 
     if Bullet::Association.has_unpreload_associations?
       if !headers['Content-Type'].nil? and headers['Content-Type'].include? 'text/html'
-        response_body = response.body[0..-17] + Bullet::Association.unpreload_associations_alert + response.body[-16..-1]
+        response_body = response.body.insert(-17, Bullet::Association.unpreload_associations_alert)
         headers['Content-Length'] = response_body.length.to_s
       end
 
