@@ -9,6 +9,7 @@ module Bullet
         # puts "start request"
         @@object_associations ||= {}
         @@unpreload_associations ||= {}
+        @@callers ||= []
         @@possible_objects ||= {}
         @@impossible_objects ||= {}
       end
@@ -17,6 +18,7 @@ module Bullet
         # puts "end request"
         @@object_associations = nil
         @@unpreload_associations = nil
+        @@callers = nil
         @@possible_objects = nil
         @@impossible_objects = nil
       end
@@ -51,6 +53,9 @@ module Bullet
         if @@logger
           @@unpreload_associations.each do |klazz, associations| 
             @@logger.info "N+1 Query: PATH_INFO: #{path};    model: #{klazz} => assocations: [#{associations.join(', ')}]"
+            @@callers.each do |c|
+              @@logger.info "method call stack: \n" + c.join('\n')
+            end
           end
           @@logger_file.flush
         end
@@ -97,7 +102,14 @@ module Bullet
           @@unpreload_associations[klazz] ||= []
           @@unpreload_associations[klazz] << associations
           @@unpreload_associations[klazz].uniq!
+          caller_in_project
         end
+      end
+      
+      VENDOR_ROOT = File.join(RAILS_ROOT, 'vendor')
+      def caller_in_project
+        @@callers << caller.select {|c| c =~ /#{RAILS_ROOT}/}.reject {|c| c =~ /#{VENDOR_ROOT}/}
+        @@callers.uniq!
       end
     end
   end
