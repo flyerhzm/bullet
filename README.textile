@@ -28,7 +28,7 @@ h2. Step by step example
 ****************************************************************************
 
 h3. Eager Loading, protect N+1 query, usage
-<a id="EagerLoading"></a>
+<a id="EagerLoading"/></a>
 
 *important*: It is strongly recommended to disable cache in browser.
 
@@ -53,7 +53,7 @@ It represents that in page '/posts', there is a N+1 query from Post to comments.
 ****************************************************************************
 
 h3. Eager Loading, protect N+1 query, step by step example
-<a id="EagerLoadingExample"></a>
+<a id="EagerLoadingExample"/></a>
 
 1. setup test environment
 
