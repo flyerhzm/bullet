@@ -53,9 +53,9 @@ module Bullet
         if @@logger
           @@unpreload_associations.each do |klazz, associations| 
             @@logger.info "N+1 Query: PATH_INFO: #{path};    model: #{klazz} => assocations: [#{associations.join(', ')}]"
-            @@callers.each do |c|
-              @@logger.info "method call stack: \n" + c.join('\n')
-            end
+          end  
+          @@callers.each do |c|
+            @@logger.info "N+1 Query: method call stack: \n" + c.join("\n")
           end
           @@logger_file.flush
         end
