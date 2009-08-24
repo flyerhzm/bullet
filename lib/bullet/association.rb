@@ -42,7 +42,7 @@ module Bullet
         if @@alert
           str = "<script type='text/javascript'>"
           str << "alert('The request has N+1 queries as follows:\\n"
-          str << @@unpreload_associations.to_a.collect{|klazz, associations| "model: #{klazz} => assocations: [#{associations.join(', ')}]"}.join('\\n')
+          str << @@unpreload_associations.to_a.collect{|klazz, associations| "model: #{klazz} => associations: [#{associations.join(', ')}]"}.join('\\n')
           str << "')"
           str << "</script>\n"
         end
@@ -52,7 +52,7 @@ module Bullet
       def log_unpreload_associations(path)
         if @@logger
           @@unpreload_associations.each do |klazz, associations| 
-            @@logger.info "N+1 Query: PATH_INFO: #{path};    model: #{klazz} => assocations: [#{associations.join(', ')}]"
+            @@logger.info "N+1 Query: PATH_INFO: #{path};    model: #{klazz} => associations: [#{associations.join(', ')}] \n Add to your finder: :include => #{associations.map{|a| a.to_sym}.inspect}"
           end  
           @@callers.each do |c|
             @@logger.info "N+1 Query: method call stack: \n" + c.join("\n")
