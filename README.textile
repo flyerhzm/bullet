@@ -50,6 +50,9 @@ It represents that in page '/posts', there is a N+1 query from Post to comments.
 
 * To see what causes N+1 queries, check the <code>spec/bullet_association_spec.rb</code>
 
+* Rake tasks
+<code>rake bullet:log:clear</code>, clear the <code>log/bullet.log</code>
+
 ****************************************************************************
 
 h3. Eager Loading, protect N+1 query, step by step example
@@ -145,6 +148,7 @@ In the meanwhile, there's a log appended into <code>log/bullet.log</code> file
 
 <pre><code>
 2009-08-20 09:12:19[INFO] N+1 Query: PATH_INFO: /posts;    model: Post => assocations: [comments]
+Add your finder: :include => [:comments]
 2009-08-20 09:12:19[INFO] N+1 Query: method call stack:
 /Users/richard/Downloads/test/app/views/posts/index.html.erb:11:in `_run_erb_app47views47posts47index46html46erb'
 /Users/richard/Downloads/test/app/views/posts/index.html.erb:8:in `each'
