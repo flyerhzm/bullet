@@ -69,7 +69,7 @@ module Bullet
         if @@alert
           str = "<script type='text/javascript'>"
           str << "alert('The request has unused preload assocations as follows:\\n"
-          str << (has_unused_preload_associations? ? @@unused_preload_associations.to_a.collect{|klazz, associations| "model: #{klazz} => associations [#{associations.join(', ')}]"}.join('\\n') : "None")
+          str << (has_unused_preload_associations? ? @@unused_preload_associations.to_a.collect{|klazz, associations| "model: #{klazz} => associations: [#{associations.join(', ')}]"}.join('\\n') : "None")
           str << "\\nThe request has N+1 queries as follows:\\n"
           str << (has_unpreload_associations? ? @@unpreload_associations.to_a.collect{|klazz, associations| "model: #{klazz} => associations: [#{associations.join(', ')}]"}.join('\\n') : "None")
           str << "')"
