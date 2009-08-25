@@ -1,8 +1,8 @@
 h1. Bullet
 
-This plugin is aimed to give you some performance hints about ActiveRecord usage,  what should use but not use, such as eager loading, counter cache and so on.
+This plugin is aimed to give you some performance suggestion about ActiveRecord usage,  what should use but not use, such as eager loading, counter cache and so on, what should not use but use, such as unused eager loading.
 
-Now it provides you the hint of eager loading.
+Now it provides you the suggestion of eager loading and unused eager loading.
 
 The others are todo, next may be couter cache.
 
@@ -16,18 +16,18 @@ h2. Install
 
 h2. Usage
 
-* "Eager Loading, protect N+1 query":#EagerLoading
+* "Eager Loading, protect N+1 query and protect from unused eager loading":#EagerLoading
 
 ****************************************************************************
 
 h2. Step by step example
 
-* "Eager Loading, protect N+1 query":#EagerLoadingExample
+* "Eager Loading, protect N+1 query and protect from unused eager loading":#EagerLoadingExample
 
 
 ****************************************************************************
 
-h3. Eager Loading, protect N+1 query, usage
+h3. Eager Loading, protect N+1 query and protect from unused eager loading, usage
 <a id="EagerLoading"/></a>
 
 *important*: It is strongly recommended to disable cache in browser.
@@ -42,11 +42,24 @@ Bullet::Association.alert = true
 ** Bullet::Association.logger (optional), if logger is true (default is true), the N+1 query hints will be appended to <code>log/bullet.log</code> with N+1 query method call stack. Otherwise, no hint to log/bullet.log.
 ** Bullet::Association.alert (optional), if alert is true (default value), alert box will popup if there is N+1 query when browsing web page. Otherwise, no alert box.
 
-* browse the webpage, if there are N+1 queries, alert box and bullet log will generate according to configurations. Alert box will only popup when the request's Content-Type is text/html, and <code>log/bullet.log</code> will produce whatever the request is.
+* browse the webpage, if there are N+1 queries or unused eager loading, alert box and bullet log will generate according to configurations. Alert box will only popup when the request's Content-Type is text/html, and <code>log/bullet.log</code> will produce whatever the request is.
 
 * example of <code>log/bullet.log</code>
-<pre><code>2009-08-16 13:18:53[INFO] PATH_INFO: /posts    model: Post => assocations: comments</code></pre>
-It represents that in page '/posts', there is a N+1 query from Post to comments. It means you may have a logic code in controller <code>@posts = Post.find(:all)</code> should be changed to <code>@posts = Post.find(:all, :include => :comments)</code>
+<pre><code>
+2009-08-25 20:40:17[INFO] N+1 Query: PATH_INFO: /posts;    model: Post => associations: [comments]·
+Add to your finder: :include => [:comments]
+2009-08-25 20:40:17[INFO] N+1 Query: method call stack:·
+/Users/richard/Downloads/test/app/views/posts/index.html.erb:11:in `_run_erb_app47views47posts47index46html46erb'
+/Users/richard/Downloads/test/app/views/posts/index.html.erb:8:in `each'
+/Users/richard/Downloads/test/app/views/posts/index.html.erb:8:in `_run_erb_app47views47posts47index46html46erb'
+/Users/richard/Downloads/test/app/controllers/posts_controller.rb:7:in `index'
+</code></pre>
+It represents that in request '/posts', there is a N+1 query from Post to comments. It means you may have a logic code in controller <code>@posts = Post.find(:all)</code> should be changed to <code>@posts = Post.find(:all, :include => :comments)</code>
+<pre><code>
+2009-08-25 20:53:56[INFO] Unused preload associations: PATH_INFO: /posts;    model: Post => associations: [comments]·
+Remove from your finder: :include => [:comments]
+</code></pre>
+It represents that in request '/posts', there is a used eager loading from Post to comments. It means you may have a logic code in controller <code>@posts = Post.find(:all, :include => :comments)</code> should be changed to <code>@posts = Post.find(:all)</code>
 
 * To see what causes N+1 queries, check the <code>spec/bullet_association_spec.rb</code>
 
@@ -55,7 +68,7 @@ It represents that in page '/posts', there is a N+1 query from Post to comments.
 
 ****************************************************************************
 
-h3. Eager Loading, protect N+1 query, step by step example
+h3. Eager Loading, protect N+1 query and protect from unused eager loading, step by step example
 <a id="EagerLoadingExample"/></a>
 
 1. setup test environment
@@ -94,13 +107,6 @@ post2.comments.create(:name => 'fourth')
 4. change the <code>app/views/posts/index.html.erb</code> to produce a N+1 query
 
 <pre><code>
-<h1>Listing posts</h1>
-
-<table>
-  <tr>
-    <th>Name</th>
-  </tr>
-
 <% @posts.each do |post| %>
   <tr>
     <td><%=h post.name %></td>
@@ -110,11 +116,6 @@ post2.comments.create(:name => 'fourth')
     <td><%= link_to 'Destroy', post, :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
 <% end %>
-</table>
-
-<br />
-
-<%= link_to 'New post', new_post_path %>
 </code></pre>
 
 5. add bullet plugin
@@ -138,6 +139,8 @@ $ script/server
 8. input http://localhost:3000/posts in browser, then you will see a popup alert box says
 
 <pre><code>
+The request has unused preload associations as follows:
+None
 The request has N+1 queries as follows:
 model: Post => associations: [comment]
 </code></pre>
@@ -188,6 +191,46 @@ The generated SQLs are
 </code></pre>
 
 a N+1 query fixed. Cool!
+
+11. now simulate unused eager loading. Change <code>app/controllers/posts_controller.rb</code> and <code>app/views/posts/index.html.erb</code>
+
+<pre><code>
+  def index
+    @posts = Post.find(:all, :include => :comments)
+
+    respond_to do |format|
+      format.html # index.html.erb
+      format.xml  { render :xml => @posts }
+    end 
+  end 
+</code></pre>
+
+<pre><code>
+<% @posts.each do |post| %>
+  <tr>
+    <td><%=h post.name %></td>
+    <td><%= link_to 'Show', post %></td>
+    <td><%= link_to 'Edit', edit_post_path(post) %></td>
+    <td><%= link_to 'Destroy', post, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</code></pre>
+
+12. refresh http://localhost:3000/posts page, then you will see a popup alert box says
+
+<pre><code>
+The request has unused preload associations as follows:
+model: Post => associations: [comment]
+The request has N+1 queries as follows:
+None
+</code></pre>
+
+In the meanwhile, there's a log appended into <code>log/bullet.log</code> file
+
+<pre><code>
+2009-08-25 21:13:22[INFO] Unused preload associations: PATH_INFO: /posts;    model: Post => associations: [comments]·
+Remove from your finder: :include => [:comments]
+</code></pre>
 
 
 Copyright (c) 2009 Richard Huang (flyerhzm@gmail.com), released under the MIT license
