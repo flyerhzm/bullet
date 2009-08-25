@@ -12,6 +12,7 @@ module Bullet
         @@callers ||= []
         @@possible_objects ||= {}
         @@impossible_objects ||= {}
+        @@call_object_associations ||= {}
       end
 
       def end_request
@@ -21,6 +22,7 @@ module Bullet
         @@callers = nil
         @@possible_objects = nil
         @@impossible_objects = nil
+        @@call_object_associations = nil
       end
 
       def alert=(alert)
@@ -31,6 +33,14 @@ module Bullet
         if logger == false
           @@logger = nil
         end
+      end
+
+      def has_unused_preload_associations?
+        @@object_associations.each do |key, value|
+          call_value = @@call_object_associations[key] || []
+          return true unless (value - call_value).empty?
+        end
+        return false
       end
       
       def has_unpreload_associations?
@@ -102,6 +112,8 @@ module Bullet
           @@unpreload_associations[klazz] ||= []
           @@unpreload_associations[klazz] << associations
           @@unpreload_associations[klazz].uniq!
+          @@call_object_associations[object] ||= []
+          @@call_object_associations[object] << associations
           caller_in_project
         end
       end
