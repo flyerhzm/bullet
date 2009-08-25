@@ -8,17 +8,19 @@ module Bullet
       def start_request
         # puts "start request"
         @@object_associations ||= {}
+        @@call_object_associations ||= {}
         @@unpreload_associations ||= {}
+        @@unused_preload_associations ||= {}
         @@callers ||= []
         @@possible_objects ||= {}
         @@impossible_objects ||= {}
-        @@call_object_associations ||= {}
       end
 
       def end_request
         # puts "end request"
         @@object_associations = nil
         @@unpreload_associations = nil
+        @@unused_preload_associations = nil
         @@callers = nil
         @@possible_objects = nil
         @@impossible_objects = nil
@@ -34,24 +36,34 @@ module Bullet
           @@logger = nil
         end
       end
+      
+      def check_unused_preload_associations
+        @@object_associations.each do |object, association|
+          call_association = @@call_object_associations[object] || []
+          @@unused_preload_associations[object.class] ||= []
+          @@unused_preload_associations[object.class] << (association - call_association) unless (association - call_association).empty?
+        end
+      end
+      
+      def has_bad_assocations?
+        has_unpreload_associations? or has_unused_preload_associations?
+      end
 
       def has_unused_preload_associations?
-        @@object_associations.each do |key, value|
-          call_value = @@call_object_associations[key] || []
-          return true unless (value - call_value).empty?
-        end
-        return false
+        !@@unused_preload_associations.empty?
       end
       
       def has_unpreload_associations?
         !@@unpreload_associations.empty?
       end
 
-      def unpreload_associations_alert
+      def bad_associations_alert
         str = ''
         if @@alert
           str = "<script type='text/javascript'>"
-          str << "alert('The request has N+1 queries as follows:\\n"
+          str << "alert('The request has unused preload assocations as follows:\\n"
+          str << @@unused_preload_associations.to_a.collect{|klazz, associations| "model: #{klazz} => associations [#{associations.join(', ')}]"}.join('\\n')
+          str << "\\nThe request has N+1 queries as follows:\\n"
           str << @@unpreload_associations.to_a.collect{|klazz, associations| "model: #{klazz} => associations: [#{associations.join(', ')}]"}.join('\\n')
           str << "')"
           str << "</script>\n"
@@ -59,8 +71,11 @@ module Bullet
         str
       end
 
-      def log_unpreload_associations(path)
+      def log_bad_associations(path)
         if @@logger
+          @@unused_preload_associations.each do |klazz, asssociations|
+            @@logger.info "Unused preload associations: PATH_INFO: #{path};    model: #{klazz} => associations: [#{associations.join(', ')}] \n Remove from your finder: :include => #{associations.map{|a| a.to_sym}.inspect}"
+          end
           @@unpreload_associations.each do |klazz, associations| 
             @@logger.info "N+1 Query: PATH_INFO: #{path};    model: #{klazz} => associations: [#{associations.join(', ')}] \n Add to your finder: :include => #{associations.map{|a| a.to_sym}.inspect}"
           end  

@@ -97,11 +97,13 @@ describe Bullet::Association, 'has_many' do
     
     it "should detect unused preload post => comments" do
       Post.find(:all, :include => :comments).collect(&:name)
+      Bullet::Association.check_unused_preload_associations
       Bullet::Association.should be_has_unused_preload_associations
     end
 
     it "should no detect unused preload post => comments" do
       Post.find(:all).collect(&:name)
+      Bullet::Association.check_unused_preload_associations
       Bullet::Association.should_not be_has_unused_preload_associations
     end
   end
@@ -136,6 +138,7 @@ describe Bullet::Association, 'has_many' do
     
     it "should detect unused preload with category => posts => comments" do
       Category.find(:all, :include => {:posts => :comments}).collect(&:name)
+      Bullet::Association.check_unused_preload_associations
       Bullet::Association.should be_has_unused_preload_associations
     end
     
@@ -143,6 +146,7 @@ describe Bullet::Association, 'has_many' do
       Category.find(:all, :include => {:posts => :comments}).each do |category|
         category.posts.collect(&:name)
       end
+      Bullet::Association.check_unused_preload_associations
       Bullet::Association.should be_has_unused_preload_associations
     end
     
@@ -152,6 +156,7 @@ describe Bullet::Association, 'has_many' do
           post.comments.collect(&:name)
         end
       end
+      Bullet::Association.check_unused_preload_associations
       Bullet::Association.should_not be_has_unused_preload_associations
     end
   end
@@ -183,6 +188,7 @@ describe Bullet::Association, 'has_many' do
     
     it "should detect unused with category => [posts, entries]" do
       Category.find(:all, :include => [:posts, :entries]).collect(&:name)
+      Bullet::Association.check_unused_preload_associations
       Bullet::Association.should be_has_unused_preload_associations
     end
     
@@ -190,6 +196,7 @@ describe Bullet::Association, 'has_many' do
       Category.find(:all, :include => [:posts, :entries]).each do |category|
         category.posts.collect(&:name)
       end
+      Bullet::Association.check_unused_preload_associations
       Bullet::Association.should be_has_unused_preload_associations
     end
     
@@ -198,7 +205,8 @@ describe Bullet::Association, 'has_many' do
         category.posts.collect(&:name)
         category.entries.collect(&:name)
       end
-        Bullet::Association.should_not be_has_unused_preload_associations
+      Bullet::Association.check_unused_preload_associations
+      Bullet::Association.should_not be_has_unused_preload_associations
     end
   end
 
@@ -231,11 +239,13 @@ describe Bullet::Association, 'has_many' do
 
     it "should detect no unused preload comments => post" do
       Comment.find(:all).collect(&:name)
+      Bullet::Association.check_unused_preload_associations
       Bullet::Association.should_not be_has_unused_preload_associations
     end
     
     it "should detect unused preload comments => post" do
       Comment.find(:all, :include => :post).collect(&:name)
+      Bullet::Association.check_unused_preload_associations
       Bullet::Association.should be_has_unused_preload_associations
     end
   end
@@ -313,11 +323,13 @@ describe Bullet::Association, 'has_and_belongs_to_many' do
   
   it "should detect unused preload associatoins" do
     Student.find(:all, :include => :teachers).collect(&:name)
+    Bullet::Association.check_unused_preload_associations
     Bullet::Association.should be_has_unused_preload_associations
   end
 
   it "should detect no unused preload associatoins" do
     Student.find(:all).collect(&:name)
+    Bullet::Association.check_unused_preload_associations
     Bullet::Association.should_not be_has_unused_preload_associations
   end
 end
@@ -401,11 +413,13 @@ describe Bullet::Association, 'has_many :through' do
 
   it "should detect no unused preload associatoins" do
     Firm.find(:all).collect(&:name)
+    Bullet::Association.check_unused_preload_associations
     Bullet::Association.should_not be_has_unused_preload_associations
   end
 
   it "should detect unused preload associatoins" do
     Firm.find(:all, :include => :clients).collect(&:name)
+    Bullet::Association.check_unused_preload_associations
     Bullet::Association.should be_has_unused_preload_associations
   end
 end
@@ -505,21 +519,25 @@ describe Bullet::Association, 'has_many :as' do
   
   it "should detect no unused preload associations" do
     User.find(:all).collect(&:name)
+    Bullet::Association.check_unused_preload_associations
     Bullet::Association.should_not be_has_unused_preload_associations
   end
   
   it "should detect unused preload associations" do
     User.find(:all, :include => :votes).collect(&:name)
+    Bullet::Association.check_unused_preload_associations
     Bullet::Association.should be_has_unused_preload_associations
   end
   
   it "should detect no unused preload associations with voteable" do
     Vote.find(:all).collect(&:vote)
+    Bullet::Association.check_unused_preload_associations
     Bullet::Association.should_not be_has_unused_preload_associations
   end
 
   it "should detect unused preload associatoins with voteable" do
     Vote.find(:all, :include => :voteable).collect(&:vote)
+    Bullet::Association.check_unused_preload_associations
     Bullet::Association.should be_has_unused_preload_associations
   end
 end
@@ -590,11 +608,13 @@ describe Bullet::Association, "has_one" do
   
   it "should detect no unused preload association" do
     Company.find(:all).collect(&:name)
+    Bullet::Association.check_unused_preload_associations
     Bullet::Association.should_not be_has_unused_preload_associations
   end
 
   it "should detect unused preload association" do
     Company.find(:all, :include => :address).collect(&:name)
+    Bullet::Association.check_unused_preload_associations
     Bullet::Association.should be_has_unused_preload_associations
   end
 end
