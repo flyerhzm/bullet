@@ -20,6 +20,7 @@ Gem::Specification.new do |s|
      "README.textile",
      "Rakefile",
      "VERSION",
+     "bullet.gemspec",
      "lib/bullet.rb",
      "lib/bullet/association.rb",
      "lib/bullet/logger.rb",
