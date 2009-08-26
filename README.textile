@@ -11,7 +11,10 @@ The others are todo, next may be couter cache.
 h2. Install
 
 install as gem:
-<pre><code>gem install flyerhzm-bullet</code></pre>
+<pre><code>
+gem sources -a http://gems.github.com
+gem install flyerhzm-bullet
+</code></pre>
 
 install as plugin:
 <pre><code>script/plugin install git://github.com/flyerhzm/bullet.git</code></pre>
