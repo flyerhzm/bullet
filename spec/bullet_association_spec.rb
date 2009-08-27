@@ -224,7 +224,7 @@ describe Bullet::Association, 'has_many' do
       end
       Bullet::Association.should be_has_unpreload_associations
     end
-
+    
     it "should no preload comment => post" do
       Comment.first.post.name
       Bullet::Association.should_not be_has_unpreload_associations
@@ -236,7 +236,7 @@ describe Bullet::Association, 'has_many' do
       end
       Bullet::Association.should_not be_has_unpreload_associations
     end
-
+    
     it "should detect no unused preload comments => post" do
       Comment.find(:all).collect(&:name)
       Bullet::Association.check_unused_preload_associations
@@ -247,6 +247,22 @@ describe Bullet::Association, 'has_many' do
       Comment.find(:all, :include => :post).collect(&:name)
       Bullet::Association.check_unused_preload_associations
       Bullet::Association.should be_has_unused_preload_associations
+    end
+    
+    it "should dectect no unused preload comments => post" do
+      Comment.find(:all).each do |comment|
+        comment.post.name
+      end
+      Bullet::Association.check_unused_preload_associations
+      Bullet::Association.should_not be_has_unused_preload_associations
+    end
+    
+    it "should dectect no unused preload comments => post" do
+      Comment.find(:all, :include => :post).each do |comment|
+        comment.post.name
+      end
+      Bullet::Association.check_unused_preload_associations
+      Bullet::Association.should_not be_has_unused_preload_associations
     end
   end
 end
