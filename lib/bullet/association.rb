@@ -32,11 +32,8 @@ module Bullet
       
       def check_unused_preload_associations
         object_associations.each do |object, association|
-          call_association = call_object_associations[object] || []
-          association.uniq! unless association.flatten!.nil?
-          call_association.uniq! unless call_association.flatten!.nil?
-          
-          add_unused_preload_associations(object.class, association - call_association) unless (association - call_association).empty?
+          call_object_association = call_object_associations[object] || []
+          add_unused_preload_associations(object.class, association - call_object_association) unless (association - call_object_association).empty?
         end
       end
       
@@ -100,15 +97,15 @@ module Bullet
       end
       
       def define_association(klazz, associations)
-        # puts "define association, #{klazz} => #{associations}"
+        # puts "define association, #{klazz} => #{associations.inspect}"
         add_klazz_associations(klazz, associations)
       end
 
       def call_association(object, associations)
-        # puts "call association, #{object} => #{associations}"
+        # puts "call association, #{object} => #{associations.inspect}"
+        add_call_object_associations(object, associations)
         if unpreload_associations?(object, associations)
           add_unpreload_associations(object.class, associations)
-          add_call_object_associations(object, associations)
           caller_in_project
         end
       end
@@ -124,26 +121,28 @@ module Bullet
         # puts "add unpreload associations, #{klazz} => #{associations.inspect}"
         unpreload_associations[klazz] ||= []
         unpreload_associations[klazz] << associations
-        unpreload_associations[klazz].uniq!
+        unique(unpreload_associations[klazz])
       end
       
       def add_unused_preload_associations(klazz, associations)
         # puts "add unused preload associations, #{klazz} => #{associations.inspect}"
         unused_preload_associations[klazz] ||= []
         unused_preload_associations[klazz] << associations
-        unused_preload_associations[klazz].flatten!.uniq!
+        unique(unused_preload_associations[klazz])
       end
 
       def add_association(object, associations)
         # puts "add associations, #{object} => #{associations.inspect}"
         object_associations[object] ||= []
         object_associations[object] << associations
+        unique(object_associations[object])
       end
 
       def add_call_object_associations(object, associations)
         # puts "add call object associations, #{object} => #{associations.inspect}"
         call_object_associations[object] ||= []
         call_object_associations[object] << associations
+        unique(call_object_associations[object])
       end
 
       def add_possible_objects(objects)
@@ -151,7 +150,7 @@ module Bullet
         klazz= objects.first.class
         possible_objects[klazz] ||= []
         possible_objects[klazz] << objects
-        possible_objects[klazz].flatten!.uniq!
+        unique(possible_objects[klazz])
       end
 
       def add_impossible_object(object)
@@ -159,12 +158,19 @@ module Bullet
         klazz = object.class
         impossible_objects[klazz] ||= []
         impossible_objects[klazz] << object
+        impossible_objects[klazz].uniq!
       end
       
       def add_klazz_associations(klazz, associations)
         # puts "define associations, #{klazz} => #{associations.inspect}"
         klazz_associations[klazz] ||= []
         klazz_associations[klazz] << associations
+        unique(klazz_associations[klazz])
+      end
+      
+      def unique(array)
+        array.flatten!
+        array.uniq!
       end
       
       def unpreload_associations
