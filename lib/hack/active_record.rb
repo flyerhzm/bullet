@@ -61,33 +61,13 @@ if Bullet.enable?
         end  
       end
 
-      class HasOneAssociation
+      class AssociationProxy
         # call has_one association
-        alias_method :origin_find_target, :find_target
+        alias_method :origin_load_target, :load_target
 
-        def find_target
+        def load_target
           Bullet::Association.call_association(@owner, @reflection.name)
-          origin_find_target
-        end
-      end
-
-      class BelongsToAssociation
-        # call belongs_to association
-        alias_method :origin_find_target, :find_target
-
-        def find_target
-          Bullet::Association.call_association(@owner, @reflection.name)
-          origin_find_target
-        end
-      end
-
-      class BelongsToPolymorphicAssociation
-        # call belongs_to association
-        alias_method :origin_find_target, :find_target
-
-        def find_target
-          Bullet::Association.call_association(@owner, @reflection.name)
-          origin_find_target
+          origin_load_target
         end
       end
     end
