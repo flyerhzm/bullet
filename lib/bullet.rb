@@ -5,7 +5,7 @@ module Bullet
     def enable=(enable)
       if enable != @@enable && @@enable = enable
         Bullet::ActiveRecord.enable
-        # ActiveRecord.send :include, Bullet::ActiveRecord
+        ActionController::Dispatcher.middleware.use Bulletware
       end
       @@enable
     end
