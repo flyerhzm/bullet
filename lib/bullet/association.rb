@@ -6,11 +6,11 @@ module Bullet
       @@alert = true
       
       def start_request
-        # puts "start request"
+        puts "start request"
       end
 
       def end_request
-        # puts "end request"
+        puts "end request"
         @@object_associations = nil
         @@unpreload_associations = nil
         @@unused_preload_associations = nil
@@ -66,19 +66,6 @@ module Bullet
         end
         str
       end
-      
-      def bad_associations_str(bad_associations)
-        puts bad_associations.inspect
-        bad_associations.to_a.collect{|klazz, associations| klazz_associations_str(klazz, associations)}.join('\\n')
-      end
-      
-      def klazz_associations_str(klazz, associations)
-        "model: #{klazz} => associations: [#{associations.join(', ')}]"
-      end
-      
-      def associations_str(associations)
-        ":include => #{associations.map{|a| a.to_sym unless a.is_a? Hash}.inspect}"
-      end
 
       def log_bad_associations(path)
         if @@logger
@@ -94,18 +81,31 @@ module Bullet
           @@logger_file.flush
         end
       end
+      
+      def bad_associations_str(bad_associations)
+        puts bad_associations.inspect
+        bad_associations.to_a.collect{|klazz, associations| klazz_associations_str(klazz, associations)}.join('\\n')
+      end
+      
+      def klazz_associations_str(klazz, associations)
+        "model: #{klazz} => associations: [#{associations.join(', ')}]"
+      end
+      
+      def associations_str(associations)
+        ":include => #{associations.map{|a| a.to_sym unless a.is_a? Hash}.inspect}"
+      end
 
       def has_klazz_association(klazz)
         !klazz_associations[klazz].nil? and klazz_associations.keys.include?(klazz)
       end
       
       def define_association(klazz, associations)
-        # puts "define association, #{klazz} => #{associations}"
+        puts "define association, #{klazz} => #{associations}"
         add_klazz_associations(klazz, associations)
       end
 
       def call_association(object, associations)
-        # puts "call association, #{object} => #{associations}"
+        puts "call association, #{object} => #{associations}"
         if unpreload_associations?(object, associations)
           add_unpreload_associations(object.class, associations)
           add_call_object_associations(object, associations)
@@ -121,33 +121,33 @@ module Bullet
       end
 
       def add_unpreload_associations(klazz, associations)
-        # puts "add unpreload associations, #{klazz} => #{associations.inspect}"
+        puts "add unpreload associations, #{klazz} => #{associations.inspect}"
         unpreload_associations[klazz] ||= []
         unpreload_associations[klazz] << associations
         unpreload_associations[klazz].uniq!
       end
       
       def add_unused_preload_associations(klazz, associations)
-        # puts "add unused preload associations, #{object} => #{associations.inspect}"
+        puts "add unused preload associations, #{klazz} => #{associations.inspect}"
         unused_preload_associations[klazz] ||= []
         unused_preload_associations[klazz] << associations
         unused_preload_associations[klazz].flatten!.uniq!
       end
 
       def add_association(object, associations)
-        # puts "add associations, #{object} => #{associations.inspect}"
+        puts "add associations, #{object} => #{associations.inspect}"
         object_associations[object] ||= []
         object_associations[object] << associations
       end
 
       def add_call_object_associations(object, associations)
-        # puts "add call object associations, #{object} => #{associations.inspect}"
+        puts "add call object associations, #{object} => #{associations.inspect}"
         call_object_associations[object] ||= []
         call_object_associations[object] << associations
       end
 
       def add_possible_objects(objects)
-        # puts "add possible objects, #{objects.inspect}"
+        puts "add possible objects, #{objects.inspect}"
         klazz= objects.first.class
         possible_objects[klazz] ||= []
         possible_objects[klazz] << objects
@@ -155,14 +155,14 @@ module Bullet
       end
 
       def add_impossible_object(object)
-        # puts "add impossible object, #{object}"
+        puts "add impossible object, #{object}"
         klazz = object.class
         impossible_objects[klazz] ||= []
         impossible_objects[klazz] << object
       end
       
       def add_klazz_associations(klazz, associations)
-        # puts "define associations, #{klazz} => #{associations.inspect}"
+        puts "define associations, #{klazz} => #{associations.inspect}"
         klazz_associations[klazz] ||= []
         klazz_associations[klazz] << associations
       end
