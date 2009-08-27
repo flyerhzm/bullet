@@ -95,14 +95,31 @@ describe Bullet::Association, 'has_many' do
       Bullet::Association.should be_has_unpreload_associations
     end
     
-    it "should detect unused preload post => comments" do
+    it "should detect unused preload post => comments for post" do
       Post.find(:all, :include => :comments).collect(&:name)
       Bullet::Association.check_unused_preload_associations
       Bullet::Association.should be_has_unused_preload_associations
     end
 
-    it "should no detect unused preload post => comments" do
+    it "should detect no unused preload post => comments for post" do
       Post.find(:all).collect(&:name)
+      Bullet::Association.check_unused_preload_associations
+      Bullet::Association.should_not be_has_unused_preload_associations
+    end
+    
+    it "should detect no unused preload post => comments for comment" do
+      Post.find(:all).each do |post|
+        post.comments.collect(&:name)
+      end
+      Bullet::Association.check_unused_preload_associations
+      Bullet::Association.should_not be_has_unused_preload_associations
+   
+      Bullet::Association.end_request
+      Bullet::Association.start_request
+      
+      Post.find(:all).each do |post|
+        post.comments.collect(&:name)
+      end
       Bullet::Association.check_unused_preload_associations
       Bullet::Association.should_not be_has_unused_preload_associations
     end
