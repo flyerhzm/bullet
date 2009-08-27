@@ -84,7 +84,7 @@ module Bullet
             @@logger.info "Unused preload associations: PATH_INFO: #{path};    model: #{klazz} => associations: [#{associations.join(', ')}] \n Remove from your finder: :include => #{associations.map{|a| a.to_sym}.inspect}"
           end
           @@unpreload_associations.each do |klazz, associations| 
-            @@logger.info "N+1 Query: PATH_INFO: #{path};    model: #{klazz} => associations: [#{associations.join(', ')}] \n Add to your finder: :include => #{associations.map{|a| a.to_sym}.inspect}"
+            @@logger.info "N+1 Query: PATH_INFO: #{path};    model: #{klazz} => associations: [#{associations.join(', ')}] \n Add to your finder: :include => #{associations.map{|a| a.to_sym unless a.is_a? Hash}.inspect}"
           end  
           @@callers.each do |c|
             @@logger.info "N+1 Query: method call stack: \n" + c.join("\n")
