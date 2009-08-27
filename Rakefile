@@ -23,10 +23,10 @@ end
 Jeweler::Tasks.new do |gemspec|
   gemspec.name = "bullet"
   gemspec.summary = "A plugin to kill N+1 queries and unused eager loading"
-  gemspec.description = "This plugin is aimed to give you some performance suggestion about ActiveRecord usage, what should use but not use, such as eager loading, counter cache and so on, what should not use but use, such as unused eager loading. Now it provides you the suggestion of eager loading and unused eager loading. The others are todo, next may be couter cache."
-  gemspec.email = "flyerhzm@gmail.com"
-  gemspec.homepage = "http://www.huangzhimin.com/projects/4-bullet"
-  gemspec.authors = ["Richard Huang"]
+  gemspec.description = "The Bullet plugin is designed to help you increase your application's performance by reducing the number of queries it makes. It will watch your queries while you develop your application and notify you when you should add eager loading (N+1 queries) or when you're using eager loading that isn't necessary."
+  gemspec.email = "flip@x451.com"
+  gemspec.homepage = "http://github.com/flipsasser/bullet"
+  gemspec.authors = ["Richard Huang", "Flip Sasser"]
   gemspec.files.exclude '.gitignore'
   gemspec.files.exclude 'log/'
 end
