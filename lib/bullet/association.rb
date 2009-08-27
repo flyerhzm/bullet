@@ -1,10 +1,16 @@
 module Bullet
+  class BulletAssociationError < StandardError
+  end
+
   class Association
     class <<self
       @@logger_file = File.open(Bullet::BulletLogger::LOG_FILE, 'a+')
       @@logger = Bullet::BulletLogger.new(@@logger_file)
       @@alert = true
-      
+      @@console = false
+      @@growl = false
+      @@growl_password = nil
+
       def start_request
         # puts "start request"
       end
@@ -22,6 +28,25 @@ module Bullet
 
       def alert=(alert)
         @@alert = alert
+      end
+
+      def console=(console)
+        @@console = console
+      end
+
+      def growl=(growl)
+        if growl
+          begin
+            require 'ruby-growl'
+          rescue MissingSourceFile
+            raise BulletAssociationError.new('You must install the ruby-growl gem to use Growl notifications: `sudo gem install ruby-growl`')
+          end
+        end
+        @@growl = growl
+      end
+
+      def growl_password=(growl_password)
+        @@growl_password = growl_password
       end
 
       def logger=(logger)
@@ -52,16 +77,39 @@ module Bullet
 
       def bad_associations_alert
         str = ''
+        if @@alert || @@console || @@growl
+          response = []
+          if has_unused_preload_associations?
+            response.push("The request has unused preload assocations as follows:\n")
+            response.push(*@@unused_preload_associations.to_a.collect{|klazz, associations| "model: #{klazz} => associations: [#{associations.join(', ')}]"})
+          end
+          if has_unpreload_associations?
+            response.push("#{"\n" unless response.empty?}The request has N+1 queries as follows:\n")
+            response.push(@@unpreload_associations.to_a.collect{|klazz, associations| "model: #{klazz} => associations: [#{associations.join(', ')}]"}.join('\n'))
+          end
+        end
         if @@alert
-          str = "<script type='text/javascript'>"
-          str << "alert('The request has unused preload assocations as follows:\\n"
-          str << (has_unused_preload_associations? ? bad_associations_str(unused_preload_associations) : "None")
-          str << "\\nThe request has N+1 queries as follows:\\n"
-          str << (has_unpreload_associations? ? bad_associations_str(unpreload_associations) : "None")
-          str << "')"
-          str << "</script>\n"
+          str << wrap_js_association("alert(#{response.join("\n").inspect});")
+        end
+        if @@console
+          str << wrap_js_association("if (typeof(console) != 'undefined' && console.log) console.log(#{response.join("\n").inspect});")
+        end
+        if @@growl
+          begin
+            growl = Growl.new('localhost', 'ruby-growl', ['Bullet Notification'], nil, @@growl_password)
+            growl.notify('Bullet Notification', 'Bullet Notification', response.join("\n"))
+          rescue
+          end
+          str << '<!-- Sent Growl notification -->'
         end
         str
+      end
+
+      def wrap_js_association(message)
+        str = ''
+        str << "<script type=\"text/javascript\">/*<![CDATA[*/"
+        str << message
+        str << "/*]]>*/</script>\n"
       end
 
       def log_bad_associations(path)

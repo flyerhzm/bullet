@@ -1,7 +1,13 @@
 module Bullet
+  @@enable = nil
+
   class <<self
     def enable=(enable)
-      @@enable = enable
+      if enable != @@enable && @@enable = enable
+        Bullet::ActiveRecord.enable
+        # ActiveRecord.send :include, Bullet::ActiveRecord
+      end
+      @@enable
     end
 
     def enable?
@@ -9,6 +15,7 @@ module Bullet
     end
   end
 
+  autoload :ActiveRecord, 'bullet/active_record'
   autoload :Association, 'bullet/association'
   autoload :BulletLogger, 'bullet/logger'
 end
