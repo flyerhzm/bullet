@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{bullet}
-  s.version = "1.0.0"
+  s.version = "1.1.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Richard Huang"]
-  s.date = %q{2009-08-26}
+  s.date = %q{2009-08-27}
   s.description = %q{This plugin is aimed to give you some performance suggestion about ActiveRecord usage, what should use but not use, such as eager loading, counter cache and so on, what should not use but use, such as unused eager loading. Now it provides you the suggestion of eager loading and unused eager loading. The others are todo, next may be couter cache.}
   s.email = %q{flyerhzm@gmail.com}
   s.extra_rdoc_files = [
@@ -38,8 +38,8 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.3.5}
   s.summary = %q{A plugin to kill N+1 queries and unused eager loading}
   s.test_files = [
-    "spec/spec_helper.rb",
-     "spec/bullet_association_spec.rb"
+    "spec/bullet_association_spec.rb",
+     "spec/spec_helper.rb"
   ]
 
   if s.respond_to? :specification_version then
