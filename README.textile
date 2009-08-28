@@ -1,0 +1,259 @@
+h1. Bullet
+
+The Bullet plugin is designed to help you increase your application's performance by reducing the number of queries it makes. It will watch your queries while you develop your application and notify you when you should add eager loading (N+1 queries) or when you're using eager loading that isn't necessary.
+
+Best practice is to use Bullet in development mode or custom mode (staging, profile, etc.). The last thing you want is your clients getting alerts about how lazy you are.
+
+****************************************************************************
+
+h2. Thanks
+
+flipsasser added Growl, console.log and Rails.log support, very awesome. And he improved README.
+
+****************************************************************************
+
+h2. Install
+
+You can add Bullet to your Rails gem requirements:
+<pre><code>config.gem 'flyerhzm-bullet', :lib => 'bullet', :source => 'http://gems.github.com'</code></pre>
+
+You can install it as a gem:
+<pre><code>sudo gem install flyerhzm-bullet --source http://gems.github.com</code></pre>
+
+Or you can install it as a rails plugin:
+<pre><code>script/plugin install git://github.com/flyerhzm/bullet.git</code></pre>
+
+****************************************************************************
+
+h2. Configuration
+
+Bullet won't do ANYTHING unless you tell it to explicitly. Append to <code>config/environments/development.rb</code> initializer with the following code:
+<pre><code>
+config.after_initialize do
+  Bullet.enable = true 
+  Bullet::Association.alert = true
+  Bullet::Association.bullet_logger = true  
+  Bullet::Association.console = true
+  Bullet::Association.growl = true
+  Bullet::Association.rails_logger = true
+end
+</code></pre>
+
+The code above will enable all five of the Bullet notification systems:
+* <code>Bullet.enable</code>: enable Bullet plugin, otherwise do nothing
+* <code>Bullet::Association.alert</code>: pop up a JavaScript alert in the browser
+* <code>Bullet::Association.bullet_logger</code>: log to the Bullet log file (RAILS_ROOT/log/bullet.log)
+* <code>Bullet::Association.rails_logger</code>: add warnings directly to the Rails log
+* <code>Bullet::Association.console</code>: log warnings to your browser's console.log (Safari/Webkit browsers or Firefox w/Firebug installed)
+* <code>Bullet::Association.growl</code>: pop up Growl warnings if your system has Growl installed. Requires a little bit of configuration
+
+****************************************************************************
+
+h2. Log
+
+The Bullet log <code>log/bullet.log</code> will look something like this:
+
+* N+1 Query:
+<pre><code>
+2009-08-25 20:40:17[INFO] N+1 Query: PATH_INFO: /posts;    model: Post => associations: [comments]·
+Add to your finder: :include => [:comments]
+2009-08-25 20:40:17[INFO] N+1 Query: method call stack:·
+/Users/richard/Downloads/test/app/views/posts/index.html.erb:11:in `_run_erb_app47views47posts47index46html46erb'
+/Users/richard/Downloads/test/app/views/posts/index.html.erb:8:in `each'
+/Users/richard/Downloads/test/app/views/posts/index.html.erb:8:in `_run_erb_app47views47posts47index46html46erb'
+/Users/richard/Downloads/test/app/controllers/posts_controller.rb:7:in `index'
+</code></pre>
+
+The first two lines are notifications that N+1 queries have been encountered. The remaining lines are stack traces so you can find exactly where the queries were invoked in your code, and fix them.
+
+* Unsed eager loading:
+<pre><code>
+2009-08-25 20:53:56[INFO] Unused eager loadings: PATH_INFO: /posts;    model: Post => associations: [comments]·
+Remove from your finder: :include => [:comments]
+</code></pre>
+
+These two lines are notifications that unused eager loadings have been encountered.
+
+****************************************************************************
+
+h2. Growl Support
+
+To get Growl support up-and-running for Bullet, follow the steps below:
+* Install the ruby-growl gem: <code>sudo gem install ruby-growl</code>
+* Open the Growl preference pane in Systems Preferences
+* Click the "Network" tab
+* Make sure both "Listen for incoming notifications" and "Allow remote application registration" are checked. *Note*: If you set a password, you will need to set <code>Bullet::Association.growl_password = 'your_growl_password</code>' in the config file.
+* Restart Growl ("General" tab -> Stop Growl -> Start Growl)
+* Boot up your application. Bullet will automatically send a Growl notification when Growl is turned on. If you do not see it when your application loads, make sure it is enabled in your initializer and double-check the steps above.
+
+****************************************************************************
+
+h2. Step by step example
+
+Bullet is designed to function as you browse through your application in development. It will alert you whenever it encounters N+1 queries or unused eager loading.
+
+*Important*: It is strongly recommended you disable your browser's cache.
+
+1. setup test environment
+
+<pre><code>
+$ rails test
+$ cd test
+$ script/generate scaffold post name:string 
+$ script/generate scaffold comment name:string post_id:integer
+$ rake db:migrate
+</code></pre>
+
+2. change <code>app/model/post.rb</code> and <code>app/model/comment.rb</code>
+
+<pre><code>
+class Post < ActiveRecord::Base
+  has_many :comments
+end
+
+class Comment < ActiveRecord::Base
+  belongs_to :post
+end
+</code></pre>
+
+3. go to script/console and execute
+
+<pre><code>
+post1 = Post.create(:name => 'first')
+post2 = Post.create(:name => 'second')
+post1.comments.create(:name => 'first')
+post1.comments.create(:name => 'second')
+post2.comments.create(:name => 'third')
+post2.comments.create(:name => 'fourth')
+</code></pre>
+
+4. change the <code>app/views/posts/index.html.erb</code> to produce a N+1 query
+
+<pre><code>
+<% @posts.each do |post| %>
+  <tr>
+    <td><%=h post.name %></td>
+    <td><%= post.comments.collect(&:name) %></td>
+    <td><%= link_to 'Show', post %></td>
+    <td><%= link_to 'Edit', edit_post_path(post) %></td>
+    <td><%= link_to 'Destroy', post, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</code></pre>
+
+5. add bullet plugin
+
+<pre><code>
+$ script/plugin install git://github.com/flyerhzm/bullet.git
+</code></pre>
+
+6. enable the bullet plugin in development, add a line to <code>config/environments/development.rb</code>
+
+<pre><code>
+Bullet.enable = true
+</code></pre>
+
+7. start server
+
+<pre><code>
+$ script/server
+</code></pre>
+
+8. input http://localhost:3000/posts in browser, then you will see a popup alert box says
+
+<pre><code>
+The request has unused preload associations as follows:
+None
+The request has N+1 queries as follows:
+model: Post => associations: [comment]
+</code></pre>
+
+which means there is a N+1 query from post object to comments associations.
+
+In the meanwhile, there's a log appended into <code>log/bullet.log</code> file
+
+<pre><code>
+2009-08-20 09:12:19[INFO] N+1 Query: PATH_INFO: /posts;    model: Post => assocations: [comments]
+Add your finder: :include => [:comments]
+2009-08-20 09:12:19[INFO] N+1 Query: method call stack:
+/Users/richard/Downloads/test/app/views/posts/index.html.erb:11:in `_run_erb_app47views47posts47index46html46erb'
+/Users/richard/Downloads/test/app/views/posts/index.html.erb:8:in `each'
+/Users/richard/Downloads/test/app/views/posts/index.html.erb:8:in `_run_erb_app47views47posts47index46html46erb'
+/Users/richard/Downloads/test/app/controllers/posts_controller.rb:7:in `index'
+</code></pre>
+
+The generated SQLs are
+
+<pre><code>
+  Post Load (1.0ms)   SELECT * FROM "posts" 
+  Comment Load (0.4ms)   SELECT * FROM "comments" WHERE ("comments".post_id = 1) 
+  Comment Load (0.3ms)   SELECT * FROM "comments" WHERE ("comments".post_id = 2) 
+</code></pre>
+
+
+9. fix the N+1 query, change <code>app/controllers/posts_controller.rb</code> file
+
+<pre><code>
+  def index
+    @posts = Post.find(:all, :include => :comments)
+
+    respond_to do |format|
+      format.html # index.html.erb
+      format.xml  { render :xml => @posts }
+    end 
+  end 
+</code></pre>
+
+10. refresh http://localhost:3000/posts page, no alert box and no log appended.
+
+The generated SQLs are
+
+<pre><code>
+  Post Load (0.5ms)   SELECT * FROM "posts" 
+  Comment Load (0.5ms)   SELECT "comments".* FROM "comments" WHERE ("comments".post_id IN (1,2)) 
+</code></pre>
+
+a N+1 query fixed. Cool!
+
+11. now simulate unused eager loading. Change <code>app/controllers/posts_controller.rb</code> and <code>app/views/posts/index.html.erb</code>
+
+<pre><code>
+  def index
+    @posts = Post.find(:all, :include => :comments)
+
+    respond_to do |format|
+      format.html # index.html.erb
+      format.xml  { render :xml => @posts }
+    end 
+  end 
+</code></pre>
+
+<pre><code>
+<% @posts.each do |post| %>
+  <tr>
+    <td><%=h post.name %></td>
+    <td><%= link_to 'Show', post %></td>
+    <td><%= link_to 'Edit', edit_post_path(post) %></td>
+    <td><%= link_to 'Destroy', post, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</code></pre>
+
+12. refresh http://localhost:3000/posts page, then you will see a popup alert box says
+
+<pre><code>
+The request has unused preload associations as follows:
+model: Post => associations: [comment]
+The request has N+1 queries as follows:
+None
+</code></pre>
+
+In the meanwhile, there's a log appended into <code>log/bullet.log</code> file
+
+<pre><code>
+2009-08-25 21:13:22[INFO] Unused preload associations: PATH_INFO: /posts;    model: Post => associations: [comments]·
+Remove from your finder: :include => [:comments]
+</code></pre>
+
+
+Copyright (c) 2009 Richard Huang (flyerhzm@gmail.com), released under the MIT license
