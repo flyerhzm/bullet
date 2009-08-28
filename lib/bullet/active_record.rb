@@ -19,24 +19,28 @@ module Bullet
 
             records
           end
+        end
+      end
 
-          alias_method :bullet_preload_associations, :preload_associations
-          # add include for one to many associations query
-          def preload_associations(records, associations, preload_options={})
-            records = [records].flatten.compact.uniq
-            return if records.empty?
-            records.each do |record|
-              Bullet::Association.add_association(record, associations)
-            end
-            bullet_preload_associations(records, associations, preload_options={})
+      ::ActiveRecord::AssociationPreload::ClassMethods.class_eval do
+        alias_method :bullet_preload_associations, :preload_associations
+        # add include for one to many associations query
+        def preload_associations(records, associations, preload_options={})
+          records = [records].flatten.compact.uniq
+          return if records.empty?
+          records.each do |record|
+            Bullet::Association.add_association(record, associations)
           end
+          bullet_preload_associations(records, associations, preload_options={})
+        end
+      end
 
-          # define one to many associations
-          alias_method :bullet_collection_reader_method, :collection_reader_method
-          def collection_reader_method(reflection, association_proxy_class)
-            Bullet::Association.define_association(self, reflection.name)
-            bullet_collection_reader_method(reflection, association_proxy_class)
-          end
+      ::ActiveRecord::Associations::ClassMethods.class_eval do
+        # define one to many associations
+        alias_method :bullet_collection_reader_method, :collection_reader_method
+        def collection_reader_method(reflection, association_proxy_class)
+          Bullet::Association.define_association(self, reflection.name)
+          bullet_collection_reader_method(reflection, association_proxy_class)
         end
       end
 
