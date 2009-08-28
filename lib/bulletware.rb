@@ -12,7 +12,7 @@ class Bulletware
 
     if Bullet::Association.has_bad_assocations?
       if !headers['Content-Type'].nil? and headers['Content-Type'].include? 'text/html'
-        response_body = response.body.insert(-17, Bullet::Association.bad_associations_alert)
+        response_body = response.body << Bullet::Association.bad_associations_alert
         headers['Content-Length'] = response_body.length.to_s
       end
 

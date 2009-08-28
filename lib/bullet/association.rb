@@ -1,10 +1,16 @@
 module Bullet
+  class BulletAssociationError < StandardError
+  end
+
   class Association
     class <<self
-      @@logger_file = File.open(Bullet::BulletLogger::LOG_FILE, 'a+')
-      @@logger = Bullet::BulletLogger.new(@@logger_file)
-      @@alert = true
-      
+      @@alert = nil
+      @@bullet_logger = nil
+      @@console = nil
+      @@growl = nil
+      @@growl_password = nil
+      @@rails_logger = nil
+
       def start_request
         # puts "start request"
       end
@@ -24,12 +30,38 @@ module Bullet
         @@alert = alert
       end
 
-      def logger=(logger)
-        if logger == false
-          @@logger = nil
+      def bullet_logger=(bullet_logger)
+        if @@bullet_logger = bullet_logger
+          @@logger_file = File.open(Bullet::BulletLogger::LOG_FILE, 'a+')
+          @@logger = Bullet::BulletLogger.new(@@logger_file)
         end
       end
-      
+
+      def console=(console)
+        @@console = console
+      end
+
+      def growl=(growl)
+        if growl
+          begin
+            require 'ruby-growl'
+            growl = Growl.new('localhost', 'ruby-growl', ['Bullet Notification'], nil, @@growl_password)
+            growl.notify('Bullet Notification', 'Bullet Notification', 'Bullet Growl notifications have been turned on')
+          rescue MissingSourceFile
+            raise BulletAssociationError.new('You must install the ruby-growl gem to use Growl notifications: `sudo gem install ruby-growl`')
+          end
+        end
+        @@growl = growl
+      end
+
+      def growl_password=(growl_password)
+        @@growl_password = growl_password
+      end
+
+      def rails_logger=(rails_logger)
+        @@rails_logger = rails_logger
+      end
+
       def check_unused_preload_associations
         object_associations.each do |object, association|
           call_object_association = call_object_associations[object] || []
@@ -52,30 +84,60 @@ module Bullet
 
       def bad_associations_alert
         str = ''
+        if @@alert || @@console || @@growl
+          response = []
+          if has_unused_preload_associations?
+            response.push("Unused preload associations detected:\n")
+            response.push(*@@unused_preload_associations.to_a.collect{|klazz, associations| klazz_associations_str(klazz, associations)}.join('\n'))
+          end
+          if has_unpreload_associations?
+            response.push("#{"\n" unless response.empty?}N+1 queries detected:\n")
+            response.push(*@@unpreload_associations.to_a.collect{|klazz, associations| "  #{klazz} => [#{associations.map(&:inspect).join(', ')}]"}.join('\n'))
+          end
+        end
         if @@alert
-          str = "<script type='text/javascript'>"
-          str << "alert('The request has unused preload assocations as follows:\\n"
-          str << (has_unused_preload_associations? ? bad_associations_str(unused_preload_associations) : "None")
-          str << "\\nThe request has N+1 queries as follows:\\n"
-          str << (has_unpreload_associations? ? bad_associations_str(unpreload_associations) : "None")
-          str << "')"
-          str << "</script>\n"
+          str << wrap_js_association("alert(#{response.join("\n").inspect});")
+        end
+        if @@console
+          str << wrap_js_association("if (typeof(console) != 'undefined' && console.log) console.log(#{response.join("\n").inspect});")
+        end
+        if @@growl
+          begin
+            growl = Growl.new('localhost', 'ruby-growl', ['Bullet Notification'], nil, @@growl_password)
+            growl.notify('Bullet Notification', 'Bullet Notification', response.join("\n"))
+          rescue
+          end
+          str << '<!-- Sent Growl notification -->'
         end
         str
       end
 
+      def wrap_js_association(message)
+        str = ''
+        str << "<script type=\"text/javascript\">/*<![CDATA[*/"
+        str << message
+        str << "/*]]>*/</script>\n"
+      end
+
       def log_bad_associations(path)
-        if @@logger
+        if (@@bullet_logger || @@rails_logger) && (!unpreload_associations.empty? || !unused_preload_associations.empty?)
+          Rails.logger.warn '' if @@rails_logger
           unused_preload_associations.each do |klazz, associations|
-            @@logger.info "Unused preload associations: PATH_INFO: #{path};    " + klazz_associations_str(klazz, associations) + "\n Remove from your finder: " + associations_str(associations)
+            log = ["Unused preload associations: #{path}", klazz_associations_str(klazz, associations), "  Remove from your finder: #{associations_str(associations)}"].join("\n")
+            @@logger.info(log) if @@bullet_logger
+            Rails.logger.warn(log) if @@rails_logger
           end
-          unpreload_associations.each do |klazz, associations| 
-            @@logger.info "N+1 Query: PATH_INFO: #{path};    " + klazz_associations_str(klazz, associations) + "\n Add to your finder: " + associations_str(associations)
+          unpreload_associations.each do |klazz, associations|
+            log = ["N+1 Query in #{path}", klazz_associations_str(klazz, associations), "  Add to your finder: #{associations_str(associations)}"].join("\n")
+            @@logger.info(log) if @@bullet_logger
+            Rails.logger.warn(log) if @@rails_logger
           end  
           callers.each do |c|
-            @@logger.info "N+1 Query: method call stack: \n" + c.join("\n")
+            log = ["N+1 Query method call stack", c.map{|line| "  #{line}"}].flatten.join("\n")
+            @@logger.info(log) if @@bullet_logger
+            Rails.logger.warn(log) if @@rails_logger
           end
-          @@logger_file.flush
+          @@logger_file.flush if @@bullet_logger
         end
       end
       
@@ -85,7 +147,7 @@ module Bullet
       end
       
       def klazz_associations_str(klazz, associations)
-        "model: #{klazz} => associations: [#{associations.join(', ')}]"
+        "  #{klazz} => [#{associations.map(&:inspect).join(', ')}]"
       end
       
       def associations_str(associations)
