@@ -3,15 +3,15 @@ module Bullet
 
   class <<self
     def enable=(enable)
-      if enable != @@enable && @@enable = enable
+      @@enable = enable
+      if enable? 
         Bullet::ActiveRecord.enable
         ActionController::Dispatcher.middleware.use Bulletware
       end
-      @@enable
     end
 
     def enable?
-      class_variables.include?('@@enable') and @@enable == true
+      @@enable == true
     end
   end
 
