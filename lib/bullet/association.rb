@@ -87,7 +87,7 @@ module Bullet
         if @@alert || @@console || @@growl
           response = []
           if has_unused_preload_associations?
-            response.push("Unused preload associations detected:\n")
+            response.push("Unused eager loadings detected:\n")
             response.push(*@@unused_preload_associations.to_a.collect{|klazz, associations| klazz_associations_str(klazz, associations)}.join('\n'))
           end
           if has_unpreload_associations?
@@ -123,7 +123,7 @@ module Bullet
         if (@@bullet_logger || @@rails_logger) && (!unpreload_associations.empty? || !unused_preload_associations.empty?)
           Rails.logger.warn '' if @@rails_logger
           unused_preload_associations.each do |klazz, associations|
-            log = ["Unused preload associations: #{path}", klazz_associations_str(klazz, associations), "  Remove from your finder: #{associations_str(associations)}"].join("\n")
+            log = ["Unused eager loadings: #{path}", klazz_associations_str(klazz, associations), "  Remove from your finder: #{associations_str(associations)}"].join("\n")
             @@logger.info(log) if @@bullet_logger
             Rails.logger.warn(log) if @@rails_logger
           end
