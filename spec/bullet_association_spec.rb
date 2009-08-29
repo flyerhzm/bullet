@@ -226,6 +226,13 @@ describe Bullet::Association, 'has_many' do
   end
 
   context "no preload" do
+    it "should no preload only display only one post => comment" do
+      Post.find(:all, :include => :comments).each do |post|
+        post.comments.first.name
+      end
+      Bullet::Association.should_not be_has_unpreload_associations
+    end
+
     it "should no preload only one post => commnets" do
       Post.first.comments.collect(&:name)
       Bullet::Association.should_not be_has_unpreload_associations
@@ -235,7 +242,14 @@ describe Bullet::Association, 'has_many' do
   context "no unused" do
     it "should no unused only display only one post => comment" do
       Post.find(:all, :include => :comments).each do |post|
-        post.comments.first.name
+        i = 0
+        post.comments.each do |comment|
+          if i == 0
+            comment.name
+          else
+            i += 1
+          end
+        end
       end
       Bullet::Association.check_unused_preload_associations
       Bullet::Association.should_not be_has_unused_preload_associations

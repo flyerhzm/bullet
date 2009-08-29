@@ -31,6 +31,7 @@ module Bullet
           records.each do |record|
             Bullet::Association.add_association(record, associations)
           end
+          Bullet::Association.add_eager_loadings(records, associations)
           origin_preload_associations(records, associations, preload_options={})
         end
       end
@@ -54,7 +55,7 @@ module Bullet
       end
       
       ::ActiveRecord::Associations::AssociationProxy.class_eval do
-        # call has_one association
+        # call has_one and belong_to association
         alias_method :origin_load_target, :load_target
         def load_target
           Bullet::Association.call_association(@owner, @reflection.name)

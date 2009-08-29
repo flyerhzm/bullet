@@ -24,6 +24,7 @@ module Bullet
         @@possible_objects = nil
         @@impossible_objects = nil
         @@call_object_associations = nil
+        @@eager_loadings = nil
       end
 
       def alert=(alert)
@@ -64,7 +65,8 @@ module Bullet
 
       def check_unused_preload_associations
         object_associations.each do |object, association|
-          call_object_association = call_object_associations[object] || []
+          related_objects = eager_loadings.select {|key, value| key.include?(object) and value == association}.collect(&:first).flatten
+          call_object_association = related_objects.collect { |related_object| call_object_associations[object] }.compact.flatten.uniq
           add_unused_preload_associations(object.class, association - call_object_association) unless (association - call_object_association).empty?
         end
       end
@@ -229,6 +231,14 @@ module Bullet
         klazz_associations[klazz] << associations
         unique(klazz_associations[klazz])
       end
+
+      def add_eager_loadings(objects, associations)
+        # puts "add eager loadings, #{objects.inspect} => #{associations.inspect}"
+        objects = Array(objects)
+        eager_loadings[objects] ||= []
+        eager_loadings[objects] << associations
+        unique(eager_loadings[objects])
+      end
       
       def unique(array)
         array.flatten!
@@ -261,6 +271,10 @@ module Bullet
       
       def klazz_associations
         @@klazz_associations ||= {}
+      end
+
+      def eager_loadings
+        @@eager_loadings ||= {}
       end
       
       VENDOR_ROOT = File.join(RAILS_ROOT, 'vendor')
