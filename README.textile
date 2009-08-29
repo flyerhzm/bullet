@@ -150,7 +150,11 @@ $ script/plugin install git://github.com/flyerhzm/bullet.git
 6. enable the bullet plugin in development, add a line to <code>config/environments/development.rb</code>
 
 <pre><code>
-Bullet.enable = true
+config.after_initialize do
+  Bullet.enable = true 
+  Bullet::Association.alert = true
+  Bullet::Association.bullet_logger = true  
+end
 </code></pre>
 
 7. start server
