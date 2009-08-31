@@ -67,7 +67,8 @@ module Bullet
         object_associations.each do |object, association|
           related_objects = eager_loadings.select {|key, value| key.include?(object) and value == association}.collect(&:first).flatten
           call_object_association = related_objects.collect { |related_object| call_object_associations[related_object] }.compact.flatten.uniq
-          add_unused_preload_associations(object.class, association - call_object_association) unless (association - call_object_association).empty?
+          diff_object_association = (association - call_object_association).reject {|a| a.is_a? Hash}
+          add_unused_preload_associations(object.class, diff_object_association) unless diff_object_association.empty?
         end
       end
       
