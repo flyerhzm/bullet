@@ -90,11 +90,11 @@ module Bullet
           response = []
           if has_unused_preload_associations?
             response.push("Unused eager loadings detected:\n")
-            response.push(*@@unused_preload_associations.to_a.collect{|klazz, associations| klazz_associations_str(klazz, associations)}.join('\n'))
+            response.push(*@@unused_preload_associations.to_a.collect{|klazz, associations| klazz_associations_str(klazz, associations)}.join("\n"))
           end
           if has_unpreload_associations?
             response.push("#{"\n" unless response.empty?}N+1 queries detected:\n")
-            response.push(*@@unpreload_associations.to_a.collect{|klazz, associations| "  #{klazz} => [#{associations.map(&:inspect).join(', ')}]"}.join('\n'))
+            response.push(*@@unpreload_associations.to_a.collect{|klazz, associations| "  #{klazz} => [#{associations.map(&:inspect).join(', ')}]"}.join("\n"))
           end
         end
         if @@alert
@@ -145,7 +145,7 @@ module Bullet
       
       def bad_associations_str(bad_associations)
         # puts bad_associations.inspect
-        bad_associations.to_a.collect{|klazz, associations| klazz_associations_str(klazz, associations)}.join('\\n')
+        bad_associations.to_a.collect{|klazz, associations| klazz_associations_str(klazz, associations)}.join("\n")
       end
       
       def klazz_associations_str(klazz, associations)
