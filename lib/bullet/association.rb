@@ -94,7 +94,26 @@ module Bullet
           str << wrap_js_association("alert(#{response.join("\n").inspect});")
         end
         if @@console
-          str << wrap_js_association("if (typeof(console) != 'undefined' && console.log) console.log(#{response.join("\n").inspect});")
+          title = []
+          title << unused_preload_messages.first.first unless unused_preload_messages.empty?
+          title << non_preload_messages.first.first unless non_preload_messages.empty?
+          code = <<-CODE
+            if (typeof(console) !== 'undefined') {
+
+              if (console.groupCollapsed && console.groupEnd && console.log) {
+
+                console.groupCollapsed(#{title.join(', ').inspect});
+                console.log(#{response.join("\n").inspect});
+                console.log(#{call_stack_messages.join("\n").inspect});
+                console.groupEnd();
+
+              } else if (console.log) {
+
+                console.log('#{response.join("\n").inspect}');
+              }
+            }
+          CODE
+          str << wrap_js_association(code)
         end
         str
       end
