@@ -71,7 +71,7 @@ module Bullet
           add_unused_preload_associations(object.class, diff_object_association) unless diff_object_association.empty?
         end
       end
-      
+
       def has_bad_assocations?
         check_unused_preload_associations
         has_unpreload_associations? or has_unused_preload_associations?
@@ -80,7 +80,7 @@ module Bullet
       def has_unused_preload_associations?
         !unused_preload_associations.empty?
       end
-      
+
       def has_unpreload_associations?
         !unpreload_associations.empty?
       end
@@ -98,7 +98,7 @@ module Bullet
         end
         str
       end
-      
+
       def growl_notification
         if @@growl
           response = notification_response
@@ -113,29 +113,26 @@ module Bullet
       def log_notificatioin(path)
         if (@@bullet_logger || @@rails_logger) && (!unpreload_associations.empty? || !unused_preload_associations.empty?)
           Rails.logger.warn '' if @@rails_logger
-          unused_preload_associations.each do |klazz, associations|
-            log = ["Unused eager loadings: #{path}", klazz_associations_str(klazz, associations), "  Remove from your finder: #{associations_str(associations)}"].join("\n")
-            @@logger.info(log) if @@bullet_logger
-            Rails.logger.warn(log) if @@rails_logger
+          unused_preload_messages(path).each do |message|
+            @@logger.info(message.join("\n")) if @@bullet_logger
+            Rails.logger.warn(message.join("\n")) if @@rails_logger
           end
-          unpreload_associations.each do |klazz, associations|
-            log = ["N+1 Query in #{path}", klazz_associations_str(klazz, associations), "  Add to your finder: #{associations_str(associations)}"].join("\n")
-            @@logger.info(log) if @@bullet_logger
-            Rails.logger.warn(log) if @@rails_logger
-          end  
-          callers.each do |c|
-            log = ["N+1 Query method call stack", c.map{|line| "  #{line}"}].flatten.join("\n")
-            @@logger.info(log) if @@bullet_logger
-            Rails.logger.warn(log) if @@rails_logger
+          non_preload_messages(path).each do |message|
+            @@logger.info(message.join("\n")) if @@bullet_logger
+            Rails.logger.warn(message.join("\n")) if @@rails_logger
+          end
+          call_stack_messages.each do |message|
+            @@logger.info(message.join("\n")) if @@bullet_logger
+            Rails.logger.warn(message.join("\n")) if @@rails_logger
           end
           @@logger_file.flush if @@bullet_logger
         end
       end
-      
+
       def klazz_associations_str(klazz, associations)
         "  #{klazz} => [#{associations.map(&:inspect).join(', ')}]"
       end
-      
+
       def associations_str(associations)
         ":include => #{associations.map{|a| a.to_sym unless a.is_a? Hash}.inspect}"
       end
@@ -153,6 +150,36 @@ module Bullet
         response
       end
 
+      def unused_preload_messages(path)
+        messages = []
+        unused_preload_associations.each do |klazz, associations|
+          messages << [
+            "Unused Eager Loading in #{path}",
+            klazz_associations_str(klazz, associations),
+            "  Remove from your finder: #{associations_str(associations)}"
+          ]
+        end
+        messages
+      end
+
+      def non_preload_messages(path)
+        messages = []
+        unpreload_associations.each do |klazz, associations|
+          messages << [
+            "N+1 Query in #{path}",
+            klazz_associations_str(klazz, associations),
+            "  Add to your finder: #{associations_str(associations)}"
+          ]
+        end
+        messages
+      end
+
+      def call_stack_messages
+        callers.inject([]) do |messages, c|
+          messages << ['N+1 Query method call stack', c.collect {|line| "  #{line}"}].flatten
+        end
+      end
+
       def wrap_js_association(message)
         str = ''
         str << "<script type=\"text/javascript\">/*<![CDATA[*/"
@@ -163,7 +190,7 @@ module Bullet
       def has_klazz_association(klazz)
         !klazz_associations[klazz].nil? and klazz_associations.keys.include?(klazz)
       end
-      
+
       def define_association(klazz, associations)
         # puts "define association, #{klazz} => #{associations.inspect}"
         add_klazz_associations(klazz, associations)
@@ -177,11 +204,11 @@ module Bullet
           caller_in_project
         end
       end
-      
+
       def unpreload_associations?(object, associations)
         klazz = object.class
-        (!possible_objects[klazz].nil? and possible_objects[klazz].include?(object)) and 
-        (impossible_objects[klazz].nil? or !impossible_objects[klazz].include?(object)) and 
+        (!possible_objects[klazz].nil? and possible_objects[klazz].include?(object)) and
+        (impossible_objects[klazz].nil? or !impossible_objects[klazz].include?(object)) and
         (object_associations[object].nil? or !object_associations[object].include?(associations))
       end
 
@@ -191,7 +218,7 @@ module Bullet
         unpreload_associations[klazz] << associations
         unique(unpreload_associations[klazz])
       end
-      
+
       def add_unused_preload_associations(klazz, associations)
         # puts "add unused preload associations, #{klazz} => #{associations.inspect}"
         unused_preload_associations[klazz] ||= []
@@ -228,7 +255,7 @@ module Bullet
         impossible_objects[klazz] << object
         impossible_objects[klazz].uniq!
       end
-      
+
       def add_klazz_associations(klazz, associations)
         # puts "define associations, #{klazz} => #{associations.inspect}"
         klazz_associations[klazz] ||= []
@@ -243,28 +270,28 @@ module Bullet
         eager_loadings[objects] << associations
         unique(eager_loadings[objects])
       end
-      
+
       def unique(array)
         array.flatten!
         array.uniq!
       end
-      
+
       def unpreload_associations
         @@unpreload_associations ||= {}
       end
-      
+
       def unused_preload_associations
         @@unused_preload_associations ||= {}
       end
-      
+
       def object_associations
         @@object_associations ||= {}
       end
-      
+
       def call_object_associations
         @@call_object_associations ||= {}
       end
-      
+
       def possible_objects
         @@possible_objects ||= {}
       end
@@ -272,7 +299,7 @@ module Bullet
       def impossible_objects
         @@impossible_objects ||= {}
       end
-      
+
       def klazz_associations
         @@klazz_associations ||= {}
       end
@@ -280,13 +307,13 @@ module Bullet
       def eager_loadings
         @@eager_loadings ||= {}
       end
-      
+
       VENDOR_ROOT = File.join(RAILS_ROOT, 'vendor')
       def caller_in_project
         callers << caller.select {|c| c =~ /#{RAILS_ROOT}/}.reject {|c| c =~ /#{VENDOR_ROOT}/}
-        callers.uniq!
+          callers.uniq!
       end
-      
+
       def callers
         @@callers ||= []
       end
