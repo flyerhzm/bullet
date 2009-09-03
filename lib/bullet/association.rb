@@ -109,7 +109,7 @@ module Bullet
 
               } else if (console.log) {
 
-                console.log('#{response.join("\n").inspect}');
+                console.log(#{response.join("\n").inspect});
               }
             }
           CODE
