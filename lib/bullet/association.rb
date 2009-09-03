@@ -140,21 +140,19 @@ module Bullet
       def notification_response
         response = []
         if has_unused_preload_associations?
-          response.push("Unused eager loadings detected:\n")
-          response.push(*@@unused_preload_associations.to_a.collect{|klazz, associations| klazz_associations_str(klazz, associations)}.join("\n"))
+          response << unused_preload_messages.join("\n")
         end
         if has_unpreload_associations?
-          response.push("#{"\n" unless response.empty?}N+1 queries detected:\n")
-          response.push(*@@unpreload_associations.to_a.collect{|klazz, associations| "  #{klazz} => [#{associations.map(&:inspect).join(', ')}]"}.join("\n"))
+          response << non_preload_messages.join("\n")
         end
         response
       end
 
-      def unused_preload_messages(path)
+      def unused_preload_messages(path = nil)
         messages = []
         unused_preload_associations.each do |klazz, associations|
           messages << [
-            "Unused Eager Loading in #{path}",
+            "Unused Eager Loading #{path ? "in #{path}" : 'detected'}",
             klazz_associations_str(klazz, associations),
             "  Remove from your finder: #{associations_str(associations)}"
           ]
@@ -162,11 +160,11 @@ module Bullet
         messages
       end
 
-      def non_preload_messages(path)
+      def non_preload_messages(path = nil)
         messages = []
         unpreload_associations.each do |klazz, associations|
           messages << [
-            "N+1 Query in #{path}",
+            "N+1 Query #{path ? "in #{path}" : 'detected'}",
             klazz_associations_str(klazz, associations),
             "  Add to your finder: #{associations_str(associations)}"
           ]
