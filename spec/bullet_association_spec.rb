@@ -1,3 +1,5 @@
+require File.dirname(__FILE__) + '/spec_helper'
+
 ActiveRecord::Base.establish_connection(:adapter => 'sqlite3', :dbfile => ':memory:')
 
 describe Bullet::Association, 'has_many' do
