@@ -9,6 +9,7 @@ Best practice is to use Bullet in development mode or custom mode (staging, prof
 h2. Thanks
 
 flipsasser added Growl, console.log and Rails.log support, very awesome. And he improved README.
+rainux add group style console.log.
 
 ****************************************************************************
 
