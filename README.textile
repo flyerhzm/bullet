@@ -39,6 +39,15 @@ config.after_initialize do
 end
 </code></pre>
 
+It is recommended to config growl notification as follows if your collaborators are not using MacOS
+<pre><code>
+  begin
+    require 'ruby-growl'
+    Bullet::Association.growl = true
+  rescue MissingSourceFile
+  end
+</code></pre>
+
 The code above will enable all five of the Bullet notification systems:
 * <code>Bullet.enable</code>: enable Bullet plugin, otherwise do nothing
 * <code>Bullet::Association.alert</code>: pop up a JavaScript alert in the browser
