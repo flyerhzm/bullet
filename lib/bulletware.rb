@@ -11,7 +11,7 @@ class Bulletware
     return [status, headers, response] if response.empty?
 
     if Bullet::Association.has_bad_assocations?
-      if !headers['Content-Type'].nil? and headers['Content-Type'].include? 'text/html'
+      if check_html?(headers, response)
         response_body = response.body << Bullet::Association.javascript_notification
         headers['Content-Length'] = response_body.length.to_s
       end
@@ -22,5 +22,9 @@ class Bulletware
     response_body ||= response.body
     Bullet::Association.end_request
     [status, headers, response_body]
+  end
+  
+  def check_html?(headers, response)
+    !headers['Content-Type'].nil? and headers['Content-Type'].include? 'text/html' and response.body =~ %r{<html.*</html>}m
   end
 end
