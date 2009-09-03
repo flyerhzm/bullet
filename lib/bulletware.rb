@@ -12,11 +12,12 @@ class Bulletware
 
     if Bullet::Association.has_bad_assocations?
       if !headers['Content-Type'].nil? and headers['Content-Type'].include? 'text/html'
-        response_body = response.body << Bullet::Association.bad_associations_alert
+        response_body = response.body << Bullet::Association.javascript_notification
         headers['Content-Length'] = response_body.length.to_s
       end
 
-      Bullet::Association.log_bad_associations(env['PATH_INFO'])
+      Bullet::Association.growl_notification
+      Bullet::Association.log_notificatioin(env['PATH_INFO'])
     end
     response_body ||= response.body
     Bullet::Association.end_request

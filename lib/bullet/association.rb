@@ -85,18 +85,10 @@ module Bullet
         !unpreload_associations.empty?
       end
 
-      def bad_associations_alert
+      def javascript_notification
         str = ''
-        if @@alert || @@console || @@growl
-          response = []
-          if has_unused_preload_associations?
-            response.push("Unused eager loadings detected:\n")
-            response.push(*@@unused_preload_associations.to_a.collect{|klazz, associations| klazz_associations_str(klazz, associations)}.join("\n"))
-          end
-          if has_unpreload_associations?
-            response.push("#{"\n" unless response.empty?}N+1 queries detected:\n")
-            response.push(*@@unpreload_associations.to_a.collect{|klazz, associations| "  #{klazz} => [#{associations.map(&:inspect).join(', ')}]"}.join("\n"))
-          end
+        if @@alert || @@console
+          response = notification_response
         end
         if @@alert
           str << wrap_js_association("alert(#{response.join("\n").inspect});")
@@ -104,25 +96,21 @@ module Bullet
         if @@console
           str << wrap_js_association("if (typeof(console) != 'undefined' && console.log) console.log(#{response.join("\n").inspect});")
         end
+        str
+      end
+      
+      def growl_notification
         if @@growl
+          response = notification_response
           begin
             growl = Growl.new('localhost', 'ruby-growl', ['Bullet Notification'], nil, @@growl_password)
             growl.notify('Bullet Notification', 'Bullet Notification', response.join("\n"))
           rescue
           end
-          str << '<!-- Sent Growl notification -->'
         end
-        str
       end
 
-      def wrap_js_association(message)
-        str = ''
-        str << "<script type=\"text/javascript\">/*<![CDATA[*/"
-        str << message
-        str << "/*]]>*/</script>\n"
-      end
-
-      def log_bad_associations(path)
+      def log_notificatioin(path)
         if (@@bullet_logger || @@rails_logger) && (!unpreload_associations.empty? || !unused_preload_associations.empty?)
           Rails.logger.warn '' if @@rails_logger
           unused_preload_associations.each do |klazz, associations|
@@ -144,17 +132,32 @@ module Bullet
         end
       end
       
-      def bad_associations_str(bad_associations)
-        # puts bad_associations.inspect
-        bad_associations.to_a.collect{|klazz, associations| klazz_associations_str(klazz, associations)}.join("\n")
-      end
-      
       def klazz_associations_str(klazz, associations)
         "  #{klazz} => [#{associations.map(&:inspect).join(', ')}]"
       end
       
       def associations_str(associations)
         ":include => #{associations.map{|a| a.to_sym unless a.is_a? Hash}.inspect}"
+      end
+
+      def notification_response
+        response = []
+        if has_unused_preload_associations?
+          response.push("Unused eager loadings detected:\n")
+          response.push(*@@unused_preload_associations.to_a.collect{|klazz, associations| klazz_associations_str(klazz, associations)}.join("\n"))
+        end
+        if has_unpreload_associations?
+          response.push("#{"\n" unless response.empty?}N+1 queries detected:\n")
+          response.push(*@@unpreload_associations.to_a.collect{|klazz, associations| "  #{klazz} => [#{associations.map(&:inspect).join(', ')}]"}.join("\n"))
+        end
+        response
+      end
+
+      def wrap_js_association(message)
+        str = ''
+        str << "<script type=\"text/javascript\">/*<![CDATA[*/"
+        str << message
+        str << "/*]]>*/</script>\n"
       end
 
       def has_klazz_association(klazz)
