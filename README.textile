@@ -103,11 +103,13 @@ h2. Advance
 The bullet plugin use rack middleware for http request. If you want to bullet for without http server, such as job server. You can do like this:
 
 <pre><code>
-Bullet::Association.start_request
+Bullet::Association.start_request if Bullet.enable?
 # run job
-Bullet::Association.growl_notification
-Bullet::Association.log_notificatioin('JobServer: ')
-Bullet::Association.end_request
+if Bullet.enable?
+  Bullet::Association.growl_notification
+  Bullet::Association.log_notificatioin('JobServer: ')
+  Bullet::Association.end_request
+end
 </code></pre>
 
 ****************************************************************************
