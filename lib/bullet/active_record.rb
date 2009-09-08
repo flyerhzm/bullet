@@ -62,6 +62,15 @@ module Bullet
           origin_load_target
         end
       end
+      
+      ::ActiveRecord::Associations::HasManyAssociation.class_eval do
+        alias_method :origin_has_cached_counter?, :has_cached_counter?
+        def has_cached_counter?
+          result = origin_has_cached_counter?
+          Bullet::Counter.add_counter_cache(@owner, @reflection.name) unless result
+          result
+        end
+      end
     end
   end
 end

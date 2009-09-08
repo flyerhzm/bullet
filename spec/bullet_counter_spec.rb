@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/spec_helper'
 
 ActiveRecord::Base.establish_connection(:adapter => 'sqlite3', :dbfile => ':memory:')
 
-describe Bullet::Count do
+describe Bullet::Counter do
   def setup_db
     ActiveRecord::Schema.define(:version => 1) do
       create_table :countries do |t|
@@ -47,22 +47,22 @@ describe Bullet::Count do
   end
 
   before(:each) do
-    Bullet::Count.start_request
+    Bullet::Counter.start_request
   end
   
   after(:each) do
-    Bullet::Count.end_request
+    Bullet::Counter.end_request
   end
 
   it "should need counter cache with count" do
     Country.all.each do |country|
-      country.cities.count
+      country.cities.size
     end
-    Bullet::Count.should be_need_counter_caches
+    Bullet::Counter.should be_need_counter_caches
   end
 end
 
-describe Bullet::Count do
+describe Bullet::Counter do
   def setup_db
     ActiveRecord::Schema.define(:version => 1) do
       create_table :people do |t|
@@ -108,17 +108,17 @@ describe Bullet::Count do
   end
 
   before(:each) do
-    Bullet::Count.start_request
+    Bullet::Counter.start_request
   end
   
   after(:each) do
-    Bullet::Count.end_request
+    Bullet::Counter.end_request
   end
 
   it "should need counter cache with count" do
     Person.all.each do |person|
-      person.pets.count
+      person.pets.size
     end
-    Bullet::Count.should_not be_need_counter_caches
+    Bullet::Counter.should_not be_need_counter_caches
   end
 end
