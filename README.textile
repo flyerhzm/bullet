@@ -98,6 +98,24 @@ To get Growl support up-and-running for Bullet, follow the steps below:
 
 ****************************************************************************
 
+h2. Important
+
+If you encounter the following errors in development environment:
+
+<pre><code>
+You might have expected an instance of Array.
+The error occurred while evaluating nil.include?
+    /usr/lib/ruby/gems/1.8/gems/activerecord-2.3.2/lib/active_record/attribute_methods.rb:142:in `create_time_zone_conversion_attribute?'
+    /usr/lib/ruby/gems/1.8/gems/activerecord-2.3.2/lib/active_record/attribute_methods.rb:75:in `define_attribute_methods'
+    /usr/lib/ruby/gems/1.8/gems/activerecord-2.3.2/lib/active_record/attribute_methods.rb:71:in `each'
+    /usr/lib/ruby/gems/1.8/gems/activerecord-2.3.2/lib/active_record/attribute_methods.rb:71:in `define_attribute_methods'
+    /usr/lib/ruby/gems/1.8/gems/activerecord-2.3.2/lib/active_record/attribute_methods.rb:242:in `method_missing'
+</code></pre>
+
+Please disable your browser's cache. It is caused by model class reloading in development environment.
+
+****************************************************************************
+
 h2. Advance
 
 The bullet plugin use rack middleware for http request. If you want to bullet for without http server, such as job server. You can do like this:
@@ -117,8 +135,6 @@ end
 h2. Step by step example
 
 Bullet is designed to function as you browse through your application in development. It will alert you whenever it encounters N+1 queries or unused eager loading.
-
-*Important*: It is strongly recommended you disable your browser's cache.
 
 1. setup test environment
 
