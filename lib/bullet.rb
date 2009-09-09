@@ -1,3 +1,5 @@
+require 'bulletware'
+
 module Bullet
   @@enable = nil
 
