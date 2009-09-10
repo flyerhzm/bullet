@@ -112,7 +112,7 @@ The error occurred while evaluating nil.include?
     /usr/lib/ruby/gems/1.8/gems/activerecord-2.3.2/lib/active_record/attribute_methods.rb:242:in `method_missing'
 </code></pre>
 
-Please disable your browser's cache. It is caused by model class reloading in development environment.
+Or any strange behavior of bullet plugin/gem, *please disable your browser's cache*.
 
 ****************************************************************************
 
