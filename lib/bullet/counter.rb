@@ -1,8 +1,9 @@
 module Bullet
   class Counter
     class <<self
-      def start_request
+      include Bullet::Notification
 
+      def start_request
       end
 
       def end_request
@@ -11,6 +12,22 @@ module Bullet
 
       def need_counter_caches?
         !klazz_associations.empty?
+      end
+
+      def notification_response
+        response = []
+        if need_counter_caches?
+          response << counter_cache_messages.join("\n")
+        end
+        response
+      end
+
+      def console_title
+        title = ["Need Counter Cache"]
+      end
+
+      def log_message(path = nil)
+        counter_cache_messages(path)
       end
       
       def add_counter_cache(object, associations)
@@ -21,9 +38,24 @@ module Bullet
         klazz_associations[klazz].uniq!
       end
       
-      def klazz_associations
-        @@klazz_associations ||= {}
-      end
+      private
+        def counter_cache_messages(path = nil)
+          messages = []
+          klazz_associations.each do |klazz, associations|
+            messages << [
+              "Need Counter Cache",
+              "  #{klazz} => [#{associations.map(&:inspect).join(', ')}]"
+            ]
+          end
+        end
+
+        def call_stack_messages
+          []
+        end
+        
+        def klazz_associations
+          @@klazz_associations ||= {}
+        end
     end
   end
 end

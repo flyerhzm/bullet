@@ -159,18 +159,18 @@ module Bullet
           messages
         end
 
+        def call_stack_messages
+          callers.inject([]) do |messages, c|
+            messages << ['N+1 Query method call stack', c.collect {|line| "  #{line}"}].flatten
+          end
+        end
+
         def klazz_associations_str(klazz, associations)
           "  #{klazz} => [#{associations.map(&:inspect).join(', ')}]"
         end
 
         def associations_str(associations)
           ":include => #{associations.map{|a| a.to_sym unless a.is_a? Hash}.inspect}"
-        end
-
-        def call_stack_messages
-          callers.inject([]) do |messages, c|
-            messages << ['N+1 Query method call stack', c.collect {|line| "  #{line}"}].flatten
-          end
         end
         
         def unique(array)
