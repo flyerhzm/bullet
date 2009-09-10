@@ -54,11 +54,18 @@ describe Bullet::Counter do
     Bullet::Counter.end_request
   end
 
-  it "should need counter cache with count" do
+  it "should need counter cache with all cities" do
     Country.all.each do |country|
       country.cities.size
     end
     Bullet::Counter.should be_need_counter_caches
+  end
+
+  it "should not need counter cache with part of cities" do
+    Country.all.each do |country|
+      country.cities(:conditions => ["name = ?", 'first']).size
+    end
+    Bullet::Counter.should_not be_need_counter_cache
   end
 end
 
@@ -115,7 +122,7 @@ describe Bullet::Counter do
     Bullet::Counter.end_request
   end
 
-  it "should need counter cache with count" do
+  it "should not need counter cache" do
     Person.all.each do |person|
       person.pets.size
     end
