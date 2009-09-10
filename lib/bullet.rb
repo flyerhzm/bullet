@@ -19,5 +19,8 @@ module Bullet
 
   autoload :ActiveRecord, 'bullet/active_record'
   autoload :Association, 'bullet/association'
+  autoload :Counter, 'bullet/counter'
   autoload :BulletLogger, 'bullet/logger'
+  autoload :Configuration, 'bullet/configuration'
+  autoload :Notification, 'bullet/notification'
 end
