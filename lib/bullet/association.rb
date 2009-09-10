@@ -17,7 +17,7 @@ module Bullet
         @@eager_loadings = nil
       end
 
-      def has_bad_assocations?
+      def notification?
         check_unused_preload_associations
         has_unpreload_associations? or has_unused_preload_associations?
       end
@@ -132,7 +132,6 @@ module Bullet
           messages << unused_preload_messages(path)
           messages << unpreload_messages(path)
           messages << call_stack_messages
-          messages.flatten
         end
 
         def unused_preload_messages(path = nil)

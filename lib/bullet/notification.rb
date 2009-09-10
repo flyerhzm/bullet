@@ -3,6 +3,18 @@ module Bullet
   end
 
   module Notification
+    def notification?
+    end
+
+    def notification_response
+    end
+
+    def console_title
+    end
+
+    def log_message(path = nil)
+    end
+
     def javascript_notification
       str = ''
       if Bullet::Configuration.alert || Bullet::Configuration.console
@@ -44,7 +56,7 @@ module Bullet
       end
     end
 
-    def log_notificatioin(path)
+    def log_notification(path)
       if Bullet::Configuration.bullet_logger || Bullet::Configuration.rails_logger
         Rails.logger.warn '' if Bullet::Configuration.rails_logger
         messages = log_messages(path)

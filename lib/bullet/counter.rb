@@ -14,6 +14,10 @@ module Bullet
         !klazz_associations.empty?
       end
 
+      def notification?
+        need_counter_caches?
+      end
+
       def notification_response
         response = []
         if need_counter_caches?
@@ -26,8 +30,8 @@ module Bullet
         title = ["Need Counter Cache"]
       end
 
-      def log_message(path = nil)
-        counter_cache_messages(path)
+      def log_messages(path = nil)
+        [counter_cache_messages(path)]
       end
       
       def add_counter_cache(object, associations)
@@ -47,6 +51,7 @@ module Bullet
               "  #{klazz} => [#{associations.map(&:inspect).join(', ')}]"
             ]
           end
+          messages
         end
 
         def call_stack_messages

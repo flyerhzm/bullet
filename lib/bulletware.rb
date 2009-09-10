@@ -1,4 +1,6 @@
 class Bulletware
+  BULLETS = [Bullet::Association, Bullet::Counter]
+  
   def initialize(app)
     @app = app
   end
@@ -6,25 +8,49 @@ class Bulletware
   def call(env)
     return @app.call(env) unless Bullet.enable?
 
-    Bullet::Association.start_request
+    start_request
     status, headers, response = @app.call(env)
     return [status, headers, response] if response.empty?
 
-    if Bullet::Association.has_bad_assocations?
+    if notification?
       if check_html?(headers, response)
-        response_body = response.body << Bullet::Association.javascript_notification
+        response_body = response.body << javascript_notification
         headers['Content-Length'] = response_body.length.to_s
       end
 
-      Bullet::Association.growl_notification
-      Bullet::Association.log_notificatioin(env['PATH_INFO'])
+      growl_notification
+      log_notification(env['PATH_INFO'])
     end
     response_body ||= response.body
-    Bullet::Association.end_request
+    end_request
     [status, headers, response_body]
   end
   
   def check_html?(headers, response)
     !headers['Content-Type'].nil? and headers['Content-Type'].include? 'text/html' and response.body =~ %r{<html.*</html>}m
+  end
+
+  def start_request
+    BULLETS.each {|bullet| bullet.start_request}
+  end
+
+  def end_request
+    BULLETS.each {|bullet| bullet.end_request}
+  end
+
+  def notification?
+    BULLETS.any? {|bullet| bullet.notification?}
+  end
+
+  def javascript_notification
+    BULLETS.collect {|bullet| bullet.javascript_notification if bullet.notification?}.join("\n")
+  end
+
+  def growl_notification
+    BULLETS.each {|bullet| bullet.growl_notification if bullet.notification?}
+  end
+
+  def log_notification(path)
+    BULLETS.each {|bullet| bullet.log_notification(path) if bullet.notification?}
   end
 end

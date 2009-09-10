@@ -1,7 +1,7 @@
 module Bullet
   class Configuration
     class <<self
-      attr_accessor :alert, :bullet_logger, :console, :growl, :growl_password, :rails_logger
+      attr_accessor :alert, :console, :growl, :growl_password, :rails_logger, :bullet_logger, :logger, :logger_file
 
       def growl=(growl)
         if growl
