@@ -1,8 +1,10 @@
 h1. Bullet
 
-The Bullet plugin is designed to help you increase your application's performance by reducing the number of queries it makes. It will watch your queries while you develop your application and notify you when you should add eager loading (N+1 queries), when you're using eager loading that isn't necessary and when you should use counter cache.
+The Bullet plugin/gem is designed to help you increase your application's performance by reducing the number of queries it makes. It will watch your queries while you develop your application and notify you when you should add eager loading (N+1 queries), when you're using eager loading that isn't necessary and when you should use counter cache.
 
 Best practice is to use Bullet in development mode or custom mode (staging, profile, etc.). The last thing you want is your clients getting alerts about how lazy you are.
+
+This plugin/gem uses <code>ActionController::Dispatcher.middleware</code> which is introduce by rails 2.3.
 
 ****************************************************************************
 
@@ -50,7 +52,7 @@ It is recommended to config growl notification as follows if your collaborators 
 </code></pre>
 
 The code above will enable all five of the Bullet notification systems:
-* <code>Bullet.enable</code>: enable Bullet plugin, otherwise do nothing
+* <code>Bullet.enable</code>: enable Bullet plugin/gem, otherwise do nothing
 * <code>Bullet.alert</code>: pop up a JavaScript alert in the browser
 * <code>Bullet.bullet_logger</code>: log to the Bullet log file (RAILS_ROOT/log/bullet.log)
 * <code>Bullet.rails_logger</code>: add warnings directly to the Rails log
@@ -124,7 +126,7 @@ Or any strange behavior of bullet plugin/gem, *please disable your browser's cac
 
 h2. Advance
 
-The bullet plugin use rack middleware for http request. If you want to bullet for without http server, such as job server. You can do like this:
+The bullet plugin/gem use rack middleware for http request. If you want to bullet for without http server, such as job server. You can do like this:
 
 <pre><code>
 Bullet.start_request if Bullet.enable?
