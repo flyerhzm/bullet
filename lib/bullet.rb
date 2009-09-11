@@ -35,6 +35,32 @@ module Bullet
         @logger = Bullet::BulletLogger.new(@logger_file)
       end
     end
+
+    BULLETS = [Bullet::Association, Bullet::Counter]
+
+    def start_request
+      BULLETS.each {|bullet| bullet.start_request}
+    end
+
+    def end_request
+      BULLETS.each {|bullet| bullet.end_request}
+    end
+
+    def notification?
+      BULLETS.any? {|bullet| bullet.notification?}
+    end
+
+    def javascript_notification
+      BULLETS.collect {|bullet| bullet.javascript_notification if bullet.notification?}.join("\n")
+    end
+
+    def growl_notification
+      BULLETS.each {|bullet| bullet.growl_notification if bullet.notification?}
+    end
+
+    def log_notification(path)
+      BULLETS.each {|bullet| bullet.log_notification(path) if bullet.notification?}
+    end
   end
 
   autoload :ActiveRecord, 'bullet/active_record'
