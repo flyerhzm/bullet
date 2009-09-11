@@ -17,13 +17,13 @@ module Bullet
 
     def javascript_notification
       str = ''
-      if Bullet::Configuration.alert || Bullet::Configuration.console
+      if Bullet.alert || Bullet.console
         response = notification_response
       end
-      if Bullet::Configuration.alert
+      if Bullet.alert
         str << wrap_js_association("alert(#{response.join("\n").inspect});")
       end
-      if Bullet::Configuration.console
+      if Bullet.console
         code = <<-CODE
           if (typeof(console) !== 'undefined') {
 
@@ -46,10 +46,10 @@ module Bullet
     end
 
     def growl_notification
-      if Bullet::Configuration.growl
+      if Bullet.growl
         response = notification_response
         begin
-          growl = Growl.new('localhost', 'ruby-growl', ['Bullet Notification'], nil, Bullet::Configuration.growl_password)
+          growl = Growl.new('localhost', 'ruby-growl', ['Bullet Notification'], nil, Bullet.growl_password)
           growl.notify('Bullet Notification', 'Bullet Notification', response.join("\n"))
         rescue
         end
@@ -57,14 +57,14 @@ module Bullet
     end
 
     def log_notification(path)
-      if Bullet::Configuration.bullet_logger || Bullet::Configuration.rails_logger
-        Rails.logger.warn '' if Bullet::Configuration.rails_logger
+      if Bullet.bullet_logger || Bullet.rails_logger
+        Rails.logger.warn '' if Bullet.rails_logger
         messages = log_messages(path)
         messages.each do |message|
-          Bullet::Configuration.logger.info(message.join("\n")) if Bullet::Configuration.bullet_logger
-          Rails.logger.warn(message.join("\n")) if Bullet::Configuration.rails_logger
+          Bullet.logger.info(message.join("\n")) if Bullet.bullet_logger
+          Rails.logger.warn(message.join("\n")) if Bullet.rails_logger
         end
-        Bullet::Configuration.logger_file.flush if Bullet::Configuration.bullet_logger
+        Bullet.logger_file.flush if Bullet.bullet_logger
       end
     end
 
