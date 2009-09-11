@@ -1,6 +1,12 @@
 require 'bulletware'
 
 module Bullet
+  autoload :ActiveRecord, 'bullet/active_record'
+  autoload :Association, 'bullet/association'
+  autoload :Counter, 'bullet/counter'
+  autoload :BulletLogger, 'bullet/logger'
+  autoload :Notification, 'bullet/notification'
+
   class <<self
     attr_accessor :enable, :alert, :console, :growl, :growl_password, :rails_logger, :bullet_logger, :logger, :logger_file
 
@@ -62,10 +68,4 @@ module Bullet
       BULLETS.each {|bullet| bullet.log_notification(path) if bullet.notification?}
     end
   end
-
-  autoload :ActiveRecord, 'bullet/active_record'
-  autoload :Association, 'bullet/association'
-  autoload :Counter, 'bullet/counter'
-  autoload :BulletLogger, 'bullet/logger'
-  autoload :Notification, 'bullet/notification'
 end
