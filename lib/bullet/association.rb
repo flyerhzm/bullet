@@ -125,6 +125,7 @@ module Bullet
           title = []
           title << unused_preload_messages.first.first unless unused_preload_messages.empty?
           title << unpreload_messages.first.first unless unpreload_messages.empty?
+          title
         end
 
         def log_messages(path = nil)
@@ -132,6 +133,7 @@ module Bullet
           messages << unused_preload_messages(path)
           messages << unpreload_messages(path)
           messages << call_stack_messages
+          messages
         end
 
         def unused_preload_messages(path = nil)
