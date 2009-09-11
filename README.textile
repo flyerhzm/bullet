@@ -138,6 +138,22 @@ if Bullet.enable?
 end
 </code></pre>
 
+Or you want to use it in test mode
+
+<pre><code>
+before(:each)
+  Bullet.start_request if Bullet.enable?
+end
+
+after(:each)
+  if Bullet.enable?
+    Bullet.growl_notification
+    Bullet.log_notification('Test: ')
+    Bullet.end_request
+  end
+end
+</code></pre>
+
 ****************************************************************************
 
 h2. Step by step example
