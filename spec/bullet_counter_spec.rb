@@ -60,12 +60,17 @@ describe Bullet::Counter do
     end
     Bullet::Counter.should be_need_counter_caches
   end
+  
+  it "should not need coounter cache with only one object" do
+    Country.first.cities.size
+    Bullet::Counter.should_not be_need_counter_caches
+  end
 
   it "should not need counter cache with part of cities" do
     Country.all.each do |country|
       country.cities(:conditions => ["name = ?", 'first']).size
     end
-    Bullet::Counter.should_not be_need_counter_cache
+    Bullet::Counter.should_not be_need_counter_caches
   end
 end
 

@@ -8,6 +8,8 @@ module Bullet
 
       def end_request
         @@klazz_associations = nil
+        @@possible_objects = nil
+        @@impossible_objects = nil
       end
 
       def need_counter_caches?
@@ -36,10 +38,26 @@ module Bullet
       
       def add_counter_cache(object, associations)
         klazz = object.class
-        klazz_associations[klazz] ||= []
-        klazz_associations[klazz] << associations
-        klazz_associations[klazz].flatten!
-        klazz_associations[klazz].uniq!
+        if (!possible_objects[klazz].nil? and possible_objects[klazz].include?(object)) and
+           (impossible_objects[klazz].nil? or !impossible_objects[klazz].include?(object))
+          klazz_associations[klazz] ||= []
+          klazz_associations[klazz] << associations
+          unique(klazz_associations[klazz])
+        end
+      end
+
+      def add_possible_objects(objects)
+        klazz= objects.first.class
+        possible_objects[klazz] ||= []
+        possible_objects[klazz] << objects
+        unique(possible_objects[klazz])
+      end
+
+      def add_impossible_object(object)
+        klazz = object.class
+        impossible_objects[klazz] ||= []
+        impossible_objects[klazz] << object
+        impossible_objects[klazz].uniq!
       end
       
       private
@@ -53,6 +71,11 @@ module Bullet
           end
           messages
         end
+        
+        def unique(array)
+          array.flatten!
+          array.uniq!
+        end
 
         def call_stack_messages
           []
@@ -60,6 +83,14 @@ module Bullet
         
         def klazz_associations
           @@klazz_associations ||= {}
+        end
+
+        def possible_objects
+          @@possible_objects ||= {}
+        end
+
+        def impossible_objects
+          @@impossible_objects ||= {}
         end
     end
   end
