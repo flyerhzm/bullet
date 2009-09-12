@@ -8,6 +8,12 @@ This plugin/gem uses <code>ActionController::Dispatcher.middleware</code> which 
 
 ****************************************************************************
 
+h2. Change
+
+There is a large refactor from gem 1.4 to 1.5, so if you upgrade to 1.5 gem, please read the Configuration section again and rewrite your configuration.
+
+****************************************************************************
+
 h2. Thanks
 
 flipsasser added Growl, console.log and Rails.log support, very awesome. And he improved README.
