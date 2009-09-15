@@ -21,10 +21,17 @@ class Bulletware
     end
     response_body ||= response.body
     Bullet.end_request
+    no_browser_cache(headers) if Bullet.disable_browser_cache
     [status, headers, response_body]
   end
   
   def check_html?(headers, response)
     !headers['Content-Type'].nil? and headers['Content-Type'].include? 'text/html' and response.body =~ %r{<html.*</html>}m
+  end
+
+  def no_browser_cache(headers)
+    headers["Cache-Control"] = "no-cache, no-store, max-age=0, must-revalidate"
+    headers["Pragma"] = "no-cache"
+    headers["Expires"] = "Wed, 09 Sep 2009 09:09:09 GMT"
   end
 end

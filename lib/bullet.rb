@@ -8,7 +8,7 @@ module Bullet
   autoload :Notification, 'bullet/notification'
 
   class <<self
-    attr_accessor :enable, :alert, :console, :growl, :growl_password, :rails_logger, :bullet_logger, :logger, :logger_file
+    attr_accessor :enable, :alert, :console, :growl, :growl_password, :rails_logger, :bullet_logger, :logger, :logger_file, :disable_browser_cache
 
     def enable=(enable)
       @enable = enable
