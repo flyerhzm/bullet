@@ -40,6 +40,8 @@ describe Bullet::Association, 'has_many' do
   class Post < ActiveRecord::Base
     belongs_to :category
     has_many :comments
+
+    named_scope :preload_posts, {:include => :comments}
   end
   
   class Entry < ActiveRecord::Base
@@ -238,6 +240,21 @@ describe Bullet::Association, 'has_many' do
     it "should no preload only one post => commnets" do
       Post.first.comments.collect(&:name)
       Bullet::Association.should_not be_has_unpreload_associations
+    end
+  end
+
+  context "named_scope" do
+    it "should no preload post => comments with named_scope" do
+      Post.preload_posts.each do |post|
+        post.comments.collect(&:name)
+      end
+      Bullet::Association.should_not be_has_unpreload_associations
+    end
+
+    it "should unused preload with named_scope" do
+      Post.preload_posts.collect(&:name)
+      Bullet::Association.check_unused_preload_associations
+      Bullet::Association.should be_has_unused_preload_associations
     end
   end
 
