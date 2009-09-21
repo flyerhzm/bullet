@@ -7,6 +7,10 @@ module Bullet
       end
 
       def end_request
+        clear
+      end
+      
+      def clear
         @@object_associations = nil
         @@unpreload_associations = nil
         @@unused_preload_associations = nil

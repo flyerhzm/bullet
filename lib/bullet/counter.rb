@@ -7,6 +7,10 @@ module Bullet
       end
 
       def end_request
+        clear
+      end
+      
+      def clear
         @@klazz_associations = nil
         @@possible_objects = nil
         @@impossible_objects = nil

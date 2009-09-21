@@ -2,6 +2,7 @@ require 'bulletware'
 
 module Bullet
   autoload :ActiveRecord, 'bullet/active_record'
+  autoload :ActionController, 'bullet/action_controller'
   autoload :Association, 'bullet/association'
   autoload :Counter, 'bullet/counter'
   autoload :BulletLogger, 'bullet/logger'
@@ -14,7 +15,8 @@ module Bullet
       @enable = enable
       if enable? 
         Bullet::ActiveRecord.enable
-        ActionController::Dispatcher.middleware.use Bulletware
+        Bullet::ActionController.enable
+        ::ActionController::Dispatcher.middleware.use Bulletware
       end
     end
 
@@ -50,6 +52,10 @@ module Bullet
 
     def end_request
       BULLETS.each {|bullet| bullet.end_request}
+    end
+    
+    def clear
+      BULLETS.each {|bullet| bullet.clear}
     end
 
     def notification?
