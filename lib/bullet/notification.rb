@@ -20,27 +20,29 @@ module Bullet
       if Bullet.alert || Bullet.console
         response = notification_response
       end
-      if Bullet.alert
-        str << wrap_js_association("alert(#{response.join("\n").inspect});")
-      end
-      if Bullet.console
-        code = <<-CODE
-          if (typeof(console) !== 'undefined') {
+      unless response.blank?
+        if Bullet.alert
+          str << wrap_js_association("alert(#{response.join("\n").inspect});")
+        end
+        if Bullet.console
+          code = <<-CODE
+            if (typeof(console) !== 'undefined') {
 
-            if (console.groupCollapsed && console.groupEnd && console.log) {
+              if (console.groupCollapsed && console.groupEnd && console.log) {
 
-              console.groupCollapsed(#{console_title.join(', ').inspect});
-              console.log(#{response.join("\n").inspect});
-              console.log(#{call_stack_messages.join("\n").inspect});
-              console.groupEnd();
+                console.groupCollapsed(#{console_title.join(', ').inspect});
+                console.log(#{response.join("\n").inspect});
+                console.log(#{call_stack_messages.join("\n").inspect});
+                console.groupEnd();
 
-            } else if (console.log) {
+              } else if (console.log) {
 
-              console.log(#{response.join("\n").inspect});
+                console.log(#{response.join("\n").inspect});
+              }
             }
-          }
-        CODE
-        str << wrap_js_association(code)
+          CODE
+          str << wrap_js_association(code)
+        end
       end
       str
     end
@@ -48,10 +50,12 @@ module Bullet
     def growl_notification
       if Bullet.growl
         response = notification_response
-        begin
-          growl = Growl.new('localhost', 'ruby-growl', ['Bullet Notification'], nil, Bullet.growl_password)
-          growl.notify('Bullet Notification', 'Bullet Notification', response.join("\n"))
-        rescue
+        unless response.blank?
+          begin
+            growl = Growl.new('localhost', 'ruby-growl', ['Bullet Notification'], nil, Bullet.growl_password)
+            growl.notify('Bullet Notification', 'Bullet Notification', response.join("\n"))
+          rescue
+          end
         end
       end
     end
