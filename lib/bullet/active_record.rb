@@ -31,7 +31,7 @@ module Bullet
           records = [records].flatten.compact.uniq
           return if records.empty?
           records.each do |record|
-            Bullet::Association.add_association(record, associations)
+            Bullet::Association.add_object_associations(record, associations)
           end
           Bullet::Association.add_eager_loadings(records, associations)
           origin_preload_associations(records, associations, preload_options={})
@@ -52,7 +52,7 @@ module Bullet
           records = origin_find_with_associations(options)
           associations = merge_includes(scope(:find, :include), options[:include])
           records.each do |record|
-            Bullet::Association.add_association(record, associations)
+            Bullet::Association.add_object_associations(record, associations)
             Bullet::Association.add_call_object_associations(record, associations)
           end
           Bullet::Association.add_eager_loadings(records, associations)

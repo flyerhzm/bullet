@@ -38,7 +38,7 @@ module Bullet
         unique(unused_preload_associations[klazz])
       end
 
-      def add_association(object, associations)
+      def add_object_associations(object, associations)
         object_associations[object] ||= []
         object_associations[object] << associations
         unique(object_associations[object])
