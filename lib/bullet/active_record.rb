@@ -15,7 +15,7 @@ module Bullet
                 Bullet::Counter.add_possible_objects(records)
               elsif records.size == 1
                 Bullet::Association.add_impossible_object(records.first)
-                Bullet::Counter.add_impossible_object(records)
+                Bullet::Counter.add_impossible_object(records.first)
               end
             end
 
