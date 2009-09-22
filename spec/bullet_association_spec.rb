@@ -831,27 +831,33 @@ describe Bullet::Association, "STI" do
   end
   
   it "should detect unpreload associations" do
-    Page.find(:all).each do |document|
-      document.author.name
+    Page.find(:all).each do |page|
+      page.author.name
     end
     Bullet::Association.should be_has_unpreload_associations
+    Bullet::Association.check_unused_preload_associations
+    Bullet::Association.should_not be_has_unused_preload_associations
   end
   
   it "should not detect unpreload associations" do
-    Page.find(:all, :include => :author) do |document|
-      document.author.name
+    Page.find(:all, :include => :author) do |page|
+      page.author.name
     end
     Bullet::Association.should_not be_has_unpreload_associations
+    Bullet::Association.check_unused_preload_associations
+    Bullet::Association.should_not be_has_unused_preload_associations
   end
   
   it "should detect unused preload associations" do
     Page.find(:all, :include => :author).collect(&:name)
+    Bullet::Association.should_not be_has_unpreload_associations
     Bullet::Association.check_unused_preload_associations
     Bullet::Association.should be_has_unused_preload_associations
   end
   
   it "should not detect unused preload associations" do
     Page.find(:all).collect(&:name)
+    Bullet::Association.should_not be_has_unpreload_associations
     Bullet::Association.check_unused_preload_associations
     Bullet::Association.should_not be_has_unused_preload_associations
   end
