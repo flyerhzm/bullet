@@ -50,10 +50,12 @@ module Bullet
         alias_method :origin_find_with_associations, :find_with_associations
         def find_with_associations(options)
           records = origin_find_with_associations(options)
+          associations = merge_includes(scope(:find, :include), options[:include])
           records.each do |record|
-            Bullet::Association.add_association(record, merge_includes(scope(:find, :include), options[:include]))
+            Bullet::Association.add_association(record, associations)
+            Bullet::Association.add_call_object_associations(record, associations)
           end
-          Bullet::Association.add_eager_loadings(records, merge_includes(scope(:find, :include), options[:include]))
+          Bullet::Association.add_eager_loadings(records, associations)
           records
         end
       end

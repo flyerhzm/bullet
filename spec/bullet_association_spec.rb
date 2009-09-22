@@ -255,12 +255,10 @@ describe Bullet::Association, 'has_many' do
    end
    
    it "should not be unused preload post => category" do
-     Post.in_category_name('first').all.each do |post|
-       post.name
-     end
+     Post.in_category_name('first').all.collect(&:name)
      Bullet::Association.should_not be_has_unpreload_associations
      Bullet::Association.check_unused_preload_associations
-     Bullet::Association.should be_has_unused_preload_associations
+     Bullet::Association.should_not be_has_unused_preload_associations
    end
   end
 
