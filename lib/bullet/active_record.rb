@@ -45,6 +45,17 @@ module Bullet
           Bullet::Association.define_association(self, reflection.name)
           origin_collection_reader_method(reflection, association_proxy_class)
         end
+      
+        # add include in named_scope
+        alias_method :origin_find_with_associations, :find_with_associations
+        def find_with_associations(options)
+          records = origin_find_with_associations(options)
+          records.each do |record|
+            Bullet::Association.add_association(record, merge_includes(scope(:find, :include), options[:include]))
+          end
+          Bullet::Association.add_eager_loadings(records, merge_includes(scope(:find, :include), options[:include]))
+          records
+        end
       end
 
       ::ActiveRecord::Associations::AssociationCollection.class_eval do
