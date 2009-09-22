@@ -840,7 +840,7 @@ describe Bullet::Association, "STI" do
   end
   
   it "should not detect unpreload associations" do
-    Page.find(:all, :include => :author) do |page|
+    Page.find(:all, :include => :author).each do |page|
       page.author.name
     end
     Bullet::Association.should_not be_has_unpreload_associations
