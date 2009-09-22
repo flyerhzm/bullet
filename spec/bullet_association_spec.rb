@@ -771,3 +771,88 @@ describe Bullet::Association, "call one association that in possiable objects" d
     Bullet::Association.should_not be_has_unpreload_associations
   end
 end
+
+describe Bullet::Association, "STI" do
+  def setup_db
+    ActiveRecord::Schema.define(:version => 1) do
+      create_table :documents do |t|
+        t.string :name
+        t.string :type
+        t.integer :parent_id
+        t.integer :author_id
+      end
+      
+      create_table :authors do |t|
+        t.string :name
+      end
+    end
+  end
+
+  def teardown_db
+    ActiveRecord::Base.connection.tables.each do |table|
+      ActiveRecord::Base.connection.drop_table(table)
+    end
+  end
+  
+  class Document < ActiveRecord::Base
+    has_many :children, :class_name => "Document", :foreign_key => 'parent_id'
+    belongs_to :parent, :class_name => "Document", :foreign_key => 'parent_id' 
+    belongs_to :author
+  end
+
+  class Page < Document
+  end
+
+  class Folder < Document
+  end
+  
+  class Author < ActiveRecord::Base
+    has_many :documents
+  end
+  
+  before(:all) do
+    setup_db
+    author1 = Author.create(:name => 'author1')
+    author2 = Author.create(:name => 'author2')
+    folder1 = Folder.create(:name => 'folder1', :author_id => author1.id)
+    folder2 = Folder.create(:name => 'folder2', :author_id => author2.id)
+    page1 = Page.create(:name => 'page1', :parent_id => folder1.id, :author_id => author1.id)
+    page2 = Page.create(:name => 'page2', :parent_id => folder1.id, :author_id => author1.id)
+    page3 = Page.create(:name => 'page3', :parent_id => folder2.id, :author_id => author2.id)
+    page4 = Page.create(:name => 'page4', :parent_id => folder2.id, :author_id => author2.id)
+  end
+
+  before(:each) do
+    Bullet::Association.start_request
+  end
+
+  after(:each) do
+    Bullet::Association.end_request
+  end
+  
+  it "should detect unpreload associations" do
+    Page.find(:all).each do |document|
+      document.author.name
+    end
+    Bullet::Association.should be_has_unpreload_associations
+  end
+  
+  it "should not detect unpreload associations" do
+    Page.find(:all, :include => :author) do |document|
+      document.author.name
+    end
+    Bullet::Association.should_not be_has_unpreload_associations
+  end
+  
+  it "should detect unused preload associations" do
+    Page.find(:all, :include => :author).collect(&:name)
+    Bullet::Association.check_unused_preload_associations
+    Bullet::Association.should be_has_unused_preload_associations
+  end
+  
+  it "should not detect unused preload associations" do
+    Page.find(:all).collect(&:name)
+    Bullet::Association.check_unused_preload_associations
+    Bullet::Association.should_not be_has_unused_preload_associations
+  end
+end
