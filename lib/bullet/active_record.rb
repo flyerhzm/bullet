@@ -53,7 +53,7 @@ module Bullet
           associations = merge_includes(scope(:find, :include), options[:include])
           records.each do |record|
             Bullet::Association.add_object_associations(record, associations)
-            Bullet::Association.add_call_object_associations(record, associations)
+            Bullet::Association.call_association(record, associations)
           end
           Bullet::Association.add_eager_loadings(records, associations)
           records
