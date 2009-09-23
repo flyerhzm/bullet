@@ -19,6 +19,7 @@ module Bullet
         @@impossible_objects = nil
         @@call_object_associations = nil
         @@eager_loadings = nil
+        @@klazz_associations = nil
       end
 
       def notification?
