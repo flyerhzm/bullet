@@ -74,8 +74,26 @@ module Bullet
       def add_eager_loadings(objects, associations)
         objects = Array(objects)
         eager_loadings[objects] ||= []
-        eager_loadings[objects] << associations
-        unique(eager_loadings[objects])
+        eager_loadings.each do |k, v|
+          unless (k & objects).empty?
+            if (k & objects) == k
+              eager_loadings[k] = (eager_loadings[k] + Array(associations))
+              unique(eager_loadings[k])
+              break
+            else
+              eager_loadings.merge!({(k & objects) => (eager_loadings[k] + Array(associations))})
+              unique(eager_loadings[(k & objects)])
+              eager_loadings.merge!({(k - objects) => eager_loadings[k]}) unless (k - objects).empty?
+              unique(eager_loadings[(k - objects)])
+              eager_loadings.delete(k)
+              objects = objects - k
+            end
+          end
+        end
+        unless objects.empty?
+          eager_loadings[objects] << Array(associations) 
+          unique(eager_loadings[objects])
+        end
       end
 
       def define_association(klazz, associations)
