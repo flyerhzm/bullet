@@ -115,7 +115,7 @@ describe Bullet::Association, 'has_many' do
     Bullet::Association.end_request
   end
   
-    context "for unused cases" do
+  context "for unused cases" do
     #If you have the same record created twice with different includes
     #  the hash value get's accumulated includes, which leads to false Unused eager loading
     it "should not incorrectly mark associations as unused when multiple object instances" do
