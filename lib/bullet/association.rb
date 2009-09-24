@@ -127,10 +127,29 @@ module Bullet
 
       private
         def unpreload_associations?(object, associations)
+          possible?(object) and !impossible?(object) and !association?(object, associations)
+        end
+
+        def possible?(object)
           klazz = object.class
-          (!possible_objects[klazz].nil? and possible_objects[klazz].include?(object)) and
-          (impossible_objects[klazz].nil? or !impossible_objects[klazz].include?(object)) and
-          (object_associations[object].nil? or !object_associations[object].include?(associations))
+          possible_objects[klazz] and possible_objects[klazz].include?(object)
+        end
+
+        def impossible?(object)
+          klazz = object.class
+          impossible_objects[klazz] and impossible_objects[klazz].include?(object)
+        end
+
+        def association?(object, associations)
+          object_associations.each do |key, value|
+            if key == object
+              value.each do |v|
+                result = v.is_a?(Hash) ? v.has_key?(associations) : v == associations
+                return true if result
+              end
+            end
+          end
+          return false
         end
 
         def notification_response
