@@ -74,8 +74,26 @@ module Bullet
       def add_eager_loadings(objects, associations)
         objects = Array(objects)
         eager_loadings[objects] ||= []
-        eager_loadings[objects] << associations
-        unique(eager_loadings[objects])
+        eager_loadings.each do |k, v|
+          unless (k & objects).empty?
+            if (k & objects) == k
+              eager_loadings[k] = (eager_loadings[k] + Array(associations))
+              unique(eager_loadings[k])
+              break
+            else
+              eager_loadings.merge!({(k & objects) => (eager_loadings[k] + Array(associations))})
+              unique(eager_loadings[(k & objects)])
+              eager_loadings.merge!({(k - objects) => eager_loadings[k]}) unless (k - objects).empty?
+              unique(eager_loadings[(k - objects)])
+              eager_loadings.delete(k)
+              objects = objects - k
+            end
+          end
+        end
+        unless objects.empty?
+          eager_loadings[objects] << Array(associations) 
+          unique(eager_loadings[objects])
+        end
       end
 
       def define_association(klazz, associations)
@@ -109,10 +127,29 @@ module Bullet
 
       private
         def unpreload_associations?(object, associations)
+          possible?(object) and !impossible?(object) and !association?(object, associations)
+        end
+
+        def possible?(object)
           klazz = object.class
-          (!possible_objects[klazz].nil? and possible_objects[klazz].include?(object)) and
-          (impossible_objects[klazz].nil? or !impossible_objects[klazz].include?(object)) and
-          (object_associations[object].nil? or !object_associations[object].include?(associations))
+          possible_objects[klazz] and possible_objects[klazz].include?(object)
+        end
+
+        def impossible?(object)
+          klazz = object.class
+          impossible_objects[klazz] and impossible_objects[klazz].include?(object)
+        end
+
+        def association?(object, associations)
+          object_associations.each do |key, value|
+            if key == object
+              value.each do |v|
+                result = v.is_a?(Hash) ? v.has_key?(associations) : v == associations
+                return true if result
+              end
+            end
+          end
+          return false
         end
 
         def notification_response
