@@ -32,6 +32,10 @@ describe Bullet::Association, 'has_many' do
       create_table :base_users do |t|
         t.column :name, :string
         t.column :type, :string
+        t.column :newspaper_id, :integer
+      end
+      create_table :newspapers do |t|
+        t.column :name, :string
       end
     end
   end
@@ -71,33 +75,44 @@ describe Bullet::Association, 'has_many' do
   class BaseUser < ActiveRecord::Base
     has_many :comments
     has_many :posts
+    belongs_to :newspaper
   end
   
+  class Newspaper < ActiveRecord::Base
+    has_many :writers, :class_name => "BaseUser"
+  end
+
   class Writer < BaseUser
   end
 
   before(:all) do
     silence_logger { setup_db }
+    
+    newspaper1 = Newspaper.create(:name => "First Newspaper")
+    newspaper2 = Newspaper.create(:name => "Second Newspaper")
 
-    writer1 = Writer.create(:name => 'first')
-    writer2 = Writer.create(:name => 'second')
-    user1 = BaseUser.create(:name => 'third')
-    user2 = BaseUser.create(:name => 'fourth')
+    writer1 = Writer.create(:name => 'first', :newspaper => newspaper1)
+    writer2 = Writer.create(:name => 'second', :newspaper => newspaper2)
+    user1 = BaseUser.create(:name => 'third', :newspaper => newspaper1)
+    user2 = BaseUser.create(:name => 'fourth', :newspaper => newspaper2)
 
 
     category1 = Category.create(:name => 'first')
     category2 = Category.create(:name => 'second')
 
     post1 = category1.posts.create(:name => 'first', :writer => writer1)
+    post1a = category1.posts.create(:name => 'like first', :writer => writer2)
     post2 = category2.posts.create(:name => 'second', :writer => writer2)
 
     comment1 = post1.comments.create(:name => 'first', :author => writer1)
-    comment1 = post1.comments.create(:name => 'first2', :author => writer1)
-    comment1 = post1.comments.create(:name => 'first3', :author => writer1)
-    comment2 = post1.comments.create(:name => 'second', :author => writer2)
-    comment3 = post2.comments.create(:name => 'third', :author => user1)
-    comment4 = post2.comments.create(:name => 'fourth', :author => user2)
-    comment4 = post2.comments.create(:name => 'fourth', :author => writer1)
+    comment2 = post1.comments.create(:name => 'first2', :author => writer1)
+    comment3 = post1.comments.create(:name => 'first3', :author => writer1)
+    comment4 = post1.comments.create(:name => 'second', :author => writer2)
+    comment8 = post1a.comments.create(:name => "like first 1", :author => writer1)
+    comment9 = post1a.comments.create(:name => "like first 2", :author => writer2)
+    comment5 = post2.comments.create(:name => 'third', :author => user1)
+    comment6 = post2.comments.create(:name => 'fourth', :author => user2)
+    comment7 = post2.comments.create(:name => 'fourth', :author => writer1)
 
     entry1 = category1.entries.create(:name => 'first')
     entry2 = category1.entries.create(:name => 'second')
@@ -114,7 +129,7 @@ describe Bullet::Association, 'has_many' do
   after(:each) do
     Bullet::Association.end_request
   end
-  
+
   context "for unused cases" do
     #If you have the same record created twice with different includes
     #  the hash value get's accumulated includes, which leads to false Unused eager loading
@@ -152,9 +167,9 @@ describe Bullet::Association, 'has_many' do
 
 
   context "comments => posts => category" do
-   
+
     # this happens because the post isn't a possible object even though the writer is access through the post
-    # which leads to an 1+N queries 
+    # which leads to an 1+N queries
     it "should detect unpreloaded writer" do
       Comment.all(:include => [:author, :post],
         :conditions => ["base_users.id = ?", BaseUser.first]).each do |com|
@@ -174,21 +189,24 @@ describe Bullet::Association, 'has_many' do
       Bullet::Association.should be_completely_preloading_associations
     end
 
-    # To 2collegebums: This query generate a only one sql with left outer join, 
-    # so I think the test is not correct.
-    #
-    # this happens because it doesn't create an object association from post to writer
-    # by diving into the hash and creating those object associations
-    # it "should detect preload of post => writer" do
-    #   comments = Comment.all(:include => [:author, {:post => :writer}],
-    #     :conditions => ["base_users.id = ?", BaseUser.first]).each do |com|
-    #     com.post.writer.name
-    #   end
-    #   Bullet::Association.should be_creating_object_association_for(comments.first, :author)
-    #   Bullet::Association.should be_creating_object_association_for(comments.first.post, :writer)
-    #   Bullet::Association.should_not be_detecting_unpreloaded_association_for(Post, :writer)
-    #   Bullet::Association.should be_completely_preloading_associations
-    # end
+    it "should detect preload of post => writer" do
+      comments = Comment.all(:include => [:author, {:post => :writer}],
+        :conditions => ["base_users.id = ?", BaseUser.first]).each do |com|
+        com.post.writer.name
+      end
+      Bullet::Association.should be_creating_object_association_for(comments.first, :author)
+      Bullet::Association.should_not be_detecting_unpreloaded_association_for(Post, :writer)
+      Bullet::Association.should be_completely_preloading_associations
+    end
+
+    # To flyerhzm: This does not detect that newspaper is unpreloaded. The association is
+    # not within possible objects, and thus cannot be detected as unpreloaded
+    it "should detect unpreloading of writer => newspaper" do
+      comments = Comment.all(:include => {:post => :writer}, :conditions => "posts.name like '%first%'").each do |com|
+        com.post.writer.newspaper.name
+      end
+      Bullet::Association.should be_detecting_unpreloaded_association_for(Writer, :newspaper)
+    end
 
     # when we attempt to access category, there is an infinite overflow because load_target is hijacked leading to
     # a repeating loop of calls in this test
@@ -694,12 +712,12 @@ describe Bullet::Association, 'has_many :as' do
     user2 = User.create(:name => 'second')
     user3 = User.create(:name => 'third')
     user4 = User.create(:name => 'fourth')
-    
+
     pet1 = User.create(:name => "dog")
     pet2 = User.create(:name => "dog")
     pet3 = User.create(:name => "cat")
     pet4 = User.create(:name => "cat")
-    
+
     user1.votes << Vote.create(:vote => 10)
     user1.votes << Vote.create(:vote => 20)
     user2.votes << Vote.create(:vote => 10)
@@ -728,7 +746,7 @@ describe Bullet::Association, 'has_many :as' do
   after(:each) do
     Bullet::Association.end_request
   end
-  
+
   # this happens only when a polymorphic association is included along with another table which is being referenced in the query
   it "should not have unused preloaded associations with conditions" do
     all_users = User.all(:include => :pets)
