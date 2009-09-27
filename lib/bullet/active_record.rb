@@ -73,7 +73,8 @@ module Bullet
         # call has_one and belong_to association
         alias_method :origin_load_target, :load_target
         def load_target
-          Bullet::Association.call_association(@owner, @reflection.name)
+          # avoid stack level too deep
+          Bullet::Association.call_association(@owner, @reflection.name) unless caller.to_s.include? 'load_target'
           origin_load_target
         end
       end

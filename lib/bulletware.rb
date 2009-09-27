@@ -8,7 +8,7 @@ class Bulletware
 
     Bullet.start_request
     status, headers, response = @app.call(env)
-    return [status, headers, response] if response.empty?
+    return [status, headers, response] if empty?(response)
 
     if Bullet.notification?
       if check_html?(headers, response)
@@ -23,6 +23,11 @@ class Bulletware
     Bullet.end_request
     no_browser_cache(headers) if Bullet.disable_browser_cache
     [status, headers, response_body]
+  end
+
+  # fix issue if response's body is a Proc
+  def empty?(response)
+    (response.is_a?(Array) && response.empty?) || !response.body.is_a?(String) || response.body.empty?
   end
   
   def check_html?(headers, response)
