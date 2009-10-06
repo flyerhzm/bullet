@@ -87,7 +87,7 @@ Add to your finder: :include => [:comments]
 
 The first two lines are notifications that N+1 queries have been encountered. The remaining lines are stack traces so you can find exactly where the queries were invoked in your code, and fix them.
 
-* Unsed eager loading:
+* Unused eager loading:
 <pre><code>
 2009-08-25 20:53:56[INFO] Unused eager loadings: PATH_INFO: /posts;    model: Post => associations: [comments]·
 Remove from your finder: :include => [:comments]
@@ -142,7 +142,7 @@ Bullet.start_request if Bullet.enable?
 # run job
 if Bullet.enable?
   Bullet.growl_notification
-  Bullet.log_notificatioin('JobServer: ')
+  Bullet.log_notification('JobServer: ')
   Bullet.end_request
 end
 </code></pre>
