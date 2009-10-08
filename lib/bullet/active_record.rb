@@ -74,8 +74,10 @@ module Bullet
         alias_method :origin_load_target, :load_target
         def load_target
           # avoid stack level too deep
+          result = origin_load_target
           Bullet::Association.call_association(@owner, @reflection.name) unless caller.to_s.include? 'load_target'
-          origin_load_target
+          Bullet::Association.add_possible_objects(result)
+          result
         end
       end
       

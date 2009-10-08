@@ -52,7 +52,7 @@ module Bullet
       end
 
       def add_possible_objects(objects)
-        klazz= objects.first.class
+        klazz = objects.is_a?(Array) ? objects.first.class : objects.class
         possible_objects[klazz] ||= []
         possible_objects[klazz] << objects
         unique(possible_objects[klazz])
