@@ -60,6 +60,17 @@ module Bullet
         end
       end
 
+      ::ActiveRecord::Associations::ClassMethods::JoinDependency.class_eval do
+        # call join associations
+        alias_method :origin_construct_association, :construct_association
+        def construct_association(record, join, row)
+          associations = join.reflection.name
+          Bullet::Association.add_object_associations(record, associations)
+          Bullet::Association.call_association(record, associations)
+          origin_construct_association(record, join, row)
+        end
+      end
+
       ::ActiveRecord::Associations::AssociationCollection.class_eval do
         # call one to many associations
         alias_method :origin_load_target, :load_target
