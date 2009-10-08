@@ -30,3 +30,4 @@ Jeweler::Tasks.new do |gemspec|
   gemspec.files.exclude '.gitignore'
   gemspec.files.exclude 'log/*'
 end
+Jeweler::GemcutterTasks.new
