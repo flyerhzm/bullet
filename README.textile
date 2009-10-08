@@ -25,10 +25,13 @@ rainux add group style console.log.
 h2. Install
 
 You can add Bullet to your Rails gem requirements:
-<pre><code>config.gem 'flyerhzm-bullet', :lib => 'bullet', :source => 'http://gems.github.com'</code></pre>
+<pre><code>config.gem 'bullet', :lib => 'bullet', :source => 'http://gemcutter.org'</code></pre>
 
 You can install it as a gem:
-<pre><code>sudo gem install flyerhzm-bullet --source http://gems.github.com</code></pre>
+<pre><code>
+sudo gem sources -a http://gemcutter.org
+sudo gem install bullet
+</code></pre>
 
 Or you can install it as a rails plugin:
 <pre><code>script/plugin install git://github.com/flyerhzm/bullet.git</code></pre>
