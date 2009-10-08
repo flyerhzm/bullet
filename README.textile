@@ -25,7 +25,7 @@ rainux add group style console.log.
 h2. Install
 
 You can add Bullet to your Rails gem requirements:
-<pre><code>config.gem 'bullet', :lib => 'bullet', :source => 'http://gemcutter.org'</code></pre>
+<pre><code>config.gem 'bullet', :source => 'http://gemcutter.org'</code></pre>
 
 You can install it as a gem:
 <pre><code>
