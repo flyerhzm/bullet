@@ -6,6 +6,8 @@ Best practice is to use Bullet in development mode or custom mode (staging, prof
 
 This plugin/gem uses <code>ActionController::Dispatcher.middleware</code> which is introduce by rails 2.3.
 
+*Important: bullet gem has been moved to gemcutter.org*
+
 ****************************************************************************
 
 h2. Change
