@@ -17,7 +17,9 @@ module Bullet
       if enable? 
         Bullet::ActiveRecord.enable
         Bullet::ActionController.enable
-        ::ActionController::Dispatcher.middleware.use Bulletware
+        if ::Rails::VERSION::STRING =~ /^2.3/
+          ::ActionController::Dispatcher.middleware.use Bulletware
+        end
       end
     end
 
