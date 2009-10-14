@@ -12,7 +12,7 @@ module Bullet
             end
           end
         end
-      when /^2.2/
+      when /^2.[2|1]/
         ::ActionController::Dispatcher.class_eval do
           alias_method :origin_reload_application, :reload_application
           def reload_application
