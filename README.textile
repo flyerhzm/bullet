@@ -4,7 +4,7 @@ The Bullet plugin/gem is designed to help you increase your application's perfor
 
 Best practice is to use Bullet in development mode or custom mode (staging, profile, etc.). The last thing you want is your clients getting alerts about how lazy you are.
 
-This plugin/gem uses <code>ActionController::Dispatcher.middleware</code> which is introduce by rails 2.3.
+The Bullet plugin/gem now supports rails 2.1, 2.2 and 2.3, tested in rails 2.1.2, 2.2.2 and 2.3.2.
 
 *Important: bullet gem has been moved to gemcutter.org*
 
