@@ -31,7 +31,7 @@ class Bulletware
   end
   
   def check_html?(headers, response)
-    !headers['Content-Type'].nil? and headers['Content-Type'].include? 'text/html' and response.body =~ %r{<html.*</html>}m
+    headers['Content-Type'] and headers['Content-Type'].include? 'text/html' and response.body =~ %r{<html.*</html>}m
   end
 
   def no_browser_cache(headers)
