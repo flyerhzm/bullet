@@ -3,6 +3,12 @@ require 'spec/autorun'
 require 'active_record'
 require 'action_controller'
 
+module Rails
+  module VERSION 
+    STRING = "2.3.2"
+  end
+end
+
 RAILS_ROOT = File.expand_path(__FILE__).split('/')[0..-3].join('/') unless defined? RAILS_ROOT
 require File.expand_path(File.join(File.dirname(__FILE__), '../lib/bullet/notification'))
 require File.expand_path(File.join(File.dirname(__FILE__), '../lib/bullet/logger'))
