@@ -16,11 +16,11 @@ There is a large refactor from gem 1.4 to 1.5, so if you upgrade to 1.5 gem, ple
 
 ****************************************************************************
 
-h2. Thanks
+h2. Contributors
 
-flipsasser added Growl, console.log and Rails.log support, very awesome. And he improved README.
-rainux add group style console.log.
-2collegebums add some specs to generate red bar.
+flipsasser added Growl, console.log and Rails.log support, very awesome. And he also improved README.
+rainux added group style console.log.
+2collegebums added some great specs to generate red bar.
 
 ****************************************************************************
 
@@ -381,6 +381,8 @@ In the meanwhile, there's a log appended into <code>log/bullet.log</code> file.
 2009-09-11 10:07:10[INFO] Need Counter Cache
   Post => [:comments]
 </code></pre>
+
+****************************************************************************
 
 
 Copyright (c) 2009 Richard Huang (flyerhzm@gmail.com), released under the MIT license
