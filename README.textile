@@ -170,6 +170,14 @@ end
 
 ****************************************************************************
 
+h2. Links
+
+* "http://weblog.rubyonrails.org/2009/10/22/community-highlights":http://weblog.rubyonrails.org/2009/10/22/community-highlights
+* "http://ruby5.envylabs.com/episodes/9-episode-8-september-8-2009":http://ruby5.envylabs.com/episodes/9-episode-8-september-8-2009
+* "http://railslab.newrelic.com/2009/10/23/episode-19-on-the-edge-part-1":http://railslab.newrelic.com/2009/10/23/episode-19-on-the-edge-part-1
+
+****************************************************************************
+
 h2. Step by step example
 
 Bullet is designed to function as you browse through your application in development. It will alert you whenever it encounters N+1 queries or unused eager loading.
