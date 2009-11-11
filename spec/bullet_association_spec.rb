@@ -4,8 +4,6 @@ ActiveRecord::Base.establish_connection(:adapter => 'sqlite3', :database => ':me
 
 describe Bullet::Association, 'has_many' do
 
-  include BulletTestHelper
-
   def setup_db
     ActiveRecord::Schema.define(:version => 1) do
       create_table :categories do |t|
@@ -86,7 +84,7 @@ describe Bullet::Association, 'has_many' do
   end
 
   before(:all) do
-    silence_logger { setup_db }
+    setup_db
     
     newspaper1 = Newspaper.create(:name => "First Newspaper")
     newspaper2 = Newspaper.create(:name => "Second Newspaper")
@@ -481,7 +479,6 @@ end
 
 describe Bullet::Association, 'has_and_belongs_to_many' do
 
-  include BulletTestHelper
   def setup_db
     ActiveRecord::Schema.define(:version => 1) do
       create_table :students do |t|
@@ -514,7 +511,7 @@ describe Bullet::Association, 'has_and_belongs_to_many' do
   end
 
   before(:all) do
-    silence_logger { setup_db }
+    setup_db
     student1 = Student.create(:name => 'first')
     student2 = Student.create(:name => 'second')
     teacher1 = Teacher.create(:name => 'first')
@@ -566,8 +563,6 @@ end
 
 describe Bullet::Association, 'has_many :through' do
 
-  include BulletTestHelper
-
   def setup_db
     ActiveRecord::Schema.define(:version => 1) do
       create_table :firms do |t|
@@ -607,7 +602,7 @@ describe Bullet::Association, 'has_many :through' do
   end
 
   before(:all) do
-    silence_logger { setup_db }
+    setup_db
     firm1 = Firm.create(:name => 'first')
     firm2 = Firm.create(:name => 'second')
     client1 = Client.create(:name => 'first')
@@ -659,8 +654,6 @@ end
 
 describe Bullet::Association, 'has_many :as' do
 
-  include BulletTestHelper
-
   def setup_db
     ActiveRecord::Schema.define(:version => 1) do
       create_table :votes do |t|
@@ -707,7 +700,7 @@ describe Bullet::Association, 'has_many :as' do
   end
 
   before(:all) do
-    silence_logger { setup_db }
+    setup_db
     user1 = User.create(:name => 'first')
     user2 = User.create(:name => 'second')
     user3 = User.create(:name => 'third')
@@ -813,8 +806,6 @@ end
 
 describe Bullet::Association, "has_one" do
 
-  include BulletTestHelper
-
   def setup_db
     ActiveRecord::Schema.define(:version => 1) do
       create_table :companies do |t|
@@ -843,7 +834,7 @@ describe Bullet::Association, "has_one" do
   end
 
   before(:all) do
-    silence_logger { setup_db }
+    setup_db
 
     company1 = Company.create(:name => 'first')
     company2 = Company.create(:name => 'second')
@@ -892,7 +883,7 @@ describe Bullet::Association, "has_one" do
 end
 
 describe Bullet::Association, "call one association that in possible objects" do
-  include BulletTestHelper
+
   def setup_db
     ActiveRecord::Schema.define(:version => 1) do
       create_table :contacts do |t|
@@ -921,7 +912,7 @@ describe Bullet::Association, "call one association that in possible objects" do
   end
 
   before(:all) do
-    silence_logger { setup_db }
+    setup_db
 
     contact1 = Contact.create(:name => 'first')
     contact2 = Contact.create(:name => 'second')
@@ -952,7 +943,7 @@ describe Bullet::Association, "call one association that in possible objects" do
 end
 
 describe Bullet::Association, "STI" do
-  include BulletTestHelper
+
   def setup_db
     ActiveRecord::Schema.define(:version => 1) do
       create_table :documents do |t|
@@ -991,7 +982,7 @@ describe Bullet::Association, "STI" do
   end
 
   before(:all) do
-    silence_logger { setup_db }
+    setup_db
     author1 = Author.create(:name => 'author1')
     author2 = Author.create(:name => 'author2')
     folder1 = Folder.create(:name => 'folder1', :author_id => author1.id)

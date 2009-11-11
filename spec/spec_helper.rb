@@ -13,17 +13,8 @@ RAILS_ROOT = File.expand_path(__FILE__).split('/')[0..-3].join('/') unless defin
 
 $LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + "/../lib"))
 require 'bullet'
-require 'bullet'
 Bullet.enable = true
-
-module BulletTestHelper
-  def silence_logger(&block)
-    orig_stdout = $stdout
-    $stdout = StringIO.new
-    block.call
-    $stdout = orig_stdout
-  end
-end
+ActiveRecord::Migration.verbose = false
 
 module Bullet
   class Association
