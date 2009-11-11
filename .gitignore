@@ -2,4 +2,4 @@ log/**
 pkg/**
 .DS_Store
 lib/.DS_Store
-**/.*.swp
+.*.swp
