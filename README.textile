@@ -168,6 +168,8 @@ after(:each)
 end
 </code></pre>
 
+Don't forget enabling bullet in test environment.
+
 ****************************************************************************
 
 h2. Links
