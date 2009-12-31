@@ -19,7 +19,6 @@ module Bullet
         @@impossible_objects = nil
         @@call_object_associations = nil
         @@eager_loadings = nil
-        @@klazz_associations = nil
       end
 
       def notification?
@@ -65,12 +64,6 @@ module Bullet
         impossible_objects[klazz].uniq!
       end
 
-      def add_klazz_associations(klazz, associations)
-        klazz_associations[klazz] ||= []
-        klazz_associations[klazz] << associations
-        unique(klazz_associations[klazz])
-      end
-
       def add_eager_loadings(objects, associations)
         objects = Array(objects)
         eager_loadings[objects] ||= []
@@ -94,10 +87,6 @@ module Bullet
           eager_loadings[objects] << Array(associations) 
           unique(eager_loadings[objects])
         end
-      end
-
-      def define_association(klazz, associations)
-        add_klazz_associations(klazz, associations)
       end
 
       def call_association(object, associations)
@@ -221,6 +210,10 @@ module Bullet
           array.uniq!
         end
 
+        # unpreload_associations keep the one-to-many class relationships by hash 
+        # that the associations, belongs to the class, are used but not preloaded.
+        # e.g. { Post => :comments }
+        # so the unpreload_associations should be preloaded by include.
         def unpreload_associations
           @@unpreload_associations ||= {}
         end
@@ -229,6 +222,9 @@ module Bullet
           @@unused_preload_associations ||= {}
         end
 
+        # object_associations keep the one-to-many object relationships by hash that the object has many associations.
+        # e.g. { <Post id:1> => [<Comment id:1>, <Comment id:2>] }
+        # the object_associations may be unpreload associations or unused preload associations.
         def object_associations
           @@object_associations ||= {}
         end
@@ -243,10 +239,6 @@ module Bullet
 
         def impossible_objects
           @@impossible_objects ||= {}
-        end
-
-        def klazz_associations
-          @@klazz_associations ||= {}
         end
 
         def eager_loadings

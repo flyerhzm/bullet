@@ -38,14 +38,7 @@ module Bullet
         end
       end
 
-      ::ActiveRecord::Associations::ClassMethods.class_eval do
-        # define one to many associations
-        alias_method :origin_collection_reader_method, :collection_reader_method
-        def collection_reader_method(reflection, association_proxy_class)
-          Bullet::Association.define_association(self, reflection.name)
-          origin_collection_reader_method(reflection, association_proxy_class)
-        end
-      
+      ::ActiveRecord::Associations::ClassMethods.class_eval do      
         # add include in named_scope
         alias_method :origin_find_with_associations, :find_with_associations
         def find_with_associations(options)
