@@ -4,8 +4,8 @@ module Bullet
       ::ActiveRecord::Base.class_eval do
         class << self
           alias_method :origin_find_every, :find_every
-          # if select a collection of objects, then these objects have possible to cause N+1 query
-          # if select only one object, then the only one object has impossible to cause N+1 query
+          # if select a collection of objects, then these objects have possible to cause N+1 query.
+          # if select only one object, then the only one object has impossible to cause N+1 query.
           def find_every(options)
             records = origin_find_every(options)
 
@@ -26,7 +26,8 @@ module Bullet
 
       ::ActiveRecord::AssociationPreload::ClassMethods.class_eval do
         alias_method :origin_preload_associations, :preload_associations
-        # add include for one to many associations query
+        # include query for one to many associations.
+        # keep this eager loadings.
         def preload_associations(records, associations, preload_options={})
           records = [records].flatten.compact.uniq
           return if records.empty?
@@ -70,7 +71,7 @@ module Bullet
         def load_target
           Bullet::Association.call_association(@owner, @reflection.name)
           origin_load_target
-        end  
+        end
       end
       
       ::ActiveRecord::Associations::AssociationProxy.class_eval do
