@@ -89,6 +89,10 @@ module Bullet
         end
       end
 
+      # executed when object.assocations is called.
+      # first, it keeps this method call for object.association.
+      # then, it checks if this associations call is unpreload.
+      #   if it is, keeps this unpreload associations and caller.
       def call_association(object, associations)
         add_call_object_associations(object, associations)
         if unpreload_associations?(object, associations)
@@ -97,6 +101,11 @@ module Bullet
         end
       end
 
+      # check if there are unused preload associations.
+      # for each object => association
+      #   get related_objects from eager_loadings associated with object and associations
+      #   get call_object_association from associations of call_object_associations whose object is in related_objects 
+      #   if association not in call_object_association, then the object => association - call_object_association is ununsed preload assocations
       def check_unused_preload_associations
         object_associations.each do |object, association|
           related_objects = eager_loadings.select {|key, value| key.include?(object) and value == association}.collect(&:first).flatten
@@ -115,6 +124,7 @@ module Bullet
       end
 
       private
+        # decide whether the object.associations is unpreloaded or not.
         def unpreload_associations?(object, associations)
           possible?(object) and !impossible?(object) and !association?(object, associations)
         end
@@ -129,6 +139,7 @@ module Bullet
           impossible_objects[klazz] and impossible_objects[klazz].include?(object)
         end
 
+        # check if object => associations already exists in object_associations.
         def association?(object, associations)
           object_associations.each do |key, value|
             if key == object
@@ -210,37 +221,59 @@ module Bullet
           array.uniq!
         end
 
-        # unpreload_associations keep the one-to-many class relationships by hash 
+        # unpreload_associations keep the class relationships 
         # that the associations, belongs to the class, are used but not preloaded.
-        # e.g. { Post => :comments }
-        # so the unpreload_associations should be preloaded by include.
+        # e.g. { Post => [:comments] }
+        # so the unpreload_associations should be preloaded by find :include.
         def unpreload_associations
           @@unpreload_associations ||= {}
         end
-
+        
+        # unused_preload_associations keep the class relationships 
+        # that the associations, belongs to the class, are preloaded but not used.
+        # e.g. { Post => [:comments] }
+        # so the unused_preload_associations should be removed from find :include.
         def unused_preload_associations
           @@unused_preload_associations ||= {}
         end
 
-        # object_associations keep the one-to-many object relationships by hash that the object has many associations.
-        # e.g. { <Post id:1> => [<Comment id:1>, <Comment id:2>] }
-        # the object_associations may be unpreload associations or unused preload associations.
+        # object_associations keep the object relationships 
+        # that the object has many associations.
+        # e.g. { <Post id:1> => [:comments] }
+        # the object_associations keep all associations that may be or may no be 
+        # unpreload associations or unused preload associations.
         def object_associations
           @@object_associations ||= {}
         end
 
+        # call_object_assciations keep the object relationships
+        # that object.associations is called.
+        # e.g. { <Post id:1> => [:comments] }
+        # they are used to detect unused preload associations.
         def call_object_associations
           @@call_object_associations ||= {}
         end
 
+        # possible_objects keep the class to object relationships
+        # that the objects may cause N+1 query.
+        # e.g. { Post => [<Post id:1>, <Post id:2>] }
         def possible_objects
           @@possible_objects ||= {}
         end
 
+        # impossible_objects keep the class to objects relationships
+        # that the objects may not cause N+1 query.
+        # e.g. { Post => [<Post id:1>, <Post id:2>] }
+        # Notice: impossible_objects are not accurate,
+        # if find collection returns only one object, then the object is impossible object,
+        # impossible_objects are used to avoid treating 1+1 query to N+1 query.
         def impossible_objects
           @@impossible_objects ||= {}
         end
 
+        # eager_loadings keep the object relationships
+        # that the associations are preloaded by find :include.
+        # e.g. { [<Post id:1>, <Post id:2>] => [:comments, :user] }
         def eager_loadings
           @@eager_loadings ||= {}
         end
