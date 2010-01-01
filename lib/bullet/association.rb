@@ -4,6 +4,7 @@ module Bullet
       include Bullet::Notification
 
       def start_request
+        @@checked = false
       end
 
       def end_request
@@ -22,7 +23,7 @@ module Bullet
       end
 
       def notification?
-        check_unused_preload_associations
+        check_unused_preload_associations unless @@checked
         has_unpreload_associations? or has_unused_preload_associations?
       end
 
@@ -70,11 +71,11 @@ module Bullet
         eager_loadings.each do |k, v|
           unless (k & objects).empty?
             if (k & objects) == k
-              eager_loadings[k] = (eager_loadings[k] + Array(associations))
+              eager_loadings[k] << associations
               unique(eager_loadings[k])
               break
             else
-              eager_loadings.merge!({(k & objects) => (eager_loadings[k] + Array(associations))})
+              eager_loadings.merge!({(k & objects) => (eager_loadings[k].dup << associations)})
               unique(eager_loadings[(k & objects)])
               eager_loadings.merge!({(k - objects) => eager_loadings[k]}) unless (k - objects).empty?
               unique(eager_loadings[(k - objects)])
@@ -84,7 +85,7 @@ module Bullet
           end
         end
         unless objects.empty?
-          eager_loadings[objects] << Array(associations) 
+          eager_loadings[objects] << associations
           unique(eager_loadings[objects])
         end
       end
@@ -107,6 +108,7 @@ module Bullet
       #   get call_object_association from associations of call_object_associations whose object is in related_objects 
       #   if association not in call_object_association, then the object => association - call_object_association is ununsed preload assocations
       def check_unused_preload_associations
+        @@checked = true
         object_associations.each do |object, association|
           related_objects = eager_loadings.select {|key, value| key.include?(object) and value == association}.collect(&:first).flatten
           call_object_association = related_objects.collect { |related_object| call_object_associations[related_object] }.compact.flatten.uniq

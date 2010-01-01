@@ -18,6 +18,7 @@ describe Bullet::Association, 'for peschkaj' do
 
       create_table :users do |t|
         t.column :name, :string
+        t.column :category_id, :integer
       end
     end
   end
@@ -30,6 +31,7 @@ describe Bullet::Association, 'for peschkaj' do
 
   class Category < ActiveRecord::Base
     has_many :submissions
+    has_many :users
   end
   
   class Submission < ActiveRecord::Base
@@ -39,6 +41,7 @@ describe Bullet::Association, 'for peschkaj' do
   
   class User < ActiveRecord::Base
     has_one :submission
+    belongs_to :category
   end
 
   before(:all) do
@@ -47,8 +50,8 @@ describe Bullet::Association, 'for peschkaj' do
     category1 = Category.create(:name => "category1")
     category2 = Category.create(:name => "category2")
     
-    user1 = User.create(:name => 'user1')
-    user2 = User.create(:name => 'user2')
+    user1 = User.create(:name => 'user1', :category => category1)
+    user2 = User.create(:name => 'user2', :category => category1)
     
     submission1 = category1.submissions.create(:name => "submission1", :user => user1)
     submission2 = category1.submissions.create(:name => "submission2", :user => user2)
@@ -75,7 +78,7 @@ describe Bullet::Association, 'for peschkaj' do
       submission.user.name
     end
     Bullet::Association.check_unused_preload_associations
-    Bullet::Association.should_not be_unused_preload_associations_for(Category, :submissioins)
+    Bullet::Association.should_not be_unused_preload_associations_for(Category, :submissions)
     Bullet::Association.should_not be_unused_preload_associations_for(Submission, :user)
   end
 end

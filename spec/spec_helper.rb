@@ -36,7 +36,7 @@ module Bullet
 
       # returns true if the given class includes the specific unused preloaded association
       def unused_preload_associations_for?(klazz, association)
-         unused_preload_associations[klazz].present? && unused_preload_associations[klazz].include?(association)
+        unused_preload_associations[klazz].present? && unused_preload_associations[klazz].include?(association)
       end
     end
   end
