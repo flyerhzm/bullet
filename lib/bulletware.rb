@@ -11,7 +11,7 @@ class Bulletware
     return [status, headers, response] if empty?(response)
 
     if Bullet.notification?
-      if !response.body.frozen? and check_html?(headers, response)
+      if status == 200 and !response.body.frozen? and check_html?(headers, response)
         response_body = response.body << Bullet.javascript_notification
         headers['Content-Length'] = response_body.length.to_s
       end
