@@ -120,6 +120,12 @@ To get Growl support up-and-running for Bullet, follow the steps below:
 
 ****************************************************************************
 
+h2. Ruby 1.9 issue
+
+ruby-growl gem has an issue about md5 in ruby 1.9, if you use growl and ruby 1.9, check this gist http://gist.github.com/300184
+
+****************************************************************************
+
 h2. Important
 
 If you encounter the following errors in development environment:

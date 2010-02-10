@@ -22,7 +22,7 @@ class Bulletware
     response_body ||= response.body
     Bullet.end_request
     no_browser_cache(headers) if Bullet.disable_browser_cache
-    [status, headers, response_body]
+    [status, headers, [response_body]]
   end
 
   # fix issue if response's body is a Proc
