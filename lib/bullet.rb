@@ -1,3 +1,4 @@
+require 'action_controller/dispatcher'
 require 'bulletware'
 
 module Bullet
@@ -17,7 +18,6 @@ module Bullet
         Bullet::ActiveRecord.enable
         Bullet::ActionController.enable
         if ::Rails::VERSION::STRING =~ /^2.3/
-          require 'action_controller/dispatcher'
           ::ActionController::Dispatcher.middleware.use Bulletware
         end
       end
