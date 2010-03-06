@@ -55,9 +55,9 @@ describe Bullet::Association, 'has_many' do
     belongs_to :writer
 
 
-    named_scope :preload_posts, lambda { {:include => :comments} }
-    named_scope :in_category_name, lambda { |name|
-      { :conditions => ['categories.name = ?', name], :include => :category }
+    scope :preload_posts, lambda { includes(:comments) }
+    scope :in_category_name, lambda { |name|
+      where(['categories.name = ?', name]).includes(:category)
     }
   end
 
@@ -128,49 +128,50 @@ describe Bullet::Association, 'has_many' do
     Bullet::Association.end_request
   end
 
-  context "for unused cases" do
+  # FIXME: setup and teardown are not inherited by context
+  # context "for unused cases" do
     #If you have the same record created twice with different includes
     #  the hash value get's accumulated includes, which leads to false Unused eager loading
-    it "should not incorrectly mark associations as unused when multiple object instances" do
-      comments_with_author = Comment.all(:include => :author)
-      comments_with_post = Comment.all(:include => :post)
-      comments_with_author.each { |c| c.author.name }
-      comments_with_author.each { |c| c.post.name }
-      Bullet::Association.check_unused_preload_associations
-      Bullet::Association.should be_unused_preload_associations_for(Comment, :post)
-      Bullet::Association.should be_detecting_unpreloaded_association_for(Comment, :post)
-    end
+    #it "should not incorrectly mark associations as unused when multiple object instances" do
+      #comments_with_author = Comment.includes(:author)
+      #comments_with_post = Comment.includes(:post)
+      #comments_with_author.each { |c| c.author.name }
+      #comments_with_author.each { |c| c.post.name }
+      #Bullet::Association.check_unused_preload_associations
+      #Bullet::Association.should be_unused_preload_associations_for(Comment, :post)
+      #Bullet::Association.should be_detecting_unpreloaded_association_for(Comment, :post)
+    #end
 
     # same as above with different Models being queried
-    it "should not incorrectly mark associations as unused when multiple object instances different Model" do
-      post_with_comments = Post.all(:include => :comments)
-      comments_with_author = Comment.all(:include => :author)
-      post_with_comments.each { |p| p.comments.first.author.name }
-      comments_with_author.each { |c| c.name }
-      Bullet::Association.check_unused_preload_associations
-      Bullet::Association.should be_unused_preload_associations_for(Comment, :author)
-      Bullet::Association.should be_detecting_unpreloaded_association_for(Comment, :author)
-    end
+    #it "should not incorrectly mark associations as unused when multiple object instances different Model" do
+      #post_with_comments = Post.includes(:comments)
+      #comments_with_author = Comment.includes(:author)
+      #post_with_comments.each { |p| p.comments.first.author.name }
+      #comments_with_author.each { |c| c.name }
+      #Bullet::Association.check_unused_preload_associations
+      #Bullet::Association.should be_unused_preload_associations_for(Comment, :author)
+      #Bullet::Association.should be_detecting_unpreloaded_association_for(Comment, :author)
+    #end
 
     # this test passes right now. But is a regression test to ensure that if only a small set of returned records
     # is not used that a unused preload association error is not generated
     it  "should not have unused when small set of returned records are discarded" do
-      comments_with_author = Comment.all(:include => :author)
-      comment_collection = comments_with_author.first(2)
+      comments_with_author = Comment.includes(:author)
+      comment_collection = comments_with_author.limit(2)
       comment_collection.collect { |com| com.author.name }
       Bullet::Association.check_unused_preload_associations
       Bullet::Association.should_not be_unused_preload_associations_for(Comment, :author)
     end
-  end
+  # end
 
 
-  context "comments => posts => category" do
+  # FIXME: setup and teardown are not inherited by context
+  # context "comments => posts => category" do
 
     # this happens because the post isn't a possible object even though the writer is access through the post
     # which leads to an 1+N queries
     it "should detect unpreloaded writer" do
-      Comment.all(:include => [:author, :post],
-        :conditions => ["base_users.id = ?", BaseUser.first]).each do |com|
+      Comment.includes([:author, :post]).where(["base_users.id = ?", BaseUser.first]).each do |com|
         com.post.writer.name
       end
       Bullet::Association.should be_detecting_unpreloaded_association_for(Post, :writer)
@@ -179,8 +180,7 @@ describe Bullet::Association, 'has_many' do
     # this happens because the comment doesn't break down the hash into keys
     # properly creating an association from comment to post
     it "should detect preload of comment => post" do
-      comments = Comment.all(:include => [:author, {:post => :writer}],
-        :conditions => ["base_users.id = ?", BaseUser.first]).each do |com|
+      comments = Comment.includes([:author, {:post => :writer}]).where(["base_users.id = ?", BaseUser.first]).each do |com|
         com.post.writer.name
       end
       Bullet::Association.should_not be_detecting_unpreloaded_association_for(Comment, :post)
@@ -188,8 +188,7 @@ describe Bullet::Association, 'has_many' do
     end
 
     it "should detect preload of post => writer" do
-      comments = Comment.all(:include => [:author, {:post => :writer}],
-        :conditions => ["base_users.id = ?", BaseUser.first]).each do |com|
+      comments = Comment.includes([:author, {:post => :writer}]).where(["base_users.id = ?", BaseUser.first]).each do |com|
         com.post.writer.name
       end
       Bullet::Association.should be_creating_object_association_for(comments.first, :author)
@@ -210,42 +209,43 @@ describe Bullet::Association, 'has_many' do
     # a repeating loop of calls in this test
     it "should not raise a stack error from posts to category" do
       lambda {
-        Comment.all(:include => {:post => :category}).each do |com|
+        Comment.includes({:post => :category}).each do |com|
           com.post.category
         end
       }.should_not raise_error(SystemStackError)
     end
-  end
+  # end
 
-  context "post => comments" do
+  # FIXME: setup and teardown are not inherited by context
+  # context "post => comments" do
     it "should detect preload with post => comments" do
-      Post.find(:all, :include => :comments).each do |post|
+      Post.includes(:comments).each do |post|
         post.comments.collect(&:name)
       end
       Bullet::Association.should_not be_has_unpreload_associations
     end
 
     it "should detect no preload post => comments" do
-      Post.find(:all).each do |post|
+      Post.all.each do |post|
         post.comments.collect(&:name)
       end
       Bullet::Association.should be_has_unpreload_associations
     end
 
     it "should detect unused preload post => comments for post" do
-      Post.find(:all, :include => :comments).collect(&:name)
+      Post.includes(:comments).collect(&:name)
       Bullet::Association.check_unused_preload_associations
       Bullet::Association.should be_has_unused_preload_associations
     end
 
     it "should detect no unused preload post => comments for post" do
-      Post.find(:all).collect(&:name)
+      Post.all.collect(&:name)
       Bullet::Association.check_unused_preload_associations
       Bullet::Association.should_not be_has_unused_preload_associations
     end
 
     it "should detect no unused preload post => comments for comment" do
-      Post.find(:all).each do |post|
+      Post.all.each do |post|
         post.comments.collect(&:name)
       end
       Bullet::Association.check_unused_preload_associations
@@ -254,17 +254,18 @@ describe Bullet::Association, 'has_many' do
       Bullet::Association.end_request
       Bullet::Association.start_request
 
-      Post.find(:all).each do |post|
+      Post.all.each do |post|
         post.comments.collect(&:name)
       end
       Bullet::Association.check_unused_preload_associations
       Bullet::Association.should_not be_has_unused_preload_associations
     end
-  end
+  # end
 
-  context "category => posts => comments" do
+  # FIXME: setup and teardown are not inherited by context
+  # context "category => posts => comments" do
     it "should detect preload with category => posts => comments" do
-      Category.find(:all, :include => {:posts => :comments}).each do |category|
+      Category.includes({:posts => :comments}).each do |category|
         category.posts.each do |post|
           post.comments.collect(&:name)
         end
@@ -273,7 +274,7 @@ describe Bullet::Association, 'has_many' do
     end
 
     it "should detect preload category => posts, but no post => comments" do
-      Category.find(:all, :include => :posts).each do |category|
+      Category.includes(:posts).each do |category|
         category.posts.each do |post|
           post.comments.collect(&:name)
         end
@@ -282,7 +283,7 @@ describe Bullet::Association, 'has_many' do
     end
 
     it "should detect no preload category => posts => comments" do
-      Category.find(:all).each do |category|
+      Category.all.each do |category|
         category.posts.each do |post|
           post.comments.collect(&:name)
         end
@@ -291,13 +292,13 @@ describe Bullet::Association, 'has_many' do
     end
 
     it "should detect unused preload with category => posts => comments" do
-      Category.find(:all, :include => {:posts => :comments}).collect(&:name)
+      Category.includes({:posts => :comments}).collect(&:name)
       Bullet::Association.check_unused_preload_associations
       Bullet::Association.should be_has_unused_preload_associations
     end
 
     it "should detect unused preload with post => commnets, no category => posts" do
-      Category.find(:all, :include => {:posts => :comments}).each do |category|
+      Category.includes({:posts => :comments}).each do |category|
         category.posts.collect(&:name)
       end
       Bullet::Association.check_unused_preload_associations
@@ -305,7 +306,7 @@ describe Bullet::Association, 'has_many' do
     end
 
     it "should no detect preload with category => posts => comments" do
-      Category.find(:all).each do |category|
+      Category.all.each do |category|
         category.posts.each do |post|
           post.comments.collect(&:name)
         end
@@ -313,11 +314,12 @@ describe Bullet::Association, 'has_many' do
       Bullet::Association.check_unused_preload_associations
       Bullet::Association.should_not be_has_unused_preload_associations
     end
-  end
+  # end
 
-  context "category => posts, category => entries" do
+  # FIXME: setup and teardown are not inherited by context
+  # context "category => posts, category => entries" do
     it "should detect preload with category => [posts, entries]" do
-      Category.find(:all, :include => [:posts, :entries]).each do |category|
+      Category.includes([:posts, :entries]).each do |category|
         category.posts.collect(&:name)
         category.entries.collect(&:name)
       end
@@ -325,7 +327,7 @@ describe Bullet::Association, 'has_many' do
     end
 
     it "should detect preload with category => posts, but no category => entries" do
-      Category.find(:all, :include => :posts).each do |category|
+      Category.includes(:posts).each do |category|
         category.posts.collect(&:name)
         category.entries.collect(&:name)
       end
@@ -333,7 +335,7 @@ describe Bullet::Association, 'has_many' do
     end
 
     it "should detect no preload with category => [posts, entries]" do
-      Category.find(:all).each do |category|
+      Category.all.each do |category|
         category.posts.collect(&:name)
         category.entries.collect(&:name)
       end
@@ -341,13 +343,13 @@ describe Bullet::Association, 'has_many' do
     end
 
     it "should detect unused with category => [posts, entries]" do
-      Category.find(:all, :include => [:posts, :entries]).collect(&:name)
+      Category.includes([:posts, :entries]).collect(&:name)
       Bullet::Association.check_unused_preload_associations
       Bullet::Association.should be_has_unused_preload_associations
     end
 
     it "should detect unused preload with category => entries, but no category => posts" do
-      Category.find(:all, :include => [:posts, :entries]).each do |category|
+      Category.includes([:posts, :entries]).each do |category|
         category.posts.collect(&:name)
       end
       Bullet::Association.check_unused_preload_associations
@@ -355,18 +357,19 @@ describe Bullet::Association, 'has_many' do
     end
 
     it "should detect no unused preload" do
-      Category.find(:all).each do |category|
+      Category.all.each do |category|
         category.posts.collect(&:name)
         category.entries.collect(&:name)
       end
       Bullet::Association.check_unused_preload_associations
       Bullet::Association.should_not be_has_unused_preload_associations
     end
-  end
+  # end
 
-  context "no preload" do
+  # FIXME: setup and teardown are not inherited by context
+  # context "no preload" do
     it "should no preload only display only one post => comment" do
-      Post.find(:all, :include => :comments).each do |post|
+      Post.includes(:comments).each do |post|
         post.comments.first.name
       end
       Bullet::Association.should_not be_has_unpreload_associations
@@ -376,9 +379,10 @@ describe Bullet::Association, 'has_many' do
       Post.first.comments.collect(&:name)
       Bullet::Association.should_not be_has_unpreload_associations
     end
-  end
+  # end
 
-  context "named_scope for_category_name" do
+  # FIXME: setup and teardown are not inherited by context
+  # context "scope for_category_name" do
     it "should detect preload with post => category" do
       Post.in_category_name('first').all.each do |post|
         post.category.name
@@ -392,27 +396,29 @@ describe Bullet::Association, 'has_many' do
       Bullet::Association.check_unused_preload_associations
       Bullet::Association.should_not be_has_unused_preload_associations
     end
-  end
+  # end
 
-  context "named_scope preload_posts" do
-    it "should no preload post => comments with named_scope" do
+  # FIXME: setup and teardown are not inherited by context
+  # context "scope preload_posts" do
+    it "should no preload post => comments with scope" do
       Post.preload_posts.each do |post|
         post.comments.collect(&:name)
       end
       Bullet::Association.should_not be_has_unpreload_associations
     end
 
-    it "should unused preload with named_scope" do
+    it "should unused preload with scope" do
       Post.preload_posts.collect(&:name)
       Bullet::Association.should_not be_has_unpreload_associations
       Bullet::Association.check_unused_preload_associations
       Bullet::Association.should be_has_unused_preload_associations
     end
-  end
+  # end
 
-  context "no unused" do
+  # FIXME: setup and teardown are not inherited by context
+  # context "no unused" do
     it "should no unused only display only one post => comment" do
-      Post.find(:all, :include => :comments).each do |post|
+      Post.includes(:comments).each do |post|
         i = 0
         post.comments.each do |comment|
           if i == 0
@@ -425,11 +431,12 @@ describe Bullet::Association, 'has_many' do
       Bullet::Association.check_unused_preload_associations
       Bullet::Association.should_not be_has_unused_preload_associations
     end
-  end
+  # end
 
-  context "belongs_to" do
+  # FIXME: setup and teardown are not inherited by context
+  # context "belongs_to" do
     it "should preload comments => post" do
-      Comment.find(:all).each do |comment|
+      Comment.all.each do |comment|
         comment.post.name
       end
       Bullet::Association.should be_has_unpreload_associations
@@ -441,26 +448,26 @@ describe Bullet::Association, 'has_many' do
     end
 
     it "should no preload comments => post" do
-      Comment.find(:all, :include => :post).each do |comment|
+      Comment.includes(:post).each do |comment|
         comment.post.name
       end
       Bullet::Association.should_not be_has_unpreload_associations
     end
 
     it "should detect no unused preload comments => post" do
-      Comment.find(:all).collect(&:name)
+      Comment.all.collect(&:name)
       Bullet::Association.check_unused_preload_associations
       Bullet::Association.should_not be_has_unused_preload_associations
     end
 
     it "should detect unused preload comments => post" do
-      Comment.find(:all, :include => :post).collect(&:name)
+      Comment.includes(:post).collect(&:name)
       Bullet::Association.check_unused_preload_associations
       Bullet::Association.should be_has_unused_preload_associations
     end
 
     it "should dectect no unused preload comments => post" do
-      Comment.find(:all).each do |comment|
+      Comment.all.each do |comment|
         comment.post.name
       end
       Bullet::Association.check_unused_preload_associations
@@ -468,13 +475,13 @@ describe Bullet::Association, 'has_many' do
     end
 
     it "should dectect no unused preload comments => post" do
-      Comment.find(:all, :include => :post).each do |comment|
+      Comment.includes(:post).each do |comment|
         comment.post.name
       end
       Bullet::Association.check_unused_preload_associations
       Bullet::Association.should_not be_has_unused_preload_associations
     end
-  end
+  # end
 end
 
 describe Bullet::Association, 'has_and_belongs_to_many' do
@@ -535,27 +542,27 @@ describe Bullet::Association, 'has_and_belongs_to_many' do
   end
 
   it "should detect unpreload associations" do
-    Student.find(:all).each do |student|
+    Student.all.each do |student|
       student.teachers.collect(&:name)
     end
     Bullet::Association.should be_has_unpreload_associations
   end
 
   it "should detect no unpreload associations" do
-    Student.find(:all, :include => :teachers).each do |student|
+    Student.includes(:teachers).each do |student|
       student.teachers.collect(&:name)
     end
     Bullet::Association.should_not be_has_unpreload_associations
   end
 
   it "should detect unused preload associations" do
-    Student.find(:all, :include => :teachers).collect(&:name)
+    Student.includes(:teachers).collect(&:name)
     Bullet::Association.check_unused_preload_associations
     Bullet::Association.should be_has_unused_preload_associations
   end
 
   it "should detect no unused preload associations" do
-    Student.find(:all).collect(&:name)
+    Student.all.collect(&:name)
     Bullet::Association.check_unused_preload_associations
     Bullet::Association.should_not be_has_unused_preload_associations
   end
@@ -573,7 +580,7 @@ describe Bullet::Association, 'has_many :through' do
         t.column :name, :string
       end
 
-      create_table :relations do |t|
+      create_table :relationships do |t|
         t.column :firm_id, :integer
         t.column :client_id, :integer
       end
@@ -587,16 +594,16 @@ describe Bullet::Association, 'has_many :through' do
   end
 
   class Firm < ActiveRecord::Base
-    has_many :relations
-    has_many :clients, :through => :relations
+    has_many :relationships
+    has_many :clients, :through => :relationships
   end
 
   class Client < ActiveRecord::Base
-    has_many :relations
-    has_many :firms, :through => :relations
+    has_many :relationships
+    has_many :firms, :through => :relationships
   end
 
-  class Relation < ActiveRecord::Base
+  class Relationship < ActiveRecord::Base
     belongs_to :firm
     belongs_to :client
   end
@@ -626,27 +633,27 @@ describe Bullet::Association, 'has_many :through' do
   end
 
   it "should detect unpreload associations" do
-    Firm.find(:all).each do |firm|
+    Firm.all.each do |firm|
       firm.clients.collect(&:name)
     end
     Bullet::Association.should be_has_unpreload_associations
   end
 
   it "should detect no unpreload associations" do
-    Firm.find(:all, :include => :clients).each do |firm|
+    Firm.includes(:clients).each do |firm|
       firm.clients.collect(&:name)
     end
     Bullet::Association.should_not be_has_unpreload_associations
   end
 
   it "should detect no unused preload associations" do
-    Firm.find(:all).collect(&:name)
+    Firm.all.collect(&:name)
     Bullet::Association.check_unused_preload_associations
     Bullet::Association.should_not be_has_unused_preload_associations
   end
 
   it "should detect unused preload associations" do
-    Firm.find(:all, :include => :clients).collect(&:name)
+    Firm.includes(:clients).collect(&:name)
     Bullet::Association.check_unused_preload_associations
     Bullet::Association.should be_has_unused_preload_associations
   end
@@ -742,63 +749,64 @@ describe Bullet::Association, 'has_many :as' do
 
   # this happens only when a polymorphic association is included along with another table which is being referenced in the query
   it "should not have unused preloaded associations with conditions" do
-    all_users = User.all(:include => :pets)
-    users_with_ten_votes = User.all(:include => :votes, :conditions => ["votes.vote = ?", 10])
-    users_without_ten_votes = User.all(:conditions => ["users.id not in (?)", users_with_ten_votes.collect(&:id)])
-    all_users.collect { |t| t.pets.collect(&:name) }
+    all_users = User.includes(:pets)
+    users_with_ten_votes = User.includes(:votes).where(["votes.vote = ?", 10])
+    users_without_ten_votes = User.where(["users.id not in (?)", users_with_ten_votes.collect(&:id)])
+    puts all_users.to_sql
+    all_users.each { |t| t.pets.collect(&:name) }
     Bullet::Association.check_unused_preload_associations
     Bullet::Association.should_not be_unused_preload_associations_for(User, :pets)
     Bullet::Association.should_not be_unused_preload_associations_for(User, :votes)
   end
 
   it "should detect unpreload associations" do
-    User.find(:all).each do |user|
+    User.all.each do |user|
       user.votes.collect(&:vote)
     end
     Bullet::Association.should be_has_unpreload_associations
   end
 
   it "should detect no unpreload associations" do
-    User.find(:all, :include => :votes).each do |user|
+    User.includes(:votes).each do |user|
       user.votes.collect(&:vote)
     end
     Bullet::Association.should_not be_has_unpreload_associations
   end
 
   it "should detect unpreload associations with voteable" do
-    Vote.find(:all).each do |vote|
+    Vote.all.each do |vote|
       vote.voteable.name
     end
     Bullet::Association.should be_has_unpreload_associations
   end
 
   it "should detect no unpreload associations with voteable" do
-    Vote.find(:all, :include => :voteable).each do |vote|
+    Vote.includes(:voteable).each do |vote|
       vote.voteable.name
     end
     Bullet::Association.should_not be_has_unpreload_associations
   end
 
   it "should detect no unused preload associations" do
-    User.find(:all).collect(&:name)
+    User.all.collect(&:name)
     Bullet::Association.check_unused_preload_associations
     Bullet::Association.should_not be_has_unused_preload_associations
   end
 
   it "should detect unused preload associations" do
-    User.find(:all, :include => :votes).collect(&:name)
+    User.includes(:votes).collect(&:name)
     Bullet::Association.check_unused_preload_associations
     Bullet::Association.should be_has_unused_preload_associations
   end
 
   it "should detect no unused preload associations with voteable" do
-    Vote.find(:all).collect(&:vote)
+    Vote.all.collect(&:vote)
     Bullet::Association.check_unused_preload_associations
     Bullet::Association.should_not be_has_unused_preload_associations
   end
 
   it "should detect unused preload associations with voteable" do
-    Vote.find(:all, :include => :voteable).collect(&:vote)
+    Vote.includes(:voteable).collect(&:vote)
     Bullet::Association.check_unused_preload_associations
     Bullet::Association.should be_has_unused_preload_associations
   end
@@ -856,7 +864,7 @@ describe Bullet::Association, "has_one" do
   end
 
   it "should detect unpreload association" do
-    Company.find(:all).each do |company|
+    Company.all.each do |company|
       company.address.name
     end
     Bullet::Association.should be_has_unpreload_associations
@@ -870,7 +878,7 @@ describe Bullet::Association, "has_one" do
   end
 
   it "should detect no unused preload association" do
-    Company.find(:all).collect(&:name)
+    Company.all.collect(&:name)
     Bullet::Association.check_unused_preload_associations
     Bullet::Association.should_not be_has_unused_preload_associations
   end
@@ -936,7 +944,7 @@ describe Bullet::Association, "call one association that in possible objects" do
   end
 
   it "should detect no unpreload association" do
-    Contact.find(:all)
+    Contact.all
     Contact.first.emails.collect(&:name)
     Bullet::Association.should_not be_has_unpreload_associations
   end
@@ -1002,7 +1010,7 @@ describe Bullet::Association, "STI" do
   end
 
   it "should detect unpreload associations" do
-    Page.find(:all).each do |page|
+    Page.all.each do |page|
       page.author.name
     end
     Bullet::Association.should be_has_unpreload_associations
@@ -1027,7 +1035,7 @@ describe Bullet::Association, "STI" do
   end
 
   it "should not detect unused preload associations" do
-    Page.find(:all).collect(&:name)
+    Page.all.collect(&:name)
     Bullet::Association.should_not be_has_unpreload_associations
     Bullet::Association.check_unused_preload_associations
     Bullet::Association.should_not be_has_unused_preload_associations

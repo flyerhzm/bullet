@@ -68,7 +68,7 @@ describe Bullet::Counter do
 
   it "should not need counter cache with part of cities" do
     Country.all.each do |country|
-      country.cities(:conditions => ["name = ?", 'first']).size
+      country.cities.where(:name => 'first').size
     end
     Bullet::Counter.should_not be_need_counter_caches
   end

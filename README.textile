@@ -67,7 +67,7 @@ It is recommended to config growl notification as follows if your collaborators 
 The code above will enable all five of the Bullet notification systems:
 * <code>Bullet.enable</code>: enable Bullet plugin/gem, otherwise do nothing
 * <code>Bullet.alert</code>: pop up a JavaScript alert in the browser
-* <code>Bullet.bullet_logger</code>: log to the Bullet log file (RAILS_ROOT/log/bullet.log)
+* <code>Bullet.bullet_logger</code>: log to the Bullet log file (Rails.root/log/bullet.log)
 * <code>Bullet.rails_logger</code>: add warnings directly to the Rails log
 * <code>Bullet.console</code>: log warnings to your browser's console.log (Safari/Webkit browsers or Firefox w/Firebug installed)
 * <code>Bullet.growl</code>: pop up Growl warnings if your system has Growl installed. Requires a little bit of configuration

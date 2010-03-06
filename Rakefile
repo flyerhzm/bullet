@@ -1,5 +1,5 @@
 require 'rake'
-require 'spec/rake/spectask'
+require 'rspec/core/rake_task'
 require 'rake/rdoctask'
 require 'jeweler'
 
@@ -16,8 +16,8 @@ Rake::RDocTask.new(:rdoc) do |rdoc|
 end
 
 desc "Run all specs in spec directory"
-Spec::Rake::SpecTask.new(:spec) do |t|
-  t.spec_files = FileList['spec/**/*_spec.rb']
+Rspec::Core::RakeTask.new(:spec) do |t|
+  t.pattern = FileList['spec/**/*_spec.rb']
 end
 
 Jeweler::Tasks.new do |gemspec|
