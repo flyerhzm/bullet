@@ -1,15 +1,17 @@
 require 'rubygems'
-require 'spec/autorun'
+require 'rspec'
+require 'rspec/autorun'
+require 'rails'
 require 'active_record'
 require 'action_controller'
 
 module Rails
-  module VERSION 
-    STRING = "2.3.2"
+  class <<self
+    def root
+      File.expand_path(__FILE__).split('/')[0..-3].join('/')
+    end
   end
 end
-
-RAILS_ROOT = File.expand_path(__FILE__).split('/')[0..-3].join('/') unless defined? RAILS_ROOT
 
 $LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + "/../lib"))
 require 'bullet'

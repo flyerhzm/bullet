@@ -73,21 +73,21 @@ describe Bullet::Association do
     end
   
     it "should detect unpreload association from deal to hotel" do
-      Deal.find(:all).each do |deal|
+      Deal.all.each do |deal|
         deal.hotel.location.name
       end
       Bullet::Association.should be_detecting_unpreloaded_association_for(Deal, :hotel)
     end
   
     it "should detect unpreload association from hotel to location" do
-      Deal.find(:all, :include => :hotel).each do |deal|
+      Deal.includes(:hotel).each do |deal|
         deal.hotel.location.name
       end
       Bullet::Association.should be_detecting_unpreloaded_association_for(Hotel, :location)
     end
   
     it "should not detect unpreload association" do
-      Deal.find(:all, :include => {:hotel => :location}).each do |deal|
+      Deal.includes({:hotel => :location}).each do |deal|
         deal.hotel.location.name
       end
       Bullet::Association.should_not be_has_unused_preload_associations

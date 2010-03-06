@@ -280,9 +280,9 @@ module Bullet
           @@eager_loadings ||= {}
         end
 
-        VENDOR_ROOT = File.join(RAILS_ROOT, 'vendor')
+        VENDOR_ROOT = File.join(Rails.root, 'vendor')
         def caller_in_project
-          callers << caller.select {|c| c =~ /#{RAILS_ROOT}/}.reject {|c| c =~ /#{VENDOR_ROOT}/}
+          callers << caller.select {|c| c =~ /#{Rails.root}/}.reject {|c| c =~ /#{VENDOR_ROOT}/}
           callers.uniq!
         end
 

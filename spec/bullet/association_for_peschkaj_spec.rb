@@ -73,7 +73,7 @@ describe Bullet::Association do
     end
   
     it "should not detect unused preload associations" do
-      category = Category.find_by_name('category1', :include => {:submissions => :user}, :order => "id DESC")
+      category = Category.includes({:submissions => :user}).order("id DESC").find_by_name('category1')
       category.submissions.map do |submission|
         submission.name
         submission.user.name
