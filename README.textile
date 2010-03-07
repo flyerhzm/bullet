@@ -107,19 +107,7 @@ ruby-growl gem has an issue about md5 in ruby 1.9, if you use growl and ruby 1.9
 
 h2. Important
 
-If you encounter the following errors in development environment:
-
-<pre><code>
-You might have expected an instance of Array.
-The error occurred while evaluating nil.include?
-    /usr/lib/ruby/gems/1.8/gems/activerecord-2.3.2/lib/active_record/attribute_methods.rb:142:in `create_time_zone_conversion_attribute?'
-    /usr/lib/ruby/gems/1.8/gems/activerecord-2.3.2/lib/active_record/attribute_methods.rb:75:in `define_attribute_methods'
-    /usr/lib/ruby/gems/1.8/gems/activerecord-2.3.2/lib/active_record/attribute_methods.rb:71:in `each'
-    /usr/lib/ruby/gems/1.8/gems/activerecord-2.3.2/lib/active_record/attribute_methods.rb:71:in `define_attribute_methods'
-    /usr/lib/ruby/gems/1.8/gems/activerecord-2.3.2/lib/active_record/attribute_methods.rb:242:in `method_missing'
-</code></pre>
-
-Or any strange behavior of bullet plugin/gem, *please disable your browser's cache*.
+If you find bullet does not work for you, *please disable your browser's cache*.
 
 ****************************************************************************
 
@@ -224,11 +212,15 @@ post2.comments.create(:name => 'fourth')
 <% end %>
 </code></pre>
 
-5. add bullet plugin
+5. add bullet gem to <code>Gemfile</code>
 
 <pre><code>
-$ script/plugin install git://github.com/flyerhzm/bullet.git
+gem "bullet", "2.0.0.beta.2"
 </code></pre>
+
+And run
+
+<pre><code>bundle install</code></pre>
 
 6. enable the bullet plugin in development, add a line to <code>config/environments/development.rb</code>
 
@@ -264,13 +256,14 @@ which means there is a N+1 query from post object to comments associations.
 In the meanwhile, there's a log appended into <code>log/bullet.log</code> file
 
 <pre><code>
-2009-08-20 09:12:19[INFO] N+1 Query: PATH_INFO: /posts;    model: Post => assocations: [comments]
-Add your finder: :include => [:comments]
-2009-08-20 09:12:19[INFO] N+1 Query: method call stack:
-/Users/richard/Downloads/test/app/views/posts/index.html.erb:11:in `_run_erb_app47views47posts47index46html46erb'
-/Users/richard/Downloads/test/app/views/posts/index.html.erb:8:in `each'
-/Users/richard/Downloads/test/app/views/posts/index.html.erb:8:in `_run_erb_app47views47posts47index46html46erb'
-/Users/richard/Downloads/test/app/controllers/posts_controller.rb:7:in `index'
+2010-03-07 14:12:18[INFO] N+1 Query in /posts
+  Post => [:comments]
+  Add to your finder: :include => [:comments]
+2010-03-07 14:12:18[INFO] N+1 Query method call stack
+  /home/flyerhzm/NetBeansProjects/test_bullet2/app/views/posts/index.html.erb:14:in `_render_template__600522146_80203160_0'
+  /home/flyerhzm/NetBeansProjects/test_bullet2/app/views/posts/index.html.erb:11:in `each'
+  /home/flyerhzm/NetBeansProjects/test_bullet2/app/views/posts/index.html.erb:11:in `_render_template__600522146_80203160_0'
+  /home/flyerhzm/NetBeansProjects/test_bullet2/app/controllers/posts_controller.rb:7:in `index'
 </code></pre>
 
 The generated SQLs are
@@ -350,7 +343,7 @@ Remove from your finder: :include => [:comments]
 
 <pre><code>
   def index
-    @posts = Post.find(:all)
+    @posts = Post.all
 
     respond_to do |format|
       format.html # index.html.erb
