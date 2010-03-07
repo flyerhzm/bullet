@@ -203,7 +203,7 @@ post2.comments.create(:name => 'fourth')
 <pre><code>
 <% @posts.each do |post| %>
   <tr>
-    <td><%=h post.name %></td>
+    <td><%= post.name %></td>
     <td><%= post.comments.collect(&:name) %></td>
     <td><%= link_to 'Show', post %></td>
     <td><%= link_to 'Edit', edit_post_path(post) %></td>
@@ -315,7 +315,7 @@ a N+1 query fixed. Cool!
 <pre><code>
 <% @posts.each do |post| %>
   <tr>
-    <td><%=h post.name %></td>
+    <td><%= post.name %></td>
     <td><%= link_to 'Show', post %></td>
     <td><%= link_to 'Edit', edit_post_path(post) %></td>
     <td><%= link_to 'Destroy', post, :confirm => 'Are you sure?', :method => :delete %></td>
@@ -355,8 +355,8 @@ Remove from your finder: :include => [:comments]
 <pre><code>
 <% @posts.each do |post| %>
   <tr>
-    <td><%=h post.name %></td>
-    <td><%=h post.comments.size %></td>
+    <td><%= post.name %></td>
+    <td><%= post.comments.size %></td>
     <td><%= link_to 'Show', post %></td>
     <td><%= link_to 'Edit', edit_post_path(post) %></td>
     <td><%= link_to 'Destroy', post, :confirm => 'Are you sure?', :method => :delete %></td>
