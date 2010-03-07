@@ -15,10 +15,11 @@ Rake::RDocTask.new(:rdoc) do |rdoc|
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
 
-desc "Run all specs in spec directory"
-Rspec::Core::RakeTask.new(:spec) do |t|
-  t.pattern = FileList['spec/**/*_spec.rb']
-end
+# FIXME: 'rake spec' will break the test, just run 'ruby spec/association_spec.rb'
+#desc "Run all specs in spec directory"
+#Rspec::Core::RakeTask.new(:spec) do |t|
+  #t.pattern = FileList['spec/**/*_spec.rb']
+#end
 
 Jeweler::Tasks.new do |gemspec|
   gemspec.name = "bullet"
