@@ -5,25 +5,28 @@
 
 Gem::Specification.new do |s|
   s.name = %q{bullet}
-  s.version = "1.7.6"
+  s.version = "2.0.0.beta.1"
 
-  s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
+  s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.authors = ["Richard Huang"]
   s.date = %q{2010-03-07}
   s.description = %q{The Bullet plugin is designed to help you increase your application's performance by reducing the number of queries it makes. It will watch your queries while you develop your application and notify you when you should add eager loading (N+1 queries) or when you're using eager loading that isn't necessary.}
   s.email = %q{flyerhzm@gmail.com}
   s.extra_rdoc_files = [
-    "README.textile"
+    "README.textile",
+     "README_for_rails2.textile"
   ]
   s.files = [
     "MIT-LICENSE",
      "README.textile",
+     "README_for_rails2.textile",
      "Rakefile",
      "VERSION",
      "bullet.gemspec",
      "lib/bullet.rb",
-     "lib/bullet/action_controller.rb",
-     "lib/bullet/active_record.rb",
+     "lib/bullet/action_controller2.rb",
+     "lib/bullet/active_record2.rb",
+     "lib/bullet/active_record3.rb",
      "lib/bullet/association.rb",
      "lib/bullet/counter.rb",
      "lib/bullet/logger.rb",
@@ -41,7 +44,7 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/flyerhzm/bullet}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.5}
+  s.rubygems_version = %q{1.3.6}
   s.summary = %q{A plugin to kill N+1 queries and unused eager loading}
   s.test_files = [
     "spec/spec_helper.rb",
