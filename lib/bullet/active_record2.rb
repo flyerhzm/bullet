@@ -2,24 +2,33 @@ module Bullet
   module ActiveRecord
     def self.enable
       require 'active_record'
+      ::ActiveRecord::Base.class_eval do
+        class << self
+          alias_method :origin_find_every, :find_every
+          # if select a collection of objects, then these objects have possible to cause N+1 query.
+          # if select only one object, then the only one object has impossible to cause N+1 query.
+          def find_every(options)
+            records = origin_find_every(options)
 
-      ::ActiveRecord::Relation.class_eval do
-        alias_method :origin_to_a, :to_a
-        def to_a
-          records = origin_to_a
-          if records.size > 1
-            Bullet::Association.add_possible_objects(records)
-            Bullet::Counter.add_possible_objects(records)
-          elsif records.size == 1
-            Bullet::Association.add_impossible_object(records.first)
-            Bullet::Counter.add_impossible_object(records.first)
+            if records 
+              if records.size > 1
+                Bullet::Association.add_possible_objects(records)
+                Bullet::Counter.add_possible_objects(records)
+              elsif records.size == 1
+                Bullet::Association.add_impossible_object(records.first)
+                Bullet::Counter.add_impossible_object(records.first)
+              end
+            end
+
+            records
           end
-          records
         end
       end
 
       ::ActiveRecord::AssociationPreload::ClassMethods.class_eval do
         alias_method :origin_preload_associations, :preload_associations
+        # include query for one to many associations.
+        # keep this eager loadings.
         def preload_associations(records, associations, preload_options={})
           records = [records].flatten.compact.uniq
           return if records.empty?
@@ -31,11 +40,12 @@ module Bullet
         end
       end
 
-      ::ActiveRecord::FinderMethods.class_eval do
+      ::ActiveRecord::Associations::ClassMethods.class_eval do      
+        # add include in named_scope
         alias_method :origin_find_with_associations, :find_with_associations
-        def find_with_associations
-          records = origin_find_with_associations
-          associations = (@eager_load_values + @includes_values).uniq
+        def find_with_associations(options)
+          records = origin_find_with_associations(options)
+          associations = merge_includes(scope(:find, :include), options[:include])
           records.each do |record|
             Bullet::Association.add_object_associations(record, associations)
             Bullet::Association.call_association(record, associations)
@@ -46,6 +56,7 @@ module Bullet
       end
 
       ::ActiveRecord::Associations::ClassMethods::JoinDependency.class_eval do
+        # call join associations
         alias_method :origin_construct_association, :construct_association
         def construct_association(record, join, row)
           associations = join.reflection.name
@@ -55,7 +66,7 @@ module Bullet
         end
       end
 
-    ::ActiveRecord::Associations::AssociationCollection.class_eval do
+      ::ActiveRecord::Associations::AssociationCollection.class_eval do
         # call one to many associations
         alias_method :origin_load_target, :load_target
         def load_target
@@ -75,10 +86,9 @@ module Bullet
           result
         end
       end
-
+      
       ::ActiveRecord::Associations::HasManyAssociation.class_eval do
         alias_method :origin_has_cached_counter?, :has_cached_counter?
-
         def has_cached_counter?
           result = origin_has_cached_counter?
           Bullet::Counter.add_counter_cache(@owner, @reflection.name) unless result
@@ -86,16 +96,6 @@ module Bullet
         end
       end
 
-      ::ActiveRecord::Associations::HasManyThroughAssociation.class_eval do
-        alias_method :origin_has_cached_counter?, :has_cached_counter?
-
-        def has_cached_counter?
-          result = origin_has_cached_counter?
-          Bullet::Counter.add_counter_cache(@owner, @reflection.name) unless result
-          result
-        end
-      end
-      
       ::ActiveRecord::Associations::HasManyThroughAssociation.class_eval do
         alias_method :origin_has_cached_counter?, :has_cached_counter?
         def has_cached_counter?

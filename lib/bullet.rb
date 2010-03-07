@@ -2,8 +2,12 @@ require 'action_controller/dispatcher'
 require 'bulletware'
 
 module Bullet
-  autoload :ActiveRecord, 'bullet/active_record'
-  autoload :ActionController, 'bullet/action_controller'
+  if Rails.version =~ /^3.0/
+    autoload :ActiveRecord, 'bullet/active_record3'
+  else
+    autoload :ActiveRecord, 'bullet/active_record2'
+    autoload :ActionController, 'bullet/action_controller2'
+  end
   autoload :Association, 'bullet/association'
   autoload :Counter, 'bullet/counter'
   autoload :BulletLogger, 'bullet/logger'
@@ -16,8 +20,14 @@ module Bullet
       @enable = enable
       if enable? 
         Bullet::ActiveRecord.enable
-        require 'action_controller/metal'
-        ::ActionController::Metal.middleware_stack.use Bulletware
+        if Rails.version =~ /^3.0/
+          require 'action_controller/metal'
+          ::ActionController::Metal.middleware_stack.use Bulletware
+        elsif Rails.version =~/^2.3/
+          Bullet::ActionController.enable
+          require 'action_controller/dispatcher'
+          ::ActionController::Dispatcher.middleware.use Bulletware
+        end
       end
     end
 
