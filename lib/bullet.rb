@@ -1,4 +1,3 @@
-require 'action_controller/dispatcher'
 require 'bulletware'
 
 module Bullet
