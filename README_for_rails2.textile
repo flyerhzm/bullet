@@ -4,7 +4,23 @@ The Bullet plugin/gem is designed to help you increase your application's perfor
 
 Best practice is to use Bullet in development mode or custom mode (staging, profile, etc.). The last thing you want is your clients getting alerts about how lazy you are.
 
-The Bullet plugin/gem now supports rails 2.1, 2.2, 2.3 and 3.0, tested in rails 2.1.2, 2.2.2, 2.3.2 and 3.0.0.beta.
+The Bullet plugin/gem now supports rails 2.1, 2.2 and 2.3, tested in rails 2.1.2, 2.2.2 and 2.3.2.
+
+*Important: bullet gem has been moved to gemcutter.org*
+
+****************************************************************************
+
+h2. Change
+
+There is a large refactor from gem 1.4 to 1.5, so if you upgrade to 1.5 gem, please read the Configuration section again and rewrite your configuration.
+
+****************************************************************************
+
+h2. Contributors
+
+flipsasser added Growl, console.log and Rails.log support, very awesome. And he also improved README.
+rainux added group style console.log.
+2collegebums added some great specs to generate red bar.
 
 ****************************************************************************
 
@@ -15,8 +31,13 @@ You can add Bullet to your Rails gem requirements:
 
 You can install it as a gem:
 <pre><code>
-sudo gem install bullet --pre
+sudo gem sources -a http://gemcutter.org
+sudo gem install bullet
 </code></pre>
+
+Or you can install it as a rails plugin:
+<pre><code>script/plugin install git://github.com/flyerhzm/bullet.git</code></pre>
+
 ****************************************************************************
 
 h2. Configuration
@@ -46,7 +67,7 @@ It is recommended to config growl notification as follows if your collaborators 
 The code above will enable all five of the Bullet notification systems:
 * <code>Bullet.enable</code>: enable Bullet plugin/gem, otherwise do nothing
 * <code>Bullet.alert</code>: pop up a JavaScript alert in the browser
-* <code>Bullet.bullet_logger</code>: log to the Bullet log file (Rails.root/log/bullet.log)
+* <code>Bullet.bullet_logger</code>: log to the Bullet log file (RAILS_ROOT/log/bullet.log)
 * <code>Bullet.rails_logger</code>: add warnings directly to the Rails log
 * <code>Bullet.console</code>: log warnings to your browser's console.log (Safari/Webkit browsers or Firefox w/Firebug installed)
 * <code>Bullet.growl</code>: pop up Growl warnings if your system has Growl installed. Requires a little bit of configuration
@@ -165,14 +186,6 @@ h2. Links
 
 ****************************************************************************
 
-h2. Contributors
-
-flipsasser added Growl, console.log and Rails.log support, very awesome. And he also improved README.
-rainux added group style console.log.
-2collegebums added some great specs to generate red bar.
-
-****************************************************************************
-
 h2. Step by step example
 
 Bullet is designed to function as you browse through your application in development. It will alert you whenever it encounters N+1 queries or unused eager loading.
@@ -182,8 +195,8 @@ Bullet is designed to function as you browse through your application in develop
 <pre><code>
 $ rails test
 $ cd test
-$ script/rails g scaffold post name:string 
-$ script/rails g scaffold comment name:string post_id:integer
+$ script/generate scaffold post name:string 
+$ script/generate scaffold comment name:string post_id:integer
 $ rake db:migrate
 </code></pre>
 
@@ -199,7 +212,7 @@ class Comment < ActiveRecord::Base
 end
 </code></pre>
 
-3. go to <code>script/rails c</code> and execute
+3. go to script/console and execute
 
 <pre><code>
 post1 = Post.create(:name => 'first')
@@ -247,7 +260,7 @@ end
 7. start server
 
 <pre><code>
-$ script/rails s
+$ script/server
 </code></pre>
 
 8. input http://localhost:3000/posts in browser, then you will see a popup alert box says
@@ -286,7 +299,7 @@ The generated SQLs are
 
 <pre><code>
   def index
-    @posts = Post.includes(:comments)
+    @posts = Post.find(:all, :include => :comments)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -310,7 +323,7 @@ a N+1 query fixed. Cool!
 
 <pre><code>
   def index
-    @posts = Post.includes(:comments)
+    @posts = Post.find(:all, :include => :comments)
 
     respond_to do |format|
       format.html # index.html.erb
