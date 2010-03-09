@@ -26,7 +26,7 @@ module Bullet
           alias_method :origin_process, :process
           def process(request, response, method = :perform_action, *arguments)
             Bullet.start_request
-            response = origin_process(request, response, method = :perform_action, *arguments)
+            response = origin_process(request, response, method, *arguments)
             
             if Bullet.notification?
               if response.headers["type"] and response.headers["type"].include? 'text/html' and response.body =~ %r{<html.*</html>}m
