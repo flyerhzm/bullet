@@ -6,7 +6,7 @@ require 'jeweler'
 desc 'Default: run unit tests.'
 task :default => :spec
 
-desc 'Generate documentation for the sitemap plugin.'
+desc 'Generate documentation for the bullet plugin.'
 Rake::RDocTask.new(:rdoc) do |rdoc|
   rdoc.rdoc_dir = 'rdoc'
   rdoc.title    = 'Bullet'
