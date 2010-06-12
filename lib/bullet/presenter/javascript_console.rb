@@ -1,7 +1,9 @@
 module Bullet
   module Presenter
     module JavascriptConsole
-      def present( notice )
+      def self.present( notice )
+        return '' unless Bullet.console
+
         code = <<-CODE
           if (typeof(console) !== 'undefined') {
             if (console.groupCollapsed && console.groupEnd && console.log) {

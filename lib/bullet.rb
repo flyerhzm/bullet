@@ -83,5 +83,15 @@ module Bullet
     def log_notification(path)
       BULLETS.each {|bullet| bullet.log_notification(path) if bullet.notification?}
     end
+
+    def active_presenters
+      active_presenters = []
+      active_presenters << Bullet::Presenter::JavascriptAlert if Bullet.alert
+      active_presenters << Bullet::Presenter::JavascriptConole if Bullet.console
+      active_presenters << Bullet::Presenter::Growl if Bullet.growl
+      active_presenters << Bullet::Presenter::RailsLogger if Bullet.rails_logger
+      active_presenters << Bullet::Presenter::BulletLogger if Bullet.bullet_logger
+      active_presenters
+    end
   end
 end
