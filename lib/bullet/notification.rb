@@ -29,16 +29,10 @@ module Bullet
     end
 
     def growl_notification
-      if Bullet.growl
-        response = notification_response
-        unless response.blank?
-          begin
-            notice = GrowlNotice.new( nil, response, nil )
-            notice.for_growl
-          rescue
-          end
-        end
-      end
+      return unless Bullet.growl
+      notice = GrowlNotice.new( nil, notification_response, nil )
+      notice.for_growl if notice.has_contents?
+    rescue
     end
 
     def log_notification(path)
