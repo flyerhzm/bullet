@@ -17,19 +17,13 @@ module Bullet
 
     def javascript_notification
       str = ''
-      return str unless Bullet.alert || Bullet.console
-
       notice = Notice::Base.new( console_title, notification_response, call_stack_messages )
 
       if notice.has_contents?
-        if Bullet.alert
-          notice.presenter = Bullet::Notice::Presenter::JavascriptAlert
-          str << notice.present
-        end
-        if Bullet.console
-          notice.presenter = Bullet::Notice::Presenter::JavascriptConsole
-          str << notice.present
-        end
+        notice.presenter = Bullet::Notice::Presenter::JavascriptAlert
+        str << notice.present
+        notice.presenter = Bullet::Notice::Presenter::JavascriptConsole
+        str << notice.present
       end
       str
     end
@@ -45,18 +39,12 @@ module Bullet
     end
 
     def log_notification(path)
-      return unless Bullet.bullet_logger || Bullet.rails_logger
-
       notice = Notice::Base.new( nil, nil, nil, log_messages( path ) )
-      if Bullet.rails_logger
-        notice.presenter = Bullet::Notice::Presenter::RailsLogger
-        notice.present
-      end
+      notice.presenter = Bullet::Notice::Presenter::RailsLogger
+      notice.present
       
-      if Bullet.bullet_logger
-        notice.presenter = Bullet::Notice::Presenter::BulletLogger
-        notice.present
-      end
+      notice.presenter = Bullet::Notice::Presenter::BulletLogger
+      notice.present
     end
   end
 end
