@@ -36,15 +36,11 @@ module Bullet
     end
 
     def log_notification(path)
-      if Bullet.bullet_logger || Bullet.rails_logger
-        Rails.logger.warn '' if Bullet.rails_logger
-        messages = log_messages(path)
-        messages.each do |message|
-          Bullet.logger.info(message.join("\n")) if Bullet.bullet_logger
-          Rails.logger.warn(message.join("\n")) if Bullet.rails_logger
-        end
-        Bullet.logger_file.flush if Bullet.bullet_logger
-      end
+      return unless Bullet.bullet_logger || Bullet.rails_logger
+
+      notice = LogNotice.new( nil, nil, nil, log_messages( path ) )
+      notice.for_rails_log if Bullet.rails_logger
+      notice.for_bullet_log if Bullet.bullet_logger
     end
   end
 end
