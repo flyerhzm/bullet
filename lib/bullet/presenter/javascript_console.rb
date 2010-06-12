@@ -1,7 +1,7 @@
 module Bullet
   module Presenter
     module JavascriptConsole
-      def self.present( notice )
+      def self.inline( notice )
         return '' unless Bullet.console
 
         code = <<-CODE

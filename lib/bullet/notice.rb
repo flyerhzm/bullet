@@ -29,8 +29,14 @@ module Bullet
       @log_messages.collect { |msg| msg.join( "\n" ) }
     end
 
-    def present
-      self.presenter.send :present, self
+    def present_inline
+      return unless self.presenter.respond_to? :present_inline
+      self.presenter.send( :inline, self ) 
+    end
+
+    def present_out_of_channel
+      return unless self.presenter.respond_to? :present_out_of_channel
+      self.presenter.send( :out_of_channel, self )
     end
   end
 end
