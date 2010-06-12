@@ -1,0 +1,177 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+ActionController	lib/bullet/action_controller2.rb	/^  class ActionController$/;"	c	class:Bullet
+ActiveRecord	lib/bullet/active_record2.rb	/^  module ActiveRecord$/;"	m	class:Bullet
+ActiveRecord	lib/bullet/active_record3.rb	/^  module ActiveRecord$/;"	m	class:Bullet
+Address	spec/bullet/association_spec.rb	/^  class Address < ActiveRecord::Base$/;"	c
+Association	lib/bullet/association.rb	/^  class Association$/;"	c	class:Bullet
+Association	spec/spec_helper.rb	/^  class Association$/;"	c	class:Bullet
+Author	spec/bullet/association_spec.rb	/^  class Author < ActiveRecord::Base$/;"	c
+BaseUser	spec/bullet/association_spec.rb	/^  class BaseUser < ActiveRecord::Base$/;"	c
+Bullet	lib/bullet.rb	/^module Bullet$/;"	m
+Bullet	lib/bullet/action_controller2.rb	/^module Bullet$/;"	m
+Bullet	lib/bullet/active_record2.rb	/^module Bullet$/;"	m
+Bullet	lib/bullet/active_record3.rb	/^module Bullet$/;"	m
+Bullet	lib/bullet/association.rb	/^module Bullet$/;"	m
+Bullet	lib/bullet/counter.rb	/^module Bullet$/;"	m
+Bullet	lib/bullet/logger.rb	/^module Bullet$/;"	m
+Bullet	lib/bullet/notification.rb	/^module Bullet$/;"	m
+Bullet	lib/bullet/notifiers/javascript.rb	/^module Bullet$/;"	m
+Bullet	spec/spec_helper.rb	/^module Bullet$/;"	m
+BulletLogger	lib/bullet/logger.rb	/^  class BulletLogger < Logger$/;"	c	class:Bullet
+Bulletware	lib/bulletware.rb	/^class Bulletware$/;"	c
+Category	spec/bullet/association_for_peschkaj_spec.rb	/^    class Category < ActiveRecord::Base$/;"	c
+Category	spec/bullet/association_spec.rb	/^  class Category < ActiveRecord::Base$/;"	c
+City	spec/bullet/counter_spec.rb	/^  class City < ActiveRecord::Base$/;"	c
+Client	spec/bullet/association_spec.rb	/^  class Client < ActiveRecord::Base$/;"	c
+Comment	spec/bullet/association_spec.rb	/^  class Comment < ActiveRecord::Base$/;"	c
+Company	spec/bullet/association_spec.rb	/^  class Company < ActiveRecord::Base$/;"	c
+Contact	spec/bullet/association_spec.rb	/^  class Contact < ActiveRecord::Base$/;"	c
+Counter	lib/bullet/counter.rb	/^  class Counter$/;"	c	class:Bullet
+Country	spec/bullet/counter_spec.rb	/^  class Country < ActiveRecord::Base$/;"	c
+Deal	spec/bullet/association_for_chris_spec.rb	/^    class Deal < ActiveRecord::Base$/;"	c
+Document	spec/bullet/association_spec.rb	/^  class Document < ActiveRecord::Base$/;"	c
+Email	spec/bullet/association_spec.rb	/^  class Email < ActiveRecord::Base$/;"	c
+Entry	spec/bullet/association_spec.rb	/^  class Entry < ActiveRecord::Base$/;"	c
+Firm	spec/bullet/association_spec.rb	/^  class Firm < ActiveRecord::Base$/;"	c
+Folder	spec/bullet/association_spec.rb	/^  class Folder < Document$/;"	c
+Hotel	spec/bullet/association_for_chris_spec.rb	/^    class Hotel < ActiveRecord::Base$/;"	c
+Javascript	lib/bullet/notifiers/javascript.rb	/^      class Javascript$/;"	c	class:Bullet.Notification.Notifiers
+Location	spec/bullet/association_for_chris_spec.rb	/^    class Location < ActiveRecord::Base$/;"	c
+News	spec/bullet/association_spec.rb	/^  class News < ActiveRecord::Base$/;"	c
+Newspaper	spec/bullet/association_spec.rb	/^  class Newspaper < ActiveRecord::Base$/;"	c
+Notification	lib/bullet/notification.rb	/^  module Notification$/;"	m	class:Bullet
+Notification	lib/bullet/notifiers/javascript.rb	/^  module Notification$/;"	m	class:Bullet
+NotificationError	lib/bullet/notification.rb	/^  class NotificationError < StandardError$/;"	c	class:Bullet
+Notifiers	lib/bullet/notifiers/javascript.rb	/^    module Notifiers$/;"	m	class:Bullet.Notification
+Page	spec/bullet/association_spec.rb	/^  class Page < Document$/;"	c
+Person	spec/bullet/counter_spec.rb	/^  class Person < ActiveRecord::Base$/;"	c
+Pet	spec/bullet/association_spec.rb	/^  class Pet < ActiveRecord::Base$/;"	c
+Pet	spec/bullet/counter_spec.rb	/^  class Pet < ActiveRecord::Base$/;"	c
+Post	spec/bullet/association_spec.rb	/^  class Post < ActiveRecord::Base$/;"	c
+Rails	spec/spec_helper.rb	/^module Rails$/;"	m
+Relationship	spec/bullet/association_spec.rb	/^  class Relationship < ActiveRecord::Base$/;"	c
+Student	spec/bullet/association_spec.rb	/^  class Student < ActiveRecord::Base$/;"	c
+Submission	spec/bullet/association_for_peschkaj_spec.rb	/^    class Submission < ActiveRecord::Base$/;"	c
+Teacher	spec/bullet/association_spec.rb	/^  class Teacher < ActiveRecord::Base$/;"	c
+User	spec/bullet/association_for_peschkaj_spec.rb	/^    class User < ActiveRecord::Base$/;"	c
+User	spec/bullet/association_spec.rb	/^  class User < ActiveRecord::Base$/;"	c
+Vote	spec/bullet/association_spec.rb	/^  class Vote < ActiveRecord::Base$/;"	c
+Writer	spec/bullet/association_spec.rb	/^  class Writer < BaseUser$/;"	c
+add_call_object_associations	lib/bullet/association.rb	/^      def add_call_object_associations(object, associations)$/;"	f	class:Bullet.Association
+add_counter_cache	lib/bullet/counter.rb	/^      def add_counter_cache(object, associations)$/;"	f	class:Bullet.Counter
+add_eager_loadings	lib/bullet/association.rb	/^      def add_eager_loadings(objects, associations)$/;"	f	class:Bullet.Association
+add_impossible_object	lib/bullet/association.rb	/^      def add_impossible_object(object)$/;"	f	class:Bullet.Association
+add_impossible_object	lib/bullet/counter.rb	/^      def add_impossible_object(object)$/;"	f	class:Bullet.Counter
+add_object_associations	lib/bullet/association.rb	/^      def add_object_associations(object, associations)$/;"	f	class:Bullet.Association
+add_possible_objects	lib/bullet/association.rb	/^      def add_possible_objects(objects)$/;"	f	class:Bullet.Association
+add_possible_objects	lib/bullet/counter.rb	/^      def add_possible_objects(objects)$/;"	f	class:Bullet.Counter
+add_unpreload_associations	lib/bullet/association.rb	/^      def add_unpreload_associations(klazz, associations)$/;"	f	class:Bullet.Association
+add_unused_preload_associations	lib/bullet/association.rb	/^      def add_unused_preload_associations(klazz, associations)$/;"	f	class:Bullet.Association
+association?	lib/bullet/association.rb	/^        def association?(object, associations)$/;"	f	class:Bullet.Association
+associations_str	lib/bullet/association.rb	/^        def associations_str(associations)$/;"	f	class:Bullet.Association
+build_console_notification_code	lib/bullet/notifiers/javascript.rb	/^        def self.build_console_notification_code( response, title, call_stack )$/;"	F	class:Bullet.Notification.Notifiers.Javascript
+bullet_logger=	lib/bullet.rb	/^    def bullet_logger=(bullet_logger)$/;"	f	class:Bullet
+call	lib/bulletware.rb	/^  def call(env)$/;"	f	class:Bulletware
+call_association	lib/bullet/association.rb	/^      def call_association(object, associations)$/;"	f	class:Bullet.Association
+call_object_associations	lib/bullet/association.rb	/^        def call_object_associations$/;"	f	class:Bullet.Association
+call_stack_messages	lib/bullet/association.rb	/^        def call_stack_messages$/;"	f	class:Bullet.Association
+call_stack_messages	lib/bullet/counter.rb	/^        def call_stack_messages$/;"	f	class:Bullet.Counter
+caller_in_project	lib/bullet/association.rb	/^        def caller_in_project$/;"	f	class:Bullet.Association
+callers	lib/bullet/association.rb	/^        def callers$/;"	f	class:Bullet.Association
+check_html?	lib/bulletware.rb	/^  def check_html?(headers, response)$/;"	f	class:Bulletware
+check_unused_preload_associations	lib/bullet/association.rb	/^      def check_unused_preload_associations$/;"	f	class:Bullet.Association
+clear	lib/bullet.rb	/^    def clear$/;"	f	class:Bullet
+clear	lib/bullet/association.rb	/^      def clear$/;"	f	class:Bullet.Association
+clear	lib/bullet/counter.rb	/^      def clear$/;"	f	class:Bullet.Counter
+completely_preloading_associations?	spec/spec_helper.rb	/^      def completely_preloading_associations?$/;"	f	class:Bullet.Association
+console_title	lib/bullet/association.rb	/^        def console_title$/;"	f	class:Bullet.Association
+console_title	lib/bullet/counter.rb	/^      def console_title$/;"	f	class:Bullet.Counter
+console_title	lib/bullet/notification.rb	/^    def console_title$/;"	f	class:Bullet.Notification
+construct_association	lib/bullet/active_record2.rb	/^        def construct_association(record, join, row)$/;"	f	class:Bullet.ActiveRecord
+construct_association	lib/bullet/active_record3.rb	/^        def construct_association(record, join, row)$/;"	f	class:Bullet.ActiveRecord.enable
+counter_cache_messages	lib/bullet/counter.rb	/^        def counter_cache_messages(path = nil)$/;"	f	class:Bullet.Counter
+creating_object_association_for?	spec/spec_helper.rb	/^      def creating_object_association_for?(object, association)$/;"	f	class:Bullet.Association
+detecting_unpreloaded_association_for?	spec/spec_helper.rb	/^      def detecting_unpreloaded_association_for?(klazz, association)$/;"	f	class:Bullet.Association
+eager_loadings	lib/bullet/association.rb	/^        def eager_loadings$/;"	f	class:Bullet.Association
+empty?	lib/bulletware.rb	/^  def empty?(response)$/;"	f	class:Bulletware
+enable	lib/bullet/action_controller2.rb	/^    def self.enable$/;"	F	class:Bullet.ActionController
+enable	lib/bullet/active_record2.rb	/^    def self.enable$/;"	F	class:Bullet.ActiveRecord
+enable	lib/bullet/active_record3.rb	/^    def self.enable$/;"	F	class:Bullet.ActiveRecord
+enable=	lib/bullet.rb	/^    def enable=(enable)$/;"	f	class:Bullet
+enable?	lib/bullet.rb	/^    def enable?$/;"	f	class:Bullet
+end_request	lib/bullet.rb	/^    def end_request$/;"	f	class:Bullet
+end_request	lib/bullet/association.rb	/^      def end_request$/;"	f	class:Bullet.Association
+end_request	lib/bullet/counter.rb	/^      def end_request$/;"	f	class:Bullet.Counter
+find_every	lib/bullet/active_record2.rb	/^          def find_every(options)$/;"	f	class:Bullet.ActiveRecord.enable
+find_with_associations	lib/bullet/active_record2.rb	/^        def find_with_associations(options)$/;"	f	class:Bullet.ActiveRecord
+find_with_associations	lib/bullet/active_record3.rb	/^        def find_with_associations$/;"	f	class:Bullet.ActiveRecord.enable
+format_message	lib/bullet/logger.rb	/^    def format_message(severity, timestamp, progname, msg)$/;"	f	class:Bullet.BulletLogger
+growl=	lib/bullet.rb	/^    def growl=(growl)$/;"	f	class:Bullet
+growl_notification	lib/bullet.rb	/^    def growl_notification$/;"	f	class:Bullet
+growl_notification	lib/bullet/notification.rb	/^    def growl_notification$/;"	f	class:Bullet.Notification.javascript_notification
+has_cached_counter?	lib/bullet/active_record2.rb	/^        def has_cached_counter?$/;"	f	class:Bullet.ActiveRecord
+has_cached_counter?	lib/bullet/active_record3.rb	/^        def has_cached_counter?$/;"	f	class:Bullet.ActiveRecord.enable
+has_unpreload_associations?	lib/bullet/association.rb	/^      def has_unpreload_associations?$/;"	f	class:Bullet.Association
+has_unused_preload_associations?	lib/bullet/association.rb	/^      def has_unused_preload_associations?$/;"	f	class:Bullet.Association
+impossible?	lib/bullet/association.rb	/^        def impossible?(object)$/;"	f	class:Bullet.Association
+impossible_objects	lib/bullet/association.rb	/^        def impossible_objects$/;"	f	class:Bullet.Association
+impossible_objects	lib/bullet/counter.rb	/^        def impossible_objects$/;"	f	class:Bullet.Counter
+initialize	lib/bulletware.rb	/^  def initialize(app)$/;"	f	class:Bulletware
+javascript_notification	lib/bullet.rb	/^    def javascript_notification$/;"	f	class:Bullet
+javascript_notification	lib/bullet/notification.rb	/^    def javascript_notification$/;"	f	class:Bullet.Notification
+klazz_associations	lib/bullet/counter.rb	/^        def klazz_associations$/;"	f	class:Bullet.Counter
+klazz_associations_str	lib/bullet/association.rb	/^        def klazz_associations_str(klazz, associations)$/;"	f	class:Bullet.Association
+load_target	lib/bullet/active_record2.rb	/^        def load_target$/;"	f	class:Bullet.ActiveRecord
+load_target	lib/bullet/active_record3.rb	/^        def load_target$/;"	f	class:Bullet.ActiveRecord.enable
+log_message	lib/bullet/notification.rb	/^    def log_message(path = nil)$/;"	f	class:Bullet.Notification
+log_messages	lib/bullet/association.rb	/^        def log_messages(path = nil)$/;"	f	class:Bullet.Association
+log_messages	lib/bullet/counter.rb	/^      def log_messages(path = nil)$/;"	f	class:Bullet.Counter
+log_notification	lib/bullet.rb	/^    def log_notification(path)$/;"	f	class:Bullet
+log_notification	lib/bullet/notification.rb	/^    def log_notification(path)$/;"	f	class:Bullet.Notification.javascript_notification
+need_counter_caches?	lib/bullet/counter.rb	/^      def need_counter_caches?$/;"	f	class:Bullet.Counter
+no_browser_cache	lib/bulletware.rb	/^  def no_browser_cache(headers)$/;"	f	class:Bulletware
+notification?	lib/bullet.rb	/^    def notification?$/;"	f	class:Bullet
+notification?	lib/bullet/association.rb	/^      def notification?$/;"	f	class:Bullet.Association
+notification?	lib/bullet/counter.rb	/^      def notification?$/;"	f	class:Bullet.Counter
+notification?	lib/bullet/notification.rb	/^    def notification?$/;"	f	class:Bullet.Notification
+notification_response	lib/bullet/association.rb	/^        def notification_response$/;"	f	class:Bullet.Association
+notification_response	lib/bullet/counter.rb	/^      def notification_response$/;"	f	class:Bullet.Counter
+notification_response	lib/bullet/notification.rb	/^    def notification_response$/;"	f	class:Bullet.Notification
+notify	lib/bullet/notifiers/javascript.rb	/^        def self.notify( response, title = '', call_stack = '' )$/;"	F	class:Bullet.Notification.Notifiers.Javascript
+object_associations	lib/bullet/association.rb	/^        def object_associations$/;"	f	class:Bullet.Association
+possible?	lib/bullet/association.rb	/^        def possible?(object)$/;"	f	class:Bullet.Association
+possible_objects	lib/bullet/association.rb	/^        def possible_objects$/;"	f	class:Bullet.Association
+possible_objects	lib/bullet/counter.rb	/^        def possible_objects$/;"	f	class:Bullet.Counter
+preload_associations	lib/bullet/active_record2.rb	/^        def preload_associations(records, associations, preload_options={})$/;"	f	class:Bullet.ActiveRecord
+preload_associations	lib/bullet/active_record3.rb	/^        def preload_associations(records, associations, preload_options={})$/;"	f	class:Bullet.ActiveRecord.enable
+process	lib/bullet/action_controller2.rb	/^          def process(request, response, method = :perform_action, *arguments)$/;"	f	class:Bullet.ActionController.enable
+reload_application	lib/bullet/action_controller2.rb	/^            def reload_application$/;"	f	class:Bullet.ActionController.enable
+reload_application	lib/bullet/action_controller2.rb	/^          def reload_application$/;"	f	class:Bullet.ActionController.enable
+root	spec/spec_helper.rb	/^    def root$/;"	f	class:Rails
+setup_db	spec/bullet/association_for_chris_spec.rb	/^    def setup_db$/;"	f
+setup_db	spec/bullet/association_for_peschkaj_spec.rb	/^    def setup_db$/;"	f
+setup_db	spec/bullet/association_spec.rb	/^  def setup_db$/;"	f
+setup_db	spec/bullet/counter_spec.rb	/^  def setup_db$/;"	f
+start_request	lib/bullet.rb	/^    def start_request$/;"	f	class:Bullet
+start_request	lib/bullet/association.rb	/^      def start_request$/;"	f	class:Bullet.Association
+start_request	lib/bullet/counter.rb	/^      def start_request$/;"	f	class:Bullet.Counter
+teardown_db	spec/bullet/association_for_chris_spec.rb	/^    def teardown_db$/;"	f
+teardown_db	spec/bullet/association_for_peschkaj_spec.rb	/^    def teardown_db$/;"	f
+teardown_db	spec/bullet/association_spec.rb	/^  def teardown_db$/;"	f
+teardown_db	spec/bullet/counter_spec.rb	/^  def teardown_db$/;"	f
+to_a	lib/bullet/active_record3.rb	/^        def to_a$/;"	f	class:Bullet.ActiveRecord.enable
+unique	lib/bullet/association.rb	/^        def unique(array)$/;"	f	class:Bullet.Association
+unique	lib/bullet/counter.rb	/^        def unique(array)$/;"	f	class:Bullet.Counter
+unpreload_associations	lib/bullet/association.rb	/^        def unpreload_associations$/;"	f	class:Bullet.Association
+unpreload_associations?	lib/bullet/association.rb	/^        def unpreload_associations?(object, associations)$/;"	f	class:Bullet.Association
+unpreload_messages	lib/bullet/association.rb	/^        def unpreload_messages(path = nil)$/;"	f	class:Bullet.Association
+unused_preload_associations	lib/bullet/association.rb	/^        def unused_preload_associations$/;"	f	class:Bullet.Association
+unused_preload_associations_for?	spec/spec_helper.rb	/^      def unused_preload_associations_for?(klazz, association)$/;"	f	class:Bullet.Association
+unused_preload_messages	lib/bullet/association.rb	/^        def unused_preload_messages(path = nil)$/;"	f	class:Bullet.Association
+wrap_js_association	lib/bullet/notification.rb	/^      def wrap_js_association(message)$/;"	f	class:Bullet.Notification.javascript_notification
+wrap_js_association	lib/bullet/notifiers/javascript.rb	/^        def self.wrap_js_association( message )$/;"	F	class:Bullet.Notification.Notifiers.Javascript
