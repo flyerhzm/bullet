@@ -21,9 +21,9 @@ module Bullet
 
       if notice.has_contents?
         notice.presenter = Bullet::Notice::Presenter::JavascriptAlert
-        str << notice.present
+        str << notice.present_inline
         notice.presenter = Bullet::Notice::Presenter::JavascriptConsole
-        str << notice.present
+        str << notice.present_inline
       end
       str
     end
@@ -32,7 +32,7 @@ module Bullet
       notice = Notice.new( nil, notification_response, nil )
       if notice.has_contents?
         notice.presenter = Bullet::Notice::Presenter::Growl
-        notice.present
+        notice.present_out_of_channel
       end
     rescue
     end
@@ -40,10 +40,10 @@ module Bullet
     def log_notification(path)
       notice = Notice.new( nil, nil, nil, log_messages( path ) )
       notice.presenter = Bullet::Notice::Presenter::RailsLogger
-      notice.present
+      notice.present_out_of_channel
       
       notice.presenter = Bullet::Notice::Presenter::BulletLogger
-      notice.present
+      notice.present_out_of_channel
     end
   end
 end

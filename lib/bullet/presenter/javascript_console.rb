@@ -1,8 +1,12 @@
 module Bullet
   module Presenter
-    module JavascriptConsole
+    class JavascriptConsole < Base
+      def self.active?
+        Bullet.console
+      end
+
       def self.inline( notice )
-        return '' unless Bullet.console
+        return '' unless active?
 
         code = <<-CODE
           if (typeof(console) !== 'undefined') {

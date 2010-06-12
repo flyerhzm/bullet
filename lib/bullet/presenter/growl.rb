@@ -1,11 +1,22 @@
 module Bullet
   module Presenter
-    module Growl
-      def self.out_of_channel( notice )
-        return unless Bullet.growl
-        growl = Growl.new( 'localhost', 'ruby-growl', [ 'Bullet Notification' ], nil, Bullet.growl_password )
+    class Growl < Base
+      def self.active? 
+        Base.growl
+      end
 
-        growl.notify( 'Bullet Notification', 'Bullet Notification', notice.response )
+      def self.out_of_channel( notice )
+        return unless active?
+        notify( notice.response )
+      end
+
+      private
+      def self.growl
+        Growl.new( 'localhost', 'ruby-growl', [ 'Bullet Notification' ], nil, Bullet.growl_password )
+      end
+
+      def self.notify( message )
+        growl.notify( 'Bullet Notification', 'Bullet Notification', message )
       end
     end 
   end
