@@ -17,32 +17,13 @@ module Bullet
 
     def javascript_notification
       str = ''
-      if Bullet.alert || Bullet.console
-        response = notification_response
-      end
-      unless response.blank?
-        if Bullet.alert
-          str << wrap_js_association("alert(#{response.join("\n").inspect});")
-        end
-        if Bullet.console
-          code = <<-CODE
-            if (typeof(console) !== 'undefined') {
+      return unless Bullet.alert || Bullet.console
 
-              if (console.groupCollapsed && console.groupEnd && console.log) {
+      notice = JavascriptNotice.new( console_title, notification_response, call_stack_messages )
 
-                console.groupCollapsed(#{console_title.join(', ').inspect});
-                console.log(#{response.join("\n").inspect});
-                console.log(#{call_stack_messages.join("\n").inspect});
-                console.groupEnd();
-
-              } else if (console.log) {
-
-                console.log(#{response.join("\n").inspect});
-              }
-            }
-          CODE
-          str << wrap_js_association(code)
-        end
+      if notice.has_contents?
+        str << notice.for_alert   if Bullet.alert
+        str << notice.for_console if Bullet.console
       end
       str
     end
@@ -51,9 +32,10 @@ module Bullet
       if Bullet.growl
         response = notification_response
         unless response.blank?
+          notice = Notice.new( nil, response, nil )
           begin
             growl = Growl.new('localhost', 'ruby-growl', ['Bullet Notification'], nil, Bullet.growl_password)
-            growl.notify('Bullet Notification', 'Bullet Notification', response.join("\n"))
+            growl.notify('Bullet Notification', 'Bullet Notification', notice.response)
           rescue
           end
         end
@@ -71,13 +53,5 @@ module Bullet
         Bullet.logger_file.flush if Bullet.bullet_logger
       end
     end
-
-    private
-      def wrap_js_association(message)
-        str = ''
-        str << "<script type=\"text/javascript\">/*<![CDATA[*/"
-        str << message
-        str << "/*]]>*/</script>\n"
-      end
   end
 end
