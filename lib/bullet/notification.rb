@@ -32,10 +32,9 @@ module Bullet
       if Bullet.growl
         response = notification_response
         unless response.blank?
-          notice = Notice.new( nil, response, nil )
           begin
-            growl = Growl.new('localhost', 'ruby-growl', ['Bullet Notification'], nil, Bullet.growl_password)
-            growl.notify('Bullet Notification', 'Bullet Notification', notice.response)
+            notice = GrowlNotice.new( nil, response, nil )
+            notice.for_growl
           rescue
           end
         end
