@@ -17,30 +17,46 @@ module Bullet
 
     def javascript_notification
       str = ''
-      return unless Bullet.alert || Bullet.console
+      return str unless Bullet.alert || Bullet.console
 
-      notice = Notice::Javascript.new( console_title, notification_response, call_stack_messages )
+      notice = Notice::Base.new( console_title, notification_response, call_stack_messages )
 
       if notice.has_contents?
-        str << notice.for_alert   if Bullet.alert
-        str << notice.for_console if Bullet.console
+        if Bullet.alert
+          notice.presenter = Bullet::Notice::Presenter::JavascriptAlert
+          str << notice.present
+        end
+        if Bullet.console
+          notice.presenter = Bullet::Notice::Presenter::JavascriptConsole
+          str << notice.present
+        end
       end
       str
     end
 
     def growl_notification
       return unless Bullet.growl
-      notice = Notice::Growl.new( nil, notification_response, nil )
-      notice.for_growl if notice.has_contents?
+      notice = Notice::Base.new( nil, notification_response, nil )
+      if notice.has_contents?
+        notice.presenter = Bullet::Notice::Presenter::Growl
+        notice.present
+      end
     rescue
     end
 
     def log_notification(path)
       return unless Bullet.bullet_logger || Bullet.rails_logger
 
-      notice = Notice::Log.new( nil, nil, nil, log_messages( path ) )
-      notice.for_rails_log if Bullet.rails_logger
-      notice.for_bullet_log if Bullet.bullet_logger
+      notice = Notice::Base.new( nil, nil, nil, log_messages( path ) )
+      if Bullet.rails_logger
+        notice.presenter = Bullet::Notice::Presenter::RailsLogger
+        notice.present
+      end
+      
+      if Bullet.bullet_logger
+        notice.presenter = Bullet::Notice::Presenter::BulletLogger
+        notice.present
+      end
     end
   end
 end
