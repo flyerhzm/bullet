@@ -1,8 +1,12 @@
 module Bullet
   module Presenter
-    module JavascriptAlert
+    class JavascriptAlert < Base
+      def self.active?
+        Bullet.alert
+      end
+
       def self.inline( notice )
-        return '' unless Bullet.alert
+        return '' unless active?
 
         JavascriptHelpers::wrap_js_association "alert( #{notice.response.inspect} ); "
       end
