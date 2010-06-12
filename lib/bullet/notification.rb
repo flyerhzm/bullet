@@ -19,7 +19,7 @@ module Bullet
       str = ''
       return unless Bullet.alert || Bullet.console
 
-      notice = JavascriptNotice.new( console_title, notification_response, call_stack_messages )
+      notice = Notice::Javascript.new( console_title, notification_response, call_stack_messages )
 
       if notice.has_contents?
         str << notice.for_alert   if Bullet.alert
@@ -30,7 +30,7 @@ module Bullet
 
     def growl_notification
       return unless Bullet.growl
-      notice = GrowlNotice.new( nil, notification_response, nil )
+      notice = Notice::Growl.new( nil, notification_response, nil )
       notice.for_growl if notice.has_contents?
     rescue
     end
@@ -38,7 +38,7 @@ module Bullet
     def log_notification(path)
       return unless Bullet.bullet_logger || Bullet.rails_logger
 
-      notice = LogNotice.new( nil, nil, nil, log_messages( path ) )
+      notice = Notice::Log.new( nil, nil, nil, log_messages( path ) )
       notice.for_rails_log if Bullet.rails_logger
       notice.for_bullet_log if Bullet.bullet_logger
     end
