@@ -2,13 +2,9 @@ module Bullet
   module Notice
     class NPlusOneQuery < Base
       def initialize( callers, base_class, associations, path = nil )
-        super( nil, nil, nil, nil )
-        @base_class = base_class
-        @associations = associations
-        @path = path
+        super( base_class, associations, path )
 
         @callers = callers
-
       end
 
       def body
