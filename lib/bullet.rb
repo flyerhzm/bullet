@@ -37,15 +37,7 @@ module Bullet
     end
 
     def growl=(growl)
-      if growl
-        begin
-          require 'ruby-growl'
-          growl = Growl.new('localhost', 'ruby-growl', ['Bullet Notification'], nil, @growl_password)
-          growl.notify('Bullet Notification', 'Bullet Notification', 'Bullet Growl notifications have been turned on')
-        rescue MissingSourceFile
-          raise NotificationError.new('You must install the ruby-growl gem to use Growl notifications: `sudo gem install ruby-growl`')
-        end
-      end
+      Bullet::Presenter::Growl.setup_connection( self.growl_password ) if growl
       @growl = growl
     end
 
