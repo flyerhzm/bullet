@@ -8,10 +8,7 @@ module Bullet
       end
 
       def body
-        [ klazz_associations_str, 
-          "  Add to your finder: #{associations_str}",
-          call_stack_messages
-        ].flatten.join( "\n" )
+        "#{klazz_associations_str}\n  Add to your finder: #{associations_str}\n#{call_stack_messages}"
       end
 
       def title
@@ -23,7 +20,7 @@ module Bullet
         @callers.collect do |c|
           [ 'N+1 Query method call stack', 
             c.collect {|line| "  #{line}"} ].flatten
-        end
+        end.join( "\n" )
       end
 
     end
