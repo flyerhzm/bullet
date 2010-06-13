@@ -1,17 +1,11 @@
 module Bullet
   module Detector
-    class Association
+    class Association < Base
       class <<self
-        include Bullet::Notification
-
         def start_request
           @@checked = false
         end
 
-        def end_request
-          clear
-        end
-        
         def clear
           @@object_associations = nil
           @@callers = nil
@@ -136,11 +130,6 @@ module Bullet
               end
             end
             return false
-          end
-
-          def unique(array)
-            array.flatten!
-            array.uniq!
           end
 
           # object_associations keep the object relationships 

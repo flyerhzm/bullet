@@ -1,16 +1,7 @@
 module Bullet
   module Detector
-    class Counter
+    class Counter < Base
       class <<self
-        include Bullet::Notification
-
-        def start_request
-        end
-
-        def end_request
-          clear
-        end
-        
         def clear
           @@possible_objects = nil
           @@impossible_objects = nil
