@@ -7,7 +7,7 @@ module Bullet
 
       def self.out_of_channel( notice )
         return unless active?
-        notice.log_messages.each { |msg| Bullet.logger.info msg }
+        Bullet.logger.info notice.full_notice
         Bullet.logger_file.flush
       end
     end
