@@ -11,12 +11,12 @@ module Bullet
         @response = counter_cache_messages
       end
 
-      def counter_cache_messages
-        title + [ klass_associations_str ]
+      def body
+        klass_associations_str
       end
 
       def title
-        [ "Need Counter Cache" ]
+        "Need Counter Cache"
       end
     end
   end
