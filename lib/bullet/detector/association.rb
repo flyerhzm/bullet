@@ -15,11 +15,6 @@ module Bullet
           @@eager_loadings = nil
         end
 
-        def add_unpreload_associations(klazz, associations)
-          notice = Bullet::Notice::NPlusOneQuery.new( callers, klazz, associations )
-          Bullet.add_notification( notice )
-        end
-
         def add_unused_preload_associations(klazz, associations)
           notice = Bullet::Notice::UnusedEagerLoading.new( callers, klazz, associations )
           Bullet.add_notification( notice )
@@ -104,11 +99,6 @@ module Bullet
         end
 
         private
-          # decide whether the object.associations is unpreloaded or not.
-          def unpreload_associations?(object, associations)
-            possible?(object) and !impossible?(object) and !association?(object, associations)
-          end
-
           def possible?(object)
             klazz = object.class
             possible_objects[klazz] and possible_objects[klazz].include?(object)
@@ -171,12 +161,6 @@ module Bullet
           # e.g. { [<Post id:1>, <Post id:2>] => [:comments, :user] }
           def eager_loadings
             @@eager_loadings ||= {}
-          end
-
-          def caller_in_project
-            vender_root ||= File.join(Rails.root, 'vendor')
-            callers << caller.select {|c| c =~ /#{Rails.root}/}.reject {|c| c =~ /#{vender_root}/}
-            callers.uniq!
           end
 
           def callers
