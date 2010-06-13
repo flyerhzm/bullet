@@ -9,10 +9,6 @@ module Bullet
         @path = path
       end
 
-      def has_contents?
-        @response != nil 
-      end
-
       def title
       end
 
