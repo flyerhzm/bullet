@@ -44,9 +44,11 @@ module Bullet
         klazz = object.class
         if (!possible_objects[klazz].nil? and possible_objects[klazz].include?(object)) and
            (impossible_objects[klazz].nil? or !impossible_objects[klazz].include?(object))
-          klazz_associations[klazz] ||= []
-          klazz_associations[klazz] << associations
-          unique(klazz_associations[klazz])
+           notice = Bullet::Notice::CounterCache.new klazz, associations
+           Bullet.add_notification notice
+#          klazz_associations[klazz] ||= []
+#          klazz_associations[klazz] << associations
+#          unique(klazz_associations[klazz])
         end
       end
 
