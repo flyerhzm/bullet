@@ -13,8 +13,6 @@ module Bullet
       
       def clear
         @@object_associations = nil
-        @@unpreload_associations = nil
-        @@unused_preload_associations = nil
         @@callers = nil
         @@possible_objects = nil
         @@impossible_objects = nil
@@ -22,25 +20,14 @@ module Bullet
         @@eager_loadings = nil
       end
 
-      def notification?
-        check_unused_preload_associations unless @@checked
-        has_unpreload_associations? or has_unused_preload_associations?
-      end
-
       def add_unpreload_associations(klazz, associations)
         notice = Bullet::Notice::NPlusOneQuery.new( callers, klazz, associations )
         Bullet.add_notification( notice )
-#        unpreload_associations[klazz] ||= []
-#        unpreload_associations[klazz] << associations
-#        unique(unpreload_associations[klazz])
       end
 
       def add_unused_preload_associations(klazz, associations)
         notice = Bullet::Notice::UnusedEagerLoading.new( callers, klazz, associations )
         Bullet.add_notification( notice )
-#        unused_preload_associations[klazz] ||= []
-#         unused_preload_associations[klazz] << associations
-        # unique(unused_preload_associations[klazz])
       end
 
       def add_object_associations(object, associations)
@@ -121,14 +108,6 @@ module Bullet
         end
       end
 
-      def has_unused_preload_associations?
-        !unused_preload_associations.empty?
-      end
-
-      def has_unpreload_associations?
-        !unpreload_associations.empty?
-      end
-
       private
         # decide whether the object.associations is unpreloaded or not.
         def unpreload_associations?(object, associations)
@@ -158,90 +137,9 @@ module Bullet
           return false
         end
 
-        def notification_response
-          response = []
-          if has_unused_preload_associations?
-            response << unused_preload_messages.join("\n")
-          end
-          if has_unpreload_associations?
-            response << unpreload_messages.join("\n")
-          end
-          response
-        end
-
-#FIXME: THis will be broken right after the classifying the notifications
-        def console_title
-          title = []
-          title << unused_preload_messages.first.first unless unused_preload_messages.empty?
-          title << unpreload_messages.first.first unless unpreload_messages.empty?
-          title
-        end
-
-        def log_messages(path = nil)
-          messages = []
-          messages << unused_preload_messages(path)
-          messages << unpreload_messages(path)
-          messages << call_stack_messages
-          messages
-        end
-### CONTINUE: Extract these into separate Notification classes
-        def unused_preload_messages(path = nil)
-          messages = []
-          unused_preload_associations.each do |klazz, associations|
-            messages << [
-              "Unused Eager Loading #{path ? "in #{path}" : 'detected'}",
-              klazz_associations_str(klazz, associations),
-              "  Remove from your finder: #{associations_str(associations)}"
-            ]
-          end
-          messages
-        end
-
-        def unpreload_messages(path = nil)
-          messages = []
-          unpreload_associations.each do |klazz, associations|
-            messages << [
-              "N+1 Query #{path ? "in #{path}" : 'detected'}",
-              klazz_associations_str(klazz, associations),
-              "  Add to your finder: #{associations_str(associations)}"
-            ]
-          end
-          messages
-        end
-
-        def call_stack_messages
-          callers.inject([]) do |messages, c|
-            messages << ['N+1 Query method call stack', c.collect {|line| "  #{line}"}].flatten
-          end
-        end
-
-        def klazz_associations_str(klazz, associations)
-          "  #{klazz} => [#{associations.map(&:inspect).join(', ')}]"
-        end
-
-        def associations_str(associations)
-          ":include => #{associations.map{|a| a.to_sym unless a.is_a? Hash}.inspect}"
-        end
-        
         def unique(array)
           array.flatten!
           array.uniq!
-        end
-
-        # unpreload_associations keep the class relationships 
-        # that the associations, belongs to the class, are used but not preloaded.
-        # e.g. { Post => [:comments] }
-        # so the unpreload_associations should be preloaded by find :include.
-        def unpreload_associations
-          @@unpreload_associations ||= {}
-        end
-        
-        # unused_preload_associations keep the class relationships 
-        # that the associations, belongs to the class, are preloaded but not used.
-        # e.g. { Post => [:comments] }
-        # so the unused_preload_associations should be removed from find :include.
-        def unused_preload_associations
-          @@unused_preload_associations ||= {}
         end
 
         # object_associations keep the object relationships 

@@ -76,24 +76,12 @@ module Bullet
       BULLETS.each {|bullet| bullet.clear}
     end
 
-    def notification?
-      BULLETS.any? {|bullet| bullet.notification?}
-    end
-
-    def javascript_notification
-      BULLETS.collect {|bullet| bullet.javascript_notification if bullet.notification?}.join("\n")
-    end
-
-    def growl_notification
-      BULLETS.each {|bullet| bullet.growl_notification if bullet.notification?}
-    end
-
-    def log_notification(path)
-      BULLETS.each {|bullet| bullet.log_notification(path) if bullet.notification?}
-    end
-
     def active_presenters
       PRESENTERS.select { |presenter| presenter.send :active? }
+    end
+
+    def notification?
+      ! @notifications.empty?
     end
 
     def add_notification( notification )
