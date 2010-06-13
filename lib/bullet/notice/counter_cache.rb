@@ -9,7 +9,6 @@ module Bullet
         @path = path
 
         @response = counter_cache_messages
-        @log_messages = counter_cache_messages
       end
 
       def counter_cache_messages

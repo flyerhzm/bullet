@@ -5,7 +5,6 @@ module Bullet
 
       def initialize( console_title, response, call_stack_messages, log_messages )
         @response = response
-        @log_messages = log_messages || []
       end
 
       def has_contents?
@@ -17,10 +16,6 @@ module Bullet
 
       def response
         @response.join( "\n" )
-      end
-
-      def log_messages
-        @log_messages.collect { |msg| msg.join( "\n" ) }
       end
 
       def present_inline
