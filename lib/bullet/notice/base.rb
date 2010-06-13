@@ -20,22 +20,28 @@ module Bullet
       end
 
       def present_inline
-        return unless self.presenter.respond_to? :present_inline
+        return unless self.presenter.respond_to? :inline
         self.presenter.send( :inline, self ) 
       end
 
       def present_out_of_channel
-        return unless self.presenter.respond_to? :present_out_of_channel
+        return unless self.presenter.respond_to? :out_of_channel
         self.presenter.send( :out_of_channel, self )
+      end
+
+      def eql?( other )
+        full_notice == other.full_notice
       end
 
       protected
       def klazz_associations_str
-        "  #{@base_class} => [#{@associations.map(&:inspect).join(', ')}]"
+        assoc = @associations.is_a?( Array ) ? @associations : [ @associations ]
+        "  #{@base_class} => [#{assoc.map(&:inspect).join(', ')}]"
       end
 
       def associations_str
-        ":include => #{@associations.map{|a| a.to_sym unless a.is_a? Hash}.inspect}"
+        assoc = @associations.is_a?( Array ) ? @associations : [ @associations ]
+        ":include => #{assoc.map{|a| a.to_sym unless a.is_a? Hash}.inspect}"
       end
     end
   end
