@@ -7,7 +7,7 @@ module Bullet
 
       def self.out_of_channel( notice )
         return unless active?
-        notify( notice.response )
+        notify( notice.full_notice )
       end
 
       private

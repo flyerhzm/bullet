@@ -8,7 +8,7 @@ module Bullet
       def self.out_of_channel( notice )
         return unless active?
         Rails.logger.warn ''
-        notice.log_messages.each { |msg| Rails.logger.warn msg }
+        Rails.logger.warn notice.full_notice
       end
     end
   end
