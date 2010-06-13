@@ -6,20 +6,17 @@ module Bullet
         @base_class = base_class
         @associations = unused_associations
         @path = path
-
-        @response = unused_preload_messages
       end
 
-      def unused_preload_messages
-        title + 
+      def body
         [
           klazz_associations_str,
           "  Remove from your finder: #{associations_str}"
-        ]
+        ].join( "\n" )
       end
 
       def title
-        [ "Unused Eager Loading #{@path ? "in #{@path}" : 'detected'}" ]
+        "Unused Eager Loading #{@path ? "in #{@path}" : 'detected'}" 
       end
 
     end

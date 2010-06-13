@@ -7,21 +7,24 @@ module Bullet
         @associations = associations
         @path = path
 
-        @response = unpreload_messages + call_stack_messages( callers )
+        @callers = callers
+
       end
 
-      def unpreload_messages
-        title + 
-        [ klazz_associations_str, "  Add to your finder: #{associations_str}" ]
+      def body
+        [ klazz_associations_str, 
+          "  Add to your finder: #{associations_str}",
+          call_stack_messages
+        ].flatten.join( "\n" )
       end
 
       def title
-        [ "N+1 Query #{@path ? "in #{@path}" : 'detected'}" ]
+        "N+1 Query #{@path ? "in #{@path}" : 'detected'}"
       end
 
       protected
-      def call_stack_messages( callers )
-        callers.collect do |c|
+      def call_stack_messages
+        @callers.collect do |c|
           [ 'N+1 Query method call stack', 
             c.collect {|line| "  #{line}"} ].flatten
         end

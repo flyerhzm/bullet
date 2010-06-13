@@ -3,19 +3,24 @@ module Bullet
     class Base
       attr_accessor :presenter
 
-      def initialize( console_title, response, call_stack_messages, log_messages )
-        @response = response
+      def initialize( base_class, associations, path = nil )
+        @base_class = base_class
+        @associations = associations
+        @path = path
       end
 
       def has_contents?
-        response != nil 
+        @response != nil 
       end
 
       def title
       end
 
-      def response
-        @response.join( "\n" )
+      def body
+      end
+
+      def full_notice
+        title + "\n" + body 
       end
 
       def present_inline
