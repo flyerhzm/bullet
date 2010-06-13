@@ -11,6 +11,7 @@ module Bullet
       # then, it checks if this associations call is unpreload.
       #   if it is, keeps this unpreload associations and caller.
       def self.call_association(object, associations)
+        @@checked = true
         add_call_object_associations(object, associations)
         if unpreload_associations?(object, associations)
           add_unpreload_associations(object.class, associations)

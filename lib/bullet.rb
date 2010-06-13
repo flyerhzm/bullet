@@ -56,8 +56,10 @@ module Bullet
       end
     end
 
-    DETECTORS = [ Bullet::Detector::Association, 
+    DETECTORS = [ Bullet::Detector::NPlusOneQuery, 
+                  Bullet::Detector::UnusedEagerLoading,
                   Bullet::Detector::Counter ]
+
     PRESENTERS = [ Bullet::Presenter::JavascriptAlert,
                    Bullet::Presenter::JavascriptConsole,
                    Bullet::Presenter::Growl,
