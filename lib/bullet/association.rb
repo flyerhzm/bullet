@@ -34,9 +34,11 @@ module Bullet
       end
 
       def add_unused_preload_associations(klazz, associations)
-        unused_preload_associations[klazz] ||= []
-        unused_preload_associations[klazz] << associations
-        unique(unused_preload_associations[klazz])
+        notice = Bullet::Notice::UnusedEagerLoading( callers, klazz, associations )
+        Bullet.add_notification( notice )
+#        unused_preload_associations[klazz] ||= []
+#         unused_preload_associations[klazz] << associations
+        # unique(unused_preload_associations[klazz])
       end
 
       def add_object_associations(object, associations)
