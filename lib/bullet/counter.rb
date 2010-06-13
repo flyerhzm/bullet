@@ -11,7 +11,6 @@ module Bullet
       end
       
       def clear
-        @@klazz_associations = nil
         @@possible_objects = nil
         @@impossible_objects = nil
       end
@@ -20,35 +19,12 @@ module Bullet
         !klazz_associations.empty?
       end
 
-      def notification?
-        need_counter_caches?
-      end
-
-      def notification_response
-        response = []
-        if need_counter_caches?
-          response << counter_cache_messages.join("\n")
-        end
-        response
-      end
-
-      def console_title
-        title = ["Need Counter Cache"]
-      end
-
-      def log_messages(path = nil)
-        [counter_cache_messages(path)]
-      end
-      
       def add_counter_cache(object, associations)
         klazz = object.class
         if (!possible_objects[klazz].nil? and possible_objects[klazz].include?(object)) and
            (impossible_objects[klazz].nil? or !impossible_objects[klazz].include?(object))
            notice = Bullet::Notice::CounterCache.new klazz, associations
            Bullet.add_notification notice
-#          klazz_associations[klazz] ||= []
-#          klazz_associations[klazz] << associations
-#          unique(klazz_associations[klazz])
         end
       end
 
@@ -67,28 +43,9 @@ module Bullet
       end
       
       private
-        def counter_cache_messages(path = nil)
-          messages = []
-          klazz_associations.each do |klazz, associations|
-            messages << [
-              "Need Counter Cache",
-              "  #{klazz} => [#{associations.map(&:inspect).join(', ')}]"
-            ]
-          end
-          messages
-        end
-        
         def unique(array)
           array.flatten!
           array.uniq!
-        end
-
-        def call_stack_messages
-          []
-        end
-        
-        def klazz_associations
-          @@klazz_associations ||= {}
         end
 
         def possible_objects
