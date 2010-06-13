@@ -16,7 +16,7 @@ module Bullet
       end
 
       def full_notice
-        title + "\n" + body 
+        @full_notice ||= title + "\n" + body 
       end
 
       def present_inline
@@ -30,8 +30,11 @@ module Bullet
       end
 
       def eql?( other )
-        Rails.logger "Comparing #{full_notice} to #{other.full_notice}"
         full_notice == other.full_notice
+      end
+
+      def hash
+        full_notice.hash
       end
 
       protected
