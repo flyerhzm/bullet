@@ -1,6 +1,6 @@
 module Bullet
   module Notice
-    class NPlusOneQuery < Association
+    class NPlusOneQuery < Base
       def initialize( callers, base_class, associations, path = nil )
         super( nil, nil, nil, nil )
         @base_class = base_class
