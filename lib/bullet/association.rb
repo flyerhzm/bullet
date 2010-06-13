@@ -28,13 +28,15 @@ module Bullet
       end
 
       def add_unpreload_associations(klazz, associations)
-        unpreload_associations[klazz] ||= []
-        unpreload_associations[klazz] << associations
-        unique(unpreload_associations[klazz])
+        notice = Bullet::Notice::NPlusOneQuery.new( callers, klazz, associations )
+        Bullet.add_notification( notice )
+#        unpreload_associations[klazz] ||= []
+#        unpreload_associations[klazz] << associations
+#        unique(unpreload_associations[klazz])
       end
 
       def add_unused_preload_associations(klazz, associations)
-        notice = Bullet::Notice::UnusedEagerLoading( callers, klazz, associations )
+        notice = Bullet::Notice::UnusedEagerLoading.new( callers, klazz, associations )
         Bullet.add_notification( notice )
 #        unused_preload_associations[klazz] ||= []
 #         unused_preload_associations[klazz] << associations
@@ -167,6 +169,7 @@ module Bullet
           response
         end
 
+#FIXME: THis will be broken right after the classifying the notifications
         def console_title
           title = []
           title << unused_preload_messages.first.first unless unused_preload_messages.empty?

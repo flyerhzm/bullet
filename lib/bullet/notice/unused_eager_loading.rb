@@ -22,11 +22,6 @@ module Bullet
         ":include => #{associations.map{|a| a.to_sym unless a.is_a? Hash}.inspect}"
       end
 
-       def call_stack_messages( callers )
-        callers.inject([]) do |messages, c|
-          messages << ['N+1 Query method call stack', c.collect {|line| "  #{line}"}].flatten
-        end
-      end
     end
   end
 end
