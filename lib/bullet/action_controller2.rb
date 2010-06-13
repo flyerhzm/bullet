@@ -30,34 +30,14 @@ module Bullet
             
             if Bullet.notification?
               if response.headers["type"] and response.headers["type"].include? 'text/html' and response.body =~ %r{<html.*</html>}m
-                response.body <<= perform_bullet_inline_notifications
+                response.body <<= Bullet.gather_inline_notifications
                 response.headers["Content-Length"] = response.body.length.to_s
               end
             
-              perform_bullet_out_of_channel_notifications
+              Bullet.perform_bullet_out_of_channel_notifications
             end
             Bullet.end_request
             response
-          end
-
-          def perform_bullet_inline_notifications
-            responses = []
-            Bullet.active_presenters.each do |presenter|
-              Bullet.notifications.collect do |notification|
-                notification.presenter = presenter
-                responses << notification.present_inline
-              end
-            end
-            responses.join( "\n" )
-          end
-
-          def perform_bullet_out_of_channel_notifications
-            Bullet.active_presenters.each do |presenter|
-              Bullet.notifications.collect do |notification|
-                notification.presenter = presenter
-                notification.present_out_of_channel
-              end
-            end
           end
         end
       else

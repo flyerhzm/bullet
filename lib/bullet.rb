@@ -91,6 +91,30 @@ module Bullet
     def reset_notifications
       @notifications = Set.new
     end
+
+    def gather_inline_notifications
+      responses = []
+      for_each_active_presenter_with_notification do |notification|
+        responses << notification.present_inline
+      end
+      responses.join( "\n" )
+    end
+
+    def perform_out_of_channel_notifications
+      for_each_active_presenter_with_notification do |notification|
+        notification.present_out_of_channel
+      end
+    end
+
+    private
+    def for_each_active_presenter_with_notification
+      active_presenters.each do |presenter|
+        notifications.each do |notification|
+          notification.presenter = presenter
+          yield notification
+        end
+      end
+    end
   end
 
 end
