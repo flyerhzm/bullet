@@ -49,7 +49,7 @@ module Bullet
     end
 
     DETECTORS = [ Bullet::Detector::NPlusOneQuery, 
-                  Bullet::Detector::UnusedEagerLoading,
+                  Bullet::Detector::UnusedEagerAssociation,
                   Bullet::Detector::Counter ]
 
     PRESENTERS = [ Bullet::Presenter::JavascriptAlert,
