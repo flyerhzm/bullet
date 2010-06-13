@@ -55,8 +55,14 @@ module Bullet
     end
 
     BULLETS = [Bullet::Association, Bullet::Counter]
+    PRESENTERS = [ Bullet::Presenter::JavascriptAlert,
+                   Bullet::Presenter::JavascriptConsole,
+                   Bullet::Presenter::Growl,
+                   Bullet::Presenter::RailsLogger,
+                   Bullet::Presenter::BulletLogger ]
 
     def start_request
+      reset_notifications
       BULLETS.each {|bullet| bullet.start_request}
     end
 
@@ -85,13 +91,20 @@ module Bullet
     end
 
     def active_presenters
-      active_presenters = []
-      active_presenters << Bullet::Presenter::JavascriptAlert if Bullet.alert
-      active_presenters << Bullet::Presenter::JavascriptConole if Bullet.console
-      active_presenters << Bullet::Presenter::Growl if Bullet.growl
-      active_presenters << Bullet::Presenter::RailsLogger if Bullet.rails_logger
-      active_presenters << Bullet::Presenter::BulletLogger if Bullet.bullet_logger
-      active_presenters
+      PRESENTERS.select { |presenter| presenter.send :active? }
+    end
+
+    def add_notification( notification )
+      @notifications << notification
+    end
+
+    def notifications
+      @notifications
+    end
+
+    def reset_notifications
+      @notifications = []
     end
   end
+
 end
