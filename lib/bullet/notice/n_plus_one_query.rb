@@ -7,8 +7,7 @@ module Bullet
         @associations = associations
         @path = path
 
-        @response = unpreload_messages
-        @call_stack_messages = call_stack_messages( callers )
+        @response = unpreload_messages + call_stack_messages( callers )
       end
 
       def unpreload_messages
@@ -20,9 +19,9 @@ module Bullet
       end
 
       def call_stack_messages( callers )
-        callers.inject([]) do |messages, c|
-          messages << [ 'N+1 Query method call stack', 
-                        c.collect {|line| "  #{line}"} ].flatten
+        callers.collect do |c|
+          [ 'N+1 Query method call stack', 
+            c.collect {|line| "  #{line}"} ].flatten
         end
       end
 
