@@ -8,16 +8,16 @@ module Bullet
         @associations = associations
         @path = path
 
-        @console_title = [ "Need Counter Cache" ]
         @response = counter_cache_messages
         @log_messages = counter_cache_messages
       end
 
       def counter_cache_messages
-        [
-          "Need Counter Cache",
-          klass_associations_str
-        ]
+        title + [ klass_associations_str ]
+      end
+
+      def title
+        [ "Need Counter Cache" ]
       end
     end
   end

@@ -11,13 +11,15 @@ module Bullet
       end
 
       def unpreload_messages
-        [
-          "N+1 Query #{@path ? "in #{@path}" : 'detected'}",
-          klazz_associations_str,
-          "  Add to your finder: #{associations_str}"
-        ]
+        title + 
+        [ klazz_associations_str, "  Add to your finder: #{associations_str}" ]
       end
 
+      def title
+        [ "N+1 Query #{@path ? "in #{@path}" : 'detected'}" ]
+      end
+
+      protected
       def call_stack_messages( callers )
         callers.collect do |c|
           [ 'N+1 Query method call stack', 

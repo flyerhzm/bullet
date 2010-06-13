@@ -11,11 +11,15 @@ module Bullet
       end
 
       def unused_preload_messages
+        title + 
         [
-          "Unused Eager Loading #{@path ? "in #{@path}" : 'detected'}",
           klazz_associations_str,
           "  Remove from your finder: #{associations_str}"
         ]
+      end
+
+      def title
+        [ "Unused Eager Loading #{@path ? "in #{@path}" : 'detected'}" ]
       end
 
     end

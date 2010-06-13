@@ -4,7 +4,6 @@ module Bullet
       attr_accessor :presenter
 
       def initialize( console_title, response, call_stack_messages, log_messages )
-        @console_title = console_title || []
         @response = response
         @log_messages = log_messages || []
       end
@@ -14,7 +13,6 @@ module Bullet
       end
 
       def title
-        @console_title.join( ', ' )
       end
 
       def response
