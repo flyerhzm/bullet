@@ -3,23 +3,19 @@ module Bullet
     class UnusedEagerLoading < Base
       def initialize( callers, base_klass, unused_associations, path = nil )
         super( nil, nil, nil, nil )
+        @base_class = base_class
+        @associations = unused_associations
+        @path = path
+
         @response = unused_preload_messages( base_klass, unused_associations, path )  
       end
 
-      def unused_preload_messages(base_klass, unused_associations, path = nil)
+      def unused_preload_messages
         [
-          "Unused Eager Loading #{path ? "in #{path}" : 'detected'}",
-          klazz_associations_str(base_klass, unused_associations),
-          "  Remove from your finder: #{associations_str(unused_associations)}"
+          "Unused Eager Loading #{@path ? "in #{@path}" : 'detected'}",
+          klazz_associations_str,
+          "  Remove from your finder: #{associations_str}"
         ]
-      end
-
-      def klazz_associations_str(klazz, associations)
-        "  #{klazz} => [#{associations.map(&:inspect).join(', ')}]"
-      end
-
-      def associations_str(associations)
-        ":include => #{associations.map{|a| a.to_sym unless a.is_a? Hash}.inspect}"
       end
 
     end
