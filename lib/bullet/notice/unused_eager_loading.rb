@@ -2,10 +2,7 @@ module Bullet
   module Notice
     class UnusedEagerLoading < Base
       def body
-        [
-          klazz_associations_str,
-          "  Remove from your finder: #{associations_str}"
-        ].join( "\n" )
+        "#{klazz_associations_str}\n  Remove from your finder: #{associations_str}"
       end
 
       def title
