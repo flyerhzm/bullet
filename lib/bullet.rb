@@ -1,4 +1,5 @@
 require 'bulletware'
+require 'set'
 
 module Bullet
   if Rails.version =~ /^3.0/
@@ -88,7 +89,7 @@ module Bullet
     end
 
     def reset_notifications
-      @notifications = []
+      @notifications = Set.new
     end
   end
 
