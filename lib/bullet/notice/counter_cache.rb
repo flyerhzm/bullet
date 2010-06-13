@@ -16,7 +16,7 @@ module Bullet
       def counter_cache_messages
         [
           "Need Counter Cache",
-          "  #{@base_class} => [#{@associations.map(&:inspect).join(', ')}]"
+          klass_associations_str
         ]
       end
     end

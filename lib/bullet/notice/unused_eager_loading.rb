@@ -7,7 +7,7 @@ module Bullet
         @associations = unused_associations
         @path = path
 
-        @response = unused_preload_messages( base_klass, unused_associations, path )  
+        @response = unused_preload_messages
       end
 
       def unused_preload_messages

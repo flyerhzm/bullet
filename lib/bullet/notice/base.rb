@@ -39,6 +39,15 @@ module Bullet
         return unless self.presenter.respond_to? :present_out_of_channel
         self.presenter.send( :out_of_channel, self )
       end
+
+      protected
+      def klazz_associations_str
+        "  #{@base_class} => [#{@associations.map(&:inspect).join(', ')}]"
+      end
+
+      def associations_str
+        ":include => #{@associations.map{|a| a.to_sym unless a.is_a? Hash}.inspect}"
+      end
     end
   end
 end
