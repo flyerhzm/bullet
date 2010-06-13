@@ -2,7 +2,7 @@ module Bullet
   module Notice
     class CounterCache < Base
       def body
-        klass_associations_str
+        klazz_associations_str
       end
 
       def title

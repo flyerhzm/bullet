@@ -30,6 +30,7 @@ module Bullet
       end
 
       def eql?( other )
+        Rails.logger "Comparing #{full_notice} to #{other.full_notice}"
         full_notice == other.full_notice
       end
 
