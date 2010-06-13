@@ -12,11 +12,11 @@ class Bulletware
 
     if Bullet.notification?
       if status == 200 and !response.body.frozen? and check_html?(headers, response)
-        response_body = response.body << inline_notifications
+        response_body = response.body << Bullet.gather_inline_notifications
         headers['Content-Length'] = response_body.length.to_s
       end
 
-      out_of_channel_notifications
+      Bullet.perform_out_of_channel_notifications
       # Bullet.log_notification(env['PATH_INFO'])
     end
     response_body ||= response.body
@@ -38,25 +38,5 @@ class Bulletware
     headers["Cache-Control"] = "no-cache, no-store, max-age=0, must-revalidate"
     headers["Pragma"] = "no-cache"
     headers["Expires"] = "Wed, 09 Sep 2009 09:09:09 GMT"
-  end
-
-  def inline_notifications
-    responses = []
-    Bullet.active_presenters.each do |presenter|
-      Bullet.notifications.collect do |notification|
-        notification.presenter = presenter
-        responses << notification.present_inline
-      end
-    end
-    responses.join( "\n" )
-  end
-
-  def out_of_channel_notifications
-    Bullet.active_presenters.each do |presenter|
-      Bullet.notifications.collect do |notification|
-        notification.presenter = presenter
-        notification.present_out_of_channel
-      end
-    end
   end
 end
