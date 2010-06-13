@@ -56,7 +56,8 @@ module Bullet
       end
     end
 
-    BULLETS = [Bullet::Association, Bullet::Counter]
+    DETECTORS = [ Bullet::Detector::Association, 
+                  Bullet::Detector::Counter ]
     PRESENTERS = [ Bullet::Presenter::JavascriptAlert,
                    Bullet::Presenter::JavascriptConsole,
                    Bullet::Presenter::Growl,
@@ -65,15 +66,15 @@ module Bullet
 
     def start_request
       reset_notifications
-      BULLETS.each {|bullet| bullet.start_request}
+      DETECTORS.each {|bullet| bullet.start_request}
     end
 
     def end_request
-      BULLETS.each {|bullet| bullet.end_request}
+      DETECTORS.each {|bullet| bullet.end_request}
     end
     
     def clear
-      BULLETS.each {|bullet| bullet.clear}
+      DETECTORS.each {|bullet| bullet.clear}
     end
 
     def active_presenters
