@@ -1,5 +1,5 @@
 module Bullet
-  module Notice
+  module Notification
     class UnusedEagerLoading < Base
       def body
         "#{klazz_associations_str}\n  Remove from your finder: #{associations_str}"

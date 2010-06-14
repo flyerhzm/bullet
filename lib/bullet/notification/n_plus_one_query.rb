@@ -1,5 +1,5 @@
 module Bullet
-  module Notice
+  module Notification
     class NPlusOneQuery < Base
       def initialize( callers, base_class, associations, path = nil )
         super( base_class, associations, path )

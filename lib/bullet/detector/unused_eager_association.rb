@@ -2,7 +2,7 @@ module Bullet
   module Detector
     class UnusedEagerAssociation < Association
       def self.add_unused_preload_associations(klazz, associations)
-        notice = Bullet::Notice::UnusedEagerLoading.new( callers, klazz, associations )
+        notice = Bullet::Notification::UnusedEagerLoading.new( callers, klazz, associations )
         Bullet.add_notification( notice )
       end
 

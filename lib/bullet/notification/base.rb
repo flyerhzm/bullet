@@ -1,5 +1,5 @@
 module Bullet
-  module Notice
+  module Notification
     class Base
       attr_accessor :presenter
 
