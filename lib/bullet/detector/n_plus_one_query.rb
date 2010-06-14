@@ -2,7 +2,7 @@ module Bullet
   module Detector
     class NPlusOneQuery < Association
       def self.add_unpreload_associations(klazz, associations)
-        notice = Bullet::Notice::NPlusOneQuery.new( callers, klazz, associations )
+        notice = Bullet::Notification::NPlusOneQuery.new( callers, klazz, associations )
         Bullet.add_notification( notice )
       end
 

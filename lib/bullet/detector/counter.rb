@@ -8,15 +8,10 @@ module Bullet
 
       def self.add_counter_cache(object, associations)
         klazz = object.class
-        Rails.logger.debug "Possible objects does #{"not" unless possible_objects[klazz]} contain #{klazz}"
-        Rails.logger.debug "Impossible objects does #{"not" unless impossible_objects[klazz]} contain #{klazz}"
         if (!possible_objects[klazz].nil? and possible_objects[klazz].include?(object)) and
            (impossible_objects[klazz].nil? or !impossible_objects[klazz].include?(object))
-           notice = Bullet::Notice::CounterCache.new klazz, associations
+           notice = Bullet::Notification::CounterCache.new klazz, associations
            Bullet.add_notification notice
-          Rails.logger.debug "Notice generated"
-        else
-          Rails.logger.debug "No notice generated"
         end
 
       end

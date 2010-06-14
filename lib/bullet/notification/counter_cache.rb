@@ -1,5 +1,5 @@
 module Bullet
-  module Notice
+  module Notification
     class CounterCache < Base
       def body
         klazz_associations_str
