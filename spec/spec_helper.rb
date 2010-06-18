@@ -19,26 +19,65 @@ Bullet.enable = true
 ActiveRecord::Migration.verbose = false
 
 module Bullet
-  class Association
-    class <<self
-      # returns true if all associations are preloaded
-      def completely_preloading_associations?
-        !has_unpreload_associations?
-      end
+  def self.collected_notifications_of_class( notification_class )
+    Bullet.notifications.select do |notification| 
+      notification.is_a? notification_class 
+    end
+  end
 
-      # returns true if a given object has a specific association
-      def creating_object_association_for?(object, association)
-        object_associations[object].present? && object_associations[object].include?(association)
-      end
+  def self.collected_counter_cache_notifications
+    collected_notifications_of_class Bullet::Notification::CounterCache
+  end
 
-      # returns true if a given class includes the specific unpreloaded association
-      def detecting_unpreloaded_association_for?(klazz, association)
-        unpreload_associations[klazz].present? && unpreload_associations[klazz].include?(association)
-      end
+  def self.collected_n_plus_one_query_notifications
+    collected_notifications_of_class Bullet::Notification::NPlusOneQuery
+  end
 
-      # returns true if the given class includes the specific unused preloaded association
-      def unused_preload_associations_for?(klazz, association)
-        unused_preload_associations[klazz].present? && unused_preload_associations[klazz].include?(association)
+  def self.collected_unused_eager_association_notifications
+    collected_notifications_of_class Bullet::Notification::UnusedEagerLoading
+  end
+end
+
+module Bullet
+  module Detector
+    class Association
+      class <<self
+        # returns true if all associations are preloaded
+        def completely_preloading_associations?
+          # !has_unpreload_associations?
+          Bullet.collected_n_plus_one_query_notifications.empty?
+        end
+
+        def has_unused_preload_associations?
+          Bullet.collected_unused_eager_association_notifications.present?
+        end
+
+        # returns true if a given object has a specific association
+        def creating_object_association_for?(object, association)
+          object_associations[object].present? && object_associations[object].include?(association)
+        end
+
+        # returns true if a given class includes the specific unpreloaded association
+        def detecting_unpreloaded_association_for?(klass, association)
+          for_class_and_assoc = Bullet.collected_n_plus_one_query_notifications.select do |notification|
+            notification.base_class == klass and 
+            notification.associations.include?( association )
+          end
+          for_class_and_assoc.present?
+          
+          # unpreload_associations[klazz].present? && unpreload_associations[klazz].include?(association)
+        end
+
+        # returns true if the given class includes the specific unused preloaded association
+        def unused_preload_associations_for?(klazz, association)
+          for_class_and_assoc = Bullet.collected_unused_eager_association_notifications.select do |notification|
+            notification.base_class == klass and 
+            notification.associations.include?( association )
+          end
+          STDERR.puts "Found #{for_class_and_assoc.size} unused preloaded associations" 
+          for_class_and_assoc.present?
+          # unused_preload_associations[klazz].present? && unused_preload_associations[klazz].include?(association)
+        end
       end
     end
   end

@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 ActiveRecord::Base.establish_connection(:adapter => 'sqlite3', :database => ':memory:')
 # This test is just used for http://github.com/flyerhzm/bullet/issues#issue/20
-describe Bullet::Association do
+describe Bullet::Detector::Association do
   
   describe "for peschkaj" do
     def setup_db
@@ -65,11 +65,12 @@ describe Bullet::Association do
     end
 
     before(:each) do
-      Bullet::Association.start_request
+      Bullet.reset_notifications
+      Bullet::Detector::Association.start_request
     end
 
     after(:each) do
-      Bullet::Association.end_request
+      Bullet::Detector::Association.end_request
     end
   
     it "should not detect unused preload associations" do
@@ -78,9 +79,9 @@ describe Bullet::Association do
         submission.name
         submission.user.name
       end
-      Bullet::Association.check_unused_preload_associations
-      Bullet::Association.should_not be_unused_preload_associations_for(Category, :submissions)
-      Bullet::Association.should_not be_unused_preload_associations_for(Submission, :user)
+      Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
+      Bullet::Detector::Association.should_not be_unused_preload_associations_for(Category, :submissions)
+      Bullet::Detector::Association.should_not be_unused_preload_associations_for(Submission, :user)
     end
   end
 end

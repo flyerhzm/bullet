@@ -8,11 +8,10 @@ module Bullet
     autoload :ActiveRecord, 'bullet/active_record2'
     autoload :ActionController, 'bullet/action_controller2'
   end
-  autoload :Association, 'bullet/association'
-  autoload :Counter, 'bullet/counter'
   autoload :BulletLogger, 'bullet/logger'
   autoload :Notification, 'bullet/notification'
   autoload :Presenter, 'bullet/presenter'
+  autoload :Detector, 'bullet/detector'
 
   class <<self
     attr_accessor :enable, :alert, :console, :growl, :growl_password, :rails_logger, :bullet_logger, :logger, :logger_file, :disable_browser_cache

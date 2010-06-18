@@ -14,7 +14,7 @@ module Bullet
       def self.check_unused_preload_associations
         @@checked = true
         object_associations.each do |object, association|
-          object_association_diff = diff_object_association association 
+          object_association_diff = diff_object_association( object, association )
           next if object_association_diff.empty?
 
           add_unused_preload_associations object.class, object_association_diff
@@ -22,24 +22,22 @@ module Bullet
       end
       
       protected
-      def self.related_objects( association )
+      def self.related_objects( object, association )
         eager_loadings.select do |key, value| 
           key.include?(object) and value == association
         end.collect(&:first).flatten
       end
       
-      def self.call_object_association( association )
-        related_objects.collect do |related_object| 
-          call_object_associations(association)[related_object] 
+      def self.call_object_association( object, association )
+        related_objects( object, association ).collect do |related_object| 
+          call_object_associations[related_object] 
         end.compact.flatten.uniq
       end
 
-      def self.diff_object_association( association )
-        potential_objects = association - call_object_association( association )
-        potential_objects.reject {|a| a.is_a? Hash}
+      def self.diff_object_association( object, association )
+        potential_objects = association - call_object_association( object, association )
+        potential_objects.reject {|a| a.is_a?( Hash ) }
       end
-
-
     end
   end
 end

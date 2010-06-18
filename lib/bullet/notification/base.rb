@@ -2,10 +2,11 @@ module Bullet
   module Notification
     class Base
       attr_accessor :presenter
+      attr_reader :base_class, :associations, :path
 
       def initialize( base_class, associations, path = nil )
         @base_class = base_class
-        @associations = associations
+        @associations = associations.is_a?( Array ) ? associations : [ associations ]
         @path = path
       end
 
@@ -39,13 +40,11 @@ module Bullet
 
       protected
       def klazz_associations_str
-        assoc = @associations.is_a?( Array ) ? @associations : [ @associations ]
-        "  #{@base_class} => [#{assoc.map(&:inspect).join(', ')}]"
+        "  #{@base_class} => [#{@associations.map(&:inspect).join(', ')}]"
       end
 
       def associations_str
-        assoc = @associations.is_a?( Array ) ? @associations : [ @associations ]
-        ":include => #{assoc.map{|a| a.to_sym unless a.is_a? Hash}.inspect}"
+        ":include => #{@associations.map{|a| a.to_sym unless a.is_a? Hash}.inspect}"
       end
     end
   end
