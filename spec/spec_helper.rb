@@ -74,7 +74,6 @@ module Bullet
             notification.base_class == klass and 
             notification.associations.include?( association )
           end
-          STDERR.puts "Found #{for_class_and_assoc.size} unused preloaded associations" 
           for_class_and_assoc.present?
           # unused_preload_associations[klazz].present? && unused_preload_associations[klazz].include?(association)
         end
