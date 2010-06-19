@@ -42,8 +42,7 @@ module Bullet
 
     def bullet_logger=(bullet_logger)
       if @bullet_logger = bullet_logger
-        @logger_file = File.open(Bullet::BulletLogger::LOG_FILE, 'a+')
-        @logger = Bullet::BulletLogger.new(@logger_file)
+        @logger = Bullet::Presenter::BulletLogger.setup
       end
     end
 
