@@ -14,8 +14,8 @@ module Bullet
         @@checked = true
         add_call_object_associations(object, associations)
         if unpreload_associations?(object, associations)
-          add_unpreload_associations(object.class, associations)
           caller_in_project
+          add_unpreload_associations(object.class, associations)
         end
       end
 
