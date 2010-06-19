@@ -13,17 +13,11 @@ module Bullet
       end
 
       def self.add_possible_objects(objects)
-        klazz = objects.first.class
-        possible_objects[klazz] ||= []
-        possible_objects[klazz] << objects
-        unique(possible_objects[klazz])
+        possible_objects.add objects
       end
 
       def self.add_impossible_object(object)
-        klazz = object.class
-        impossible_objects[klazz] ||= []
-        impossible_objects[klazz] << object
-        impossible_objects[klazz].uniq!
+        impossible_objects.add object
       end
       
       private
@@ -33,26 +27,16 @@ module Bullet
       end
 
       def self.possible_objects
-        @@possible_objects ||= {}
+        @@possible_objects ||= Bullet::ObjectRegistry.new
       end
 
       def self.impossible_objects
-        @@impossible_objects ||= {}
+        @@impossible_objects ||= Bullet::ObjectRegistry.new
       end
 
       def self.conditions_met?( object, associations )
-        object_in_possible_objects?( object ) and
-        object_not_in_impossible_objects?( object )
-      end
-
-      def self.object_in_possible_objects?( object )
-        !possible_objects[ object.class ].nil? and 
-        possible_objects[ object.class ].include?( object )
-      end
-
-      def self.object_not_in_impossible_objects?( object )
-        impossible_objects[ object.class ].nil? or
-        !impossible_objects[ object.class ].include?( object )
+        possible_objects.contains?( object ) and
+        !impossible_objects.contains?( object )
       end
     end
   end
