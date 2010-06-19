@@ -6,6 +6,16 @@ module Bullet
       @logger_file = nil
       @logger = nil
 
+      def self.active? 
+        @logger
+      end
+
+      def self.out_of_channel( notice )
+        return unless active?
+        @logger.info notice.full_notice
+        @logger_file.flush
+      end
+
       def self.setup
         @logger_file = File.open( LOG_FILE, 'a+' )
         @logger = Logger.new( @logger_file )
@@ -15,15 +25,6 @@ module Bullet
         end
       end
 
-      def self.active? 
-        Bullet.bullet_logger
-      end
-
-      def self.out_of_channel( notice )
-        return unless active?
-        @logger.info notice.full_notice
-        @logger_file.flush
-      end
     end
   end
 end

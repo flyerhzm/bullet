@@ -37,11 +37,10 @@ module Bullet
 
     def growl=(growl)
       Bullet::Presenter::Growl.setup_connection( self.growl_password ) if growl
-      @growl = growl
     end
 
     def bullet_logger=(bullet_logger)
-      Bullet::Presenter::BulletLogger.setup if @bullet_logger = bullet_logger
+      Bullet::Presenter::BulletLogger.setup if bullet_logger
     end
 
     DETECTORS = [ Bullet::Detector::NPlusOneQuery, 
