@@ -27,11 +27,11 @@ module Bullet
       end
 
       def self.possible_objects
-        @@possible_objects ||= Bullet::ObjectRegistry.new
+        @@possible_objects ||= Bullet::Registry::Object.new
       end
 
       def self.impossible_objects
-        @@impossible_objects ||= Bullet::ObjectRegistry.new
+        @@impossible_objects ||= Bullet::Registry::Object.new
       end
 
       def self.conditions_met?( object, associations )
