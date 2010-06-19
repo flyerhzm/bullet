@@ -7,6 +7,11 @@ module Bullet
         end
 
         def clear
+          # Note that under ruby class variables are shared among the class
+          # that declares them and all classes derived from that class.
+          # The following variables are accessible by all classes that
+          # derive from Bullet::Detector::Association - changing the variable
+          # in one subclass will make the change visible to all subclasses!
           @@object_associations = nil
           @@callers = nil
           @@possible_objects = nil
@@ -28,17 +33,11 @@ module Bullet
         end
 
         def add_possible_objects(objects)
-          klazz = objects.is_a?(Array) ? objects.first.class : objects.class
-          possible_objects[klazz] ||= []
-          possible_objects[klazz] << objects
-          unique(possible_objects[klazz])
+          possible_objects.add objects
         end
 
         def add_impossible_object(object)
-          klazz = object.class
-          impossible_objects[klazz] ||= []
-          impossible_objects[klazz] << object
-          impossible_objects[klazz].uniq!
+          impossible_objects.add object
         end
 
         def add_eager_loadings(objects, associations)
@@ -68,13 +67,11 @@ module Bullet
 
         private
           def possible?(object)
-            klazz = object.class
-            possible_objects[klazz] and possible_objects[klazz].include?(object)
+            possible_objects.contains? object
           end
 
           def impossible?(object)
-            klazz = object.class
-            impossible_objects[klazz] and impossible_objects[klazz].include?(object)
+            impossible_objects.contains? object
           end
 
           # check if object => associations already exists in object_associations.
@@ -111,7 +108,7 @@ module Bullet
           # that the objects may cause N+1 query.
           # e.g. { Post => [<Post id:1>, <Post id:2>] }
           def possible_objects
-            @@possible_objects ||= {}
+            @@possible_objects ||= Bullet::ObjectRegistry.new
           end
 
           # impossible_objects keep the class to objects relationships
@@ -121,7 +118,7 @@ module Bullet
           # if find collection returns only one object, then the object is impossible object,
           # impossible_objects are used to avoid treating 1+1 query to N+1 query.
           def impossible_objects
-            @@impossible_objects ||= {}
+            @@impossible_objects ||= Bullet::ObjectRegistry.new
           end
 
           # eager_loadings keep the object relationships
