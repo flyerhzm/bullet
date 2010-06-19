@@ -32,11 +32,6 @@ module Bullet
          Bullet.add_notification notice
       end
 
-      def self.unique(array)
-        array.flatten!
-        array.uniq!
-      end
-
       def self.possible_objects
         @@possible_objects ||= {}
       end
