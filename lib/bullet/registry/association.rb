@@ -1,18 +1,6 @@
 module Bullet
   module Registry
-    class Association
-      attr_reader :registry
-
-      def initialize
-        @registry = {}
-      end
-
-      def add( base, associations )
-        @registry[base] ||= []
-        @registry[base] << associations
-        unique( @registry[base] )
-      end
-
+    class Association < Base
       def merge( base, associations )
         @registry.merge!( { base => associations } )
         unique( @registry[base] )
@@ -38,12 +26,6 @@ module Bullet
 
       def each( &block ) 
         @registry.each( &block )
-      end
-
-      private
-      def unique( array )
-        array.flatten!
-        array.uniq!
       end
     end
   end
