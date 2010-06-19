@@ -78,12 +78,13 @@ module Bullet
           # check if object => associations already exists in object_associations.
           def association?(object, associations)
             object_associations.each do |key, value|
-              if key == object
-                value.each do |v|
-                  result = v.is_a?(Hash) ? v.has_key?(associations) : v == associations
-                  return true if result
-                end
+              next unless key == object
+
+              value.each do |v|
+                result = v.is_a?(Hash) ? v.has_key?(associations) : v == associations
+                return true if result
               end
+
             end
             return false
           end
