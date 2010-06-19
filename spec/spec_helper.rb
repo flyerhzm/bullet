@@ -1,6 +1,6 @@
 require 'rubygems'
-require 'spec'
-# require 'rspec/autorun'
+require 'rspec'
+require 'rspec/autorun'
 require 'rails'
 require 'active_record'
 require 'action_controller'
