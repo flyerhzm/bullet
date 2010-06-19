@@ -21,15 +21,11 @@ module Bullet
         end
 
         def add_object_associations(object, associations)
-          object_associations[object] ||= []
-          object_associations[object] << associations
-          unique(object_associations[object])
+          object_associations.add( object, associations )
         end
 
         def add_call_object_associations(object, associations)
-          call_object_associations[object] ||= []
-          call_object_associations[object] << associations
-          unique(call_object_associations[object])
+          call_object_associations.add( object, associations )
         end
 
         def add_possible_objects(objects)
@@ -95,7 +91,7 @@ module Bullet
           # the object_associations keep all associations that may be or may no be 
           # unpreload associations or unused preload associations.
           def object_associations
-            @@object_associations ||= {}
+            @@object_associations ||= Bullet::Registry::Base.new
           end
 
           # call_object_assciations keep the object relationships
@@ -103,7 +99,7 @@ module Bullet
           # e.g. { <Post id:1> => [:comments] }
           # they are used to detect unused preload associations.
           def call_object_associations
-            @@call_object_associations ||= {}
+            @@call_object_associations ||= Bullet::Registry::Base.new
           end
 
           # possible_objects keep the class to object relationships

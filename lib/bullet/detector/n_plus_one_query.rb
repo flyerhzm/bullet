@@ -8,6 +8,7 @@ module Bullet
       def self.call_association(object, associations)
         @@checked = true
         add_call_object_associations(object, associations)
+
         if conditions_met?(object, associations)
           caller_in_project
           create_notification object.class, associations

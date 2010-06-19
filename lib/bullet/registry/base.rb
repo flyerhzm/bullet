@@ -11,6 +11,18 @@ module Bullet
         @registry[key]
       end
 
+      def each( &block )
+        @registry.each( &block )
+      end
+
+      def delete( base )
+        @registry.delete( base )
+      end
+
+      def select( *args, &block )
+        @registry.select( *args, &block )
+      end
+
       def add( key, value )
         @registry[key] ||= []
         @registry[key] << value
