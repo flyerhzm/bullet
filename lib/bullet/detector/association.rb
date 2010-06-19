@@ -42,26 +42,28 @@ module Bullet
 
         def add_eager_loadings(objects, associations)
           objects = Array(objects)
-          eager_loadings[objects] ||= []
+
           eager_loadings.each do |k, v|
-            unless (k & objects).empty?
-              if (k & objects) == k
-                eager_loadings[k] << associations
-                unique(eager_loadings[k])
-                break
-              else
-                eager_loadings.merge!({(k & objects) => (eager_loadings[k].dup << associations)})
-                unique(eager_loadings[(k & objects)])
-                eager_loadings.merge!({(k - objects) => eager_loadings[k]}) unless (k - objects).empty?
-                unique(eager_loadings[(k - objects)])
-                eager_loadings.delete(k)
-                objects = objects - k
-              end
+            key_objects_overlap = k & objects
+
+            next if key_objects_overlap.empty?
+
+            if key_objects_overlap == k
+              eager_loadings.add k, associations
+              break
+
+            else
+              eager_loadings.merge key_objects_overlap, ( eager_loadings[k].dup  << associations )
+
+              keys_without_objects = k - objects
+              eager_loadings.merge keys_without_objects, eager_loadings[k] unless keys_without_objects.empty?
+
+              eager_loadings.delete(k)
+              objects = objects - k
             end
           end
           unless objects.empty?
-            eager_loadings[objects] << associations
-            unique(eager_loadings[objects])
+            eager_loadings.add objects, associations
           end
         end
 
@@ -125,7 +127,7 @@ module Bullet
           # that the associations are preloaded by find :include.
           # e.g. { [<Post id:1>, <Post id:2>] => [:comments, :user] }
           def eager_loadings
-            @@eager_loadings ||= {}
+            @@eager_loadings ||= Bullet::AssociationRegistry.new
           end
 
           def callers
