@@ -14,7 +14,7 @@ module Bullet
   autoload :Detector, 'bullet/detector'
 
   class <<self
-    attr_accessor :enable, :alert, :console, :growl, :growl_password, :rails_logger, :bullet_logger, :logger, :logger_file, :disable_browser_cache
+    attr_accessor :enable, :alert, :console, :growl, :growl_password, :rails_logger, :bullet_logger, :disable_browser_cache
 
     def enable=(enable)
       @enable = enable
@@ -41,9 +41,7 @@ module Bullet
     end
 
     def bullet_logger=(bullet_logger)
-      if @bullet_logger = bullet_logger
-        @logger = Bullet::Presenter::BulletLogger.setup
-      end
+      Bullet::Presenter::BulletLogger.setup if @bullet_logger = bullet_logger
     end
 
     DETECTORS = [ Bullet::Detector::NPlusOneQuery, 
