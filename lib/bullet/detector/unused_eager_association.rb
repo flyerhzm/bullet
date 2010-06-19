@@ -22,16 +22,12 @@ module Bullet
         Bullet.add_notification( notice )
       end
 
-      def self.related_objects( object, association )
-        eager_loadings.select do |key, value| 
-          key.include?(object) and value == association
-        end.collect(&:first).flatten
-      end
-      
       def self.call_object_association( object, association )
-        related_objects( object, association ).collect do |related_object| 
-          call_object_associations[related_object] 
-        end.compact.flatten.uniq
+        eager_loadings.similarly_associated( object, association ).
+                       collect { |related_object| call_object_associations[related_object] }.
+                       compact.
+                       flatten.
+                       uniq
       end
 
       def self.diff_object_association( object, association )

@@ -17,6 +17,12 @@ module Bullet
       unique( @registry[base] )
     end
 
+    def similarly_associated( base, associations )
+      @registry.select do |key, value|
+        key.include?( base ) and value == associations
+      end.collect( &:first ).flatten!
+    end
+
     def [](base)
       @registry[base]
     end
