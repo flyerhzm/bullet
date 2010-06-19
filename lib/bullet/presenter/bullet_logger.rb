@@ -1,11 +1,13 @@
 module Bullet
   module Presenter
     class BulletLogger < Base
+      LOG_FILE = File.join( Rails.root, 'log/bullet.log' )
+
       @logger_file = nil
       @logger = nil
 
       def self.setup
-        @logger_file = File.open( Bullet::BulletLogger::LOG_FILE, 'a+' )
+        @logger_file = File.open( LOG_FILE, 'a+' )
         @logger = Bullet::BulletLogger.new( @logger_file )
       end
 
