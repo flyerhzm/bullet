@@ -1,11 +1,6 @@
 module Bullet
   module Detector
     class UnusedEagerAssociation < Association
-      def self.add_unused_preload_associations(klazz, associations)
-        notice = Bullet::Notification::UnusedEagerLoading.new( klazz, associations )
-        Bullet.add_notification( notice )
-      end
-
       # check if there are unused preload associations.
       # for each object => association
       #   get related_objects from eager_loadings associated with object and associations
@@ -14,14 +9,19 @@ module Bullet
       def self.check_unused_preload_associations
         @@checked = true
         object_associations.each do |object, association|
-          object_association_diff = diff_object_association( object, association )
+          object_association_diff = diff_object_association object, association
           next if object_association_diff.empty?
 
-          add_unused_preload_associations object.class, object_association_diff
+          create_notification object.class, object_association_diff
         end
       end
       
       protected
+      def self.create_notification(klazz, associations)
+        notice = Bullet::Notification::UnusedEagerLoading.new( klazz, associations )
+        Bullet.add_notification( notice )
+      end
+
       def self.related_objects( object, association )
         eager_loadings.select do |key, value| 
           key.include?(object) and value == association

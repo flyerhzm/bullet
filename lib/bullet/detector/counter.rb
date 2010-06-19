@@ -7,13 +7,9 @@ module Bullet
       end
 
       def self.add_counter_cache(object, associations)
-        klazz = object.class
-        if (!possible_objects[klazz].nil? and possible_objects[klazz].include?(object)) and
-           (impossible_objects[klazz].nil? or !impossible_objects[klazz].include?(object))
-           notice = Bullet::Notification::CounterCache.new klazz, associations
-           Bullet.add_notification notice
+        if conditions_met?( object, associations )
+          create_notification object.class, associations
         end
-
       end
 
       def self.add_possible_objects(objects)
@@ -31,6 +27,11 @@ module Bullet
       end
       
       private
+      def self.create_notification( klazz, associations )
+         notice = Bullet::Notification::CounterCache.new klazz, associations
+         Bullet.add_notification notice
+      end
+
       def self.unique(array)
         array.flatten!
         array.uniq!
@@ -42,6 +43,21 @@ module Bullet
 
       def self.impossible_objects
         @@impossible_objects ||= {}
+      end
+
+      def self.conditions_met?( object, associations )
+        object_in_possible_objects?( object ) and
+        object_not_in_impossible_objects?( object )
+      end
+
+      def self.object_in_possible_objects?( object )
+        !possible_objects[ object.class ].nil? and 
+        possible_objects[ object.class ].include?( object )
+      end
+
+      def self.object_not_in_impossible_objects?( object )
+        impossible_objects[ object.class ].nil? or
+        !impossible_objects[ object.class ].include?( object )
       end
     end
   end
