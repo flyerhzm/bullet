@@ -75,6 +75,7 @@ module Bullet
     end
 
     def notification?
+      Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
       ! @notifications.empty?
     end
 
