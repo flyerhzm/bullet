@@ -110,7 +110,7 @@ module Bullet
           # that the objects may cause N+1 query.
           # e.g. { Post => [<Post id:1>, <Post id:2>] }
           def possible_objects
-            @@possible_objects ||= Bullet::ObjectRegistry.new
+            @@possible_objects ||= Bullet::Registry::Object.new
           end
 
           # impossible_objects keep the class to objects relationships
@@ -120,14 +120,14 @@ module Bullet
           # if find collection returns only one object, then the object is impossible object,
           # impossible_objects are used to avoid treating 1+1 query to N+1 query.
           def impossible_objects
-            @@impossible_objects ||= Bullet::ObjectRegistry.new
+            @@impossible_objects ||= Bullet::Registry::Object.new
           end
 
           # eager_loadings keep the object relationships
           # that the associations are preloaded by find :include.
           # e.g. { [<Post id:1>, <Post id:2>] => [:comments, :user] }
           def eager_loadings
-            @@eager_loadings ||= Bullet::AssociationRegistry.new
+            @@eager_loadings ||= Bullet::Registry::Association.new
           end
 
           def callers
