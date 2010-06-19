@@ -62,9 +62,8 @@ module Bullet
               objects = objects - k
             end
           end
-          unless objects.empty?
-            eager_loadings.add objects, associations
-          end
+
+          eager_loadings.add objects, associations unless objects.empty?
         end
 
         private
