@@ -8,7 +8,11 @@ module Bullet
 
       def self.setup
         @logger_file = File.open( LOG_FILE, 'a+' )
-        @logger = Bullet::BulletLogger.new( @logger_file )
+        @logger = Logger.new( @logger_file )
+
+        def @logger.format_message( severity, timestamp, progname, msg )
+          "#{timestamp.to_formatted_s(:db)}[#{severity}] #{msg}\n"
+        end
       end
 
       def self.active? 
