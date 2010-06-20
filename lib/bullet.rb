@@ -15,6 +15,7 @@ module Bullet
 
   class <<self
     attr_accessor :enable, :alert, :console, :growl, :growl_password, :rails_logger, :bullet_logger, :logger, :logger_file, :disable_browser_cache
+    attr_accessor :xmpp
 
     def enable=(enable)
       @enable = enable
@@ -40,6 +41,10 @@ module Bullet
       @growl = growl
     end
 
+    def xmpp=(xmpp)
+      Bullet::Presenter::Xmpp.setup_connection( xmpp ) if xmpp
+    end
+
     def bullet_logger=(bullet_logger)
       if @bullet_logger = bullet_logger
         @logger_file = File.open(Bullet::BulletLogger::LOG_FILE, 'a+')
@@ -54,6 +59,7 @@ module Bullet
     PRESENTERS = [ Bullet::Presenter::JavascriptAlert,
                    Bullet::Presenter::JavascriptConsole,
                    Bullet::Presenter::Growl,
+                   Bullet::Presenter::Xmpp,
                    Bullet::Presenter::RailsLogger,
                    Bullet::Presenter::BulletLogger ]
 
