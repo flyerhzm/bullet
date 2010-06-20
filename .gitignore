@@ -4,3 +4,4 @@ pkg/**
 lib/.DS_Store
 .*.swp
 coverage.data
+tags
