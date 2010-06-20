@@ -2,6 +2,8 @@ require 'bulletware'
 require 'set'
 
 module Bullet
+  class NotificationError < StandardError; end
+
   if Rails.version =~ /^3.0/
     autoload :ActiveRecord, 'bullet/active_record3'
   else
