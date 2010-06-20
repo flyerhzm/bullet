@@ -10,7 +10,6 @@ module Bullet
       end
 
       def self.out_of_channel( notice )
-        Rails.logger.debug "XMPP: out-of-channel #{notice.inspect}"
         return unless active?
         notify( notice.full_notice )
       end
@@ -21,6 +20,7 @@ module Bullet
         @receiver = xmpp_information[:receiver]
         @password = xmpp_information[:password]
         @account  = xmpp_information[:account]
+        @show_online_status = xmpp_information[:show_online_status]
 
         connect
       rescue MissingSourceFile
@@ -30,12 +30,11 @@ module Bullet
 
       private
       def self.connect
-        Rails.logger.debug "Connecting to xmpp server..."
         jid = Jabber::JID.new( @account )
         @xmpp = Jabber::Client.new( jid )
         @xmpp.connect
         @xmpp.auth( @password )
-        Rails.logger.debug "Connected to xmpp server"
+        @xmpp.send( presence_status ) if @show_online_status
       end
 
       def self.notify( message )
@@ -43,9 +42,14 @@ module Bullet
                                   set_type( :normal ).
                                   set_id( '1' ).
                                   set_subject( 'Bullet Notification' )
-        Rails.logger.debug "XMPP: Sending message: #{message.inspect}"
         @xmpp.send( message )
-        Rails.logger.debug "XMPP: Message sent."
+      end
+
+      def self.presence_status
+        project_name = Rails.root.basename.to_s.camelcase
+        time = Time.now
+
+        Jabber::Presence.new.set_status( "Bullet in project '#{project_name}' started on #{time}" )
       end
     end
   end
