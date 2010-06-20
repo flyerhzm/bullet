@@ -29,6 +29,10 @@ config.after_initialize do
   Bullet.bullet_logger = true  
   Bullet.console = true
   Bullet.growl = true
+  Bullet.xmpp = { :account => 'bullets_account@jabber.org',
+                  :password => 'bullets_password_for_jabber',
+                  :receiver => 'your_account@jabber.org',
+                  :show_online_status => true }
   Bullet.rails_logger = true
   Bullet.disable_browser_cache = true
 end
@@ -43,13 +47,27 @@ It is recommended to config growl notification as follows if your collaborators 
   end
 </code></pre>
 
-The code above will enable all five of the Bullet notification systems:
+and similarly for XMPP:
+<pre><code>
+  begin
+    require 'xmpp4r'
+    Bullet.xmpp = { :account => 'bullets_account@jabber.org',
+                    :password => 'bullets_password_for_jabber',
+                    :receiver => 'your_account@jabber.org',
+                    :show_online_status => true }
+  rescue MissingSourceFile
+  end
+</code></pre>
+
+
+The code above will enable all six of the Bullet notification systems:
 * <code>Bullet.enable</code>: enable Bullet plugin/gem, otherwise do nothing
 * <code>Bullet.alert</code>: pop up a JavaScript alert in the browser
 * <code>Bullet.bullet_logger</code>: log to the Bullet log file (Rails.root/log/bullet.log)
 * <code>Bullet.rails_logger</code>: add warnings directly to the Rails log
 * <code>Bullet.console</code>: log warnings to your browser's console.log (Safari/Webkit browsers or Firefox w/Firebug installed)
 * <code>Bullet.growl</code>: pop up Growl warnings if your system has Growl installed. Requires a little bit of configuration
+* <code>Bullet.xmpp</code>: send XMPP/Jabber notifications to the receiver indicated. Note that the code will currently not handle the adding of contacts, so you will need to make both accounts indicated know each other manually before you will receive any notifications. If you restart the development server frequently, the 'coming online' sound for the bullet account may start to annoy - in this case set :show_online_status to false; you will still get notifications, but the bullet account won't announce it's online status anymore.
 * <code>Bullet.disable_browser_cache</code>: disable browser cache which usually causes unexpected problems
 
 ****************************************************************************
@@ -102,6 +120,17 @@ To get Growl support up-and-running for Bullet, follow the steps below:
 h2. Ruby 1.9 issue
 
 ruby-growl gem has an issue about md5 in ruby 1.9, if you use growl and ruby 1.9, check this gist http://gist.github.com/300184
+
+****************************************************************************
+
+h2. XMPP/Jabber Support
+
+To get XMPP support up-and-running for Bullet, follow the steps below:
+* Install the xmpp4r gem: <code>sudo gem install xmpp4r</code>
+* Make both the bullet and the receipient account add each other as contacts.
+  This will require you to manually log into both accounts, add each other
+  as contact and confirm each others contact request.
+* Boot up your application. Bullet will automatically send an XMPP notification when XMPP is turned on.
 
 ****************************************************************************
 
