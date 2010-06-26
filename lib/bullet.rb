@@ -25,6 +25,7 @@ module Bullet
         Bullet::ActiveRecord.enable
         if Rails.version =~ /^3.0/
           require 'action_controller/metal'
+          require 'active_support/dependencies'
           ::ActionController::Metal.middleware_stack.use Bulletware
         elsif Rails.version =~/^2.3/
           Bullet::ActionController.enable
