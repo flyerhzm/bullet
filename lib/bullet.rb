@@ -2,6 +2,8 @@ require 'bulletware'
 require 'set'
 
 module Bullet
+  class NotificationError < StandardError; end
+
   if Rails.version =~ /^3.0/
     autoload :ActiveRecord, 'bullet/active_record3'
   else
@@ -15,7 +17,7 @@ module Bullet
   autoload :Registry, 'bullet/registry'
 
   class <<self
-    attr_accessor :enable, :alert, :console, :growl, :growl_password, :rails_logger, :bullet_logger, :disable_browser_cache
+    attr_accessor :enable, :alert, :console, :growl, :growl_password, :rails_logger, :bullet_logger, :disable_browser_cache, :xmpp
 
     def enable=(enable)
       @enable = enable
@@ -40,6 +42,10 @@ module Bullet
       Bullet::Presenter::Growl.setup_connection( self.growl_password ) if growl
     end
 
+    def xmpp=(xmpp)
+      Bullet::Presenter::Xmpp.setup_connection( xmpp ) if xmpp
+    end
+
     def bullet_logger=(bullet_logger)
       Bullet::Presenter::BulletLogger.setup if bullet_logger
     end
@@ -51,6 +57,7 @@ module Bullet
     PRESENTERS = [ Bullet::Presenter::JavascriptAlert,
                    Bullet::Presenter::JavascriptConsole,
                    Bullet::Presenter::Growl,
+                   Bullet::Presenter::Xmpp,
                    Bullet::Presenter::RailsLogger,
                    Bullet::Presenter::BulletLogger ]
 
