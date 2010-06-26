@@ -65,12 +65,11 @@ describe Bullet::Detector::Association do
     end
 
     before(:each) do
-      Bullet.reset_notifications
-      Bullet::Detector::Association.start_request
+      Bullet.start_request
     end
 
     after(:each) do
-      Bullet::Detector::Association.end_request
+      Bullet.end_request
     end
   
     it "should not detect unused preload associations" do

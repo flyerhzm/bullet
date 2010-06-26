@@ -18,7 +18,7 @@ module Bullet
       private
       def self.create_notification(klazz, associations)
         notice = Bullet::Notification::NPlusOneQuery.new( callers, klazz, associations )
-        Bullet.add_notification( notice )
+        Bullet.notification_collector.add( notice )
       end
 
       # decide whether the object.associations is unpreloaded or not.
