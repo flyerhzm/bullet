@@ -23,7 +23,7 @@ module Bullet
       private
       def self.create_notification( klazz, associations )
          notice = Bullet::Notification::CounterCache.new klazz, associations
-         Bullet.add_notification notice
+         Bullet.notification_collector.add notice
       end
 
       def self.possible_objects

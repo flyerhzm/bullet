@@ -20,7 +20,7 @@ ActiveRecord::Migration.verbose = false
 
 module Bullet
   def self.collected_notifications_of_class( notification_class )
-    Bullet.notifications.select do |notification| 
+    Bullet.notification_collector.collection.select do |notification| 
       notification.is_a? notification_class 
     end
   end
@@ -44,7 +44,6 @@ module Bullet
       class <<self
         # returns true if all associations are preloaded
         def completely_preloading_associations?
-          # !has_unpreload_associations?
           Bullet.collected_n_plus_one_query_notifications.empty?
         end
 
@@ -64,8 +63,6 @@ module Bullet
             notification.associations.include?( association )
           end
           for_class_and_assoc.present?
-          
-          # unpreload_associations[klazz].present? && unpreload_associations[klazz].include?(association)
         end
 
         # returns true if the given class includes the specific unused preloaded association
@@ -75,7 +72,6 @@ module Bullet
             notification.associations.include?( association )
           end
           for_class_and_assoc.present?
-          # unused_preload_associations[klazz].present? && unused_preload_associations[klazz].include?(association)
         end
       end
     end
