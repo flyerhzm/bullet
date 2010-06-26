@@ -121,12 +121,11 @@ describe Bullet::Detector::Association, 'has_many' do
   end
 
   before(:each) do
-    Bullet.reset_notifications
-    Bullet::Detector::Association.start_request
+    Bullet.start_request
   end
 
   after(:each) do
-    Bullet::Detector::Association.end_request
+    Bullet.end_request
   end
 
   # FIXME: setup and teardown are not inherited by context
@@ -256,8 +255,8 @@ describe Bullet::Detector::Association, 'has_many' do
       Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
       Bullet::Detector::Association.should_not be_has_unused_preload_associations
 
-      Bullet::Detector::Association.end_request
-      Bullet::Detector::Association.start_request
+      Bullet.end_request
+      Bullet.start_request
 
       Post.all.each do |post|
         post.comments.collect(&:name)
@@ -542,12 +541,11 @@ describe Bullet::Detector::Association, 'has_and_belongs_to_many' do
   end
 
   before(:each) do
-    Bullet.reset_notifications
-    Bullet::Detector::Association.start_request
+    Bullet.start_request
   end
 
   after(:each) do
-    Bullet::Detector::Association.end_request
+    Bullet.end_request
   end
 
   it "should detect unpreload associations" do
@@ -634,12 +632,11 @@ describe Bullet::Detector::Association, 'has_many :through' do
   end
 
   before(:each) do
-    Bullet.reset_notifications
-    Bullet::Detector::Association.start_request
+    Bullet.start_request
   end
 
   after(:each) do
-    Bullet::Detector::Association.end_request
+    Bullet.end_request
   end
 
   it "should detect unpreload associations" do
@@ -715,12 +712,11 @@ describe Bullet::Detector::Association, "has_one" do
   end
 
   before(:each) do
-    Bullet.reset_notifications
-    Bullet::Detector::Association.start_request
+    Bullet.start_request
   end
 
   after(:each) do
-    Bullet::Detector::Association.end_request
+    Bullet.end_request
   end
 
   it "should detect unpreload association" do
@@ -796,12 +792,11 @@ describe Bullet::Detector::Association, "call one association that in possible o
   end
 
   before(:each) do
-    Bullet.reset_notifications
-    Bullet::Detector::Association.start_request
+    Bullet.start_request
   end
 
   after(:each) do
-    Bullet::Detector::Association.end_request
+    Bullet.end_request
   end
 
   it "should detect no unpreload association" do
@@ -863,12 +858,11 @@ describe Bullet::Detector::Association, "STI" do
   end
 
   before(:each) do
-    Bullet.reset_notifications
-    Bullet::Detector::Association.start_request
+    Bullet.start_request
   end
 
   after(:each) do
-    Bullet::Detector::Association.end_request
+    Bullet.end_request
   end
 
   it "should detect unpreload associations" do

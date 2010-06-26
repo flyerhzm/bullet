@@ -15,9 +15,11 @@ module Bullet
   autoload :Presenter, 'bullet/presenter'
   autoload :Detector, 'bullet/detector'
   autoload :Registry, 'bullet/registry'
+  autoload :NotificationCollector, 'bullet/notification_collector'
 
   class <<self
     attr_accessor :enable, :alert, :console, :growl, :growl_password, :rails_logger, :bullet_logger, :disable_browser_cache, :xmpp
+    attr_reader :notification_collector
 
     def enable=(enable)
       @enable = enable
@@ -63,7 +65,8 @@ module Bullet
                    Bullet::Presenter::BulletLogger ]
 
     def start_request
-      reset_notifications
+      @notification_collector ||= Bullet::NotificationCollector.new
+      @notification_collector.reset
       DETECTORS.each {|bullet| bullet.start_request}
     end
 
@@ -81,19 +84,7 @@ module Bullet
 
     def notification?
       Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
-      ! @notifications.empty?
-    end
-
-    def add_notification( notification )
-      @notifications << notification
-    end
-
-    def notifications
-      @notifications
-    end
-
-    def reset_notifications
-      @notifications = Set.new
+      @notification_collector.notifications_present?
     end
 
     def gather_inline_notifications
@@ -113,7 +104,7 @@ module Bullet
     private
     def for_each_active_presenter_with_notification
       active_presenters.each do |presenter|
-        notifications.each do |notification|
+        @notification_collector.collection.each do |notification|
           notification.presenter = presenter
           yield notification
         end

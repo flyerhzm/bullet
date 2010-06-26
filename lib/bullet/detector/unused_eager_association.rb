@@ -19,7 +19,7 @@ module Bullet
       protected
       def self.create_notification(klazz, associations)
         notice = Bullet::Notification::UnusedEagerLoading.new( klazz, associations )
-        Bullet.add_notification( notice )
+        Bullet.notification_collector.add( notice )
       end
 
       def self.call_object_association( object, association )
