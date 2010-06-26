@@ -18,6 +18,7 @@ There is a large refactor from gem 1.4 to 1.5, so if you upgrade to 1.5 gem, ple
 
 h2. Contributors
 
+sriedel did a lot of awesome refactors, added xmpp notification support, and added Hacking.textile about how to extend to bullet plugin.
 flipsasser added Growl, console.log and Rails.log support, very awesome. And he also improved README.
 rainux added group style console.log.
 2collegebums added some great specs to generate red bar.
@@ -52,6 +53,10 @@ config.after_initialize do
   Bullet.growl = true
   Bullet.rails_logger = true
   Bullet.disable_browser_cache = true
+  Bullet.xmpp = { :account => 'bullets_account@jabber.org',
+                  :password => 'bullets_password_for_jabber',
+                  :receiver => 'your_account@jabber.org',
+                  :show_online_status => true }
 end
 </code></pre>
 
@@ -60,6 +65,18 @@ It is recommended to config growl notification as follows if your collaborators 
   begin
     require 'ruby-growl'
     Bullet.growl = true
+  rescue MissingSourceFile
+  end
+</code></pre>
+
+and similarly for XMPP:
+<pre><code>
+  begin
+    require 'xmpp4r'
+    Bullet.xmpp = { :account => 'bullets_account@jabber.org',
+                    :password => 'bullets_password_for_jabber',
+                    :receiver => 'your_account@jabber.org',
+                    :show_online_status => true }
   rescue MissingSourceFile
   end
 </code></pre>
