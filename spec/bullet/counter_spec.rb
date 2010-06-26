@@ -47,12 +47,11 @@ describe Bullet::Detector::Counter do
   end
 
   before(:each) do
-    Bullet.reset_notifications
-    Bullet::Detector::Counter.start_request
+    Bullet.start_request
   end
   
   after(:each) do
-    Bullet::Detector::Counter.end_request
+    Bullet.end_request
   end
 
   it "should need counter cache with all cities" do
@@ -60,12 +59,10 @@ describe Bullet::Detector::Counter do
       country.cities.size
     end
     Bullet.collected_counter_cache_notifications.should_not be_empty
-    # Bullet::Counter.should be_need_counter_caches
   end
   
   it "should not need coounter cache with only one object" do
     Country.first.cities.size
-    # Bullet::Counter.should_not be_need_counter_caches
     Bullet.collected_counter_cache_notifications.should be_empty
   end
 
@@ -73,7 +70,6 @@ describe Bullet::Detector::Counter do
     Country.all.each do |country|
       country.cities.where(:name => 'first').size
     end
-    # Bullet::Counter.should_not be_need_counter_caches
     Bullet.collected_counter_cache_notifications.should be_empty
   end
 end
@@ -124,19 +120,17 @@ describe Bullet::Detector::Counter do
   end
 
   before(:each) do
-    Bullet::Detector::Counter.start_request
-    Bullet.reset_notifications
+    Bullet.start_request
   end
   
   after(:each) do
-    Bullet::Detector::Counter.end_request
+    Bullet.end_request
   end
 
   it "should not need counter cache" do
     Person.all.each do |person|
       person.pets.size
     end
-    # Bullet::Counter.should_not be_need_counter_caches
     Bullet.collected_counter_cache_notifications.should be_empty
   end
 end
