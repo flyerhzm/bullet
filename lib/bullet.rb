@@ -12,6 +12,7 @@ module Bullet
   autoload :Notification, 'bullet/notification'
   autoload :Presenter, 'bullet/presenter'
   autoload :Detector, 'bullet/detector'
+  autoload :Registry, 'bullet/registry'
 
   class <<self
     attr_accessor :enable, :alert, :console, :growl, :growl_password, :rails_logger, :bullet_logger, :disable_browser_cache

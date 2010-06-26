@@ -1,11 +1,6 @@
 module Bullet
   module Detector
     class UnusedEagerAssociation < Association
-      def self.add_unused_preload_associations(klazz, associations)
-        notice = Bullet::Notification::UnusedEagerLoading.new( klazz, associations )
-        Bullet.add_notification( notice )
-      end
-
       # check if there are unused preload associations.
       # for each object => association
       #   get related_objects from eager_loadings associated with object and associations
@@ -14,24 +9,25 @@ module Bullet
       def self.check_unused_preload_associations
         @@checked = true
         object_associations.each do |object, association|
-          object_association_diff = diff_object_association( object, association )
+          object_association_diff = diff_object_association object, association
           next if object_association_diff.empty?
 
-          add_unused_preload_associations object.class, object_association_diff
+          create_notification object.class, object_association_diff
         end
       end
       
       protected
-      def self.related_objects( object, association )
-        eager_loadings.select do |key, value| 
-          key.include?(object) and value == association
-        end.collect(&:first).flatten
+      def self.create_notification(klazz, associations)
+        notice = Bullet::Notification::UnusedEagerLoading.new( klazz, associations )
+        Bullet.add_notification( notice )
       end
-      
+
       def self.call_object_association( object, association )
-        related_objects( object, association ).collect do |related_object| 
-          call_object_associations[related_object] 
-        end.compact.flatten.uniq
+        eager_loadings.similarly_associated( object, association ).
+                       collect { |related_object| call_object_associations[related_object] }.
+                       compact.
+                       flatten.
+                       uniq
       end
 
       def self.diff_object_association( object, association )
