@@ -17,6 +17,7 @@ You can install it as a gem:
 <pre><code>
 sudo gem install bullet --pre
 </code></pre>
+
 ****************************************************************************
 
 h2. Configuration
