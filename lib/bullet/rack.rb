@@ -13,12 +13,10 @@ module Bullet
 
       if Bullet.notification?
         if status == 200 and !response.body.frozen? and check_html?(headers, response)
-          response_body = response.body << Bullet.javascript_notification
+          response_body = response.body << Bullet.gather_inline_notifications
           headers['Content-Length'] = response_body.length.to_s
         end
-
-        Bullet.growl_notification
-        Bullet.log_notification(env['PATH_INFO'])
+        Bullet.perform_out_of_channel_notifications
       end
       response_body ||= response.body
       Bullet.end_request
