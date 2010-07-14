@@ -1,5 +1,5 @@
-require 'bulletware'
 require 'set'
+require 'bullet/rack'
 
 module Bullet
   class NotificationError < StandardError; end
@@ -16,6 +16,15 @@ module Bullet
   autoload :Detector, 'bullet/detector'
   autoload :Registry, 'bullet/registry'
   autoload :NotificationCollector, 'bullet/notification_collector'
+  
+  if defined? Rails::Railtie
+    # compatible with rails 3.0.0.beta4
+    class BulletRailtie < Rails::Railtie
+      initializer "bullet.configure_rails_initialization" do |app|
+        app.middleware.use Bullet::Rack
+      end
+    end
+  end
 
   class <<self
     attr_accessor :enable, :alert, :console, :growl, :growl_password, :rails_logger, :bullet_logger, :disable_browser_cache, :xmpp
@@ -25,14 +34,8 @@ module Bullet
       @enable = enable
       if enable? 
         Bullet::ActiveRecord.enable
-        if Rails.version =~ /^3.0/
-          require 'action_controller/metal'
-          require 'active_support/dependencies'
-          ::ActionController::Metal.middleware_stack.use Bulletware
-        elsif Rails.version =~/^2.3/
+        if Rails.version =~ /^2./
           Bullet::ActionController.enable
-          require 'action_controller/dispatcher'
-          ::ActionController::Dispatcher.middleware.use Bulletware
         end
       end
     end
