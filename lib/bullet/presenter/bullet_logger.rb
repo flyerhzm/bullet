@@ -1,3 +1,5 @@
+require 'file'
+
 module Bullet
   module Presenter
     class BulletLogger < Base
