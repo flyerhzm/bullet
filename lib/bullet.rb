@@ -1,5 +1,4 @@
 require 'set'
-require 'bullet/rack'
 
 module Bullet
   class NotificationError < StandardError; end
@@ -10,6 +9,7 @@ module Bullet
     autoload :ActiveRecord, 'bullet/active_record2'
     autoload :ActionController, 'bullet/action_controller2'
   end
+  autoload :Rack, 'bullet/rack'
   autoload :BulletLogger, 'bullet/logger'
   autoload :Notification, 'bullet/notification'
   autoload :Presenter, 'bullet/presenter'
@@ -29,7 +29,18 @@ module Bullet
   class <<self
     attr_accessor :enable, :alert, :console, :growl, :growl_password, :rails_logger, :bullet_logger, :disable_browser_cache, :xmpp
     attr_reader :notification_collector
+    
+    DETECTORS = [ Bullet::Detector::NPlusOneQuery, 
+                  Bullet::Detector::UnusedEagerAssociation,
+                  Bullet::Detector::Counter ]
 
+    PRESENTERS = [ Bullet::Presenter::JavascriptAlert,
+                   Bullet::Presenter::JavascriptConsole,
+                   Bullet::Presenter::Growl,
+                   Bullet::Presenter::Xmpp,
+                   Bullet::Presenter::RailsLogger,
+                   Bullet::Presenter::BulletLogger ]
+                   
     def enable=(enable)
       @enable = enable
       if enable? 
@@ -55,17 +66,6 @@ module Bullet
     def bullet_logger=(bullet_logger)
       Bullet::Presenter::BulletLogger.setup if bullet_logger
     end
-
-    DETECTORS = [ Bullet::Detector::NPlusOneQuery, 
-                  Bullet::Detector::UnusedEagerAssociation,
-                  Bullet::Detector::Counter ]
-
-    PRESENTERS = [ Bullet::Presenter::JavascriptAlert,
-                   Bullet::Presenter::JavascriptConsole,
-                   Bullet::Presenter::Growl,
-                   Bullet::Presenter::Xmpp,
-                   Bullet::Presenter::RailsLogger,
-                   Bullet::Presenter::BulletLogger ]
 
     def start_request
       @notification_collector ||= Bullet::NotificationCollector.new
@@ -105,14 +105,14 @@ module Bullet
     end
 
     private
-    def for_each_active_presenter_with_notification
-      active_presenters.each do |presenter|
-        @notification_collector.collection.each do |notification|
-          notification.presenter = presenter
-          yield notification
+      def for_each_active_presenter_with_notification
+        active_presenters.each do |presenter|
+          @notification_collector.collection.each do |notification|
+            notification.presenter = presenter
+            yield notification
+          end
         end
       end
-    end
   end
 
 end
