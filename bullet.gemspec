@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{bullet}
-  s.version = "2.0.0.beta.2"
+  s.version = "2.0.0.beta.3"
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.authors = ["Richard Huang"]
-  s.date = %q{2010-03-07}
+  s.date = %q{2010-07-14}
   s.description = %q{The Bullet plugin is designed to help you increase your application's performance by reducing the number of queries it makes. It will watch your queries while you develop your application and notify you when you should add eager loading (N+1 queries) or when you're using eager loading that isn't necessary.}
   s.email = %q{flyerhzm@gmail.com}
   s.extra_rdoc_files = [
@@ -17,27 +17,50 @@ Gem::Specification.new do |s|
      "README_for_rails2.textile"
   ]
   s.files = [
-    "MIT-LICENSE",
+    ".rspec",
+     "Hacking.textile",
+     "MIT-LICENSE",
      "README.textile",
      "README_for_rails2.textile",
      "Rakefile",
      "VERSION",
+     "autotest/discover.rb",
      "bullet.gemspec",
      "lib/bullet.rb",
      "lib/bullet/action_controller2.rb",
      "lib/bullet/active_record2.rb",
      "lib/bullet/active_record3.rb",
-     "lib/bullet/association.rb",
-     "lib/bullet/counter.rb",
-     "lib/bullet/logger.rb",
+     "lib/bullet/detector.rb",
+     "lib/bullet/detector/association.rb",
+     "lib/bullet/detector/base.rb",
+     "lib/bullet/detector/counter.rb",
+     "lib/bullet/detector/n_plus_one_query.rb",
+     "lib/bullet/detector/unused_eager_association.rb",
      "lib/bullet/notification.rb",
-     "lib/bulletware.rb",
+     "lib/bullet/notification/base.rb",
+     "lib/bullet/notification/counter_cache.rb",
+     "lib/bullet/notification/n_plus_one_query.rb",
+     "lib/bullet/notification/unused_eager_loading.rb",
+     "lib/bullet/notification_collector.rb",
+     "lib/bullet/presenter.rb",
+     "lib/bullet/presenter/base.rb",
+     "lib/bullet/presenter/bullet_logger.rb",
+     "lib/bullet/presenter/growl.rb",
+     "lib/bullet/presenter/javascript_alert.rb",
+     "lib/bullet/presenter/javascript_console.rb",
+     "lib/bullet/presenter/javascript_helpers.rb",
+     "lib/bullet/presenter/rails_logger.rb",
+     "lib/bullet/presenter/xmpp.rb",
+     "lib/bullet/rack.rb",
+     "lib/bullet/registry.rb",
+     "lib/bullet/registry/association.rb",
+     "lib/bullet/registry/base.rb",
+     "lib/bullet/registry/object.rb",
      "rails/init.rb",
      "spec/bullet/association_for_chris_spec.rb",
      "spec/bullet/association_for_peschkaj_spec.rb",
      "spec/bullet/association_spec.rb",
      "spec/bullet/counter_spec.rb",
-     "spec/spec.opts",
      "spec/spec_helper.rb",
      "tasks/bullet_tasks.rake"
   ]
@@ -45,7 +68,7 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.6}
-  s.summary = %q{A plugin to kill N+1 queries and unused eager loading}
+  s.summary = %q{A rails plugin to kill N+1 queries and unused eager loading}
   s.test_files = [
     "spec/spec_helper.rb",
      "spec/bullet/counter_spec.rb",
