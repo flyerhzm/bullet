@@ -3,7 +3,8 @@ module Bullet
     def self.enable
       require 'action_controller'
       case Rails.version
-      when /^2.3/
+      when /^2.3/  
+        ::ActionController::Dispatcher.middleware.use Bullet::Rack
         ::ActionController::Dispatcher.class_eval do
           class <<self
             alias_method :origin_reload_application, :reload_application
@@ -26,7 +27,7 @@ module Bullet
           alias_method :origin_process, :process
           def process(request, response, method = :perform_action, *arguments)
             Bullet.start_request
-            response = origin_process(request, response, method, *arguments)
+            response = origin_process(request, response, method = :perform_action, *arguments)
             
             if Bullet.notification?
               if response.headers["type"] and response.headers["type"].include? 'text/html' and response.body =~ %r{<html.*</html>}m
