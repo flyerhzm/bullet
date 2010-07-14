@@ -31,11 +31,11 @@ module Bullet
       end
 
       def eql?( other )
-        full_notice == other.full_notice
+        klazz_associations_str == other.klazz_associations_str
       end
 
       def hash
-        full_notice.hash
+        klazz_associations_str.hash
       end
 
       protected
