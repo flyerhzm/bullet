@@ -9,7 +9,7 @@ module Bullet
 
       def self.out_of_channel( notice )
         return unless active?
-        notify( notice.full_notice )
+        notify( notice.standard_notice )
       end
 
       def self.setup_connection( password )
@@ -24,17 +24,17 @@ module Bullet
       end
 
       private
-      def self.connect
-        ::Growl.new 'localhost', 
-                    'ruby-growl', 
-                    [ 'Bullet Notification' ], 
-                    nil, 
-                    @password 
-      end
+        def self.connect
+          ::Growl.new 'localhost',
+                      'ruby-growl',
+                      [ 'Bullet Notification' ],
+                      nil,
+                      @password
+        end
 
-      def self.notify( message )
-        @growl.notify( 'Bullet Notification', 'Bullet Notification', message )
-      end
+        def self.notify( message )
+          @growl.notify( 'Bullet Notification', 'Bullet Notification', message )
+        end
     end 
   end
 end

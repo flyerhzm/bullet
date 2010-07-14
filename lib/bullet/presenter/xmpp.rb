@@ -11,7 +11,7 @@ module Bullet
 
       def self.out_of_channel( notice )
         return unless active?
-        notify( notice.full_notice )
+        notify( notice.standard_notice )
       end
 
       def self.setup_connection( xmpp_information )

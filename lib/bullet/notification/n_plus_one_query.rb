@@ -7,8 +7,12 @@ module Bullet
         @callers = callers
       end
 
+      def body_with_caller
+        "#{body}\n#{call_stack_messages}"
+      end
+      
       def body
-        "#{klazz_associations_str}\n  Add to your finder: #{associations_str}\n#{call_stack_messages}"
+        "#{klazz_associations_str}\n  Add to your finder: #{associations_str}"
       end
 
       def title
