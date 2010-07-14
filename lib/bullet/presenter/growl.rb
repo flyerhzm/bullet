@@ -25,11 +25,11 @@ module Bullet
 
       private
       def self.connect
-        Growl.new 'localhost', 
-                  'ruby-growl', 
-                  [ 'Bullet Notification' ], 
-                  nil, 
-                  @password 
+        ::Growl.new 'localhost', 
+                    'ruby-growl', 
+                    [ 'Bullet Notification' ], 
+                    nil, 
+                    @password 
       end
 
       def self.notify( message )
