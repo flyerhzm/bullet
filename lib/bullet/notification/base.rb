@@ -15,9 +15,17 @@ module Bullet
 
       def body
       end
+      
+      def body_with_caller
+        body
+      end
+      
+      def standard_notice
+        @standard_notifice ||= title + "\n" + body
+      end
 
       def full_notice
-        @full_notice ||= title + "\n" + body 
+        @full_notice ||= title + "\n" + body_with_caller
       end
 
       def present_inline

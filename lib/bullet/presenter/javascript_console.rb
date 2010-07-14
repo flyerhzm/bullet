@@ -12,7 +12,7 @@ module Bullet
           if (typeof(console) !== 'undefined') {
             if (console.groupCollapsed && console.groupEnd && console.log) {
               console.groupCollapsed(#{notice.title.inspect});
-              console.log(#{notice.body.inspect});
+              console.log(#{notice.body_with_caller.inspect});
               console.groupEnd();
 
             } else if (console.log) {
