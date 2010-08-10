@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{bullet}
-  s.version = "2.0.0.beta.4"
+  s.version = "2.0.0.rc1"
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.authors = ["Richard Huang"]
@@ -70,11 +70,11 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.3.6}
   s.summary = %q{A rails plugin to kill N+1 queries and unused eager loading}
   s.test_files = [
-    "spec/bullet/association_for_chris_spec.rb",
-     "spec/bullet/association_for_peschkaj_spec.rb",
-     "spec/bullet/association_spec.rb",
+    "spec/spec_helper.rb",
      "spec/bullet/counter_spec.rb",
-     "spec/spec_helper.rb"
+     "spec/bullet/association_spec.rb",
+     "spec/bullet/association_for_chris_spec.rb",
+     "spec/bullet/association_for_peschkaj_spec.rb"
   ]
 
   if s.respond_to? :specification_version then
