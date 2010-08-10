@@ -26,7 +26,9 @@ module Bullet
 
     # fix issue if response's body is a Proc
     def empty?(response)
-      (response.is_a?(Array) && response.empty?) || !response.body.is_a?(String) || response.body.empty?
+      response == ["Not Found"] ||
+      (response.is_a?(Array) && response.empty?) ||
+      !response.body.is_a?(String) || response.body.empty?
     end
   
     def check_html?(headers, response)
