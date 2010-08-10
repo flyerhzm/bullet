@@ -26,8 +26,8 @@ module Bullet
 
     # fix issue if response's body is a Proc
     def empty?(response)
-      response == ["Not Found"] ||
-      (response.is_a?(Array) && response.empty?) ||
+      # response may be ["Not Found"], ["Move Permanently"], etc.
+      (response.is_a?(Array) && response.size <= 1) ||
       !response.body.is_a?(String) || response.body.empty?
     end
   
