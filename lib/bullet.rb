@@ -68,8 +68,7 @@ module Bullet
     end
 
     def start_request
-      @notification_collector ||= Bullet::NotificationCollector.new
-      @notification_collector.reset
+      notification_collector.reset
       DETECTORS.each {|bullet| bullet.start_request}
     end
 
@@ -85,9 +84,13 @@ module Bullet
       PRESENTERS.select { |presenter| presenter.send :active? }
     end
 
+    def notification_collector
+      @notification_collector ||= Bullet::NotificationCollector.new
+    end
+
     def notification?
       Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
-      @notification_collector.notifications_present?
+      notification_collector.notifications_present?
     end
 
     def gather_inline_notifications
@@ -107,7 +110,7 @@ module Bullet
     private
       def for_each_active_presenter_with_notification
         active_presenters.each do |presenter|
-          @notification_collector.collection.each do |notification|
+          notification_collector.collection.each do |notification|
             notification.presenter = presenter
             yield notification
           end
