@@ -184,8 +184,7 @@ end
 
 after(:each)
   if Bullet.enable?
-    Bullet.growl_notification
-    Bullet.log_notification('Test: ')
+    Bullet.perform_out_of_channel_notifications
     Bullet.end_request
   end
 end
