@@ -7,7 +7,7 @@ module Bullet
         @growl
       end
 
-      def self.out_of_channel( notice )
+      def self.out_of_channel_notify( notice )
         return unless active?
         notify( notice.standard_notice )
       end

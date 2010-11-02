@@ -8,7 +8,7 @@ module Bullet
         @logger
       end
 
-      def self.out_of_channel( notice )
+      def self.out_of_channel_notify( notice )
         return unless active?
         @logger.info notice.full_notice
         @logger_file.flush
