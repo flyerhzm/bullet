@@ -5,7 +5,7 @@ module Bullet
         Bullet.alert
       end
 
-      def self.inline( notice )
+      def self.inline_notify( notice )
         return '' unless self.active?
 
         JavascriptHelpers::wrap_js_association "alert( #{notice.standard_notice.inspect} ); "

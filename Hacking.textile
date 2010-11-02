@@ -52,10 +52,10 @@ Presenter classes will need the following class methods:
 * that presenters the user doesn't want can be skipped).
 
 and at least one of:
-* .out_of_channel( notification ) which will display the notification to the
+* .out_of_channel_notify( notification ) which will display the notification to the
   user outside of the request response
 or
-* .inline( notification ) which will generate the notification presentation fit
+* .inline_notify( notification ) which will generate the notification presentation fit
   to be appended to the generated HTML request response (if you want to inject
   content on the result page, such as a javascript alert).
 

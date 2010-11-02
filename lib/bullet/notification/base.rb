@@ -29,13 +29,13 @@ module Bullet
       end
 
       def present_inline
-        return unless self.presenter.respond_to? :inline
-        self.presenter.send( :inline, self ) 
+        return unless self.presenter.respond_to? :inline_notify
+        self.presenter.send( :inline_notify, self )
       end
 
       def present_out_of_channel
-        return unless self.presenter.respond_to? :out_of_channel
-        self.presenter.send( :out_of_channel, self )
+        return unless self.presenter.respond_to? :out_of_channel_notify
+        self.presenter.send( :out_of_channel_notify, self )
       end
 
       def eql?( other )

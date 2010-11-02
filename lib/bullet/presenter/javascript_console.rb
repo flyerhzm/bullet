@@ -5,7 +5,7 @@ module Bullet
         Bullet.console
       end
 
-      def self.inline( notice )
+      def self.inline_notify( notice )
         return '' unless active?
 
         code = <<-CODE
