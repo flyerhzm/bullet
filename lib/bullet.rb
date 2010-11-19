@@ -12,11 +12,10 @@ module Bullet
   autoload :Rack, 'bullet/rack'
   autoload :BulletLogger, 'bullet/logger'
   autoload :Notification, 'bullet/notification'
-  autoload :Presenter, 'bullet/presenter'
   autoload :Detector, 'bullet/detector'
   autoload :Registry, 'bullet/registry'
   autoload :NotificationCollector, 'bullet/notification_collector'
-  
+
   if defined? Rails::Railtie
     # compatible with rails 3.0.0.beta4
     class BulletRailtie < Rails::Railtie
@@ -27,23 +26,18 @@ module Bullet
   end
 
   class <<self
-    attr_accessor :enable, :alert, :console, :growl, :growl_password, :rails_logger, :bullet_logger, :disable_browser_cache, :xmpp
+    attr_accessor :enable, :disable_browser_cache
     attr_reader :notification_collector
-    
-    DETECTORS = [ Bullet::Detector::NPlusOneQuery, 
+
+    delegate :alert=, :console=, :growl=, :rails_logger=, :xmpp=, :to => UniformNotifier
+
+    DETECTORS = [ Bullet::Detector::NPlusOneQuery,
                   Bullet::Detector::UnusedEagerAssociation,
                   Bullet::Detector::Counter ]
 
-    PRESENTERS = [ Bullet::Presenter::JavascriptAlert,
-                   Bullet::Presenter::JavascriptConsole,
-                   Bullet::Presenter::Growl,
-                   Bullet::Presenter::Xmpp,
-                   Bullet::Presenter::RailsLogger,
-                   Bullet::Presenter::BulletLogger ]
-                   
     def enable=(enable)
       @enable = enable
-      if enable? 
+      if enable?
         Bullet::ActiveRecord.enable
         if Rails.version =~ /^2./
           Bullet::ActionController.enable
@@ -55,16 +49,12 @@ module Bullet
       @enable == true
     end
 
-    def growl=(growl)
-      Bullet::Presenter::Growl.setup_connection( self.growl_password ) if growl
-    end
-
-    def xmpp=(xmpp)
-      Bullet::Presenter::Xmpp.setup_connection( xmpp ) if xmpp
-    end
-
-    def bullet_logger=(bullet_logger)
-      Bullet::Presenter::BulletLogger.setup if bullet_logger
+    def bullet_logger=(active)
+      if active
+        bullet_log_file = File.open( 'log/bullet.log', 'a+' )
+        bullet_log_file.sync
+        UniformNotifier.customized_logger = bullet_log_file
+      end
     end
 
     def start_request
@@ -75,13 +65,9 @@ module Bullet
     def end_request
       DETECTORS.each {|bullet| bullet.end_request}
     end
-    
+
     def clear
       DETECTORS.each {|bullet| bullet.clear}
-    end
-
-    def active_presenters
-      PRESENTERS.select { |presenter| presenter.send :active? }
     end
 
     def notification_collector
@@ -95,23 +81,23 @@ module Bullet
 
     def gather_inline_notifications
       responses = []
-      for_each_active_presenter_with_notification do |notification|
-        responses << notification.present_inline
+      for_each_active_notifier_with_notification do |notification|
+        responses << notification.notify_inline
       end
       responses.join( "\n" )
     end
 
     def perform_out_of_channel_notifications
-      for_each_active_presenter_with_notification do |notification|
-        notification.present_out_of_channel
+      for_each_active_notifier_with_notification do |notification|
+        notification.notify_out_of_channel
       end
     end
 
     private
-      def for_each_active_presenter_with_notification
-        active_presenters.each do |presenter|
+      def for_each_active_notifier_with_notification
+        UniformNotifier.active_notifiers.each do |notifier|
           notification_collector.collection.each do |notification|
-            notification.presenter = presenter
+            notification.notifier = notifier
             yield notification
           end
         end

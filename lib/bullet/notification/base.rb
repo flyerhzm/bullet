@@ -1,7 +1,7 @@
 module Bullet
   module Notification
     class Base
-      attr_accessor :presenter
+      attr_accessor :notifier
       attr_reader :base_class, :associations, :path
 
       def initialize( base_class, associations, path = nil )
@@ -15,11 +15,11 @@ module Bullet
 
       def body
       end
-      
+
       def body_with_caller
         body
       end
-      
+
       def standard_notice
         @standard_notifice ||= title + "\n" + body
       end
@@ -28,14 +28,12 @@ module Bullet
         @full_notice ||= title + "\n" + body_with_caller
       end
 
-      def present_inline
-        return unless self.presenter.respond_to? :inline_notify
-        self.presenter.send( :inline_notify, self )
+      def notify_inline
+        self.notifier.inline_notify( self.full_notice )
       end
 
-      def present_out_of_channel
-        return unless self.presenter.respond_to? :out_of_channel_notify
-        self.presenter.send( :out_of_channel_notify, self )
+      def notify_out_of_channel
+        self.notifier.out_of_channel_notify( self.full_notice )
       end
 
       def eql?( other )

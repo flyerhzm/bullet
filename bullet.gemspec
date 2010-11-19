@@ -15,6 +15,8 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = ">= 1.3.6"
 
+  s.add_dependency "uniform_notifier", "~> 1.0.0"
+
   s.extra_rdoc_files = %w(MIT-LICENSE README.textile README_for_rails2.textile)
   s.files        = Dir.glob("lib/**/*") + %w(MIT-LICENSE README.textile README_for_rails2.textile)
   s.require_path = 'lib'

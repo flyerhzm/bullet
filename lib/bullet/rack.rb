@@ -30,7 +30,7 @@ module Bullet
       (response.is_a?(Array) && response.size <= 1) ||
       !response.body.is_a?(String) || response.body.empty?
     end
-  
+
     def check_html?(headers, response)
       headers['Content-Type'] and headers['Content-Type'].include? 'text/html' and response.body =~ %r{<html.*</html>}m
     end
