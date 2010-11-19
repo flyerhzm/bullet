@@ -5,63 +5,36 @@ it (hopefully) easier to extend or enhance the Bullet gem.
 h2. General Control Flow aka. 10000 Meter View
 When Rails is initialized, Bullet will extend ActiveRecord (and if you're using
 Rails 2.x ActiveController too) with the relevant modules and methods found
-in lib/bullet/active_recordX.rb and lib/bullet/action_controller2.rb. If you're 
+in lib/bullet/active_recordX.rb and lib/bullet/action_controller2.rb. If you're
 running Rails 3, Bullet will integrate itself as a middleware into the Rack
 stack, so ActionController does not need to be extended.
 
-The ActiveRecord extensions will call methods in a given detector class, when 
-certain methods are called. 
+The ActiveRecord extensions will call methods in a given detector class, when
+certain methods are called.
 
-Detector classes contain all the logic to recognize 
+Detector classes contain all the logic to recognize
 a noteworthy event. If such an event is detected, an instance of the
 corresponding Notification class is created and stored in a Set instance in the
-main Bullet module (the 'notification collector'). 
+main Bullet module (the 'notification collector').
 
 Notification instances contain the message that will be displayed, and will
 use a Presenter class to display their message to the user.
-
-Each Presenter knows how to present the message either "inline" (as in: the
-message text will be inlined into the request response, such as javascript
-alerts) or "out-of-channel" (completely independent of the request response,
-such as growl or xmpp).
 
 So the flow of a request goes like this:
 1. Bullet.start_request is called, which resets all the detectors and empties
    the notification collector
 2. The request is handled by Rails, and the installed ActiveRecord extensions
    trigger Detector callbacks
-3. Detectors once called, will determine whether something noteworthy happend. 
+3. Detectors once called, will determine whether something noteworthy happend.
    If yes, then a Notification is created and stored in the notification collector.
 4. Rails finishes handling the request
 5. For each notification in the collector, Bullet will iterate over each
    Presenter and will try to generate an inline message that will be appended to
-   the generated reponse body.
+   the generated response body.
 6. The response is returned to the client.
 7. Bullet will try to generate an out-of-channel message for each notification.
 8. Bullet calls end_request for each detector.
 9. Goto 1.
-
-h2. Adding Presenters
-To add a presenter, you will need to:
-* Add the class to the PRESENTERS constant in the main Bullet module
-* Add an autoload directive to lib/bullet/presenter.rb
-* Create your presenter class in the Bullet::Presenter namespace
-
-Presenter classes will need the following class methods:
-* .active? which returns a boolean to indicate if the presenter is active (so
-* that presenters the user doesn't want can be skipped).
-
-and at least one of:
-* .out_of_channel_notify( notification ) which will display the notification to the
-  user outside of the request response
-or
-* .inline_notify( notification ) which will generate the notification presentation fit
-  to be appended to the generated HTML request response (if you want to inject
-  content on the result page, such as a javascript alert).
-
-Have a look at lib/bullet/javascript_alert.rb as a trivial example for an
-inline presenter and lib/bullet/rails_logger.rb to see how a minimal
-out-of-channel presenter looks like.
 
 h2. Adding Notification Types
 If you want to add more kinds of things that Bullet can detect, a little more
@@ -70,7 +43,6 @@ similar.
 
 * Add the class to the DETECTORS constant in the main Bullet module
 * Add (if needed) Rails monkey patches to Bullet.enable
-* Create your presenter class in the Bullet::Detector namespace
 * Add an autoload directive to lib/bullet/detector.rb
 * Create a corresponding notification class in the Bullet::Notification namespace
 * Add an autoload directive to lib/bullet/notification.rb
@@ -86,7 +58,7 @@ a feel for what is needed to get off the ground.
 h3. Detectors
 The only things you'll need to consider when building your Detector class is
 that it will need to supply the .start_request, .end_request and .clear class
-methods. 
+methods.
 
 Simple implementations are provided by Bullet::Detector::Base for start_request
 and end_request, you will have to supply your own clear method.
@@ -94,7 +66,4 @@ and end_request, you will have to supply your own clear method.
 h3. Notifications
 For notifications you will want to supply a #title and #body instance method,
 and check to see if the #initialize and #full_notice methods in the
-Bullet::Notification::Base class fit your needs. 
-
-The interaction with the presenters encapsulated in the Base class, so you
-won't have to worry about that.
+Bullet::Notification::Base class fit your needs.
