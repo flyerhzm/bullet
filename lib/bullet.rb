@@ -16,7 +16,6 @@ module Bullet
   autoload :NotificationCollector, 'bullet/notification_collector'
 
   if defined? Rails::Railtie
-    # compatible with rails 3.0.0.beta4
     class BulletRailtie < Rails::Railtie
       initializer "bullet.configure_rails_initialization" do |app|
         app.middleware.use Bullet::Rack
