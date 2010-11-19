@@ -4,19 +4,21 @@ The Bullet plugin/gem is designed to help you increase your application's perfor
 
 Best practice is to use Bullet in development mode or custom mode (staging, profile, etc.). The last thing you want is your clients getting alerts about how lazy you are.
 
-The Bullet plugin/gem now supports rails 2.1, 2.2, 2.3 and 3.0, tested in rails 2.1.2, 2.2.2, 2.3.2 and 3.0.0.beta.
+The Bullet plugin/gem now supports rails 2.1, 2.2, 2.3 and 3.0.
 
 ****************************************************************************
 
 h2. Install
 
-You can add Bullet to your Rails gem requirements:
-<pre><code>config.gem 'bullet', :source => 'http://gemcutter.org'</code></pre>
-
 You can install it as a gem:
 <pre><code>
-sudo gem install bullet --pre
+gem install bullet
 </code></pre>
+
+or add it into a Gemfile (Bundler):
+<pre><code>
+gem "bullet", :group => "development"
+</code></code>
 
 ****************************************************************************
 
@@ -25,9 +27,9 @@ h2. Configuration
 Bullet won't do ANYTHING unless you tell it to explicitly. Append to <code>config/environments/development.rb</code> initializer with the following code:
 <pre><code>
 config.after_initialize do
-  Bullet.enable = true 
+  Bullet.enable = true
   Bullet.alert = true
-  Bullet.bullet_logger = true  
+  Bullet.bullet_logger = true
   Bullet.console = true
   Bullet.growl = true
   Bullet.xmpp = { :account => 'bullets_account@jabber.org',
@@ -39,27 +41,7 @@ config.after_initialize do
 end
 </code></pre>
 
-It is recommended to config growl notification as follows if your collaborators are not using MacOS
-<pre><code>
-  begin
-    require 'ruby-growl'
-    Bullet.growl = true
-  rescue MissingSourceFile
-  end
-</code></pre>
-
-and similarly for XMPP:
-<pre><code>
-  begin
-    require 'xmpp4r'
-    Bullet.xmpp = { :account => 'bullets_account@jabber.org',
-                    :password => 'bullets_password_for_jabber',
-                    :receiver => 'your_account@jabber.org',
-                    :show_online_status => true }
-  rescue MissingSourceFile
-  end
-</code></pre>
-
+The notifier of bullet is a wrap of "uniform_notifier":https://github.com/flyerhzm/uniform_notifier
 
 The code above will enable all six of the Bullet notification systems:
 * <code>Bullet.enable</code>: enable Bullet plugin/gem, otherwise do nothing
@@ -109,10 +91,10 @@ These two lines are notifications that unused eager loadings have been encounter
 h2. Growl Support
 
 To get Growl support up-and-running for Bullet, follow the steps below:
-* Install the ruby-growl gem: <code>sudo gem install ruby-growl</code>
+* Install the ruby-growl gem: <code>gem install ruby-growl</code>
 * Open the Growl preference pane in Systems Preferences
 * Click the "Network" tab
-* Make sure both "Listen for incoming notifications" and "Allow remote application registration" are checked. *Note*: If you set a password, you will need to set <code>Bullet.growl_password = 'your_growl_password</code>' in the config file.
+* Make sure both "Listen for incoming notifications" and "Allow remote application registration" are checked. *Note*: If you set a password, you will need to set <code>Bullet.growl_password = { :password => 'growl password' }</code> in the config file.
 * Restart Growl ("General" tab -> Stop Growl -> Start Growl)
 * Boot up your application. Bullet will automatically send a Growl notification when Growl is turned on. If you do not see it when your application loads, make sure it is enabled in your initializer and double-check the steps above.
 
@@ -200,7 +182,7 @@ Bullet is designed to function as you browse through your application in develop
 <pre><code>
 $ rails test
 $ cd test
-$ script/rails g scaffold post name:string 
+$ script/rails g scaffold post name:string
 $ script/rails g scaffold comment name:string post_id:integer
 $ rake db:migrate
 </code></pre>
@@ -299,9 +281,9 @@ In the meanwhile, there's a log appended into <code>log/bullet.log</code> file
 The generated SQLs are
 
 <pre><code>
-  Post Load (1.0ms)   SELECT * FROM "posts" 
-  Comment Load (0.4ms)   SELECT * FROM "comments" WHERE ("comments".post_id = 1) 
-  Comment Load (0.3ms)   SELECT * FROM "comments" WHERE ("comments".post_id = 2) 
+  Post Load (1.0ms)   SELECT * FROM "posts"
+  Comment Load (0.4ms)   SELECT * FROM "comments" WHERE ("comments".post_id = 1)
+  Comment Load (0.3ms)   SELECT * FROM "comments" WHERE ("comments".post_id = 2)
 </code></pre>
 
 
@@ -314,8 +296,8 @@ The generated SQLs are
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @posts }
-    end 
-  end 
+    end
+  end
 </code></pre>
 
 10. refresh http://localhost:3000/posts page, no alert box and no log appended.
@@ -323,8 +305,8 @@ The generated SQLs are
 The generated SQLs are
 
 <pre><code>
-  Post Load (0.5ms)   SELECT * FROM "posts" 
-  Comment Load (0.5ms)   SELECT "comments".* FROM "comments" WHERE ("comments".post_id IN (1,2)) 
+  Post Load (0.5ms)   SELECT * FROM "posts"
+  Comment Load (0.5ms)   SELECT "comments".* FROM "comments" WHERE ("comments".post_id IN (1,2))
 </code></pre>
 
 a N+1 query fixed. Cool!
@@ -338,8 +320,8 @@ a N+1 query fixed. Cool!
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @posts }
-    end 
-  end 
+    end
+  end
 </code></pre>
 
 <pre><code>
@@ -378,8 +360,8 @@ Remove from your finder: :include => [:comments]
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @posts }
-    end 
-  end 
+    end
+  end
 </code></pre>
 
 <pre><code>
