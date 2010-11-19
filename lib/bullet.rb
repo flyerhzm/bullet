@@ -1,4 +1,5 @@
 require 'set'
+require 'uniform_notifier'
 
 module Bullet
   class NotificationError < StandardError; end
