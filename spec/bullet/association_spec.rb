@@ -75,7 +75,7 @@ describe Bullet::Detector::Association, 'has_many' do
     has_many :posts
     belongs_to :newspaper
   end
-  
+
   class Newspaper < ActiveRecord::Base
     has_many :writers, :class_name => "BaseUser"
   end
@@ -85,7 +85,7 @@ describe Bullet::Detector::Association, 'has_many' do
 
   before(:all) do
     setup_db
-    
+
     newspaper1 = Newspaper.create(:name => "First Newspaper")
     newspaper2 = Newspaper.create(:name => "Second Newspaper")
 
@@ -128,8 +128,7 @@ describe Bullet::Detector::Association, 'has_many' do
     Bullet.end_request
   end
 
-  # FIXME: setup and teardown are not inherited by context
-  # context "for unused cases" do
+  context "for unused cases" do
     #If you have the same record created twice with different includes
     #  the hash value get's accumulated includes, which leads to false Unused eager loading
     #it "should not incorrectly mark associations as unused when multiple object instances" do
@@ -162,11 +161,10 @@ describe Bullet::Detector::Association, 'has_many' do
       Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
       Bullet::Detector::Association.should_not be_unused_preload_associations_for(Comment, :author)
     end
-  # end
+  end
 
 
-  # FIXME: setup and teardown are not inherited by context
-  # context "comments => posts => category" do
+  context "comments => posts => category" do
 
     # this happens because the post isn't a possible object even though the writer is access through the post
     # which leads to an 1+N queries
@@ -214,10 +212,9 @@ describe Bullet::Detector::Association, 'has_many' do
         end
       }.should_not raise_error(SystemStackError)
     end
-  # end
+  end
 
-  # FIXME: setup and teardown are not inherited by context
-  # context "post => comments" do
+  context "post => comments" do
   #
   ### FIXME: Please double check semantic equivalence with original
     it "should detect preload with post => comments" do
@@ -264,10 +261,9 @@ describe Bullet::Detector::Association, 'has_many' do
       Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
       Bullet::Detector::Association.should_not be_has_unused_preload_associations
     end
-  # end
+  end
 
-  # FIXME: setup and teardown are not inherited by context
-  # context "category => posts => comments" do
+  context "category => posts => comments" do
     it "should detect preload with category => posts => comments" do
       Category.includes({:posts => :comments}).each do |category|
         category.posts.each do |post|
@@ -321,10 +317,9 @@ describe Bullet::Detector::Association, 'has_many' do
       Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
       Bullet::Detector::Association.should_not be_has_unused_preload_associations
     end
-  # end
+  end
 
-  # FIXME: setup and teardown are not inherited by context
-  # context "category => posts, category => entries" do
+  context "category => posts, category => entries" do
     it "should detect preload with category => [posts, entries]" do
       Category.includes([:posts, :entries]).each do |category|
         category.posts.collect(&:name)
@@ -371,10 +366,9 @@ describe Bullet::Detector::Association, 'has_many' do
       Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
       Bullet::Detector::Association.should_not be_has_unused_preload_associations
     end
-  # end
+  end
 
-  # FIXME: setup and teardown are not inherited by context
-  # context "no preload" do
+  context "no preload" do
     it "should no preload only display only one post => comment" do
       Post.includes(:comments).each do |post|
         post.comments.first.name
@@ -386,10 +380,9 @@ describe Bullet::Detector::Association, 'has_many' do
       Post.first.comments.collect(&:name)
       Bullet::Detector::Association.should be_completely_preloading_associations
     end
-  # end
+  end
 
-  # FIXME: setup and teardown are not inherited by context
-  # context "scope for_category_name" do
+  context "scope for_category_name" do
     it "should detect preload with post => category" do
       Post.in_category_name('first').all.each do |post|
         post.category.name
@@ -403,10 +396,9 @@ describe Bullet::Detector::Association, 'has_many' do
       Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
       Bullet::Detector::Association.should_not be_has_unused_preload_associations
     end
-  # end
+  end
 
-  # FIXME: setup and teardown are not inherited by context
-  # context "scope preload_posts" do
+  context "scope preload_posts" do
     it "should no preload post => comments with scope" do
       Post.preload_posts.each do |post|
         post.comments.collect(&:name)
@@ -420,10 +412,9 @@ describe Bullet::Detector::Association, 'has_many' do
       Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
       Bullet::Detector::Association.should be_has_unused_preload_associations
     end
-  # end
+  end
 
-  # FIXME: setup and teardown are not inherited by context
-  # context "no unused" do
+  context "no unused" do
     it "should no unused only display only one post => comment" do
       Post.includes(:comments).each do |post|
         i = 0
@@ -438,10 +429,9 @@ describe Bullet::Detector::Association, 'has_many' do
       Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
       Bullet::Detector::Association.should_not be_has_unused_preload_associations
     end
-  # end
+  end
 
-  # FIXME: setup and teardown are not inherited by context
-  # context "belongs_to" do
+  context "belongs_to" do
     it "should preload comments => post" do
       Comment.all.each do |comment|
         comment.post.name
@@ -488,7 +478,7 @@ describe Bullet::Detector::Association, 'has_many' do
       Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
       Bullet::Detector::Association.should_not be_has_unused_preload_associations
     end
-  # end
+  end
 end
 
 describe Bullet::Detector::Association, 'has_and_belongs_to_many' do
