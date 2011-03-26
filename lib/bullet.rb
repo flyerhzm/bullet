@@ -1,5 +1,6 @@
 require 'set'
 require 'uniform_notifier'
+require 'bullet/object'
 
 module Bullet
   if Rails.version =~ /^3.0/
