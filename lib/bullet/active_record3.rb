@@ -1,4 +1,5 @@
 module Bullet
+  LOAD_TARGET_RGX = /load_target/
   module ActiveRecord
     def self.enable
       require 'active_record'
@@ -75,7 +76,7 @@ module Bullet
         def load_target
           # avoid stack level too deep
           result = origin_load_target
-          Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name) unless caller.to_s.include? 'load_target'
+          Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name) unless caller.find {|c| c =~ LOAD_TARGET_RGX }
           Bullet::Detector::Association.add_possible_objects(result)
           result
         end
