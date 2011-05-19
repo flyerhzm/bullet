@@ -1,8 +1,10 @@
+$: << 'lib'
 require 'benchmark'
 require 'rails'
 require 'active_record'
 require 'activerecord-import'
 require 'bullet'
+require 'perftools'
 
 class Post < ActiveRecord::Base
   belongs_to :user
@@ -66,6 +68,11 @@ Comment.import comments
 
 puts "Start benchmarking..."
 
+
+Bullet.enable = true
+
+PerfTools::CpuProfiler.start("benchmark_profile4")
+
 Benchmark.bm(70) do |bm|
   bm.report("Querying & Iterating 1000 Posts with 10000 Comments and 100 Users") do
     Bullet.start_request
@@ -81,6 +88,7 @@ Benchmark.bm(70) do |bm|
   end
 end
 
+PerfTools::CpuProfiler.stop
 puts "End benchmarking..."
 
 
