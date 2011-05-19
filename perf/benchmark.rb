@@ -46,22 +46,25 @@ ActiveRecord::Schema.define(:version => 1) do
   end
 end
 
+users_size = 100
+posts_size = 1000
+comments_size = 10000
 users = []
-100.times do |i|
+users_size.times do |i|
   users << User.new(:name => "user#{i}")
 end
 User.import users
 users = User.all
 
 posts = []
-1000.times do |i|
+posts_size.times do |i|
   posts << Post.new(:title => "Title #{i}", :body => "Body #{i}", :user => users[i%100])
 end
 Post.import posts
 posts = Post.all
 
 comments = []
-10000.times do |i|
+comments_size.times do |i|
   comments << Comment.new(:body => "Comment #{i}", :post => posts[i%1000], :user => users[i%100])
 end
 Comment.import comments
@@ -74,7 +77,7 @@ Bullet.enable = true
 PerfTools::CpuProfiler.start(ARGV[0]|| "benchmark_profile")
 
 Benchmark.bm(70) do |bm|
-  bm.report("Querying & Iterating 1000 Posts with 10000 Comments and 100 Users") do
+  bm.report("Querying & Iterating #{posts_size} Posts with #{comments_size} Comments and #{users_size} Users") do
     Bullet.start_request
     Post.select("SQL_NO_CACHE *").includes(:user, :comments => :user).each do |p|
       p.title
