@@ -23,11 +23,13 @@ module Bullet
       end
 
       def self.call_object_association( object, association )
-        eager_loadings.similarly_associated( object, association ).
-                       collect { |related_object| call_object_associations[related_object] }.
-                       compact.
-                       flatten.
-                       uniq
+        all = Set.new
+        eager_loadings.similarly_associated( object, association ).each do |related_object|
+            coa = call_object_associations[related_object]
+            next if coa.nil?
+            all.merge coa
+        end
+        all.to_a
       end
 
       def self.diff_object_association( object, association )
