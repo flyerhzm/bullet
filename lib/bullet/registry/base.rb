@@ -25,13 +25,16 @@ module Bullet
 
       def add( key, value )
         @registry[key] ||= []
-        @registry[key] << value
+        if value.is_a? Array
+          @registry[key] += value
+        else
+          @registry[key] << value
+        end
         unique( @registry[key] )
       end
 
       private
       def unique( array )
-        array.flatten!
         array.uniq!
       end
     end
