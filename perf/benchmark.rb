@@ -4,7 +4,12 @@ require 'rails'
 require 'active_record'
 require 'activerecord-import'
 require 'bullet'
-require 'perftools'
+
+begin
+  require 'perftools'
+rescue LoadError
+  puts "Could not load perftools.rb, profiling won't be possible"
+end
 
 class Post < ActiveRecord::Base
   belongs_to :user
@@ -74,7 +79,7 @@ puts "Start benchmarking..."
 
 Bullet.enable = true
 
-PerfTools::CpuProfiler.start(ARGV[0]|| "benchmark_profile")
+PerfTools::CpuProfiler.start(ARGV[0]|| "benchmark_profile") if defined? PerfTools
 
 Benchmark.bm(70) do |bm|
   bm.report("Querying & Iterating #{posts_size} Posts with #{comments_size} Comments and #{users_size} Users") do
@@ -91,7 +96,7 @@ Benchmark.bm(70) do |bm|
   end
 end
 
-PerfTools::CpuProfiler.stop
+PerfTools::CpuProfiler.stop if defined? PerfTools
 puts "End benchmarking..."
 
 
