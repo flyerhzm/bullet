@@ -71,9 +71,9 @@ puts "Start benchmarking..."
 
 Bullet.enable = true
 
-PerfTools::CpuProfiler.start("benchmark_profile4")
+PerfTools::CpuProfiler.start("set_usage1")
 
-Benchmark.bm(70) do |bm|
+Benchmark.bm(1) do |bm|
   bm.report("Querying & Iterating 1000 Posts with 10000 Comments and 100 Users") do
     Bullet.start_request
     Post.select("SQL_NO_CACHE *").includes(:user, :comments => :user).each do |p|
