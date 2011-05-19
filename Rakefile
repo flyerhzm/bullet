@@ -1,3 +1,4 @@
+$LOAD_PATH.unshift File.expand_path("../lib", __FILE__)
 require "bundler"
 Bundler.setup
 
@@ -6,7 +7,6 @@ require "rake/rdoctask"
 require "rspec"
 require "rspec/core/rake_task"
 
-$LOAD_PATH.unshift File.expand_path("../lib", __FILE__)
 require "bullet/version"
 
 task :build do
