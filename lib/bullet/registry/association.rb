@@ -3,7 +3,6 @@ module Bullet
     class Association < Base
       def merge( base, associations )
         @registry.merge!( { base => associations } )
-        unique( @registry[base] )
       end
 
       def similarly_associated( base, associations )

@@ -66,7 +66,7 @@ module Bullet
         end
 
         # returns true if the given class includes the specific unused preloaded association
-        def unused_preload_associations_for?(klazz, association)
+        def unused_preload_associations_for?(klass, association)
           for_class_and_assoc = Bullet.collected_unused_eager_association_notifications.select do |notification|
             notification.base_class == klass and 
             notification.associations.include?( association )
