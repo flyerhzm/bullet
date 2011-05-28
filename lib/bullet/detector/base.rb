@@ -7,13 +7,6 @@ module Bullet
       def self.end_request
         clear
       end
-
-      protected
-      def self.unique( array )
-        array.flatten!
-        array.uniq!
-      end
-
     end
   end
 end
