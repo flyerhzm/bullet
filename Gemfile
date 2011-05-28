@@ -11,3 +11,5 @@ gem 'activerecord-import'
 
 gem "rspec", "~> 2.5.0"
 gem "watchr", "~> 0.7"
+
+gem "perftools.rb"
