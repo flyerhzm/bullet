@@ -1,0 +1,2 @@
+class Page < Document
+end

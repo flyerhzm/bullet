@@ -15,7 +15,7 @@ module Bullet
           create_notification object.class, object_association_diff
         end
       end
-      
+
       protected
       def self.create_notification(klazz, associations)
         notice = Bullet::Notification::UnusedEagerLoading.new( klazz, associations )
