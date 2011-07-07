@@ -85,8 +85,9 @@ module Bullet
       responses.join( "\n" )
     end
 
-    def perform_out_of_channel_notifications
+    def perform_out_of_channel_notifications(env = {})
       for_each_active_notifier_with_notification do |notification|
+        notification.url = [env['HTTP_HOST'], env['REQUEST_URI']].compact.join
         notification.notify_out_of_channel
       end
     end
