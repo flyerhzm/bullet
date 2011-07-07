@@ -16,7 +16,7 @@ module Bullet
           response_body = response.body << Bullet.gather_inline_notifications
           headers['Content-Length'] = response_body.length.to_s
         end
-        Bullet.perform_out_of_channel_notifications
+        Bullet.perform_out_of_channel_notifications(env)
       end
       response_body ||= response.body
       Bullet.end_request

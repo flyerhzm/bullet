@@ -1,7 +1,7 @@
 module Bullet
   module Notification
     class Base
-      attr_accessor :notifier
+      attr_accessor :notifier, :url
       attr_reader :base_class, :associations, :path
 
       def initialize( base_class, associations, path = nil )
@@ -15,6 +15,10 @@ module Bullet
 
       def body
       end
+      
+      def whoami
+        "user: " << `whoami`.chomp
+      end
 
       def body_with_caller
         body
@@ -25,7 +29,7 @@ module Bullet
       end
 
       def full_notice
-        @full_notice ||= title + "\n" + body_with_caller
+        [whoami, url, title, body_with_caller].compact.join("\n")
       end
 
       def notify_inline
