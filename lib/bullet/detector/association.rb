@@ -39,24 +39,34 @@ module Bullet
         def add_eager_loadings(objects, associations)
           objects = Array(objects)
 
+          to_add = nil
+          to_merge, to_delete = [], []
           eager_loadings.each do |k, v|
             key_objects_overlap = k & objects
 
             next if key_objects_overlap.empty?
 
             if key_objects_overlap == k
-              eager_loadings.add k, associations
+              to_add = [k, associations]
               break
 
             else
-              eager_loadings.merge key_objects_overlap, ( eager_loadings[k].dup  << associations )
+              to_merge << [key_objects_overlap, ( eager_loadings[k].dup  << associations )]
 
               keys_without_objects = k - objects
-              eager_loadings.merge keys_without_objects, eager_loadings[k] unless keys_without_objects.empty?
-
-              eager_loadings.delete(k)
+              to_merge << [keys_without_objects, eager_loadings[k]]
+              to_delete << k
               objects = objects - k
             end
+          end
+          if to_add
+            eager_loadings.add *to_add
+          end
+          to_merge.each do |k,val|
+            eager_loadings.merge k, val
+          end
+          to_delete.each do |k|
+            eager_loadings.delete k
           end
 
           eager_loadings.add objects, associations unless objects.empty?
