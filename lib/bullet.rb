@@ -2,8 +2,10 @@ require 'set'
 require 'uniform_notifier'
 
 module Bullet
-  if Rails.version =~ /^3.[01]/
+  if Rails.version =~ /^3\.0/
     autoload :ActiveRecord, 'bullet/active_record3'
+  elsif Rails.version =~ /^3\.1/
+    autoload :ActiveRecord, 'bullet/active_record31'
   else
     autoload :ActiveRecord, 'bullet/active_record2'
     autoload :ActionController, 'bullet/action_controller2'
