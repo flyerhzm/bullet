@@ -23,14 +23,15 @@ module Bullet
       ::ActiveRecord::Associations::Preloader.class_eval do
         # include query for one to many associations.
         # keep this eager loadings.
+        alias_method :origin_initialize, :initialize
         def initialize(records, associations, preload_options = {})
+          origin_initialize(records, associations, preload_options)
           records = [records].flatten.compact.uniq
           return if records.empty?
           records.each do |record|
             Bullet::Detector::Association.add_object_associations(record, associations)
           end
           Bullet::Detector::Association.add_eager_loadings(records, associations)
-          super(records, associations, preload_options)
         end
       end
 
