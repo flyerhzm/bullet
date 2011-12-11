@@ -3,7 +3,7 @@ require "bundler"
 Bundler.setup
 
 require "rake"
-require "rake/rdoctask"
+require "rdoc/task"
 require "rspec"
 require "rspec/core/rake_task"
 
@@ -26,11 +26,11 @@ task :release => :build do
   system "gem push bullet-#{Bullet::VERSION}.gem"
 end
 
-Rspec::Core::RakeTask.new(:spec) do |spec|
+RSpec::Core::RakeTask.new(:spec) do |spec|
   spec.pattern = "spec/**/*_spec.rb"
 end
 
-Rspec::Core::RakeTask.new('spec:progress') do |spec|
+RSpec::Core::RakeTask.new('spec:progress') do |spec|
   spec.rspec_opts = %w(--format progress)
   spec.pattern = "spec/**/*_spec.rb"
 end
