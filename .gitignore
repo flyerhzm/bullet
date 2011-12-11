@@ -6,6 +6,4 @@ lib/.DS_Store
 coverage.data
 tags
 .bundle
-.rvmrc
 *.gem
-Gemfile.lock

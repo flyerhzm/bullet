@@ -4,12 +4,12 @@ source "http://rubygems.org"
 
 gemspec
 
-gem 'rails', '3.0.0'
+gem 'rails'
 gem 'sqlite3-ruby', :require => 'sqlite3'
 gem 'mysql'
 gem 'activerecord-import'
 
-gem "rspec", "~> 2.5.0"
-gem "watchr", "~> 0.7"
+gem "rspec"
+gem "watchr"
 
 gem "perftools.rb"
