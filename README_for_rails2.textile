@@ -192,8 +192,8 @@ Bullet is designed to function as you browse through your application in develop
 1. setup test environment
 
 <pre><code>
-$ rails test
-$ cd test
+$ rails test_bullet
+$ cd test_bullet
 $ script/generate scaffold post name:string
 $ script/generate scaffold comment name:string post_id:integer
 $ rake db:migrate
@@ -279,10 +279,10 @@ In the meanwhile, there's a log appended into <code>log/bullet.log</code> file
 2009-08-20 09:12:19[INFO] N+1 Query: PATH_INFO: /posts;    model: Post => assocations: [comments]
 Add your finder: :include => [:comments]
 2009-08-20 09:12:19[INFO] N+1 Query: method call stack:
-/Users/richard/Downloads/test/app/views/posts/index.html.erb:11:in `_run_erb_app47views47posts47index46html46erb'
-/Users/richard/Downloads/test/app/views/posts/index.html.erb:8:in `each'
-/Users/richard/Downloads/test/app/views/posts/index.html.erb:8:in `_run_erb_app47views47posts47index46html46erb'
-/Users/richard/Downloads/test/app/controllers/posts_controller.rb:7:in `index'
+/Users/flyerhzm/Downloads/test_bullet/app/views/posts/index.html.erb:11:in `_run_erb_app47views47posts47index46html46erb'
+/Users/flyerhzm/Downloads/test_bullet/app/views/posts/index.html.erb:8:in `each'
+/Users/flyerhzm/Downloads/test_bullet/app/views/posts/index.html.erb:8:in `_run_erb_app47views47posts47index46html46erb'
+/Users/flyerhzm/Downloads/test_bullet/app/controllers/posts_controller.rb:7:in `index'
 </code></pre>
 
 The generated SQLs are
@@ -400,4 +400,4 @@ In the meanwhile, there's a log appended into <code>log/bullet.log</code> file.
 ****************************************************************************
 
 
-Copyright (c) 2009 - 2010 Richard Huang (flyerhzm@gmail.com), released under the MIT license
+Copyright (c) 2009 - 2011 Richard Huang (flyerhzm@gmail.com), released under the MIT license

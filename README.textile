@@ -180,11 +180,11 @@ Bullet is designed to function as you browse through your application in develop
 1. setup test environment
 
 <pre><code>
-$ rails test
-$ cd test
-$ script/rails g scaffold post name:string
-$ script/rails g scaffold comment name:string post_id:integer
-$ rake db:migrate
+$ rails new test_bullet
+$ cd test_bullet
+$ rails g scaffold post name:string
+$ rails g scaffold comment name:string post_id:integer
+$ bundle exec rake db:migrate
 </code></pre>
 
 2. change <code>app/model/post.rb</code> and <code>app/model/comment.rb</code>
@@ -199,7 +199,7 @@ class Comment < ActiveRecord::Base
 end
 </code></pre>
 
-3. go to <code>script/rails c</code> and execute
+3. go to <code>rails c</code> and execute
 
 <pre><code>
 post1 = Post.create(:name => 'first')
@@ -216,7 +216,7 @@ post2.comments.create(:name => 'fourth')
 <% @posts.each do |post| %>
   <tr>
     <td><%= post.name %></td>
-    <td><%= post.comments.collect(&:name) %></td>
+    <td><%= post.comments.map(&:name) %></td>
     <td><%= link_to 'Show', post %></td>
     <td><%= link_to 'Edit', edit_post_path(post) %></td>
     <td><%= link_to 'Destroy', post, :confirm => 'Are you sure?', :method => :delete %></td>
@@ -227,7 +227,7 @@ post2.comments.create(:name => 'fourth')
 5. add bullet gem to <code>Gemfile</code>
 
 <pre><code>
-gem "bullet", "2.0.0.beta.2"
+gem "bullet"
 </code></pre>
 
 And run
@@ -251,7 +251,7 @@ end
 7. start server
 
 <pre><code>
-$ script/rails s
+$ rails s
 </code></pre>
 
 8. input http://localhost:3000/posts in browser, then you will see a popup alert box says
@@ -272,10 +272,10 @@ In the meanwhile, there's a log appended into <code>log/bullet.log</code> file
   Post => [:comments]
   Add to your finder: :include => [:comments]
 2010-03-07 14:12:18[INFO] N+1 Query method call stack
-  /home/flyerhzm/NetBeansProjects/test_bullet2/app/views/posts/index.html.erb:14:in `_render_template__600522146_80203160_0'
-  /home/flyerhzm/NetBeansProjects/test_bullet2/app/views/posts/index.html.erb:11:in `each'
-  /home/flyerhzm/NetBeansProjects/test_bullet2/app/views/posts/index.html.erb:11:in `_render_template__600522146_80203160_0'
-  /home/flyerhzm/NetBeansProjects/test_bullet2/app/controllers/posts_controller.rb:7:in `index'
+  /home/flyerhzm/Downloads/test_bullet/app/views/posts/index.html.erb:14:in `_render_template__600522146_80203160_0'
+  /home/flyerhzm/Downloads/test_bullet/app/views/posts/index.html.erb:11:in `each'
+  /home/flyerhzm/Downloads/test_bullet/app/views/posts/index.html.erb:11:in `_render_template__600522146_80203160_0'
+  /home/flyerhzm/Downloads/test_bullet/app/controllers/posts_controller.rb:7:in `index'
 </code></pre>
 
 The generated SQLs are
@@ -393,4 +393,4 @@ In the meanwhile, there's a log appended into <code>log/bullet.log</code> file.
 ****************************************************************************
 
 
-Copyright (c) 2009 - 2010 Richard Huang (flyerhzm@gmail.com), released under the MIT license
+Copyright (c) 2009 - 2011 Richard Huang (flyerhzm@gmail.com), released under the MIT license
