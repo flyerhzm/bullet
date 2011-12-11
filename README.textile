@@ -4,7 +4,7 @@ The Bullet plugin/gem is designed to help you increase your application's perfor
 
 Best practice is to use Bullet in development mode or custom mode (staging, profile, etc.). The last thing you want is your clients getting alerts about how lazy you are.
 
-The Bullet plugin/gem now supports rails 2.1, 2.2, 2.3 and 3.0.
+The Bullet plugin/gem now supports rails 2.1, 2.2, 2.3, 3.0 and 3.1.
 
 ****************************************************************************
 
