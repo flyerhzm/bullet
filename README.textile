@@ -166,10 +166,7 @@ h2. Links
 
 h2. Contributors
 
-sriedel did a lot of awesome refactors, added xmpp notification support, and added Hacking.textile about how to extend to bullet plugin.
-flipsasser added Growl, console.log and Rails.log support, very awesome. And he also improved README.
-rainux added group style console.log.
-2collegebums added some great specs to generate red bar.
+git shortlog -s -n
 
 ****************************************************************************
 
