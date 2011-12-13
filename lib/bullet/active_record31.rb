@@ -85,8 +85,8 @@ module Bullet
       ::ActiveRecord::Associations::HasManyAssociation.class_eval do
         alias_method :origin_has_cached_counter?, :has_cached_counter?
 
-        def has_cached_counter?(reflection)
-          result = origin_has_cached_counter?(reflection)
+        def has_cached_counter?(*args)
+          result = origin_has_cached_counter?(*args)
           Bullet::Detector::Counter.add_counter_cache(@owner, @reflection.name) unless result
           result
         end
