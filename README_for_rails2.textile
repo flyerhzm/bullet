@@ -16,7 +16,7 @@ There is a large refactor from gem 1.4 to 1.5, so if you upgrade to 1.5 gem, ple
 
 h2. Contributors
 
-git shortlog -s -n
+"https://github.com/flyerhzm/bullet/contributors":https://github.com/flyerhzm/bullet/contributors
 
 ****************************************************************************
 

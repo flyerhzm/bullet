@@ -168,7 +168,7 @@ h2. Links
 
 h2. Contributors
 
-git shortlog -s -n
+"https://github.com/flyerhzm/bullet/contributors":https://github.com/flyerhzm/bullet/contributors
 
 ****************************************************************************
 
