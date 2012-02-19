@@ -11,6 +11,7 @@ module Bullet
       status, headers, response = @app.call(env)
       return [status, headers, response] if empty?(response)
 
+      response_body = nil
       if Bullet.notification?
         if status == 200 and !response.body.frozen? and check_html?(headers, response)
           response_body = response.body << Bullet.gather_inline_notifications
@@ -18,10 +19,9 @@ module Bullet
         end
         Bullet.perform_out_of_channel_notifications(env)
       end
-      response_body ||= response.body
       Bullet.end_request
       no_browser_cache(headers) if Bullet.disable_browser_cache
-      [status, headers, [response_body]]
+      [status, headers, response_body ? [response_body] : response]
     end
 
     # fix issue if response's body is a Proc
