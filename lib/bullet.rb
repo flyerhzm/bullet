@@ -4,7 +4,7 @@ require 'uniform_notifier'
 module Bullet
   if Rails.version =~ /^3\.0/
     autoload :ActiveRecord, 'bullet/active_record3'
-  elsif Rails.version =~ /^3\.1/
+  elsif Rails.version =~ /^3\.[12]/
     autoload :ActiveRecord, 'bullet/active_record31'
   else
     autoload :ActiveRecord, 'bullet/active_record2'
