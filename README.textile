@@ -20,7 +20,7 @@ gem install bullet
 or add it into a Gemfile (Bundler):
 <pre><code>
 gem "bullet", :group => "development"
-</code></code>
+</code></pre>
 
 ****************************************************************************
 
