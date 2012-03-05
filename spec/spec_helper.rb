@@ -1,4 +1,4 @@
-require 'pry'
+#require 'pry'
 require 'rubygems'
 require 'rspec'
 require 'rspec/autorun'
@@ -21,8 +21,8 @@ ActiveRecord::Migration.verbose = false
 
 module Bullet
   def self.collected_notifications_of_class( notification_class )
-    Bullet.notification_collector.collection.select do |notification| 
-      notification.is_a? notification_class 
+    Bullet.notification_collector.collection.select do |notification|
+      notification.is_a? notification_class
     end
   end
 
@@ -60,7 +60,7 @@ module Bullet
         # returns true if a given class includes the specific unpreloaded association
         def detecting_unpreloaded_association_for?(klass, association)
           for_class_and_assoc = Bullet.collected_n_plus_one_query_notifications.select do |notification|
-            notification.base_class == klass and 
+            notification.base_class == klass and
             notification.associations.include?( association )
           end
           for_class_and_assoc.present?
@@ -69,7 +69,7 @@ module Bullet
         # returns true if the given class includes the specific unused preloaded association
         def unused_preload_associations_for?(klass, association)
           for_class_and_assoc = Bullet.collected_unused_eager_association_notifications.select do |notification|
-            notification.base_class == klass and 
+            notification.base_class == klass and
             notification.associations.include?( association )
           end
           for_class_and_assoc.present?
