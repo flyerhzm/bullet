@@ -1,0 +1,2 @@
+class Writer < BaseUser
+end
