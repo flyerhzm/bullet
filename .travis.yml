@@ -1,1 +1,4 @@
-rvm: 1.9.2
+language: ruby
+rvm:
+  - 1.9.3
+env: DB=sqlite
