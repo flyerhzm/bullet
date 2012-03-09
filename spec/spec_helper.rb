@@ -134,6 +134,17 @@ def setup_db
     create_table :authors do |t|
       t.string :name
     end
+
+    create_table :submissions do |t|
+      t.column :name, :string
+      t.column :category_id, :integer
+      t.column :user_id, :integer
+    end
+
+    create_table :users do |t|
+      t.column :name, :string
+      t.column :category_id, :integer
+    end
   end
 end
 
@@ -235,6 +246,14 @@ RSpec.configure do |config|
     page2 = Page.create(:name => 'page2', :parent_id => folder1.id, :author_id => author1.id)
     page3 = Page.create(:name => 'page3', :parent_id => folder2.id, :author_id => author2.id)
     page4 = Page.create(:name => 'page4', :parent_id => folder2.id, :author_id => author2.id)
+
+    user1 = User.create(:name => 'user1', :category => category1)
+    user2 = User.create(:name => 'user2', :category => category1)
+
+    submission1 = category1.submissions.create(:name => "submission1", :user => user1)
+    submission2 = category1.submissions.create(:name => "submission2", :user => user2)
+    submission3 = category2.submissions.create(:name => "submission3", :user => user1)
+    submission4 = category2.submissions.create(:name => "submission4", :user => user2)
   end
 
   config.after(:all) do
