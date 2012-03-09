@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../spec_helper'
+require 'spec_helper'
 
 describe Bullet::Detector::Counter do
   it "should need counter cache with all cities" do
