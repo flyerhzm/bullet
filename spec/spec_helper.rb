@@ -19,6 +19,81 @@ require 'bullet'
 Bullet.enable = true
 ActiveRecord::Migration.verbose = false
 
+MODELS = File.join(File.dirname(__FILE__), "models")
+$LOAD_PATH.unshift(MODELS)
+
+# Autoload every model for the test suite that sits in spec/models.
+Dir[ File.join(MODELS, "*.rb") ].sort.each do |file|
+  name = File.basename(file, ".rb")
+  autoload name.camelize.to_sym, name
+end
+
+def setup_db
+  ActiveRecord::Schema.define(:version => 1) do
+    create_table :countries do |t|
+      t.string :name
+    end
+
+    create_table :cities do |t|
+      t.string :name
+      t.integer :country_id
+    end
+
+    create_table :people do |t|
+      t.string :name
+      t.integer :pets_count
+    end
+
+    create_table :pets do |t|
+      t.string :name
+      t.integer :person_id
+    end
+  end
+end
+
+def teardown_db
+  ActiveRecord::Base.connection.tables.each do |table|
+    ActiveRecord::Base.connection.drop_table(table)
+  end
+end
+
+ActiveRecord::Base.establish_connection(:adapter => 'sqlite3', :database => ':memory:')
+
+
+RSpec.configure do |config|
+  config.before(:all) do
+    setup_db
+
+    country1 = Country.create(:name => 'first')
+    country2 = Country.create(:name => 'second')
+
+    country1.cities.create(:name => 'first')
+    country1.cities.create(:name => 'second')
+    country2.cities.create(:name => 'third')
+    country2.cities.create(:name => 'fourth')
+
+    person1 = Person.create(:name => 'first')
+    person2 = Person.create(:name => 'second')
+
+    person1.pets.create(:name => 'first')
+    person1.pets.create(:name => 'second')
+    person2.pets.create(:name => 'third')
+    person2.pets.create(:name => 'fourth')
+  end
+
+  config.after(:all) do
+    teardown_db
+  end
+
+  config.before(:each) do
+    Bullet.start_request
+  end
+
+  config.after(:each) do
+    Bullet.end_request
+  end
+end
+
 module Bullet
   def self.collected_notifications_of_class( notification_class )
     Bullet.notification_collector.collection.select do |notification|
