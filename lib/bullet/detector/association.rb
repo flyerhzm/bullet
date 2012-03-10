@@ -49,7 +49,6 @@ module Bullet
             if key_objects_overlap == k
               to_add = [k, associations]
               break
-
             else
               to_merge << [key_objects_overlap, ( eager_loadings[k].dup  << associations )]
 
@@ -59,41 +58,15 @@ module Bullet
               objects = objects - k
             end
           end
-          if to_add
-            eager_loadings.add *to_add
-          end
-          to_merge.each do |k,val|
-            eager_loadings.merge k, val
-          end
-          to_delete.each do |k|
-            eager_loadings.delete k
-          end
+
+          eager_loadings.add *to_add if to_add
+          to_merge.each { |k,val| eager_loadings.merge k, val }
+          to_delete.each { |k| eager_loadings.delete k }
 
           eager_loadings.add objects, associations unless objects.empty?
         end
 
         private
-          def possible?(object)
-            possible_objects.include? object
-          end
-
-          def impossible?(object)
-            impossible_objects.include? object
-          end
-
-          # check if object => associations already exists in object_associations.
-          def association?(object, associations)
-            value = object_associations[object]
-            if value
-              value.each do |v|
-                result = v.is_a?(Hash) ? v.has_key?(associations) : v == associations
-                return true if result
-              end
-            end
-
-            return false
-          end
-
           # object_associations keep the object relationships
           # that the object has many associations.
           # e.g. { <Post id:1> => [:comments] }
