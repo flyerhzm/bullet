@@ -19,7 +19,7 @@ module Bullet
       def self.add_impossible_object(object)
         impossible_objects.add object
       end
-      
+
       private
       def self.create_notification( klazz, associations )
          notice = Bullet::Notification::CounterCache.new klazz, associations
@@ -35,8 +35,8 @@ module Bullet
       end
 
       def self.conditions_met?( object, associations )
-        possible_objects.contains?( object ) and
-        !impossible_objects.contains?( object )
+        possible_objects.include?( object ) and
+        !impossible_objects.include?( object )
       end
     end
   end

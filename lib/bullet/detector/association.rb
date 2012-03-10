@@ -74,11 +74,11 @@ module Bullet
 
         private
           def possible?(object)
-            possible_objects.contains? object
+            possible_objects.include? object
           end
 
           def impossible?(object)
-            impossible_objects.contains? object
+            impossible_objects.include? object
           end
 
           # check if object => associations already exists in object_associations.
@@ -94,10 +94,10 @@ module Bullet
             return false
           end
 
-          # object_associations keep the object relationships 
+          # object_associations keep the object relationships
           # that the object has many associations.
           # e.g. { <Post id:1> => [:comments] }
-          # the object_associations keep all associations that may be or may no be 
+          # the object_associations keep all associations that may be or may no be
           # unpreload associations or unused preload associations.
           def object_associations
             @@object_associations ||= Bullet::Registry::Base.new

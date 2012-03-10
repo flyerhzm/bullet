@@ -7,7 +7,7 @@ module Bullet
         super( klazz, object_or_objects )
       end
 
-      def contains?( object )
+      def include?( object )
         @registry[object.class] and @registry[object.class].include?( object )
       end
     end
