@@ -1,6 +1,13 @@
 require 'spec_helper'
 
 describe Bullet::Detector::Association, 'has_many' do
+  before(:each) do
+    Bullet.start_request
+  end
+
+  after(:each) do
+    Bullet.end_request
+  end
 
   context "for unused cases" do
     #If you have the same record created twice with different includes
@@ -356,6 +363,14 @@ describe Bullet::Detector::Association, 'has_many' do
 end
 
 describe Bullet::Detector::Association, 'has_and_belongs_to_many' do
+  before(:each) do
+    Bullet.start_request
+  end
+
+  after(:each) do
+    Bullet.end_request
+  end
+
   it "should detect unpreload associations" do
     Student.all.each do |student|
       student.teachers.collect(&:name)
@@ -384,6 +399,14 @@ describe Bullet::Detector::Association, 'has_and_belongs_to_many' do
 end
 
 describe Bullet::Detector::Association, 'has_many :through' do
+  before(:each) do
+    Bullet.start_request
+  end
+
+  after(:each) do
+    Bullet.end_request
+  end
+
   it "should detect unpreload associations" do
     Firm.all.each do |firm|
       firm.clients.collect(&:name)
@@ -414,6 +437,14 @@ end
 
 
 describe Bullet::Detector::Association, "has_one" do
+  before(:each) do
+    Bullet.start_request
+  end
+
+  after(:each) do
+    Bullet.end_request
+  end
+
   it "should detect unpreload association" do
     Company.all.each do |company|
       company.address.name
@@ -442,6 +473,14 @@ describe Bullet::Detector::Association, "has_one" do
 end
 
 describe Bullet::Detector::Association, "call one association that in possible objects" do
+  before(:each) do
+    Bullet.start_request
+  end
+
+  after(:each) do
+    Bullet.end_request
+  end
+
   it "should detect no unpreload association" do
     Contact.all
     Contact.first.emails.collect(&:name)
@@ -450,6 +489,14 @@ describe Bullet::Detector::Association, "call one association that in possible o
 end
 
 describe Bullet::Detector::Association, "STI" do
+  before(:each) do
+    Bullet.start_request
+  end
+
+  after(:each) do
+    Bullet.end_request
+  end
+
   it "should detect unpreload associations" do
     Page.all.each do |page|
       page.author.name

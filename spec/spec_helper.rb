@@ -43,14 +43,6 @@ RSpec.configure do |config|
     teardown_db
   end
 
-  config.before(:each) do
-    Bullet.start_request
-  end
-
-  config.after(:each) do
-    Bullet.end_request
-  end
-
   config.filter_run :focus => true
   config.run_all_when_everything_filtered = true
 end

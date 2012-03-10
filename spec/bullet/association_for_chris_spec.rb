@@ -1,8 +1,14 @@
 require 'spec_helper'
 
-ActiveRecord::Base.establish_connection(:adapter => 'sqlite3', :database => ':memory:')
 # This test is just used for http://github.com/flyerhzm/bullet/issues/#issue/14
 describe Bullet::Detector::Association do
+  before(:each) do
+    Bullet.start_request
+  end
+
+  after(:each) do
+    Bullet.end_request
+  end
 
   describe "for chris" do
     it "should detect unpreload association from deal to hotel" do

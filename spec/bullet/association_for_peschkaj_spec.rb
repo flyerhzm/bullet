@@ -1,8 +1,14 @@
 require 'spec_helper'
 
-ActiveRecord::Base.establish_connection(:adapter => 'sqlite3', :database => ':memory:')
 # This test is just used for http://github.com/flyerhzm/bullet/issues#issue/20
 describe Bullet::Detector::Association do
+  before(:each) do
+    Bullet.start_request
+  end
+
+  after(:each) do
+    Bullet.end_request
+  end
 
   describe "for peschkaj" do
     it "should not detect unused preload associations" do
