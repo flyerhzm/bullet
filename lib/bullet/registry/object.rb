@@ -8,7 +8,7 @@ module Bullet
       end
 
       def include?( object )
-        @registry[object.class] and @registry[object.class].include?( object )
+        super(object.class, object)
       end
     end
   end
