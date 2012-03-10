@@ -3,7 +3,7 @@ require 'spec_helper'
 
 describe Bullet::Rack do
   let(:middleware) { Bullet::Rack.new app }
-  let(:app) { AppDouble.new }
+  let(:app) { Support::AppDouble.new }
 
   describe "#call" do
     context "when Bullet is enabled" do
@@ -20,7 +20,7 @@ describe Bullet::Rack do
       end
 
       it "should return original response body" do
-        expected_response = ResponseDouble.new "Actual body"
+        expected_response = Support::ResponseDouble.new "Actual body"
         app.response = expected_response
         status, headers, response = middleware.call([])
         response.should eq expected_response
