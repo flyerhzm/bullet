@@ -14,7 +14,7 @@ module Support
     end
 
     def headers
-      @headers ||= {}
+      @headers ||= {"Content-Type" => "text/html"}
       @headers
     end
 
@@ -38,7 +38,7 @@ module Support
     end
 
     def body
-      @body ||= "Hello world!"
+      @body ||= "<html><head></head><body></body></html>"
     end
 
     def body= body
