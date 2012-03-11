@@ -1,5 +1,3 @@
-#require 'pry'
-require 'rubygems'
 require 'rspec'
 require 'rspec/autorun'
 require 'rails'

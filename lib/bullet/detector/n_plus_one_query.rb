@@ -11,7 +11,7 @@ module Bullet
           add_call_object_associations(object, associations)
 
           if conditions_met?(object, associations)
-            caller_in_project
+            caller_in_project!
             create_notification object.class, associations
           end
         end
@@ -24,12 +24,10 @@ module Bullet
 
           # decide whether the object.associations is unpreloaded or not.
           def conditions_met?(object, associations)
-            possible?(object) and
-            !impossible?(object) and
-            !association?(object, associations)
+            possible?(object) && !impossible?(object) && !association?(object, associations)
           end
 
-          def caller_in_project
+          def caller_in_project!
             vender_root ||= File.join(Rails.root, 'vendor')
             callers << caller.select { |c| c =~ /#{Rails.root}/ }.
                               reject { |c| c =~ /#{vender_root}/ }
