@@ -6,9 +6,8 @@ module Bullet
       end
 
       def title
-        "Unused Eager Loading #{@path ? "in #{@path}" : 'detected'}" 
+        "Unused Eager Loading #{@path ? "in #{@path}" : 'detected'}"
       end
-
     end
   end
 end
