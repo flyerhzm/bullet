@@ -19,7 +19,6 @@ module Bullet
     def notifications_present?
       !@collection.empty?
     end
-
   end
 end
 
