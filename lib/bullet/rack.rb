@@ -13,7 +13,7 @@ module Bullet
 
       response_body = nil
       if Bullet.notification?
-        if status == 200 and !response.body.frozen? and check_html?(headers, response)
+        if status == 200 && !response.body.frozen? && html_request?(headers, response)
           response_body = response.body << Bullet.gather_inline_notifications
           headers['Content-Length'] = response_body.length.to_s
         end
@@ -31,8 +31,8 @@ module Bullet
       !response.body.is_a?(String) || response.body.empty?
     end
 
-    def check_html?(headers, response)
-      headers['Content-Type'] and headers['Content-Type'].include? 'text/html' and response.body =~ %r{<html.*</html>}m
+    def html_request?(headers, response)
+      headers['Content-Type'] && headers['Content-Type'].include?('text/html') && response.body =~ %r{<html.*</html>}m
     end
 
     def no_browser_cache(headers)
