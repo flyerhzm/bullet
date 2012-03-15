@@ -69,7 +69,7 @@ module Bullet
           origin_load_target
         end
       end
-      
+
       ::ActiveRecord::Associations::AssociationProxy.class_eval do
         # call has_one and belong_to association
         alias_method :origin_load_target, :load_target
