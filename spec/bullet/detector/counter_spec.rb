@@ -3,6 +3,8 @@ require 'spec_helper'
 module Bullet
   module Detector
     describe Counter do
+      after(:each) { Counter.clear }
+
       context ".clear" do
         it "should clear all class variables" do
           Counter.clear

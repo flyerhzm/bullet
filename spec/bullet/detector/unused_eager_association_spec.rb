@@ -3,9 +3,8 @@ require 'spec_helper'
 module Bullet
   module Detector
     describe UnusedEagerAssociation do
-      before :each do
-        @object = Object.new
-      end
+      before(:each) { @object = Object.new }
+      after(:each) { UnusedEagerAssociation.clear }
 
       context ".call_associations" do
         it "should get empty array if eager_loadgins" do
