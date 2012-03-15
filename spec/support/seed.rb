@@ -250,5 +250,7 @@ module Support
         ActiveRecord::Base.connection.drop_table(table)
       end
     end
+
+    extend self
   end
 end

@@ -30,15 +30,13 @@ SUPPORT = File.join(File.dirname(__FILE__), "support")
 Dir[ File.join(SUPPORT, "*.rb") ].sort.each { |file| require file }
 
 RSpec.configure do |config|
-  config.include(Support::Seed)
-
-  config.before(:all) do
-    setup_db
-    seed_db
+  config.before(:suite) do
+    Support::Seed.setup_db
+    Support::Seed.seed_db
   end
 
-  config.after(:all) do
-    teardown_db
+  config.after(:suite) do
+    Support::Seed.teardown_db
   end
 
   config.filter_run :focus => true
