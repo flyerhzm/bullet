@@ -60,8 +60,6 @@ module Bullet
 
     context "#call" do
       context "when Bullet is enabled" do
-        before(:each) { Bullet.enable = true }
-
         it "should invoke Bullet.start_request and Bullet.end_request" do
           Bullet.should_receive(:start_request)
           Bullet.should_receive(:end_request)
@@ -86,8 +84,7 @@ module Bullet
       end
 
       context "when Bullet is disabled" do
-        before(:each) { Bullet.enable = false }
-        after(:each) { Bullet.enable = true }
+        before(:each) { Bullet.stub(:enable?, false) }
 
         it "should not call Bullet.start_request" do
           Bullet.should_not_receive(:start_request)
