@@ -3,6 +3,8 @@ require 'spec_helper'
 module Bullet
   module Detector
     describe Association do
+      after(:each) { Association.clear }
+
       context ".start_request" do
         it "should set @@checked to false" do
           Association.start_request

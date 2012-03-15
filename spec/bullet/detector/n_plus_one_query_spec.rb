@@ -3,9 +3,8 @@ require 'spec_helper'
 module Bullet
   module Detector
     describe NPlusOneQuery do
-      before :each do
-        @object = Object.new
-      end
+      before(:each) { @object = Object.new }
+      after(:each) { NPlusOneQuery.clear }
 
       context ".call_association" do
         it "should set @@checked to true" do
