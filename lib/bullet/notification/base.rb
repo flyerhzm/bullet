@@ -11,11 +11,13 @@ module Bullet
       end
 
       def title
+        raise NoMethodError.new("no method title defined")
       end
 
       def body
+        raise NoMethodError.new("no method body defined")
       end
-      
+
       def whoami
         "user: " << `whoami`.chomp
       end
@@ -49,13 +51,13 @@ module Bullet
       end
 
       protected
-      def klazz_associations_str
-        "  #{@base_class} => [#{@associations.map(&:inspect).join(', ')}]"
-      end
+        def klazz_associations_str
+          "  #{@base_class} => [#{@associations.map(&:inspect).join(', ')}]"
+        end
 
-      def associations_str
-        ":include => #{@associations.map{|a| a.to_s.to_sym unless a.is_a? Hash}.inspect}"
-      end
+        def associations_str
+          ":include => #{@associations.map{|a| a.to_s.to_sym unless a.is_a? Hash}.inspect}"
+        end
     end
   end
 end

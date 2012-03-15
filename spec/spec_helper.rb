@@ -1,5 +1,3 @@
-#require 'pry'
-require 'rubygems'
 require 'rspec'
 require 'rspec/autorun'
 require 'rails'
@@ -18,6 +16,32 @@ $LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + "/../lib"))
 require 'bullet'
 Bullet.enable = true
 ActiveRecord::Migration.verbose = false
+
+MODELS = File.join(File.dirname(__FILE__), "models")
+$LOAD_PATH.unshift(MODELS)
+
+# Autoload every model for the test suite that sits in spec/models.
+Dir[ File.join(MODELS, "*.rb") ].sort.each do |file|
+  name = File.basename(file, ".rb")
+  autoload name.camelize.to_sym, name
+end
+
+SUPPORT = File.join(File.dirname(__FILE__), "support")
+Dir[ File.join(SUPPORT, "*.rb") ].sort.each { |file| require file }
+
+RSpec.configure do |config|
+  config.before(:suite) do
+    Support::Seed.setup_db
+    Support::Seed.seed_db
+  end
+
+  config.after(:suite) do
+    Support::Seed.teardown_db
+  end
+
+  config.filter_run :focus => true
+  config.run_all_when_everything_filtered = true
+end
 
 module Bullet
   def self.collected_notifications_of_class( notification_class )
@@ -76,59 +100,5 @@ module Bullet
         end
       end
     end
-  end
-end
-
-class AppDouble
-  def call env
-    env = @env
-    [ status, headers, response ]
-  end
-
-  def status= status
-    @status = status
-  end
-
-  def headers= headers
-    @headers = headers
-  end
-
-  def headers
-    @headers ||= {}
-    @headers
-  end
-
-  def response= response
-    @response = response
-  end
-
-  private
-  def status
-    @status || 200
-  end
-
-  def response
-    @response || ResponseDouble.new
-  end
-end
-
-class ResponseDouble
-  def initialize actual_body = nil
-    @actual_body = actual_body
-  end
-
-  def body
-    @body ||= "Hello world!"
-  end
-
-  def body= body
-    @body = body
-  end
-
-  def each
-    yield body
-  end
-
-  def close
   end
 end
