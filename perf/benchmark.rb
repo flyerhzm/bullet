@@ -83,16 +83,18 @@ PerfTools::CpuProfiler.start(ARGV[0]|| "benchmark_profile") if defined? PerfTool
 
 Benchmark.bm(70) do |bm|
   bm.report("Querying & Iterating #{posts_size} Posts with #{comments_size} Comments and #{users_size} Users") do
-    Bullet.start_request
-    Post.select("SQL_NO_CACHE *").includes(:user, :comments => :user).each do |p|
-      p.title
-      p.user.name
-      p.comments.each do |c|
-        c.body
-        c.user.name
+    10.times do
+      Bullet.start_request
+      Post.select("SQL_NO_CACHE *").includes(:user, :comments => :user).each do |p|
+        p.title
+        p.user.name
+        p.comments.each do |c|
+          c.body
+          c.user.name
+        end
       end
+      Bullet.end_request
     end
-    Bullet.end_request
   end
 end
 
@@ -100,7 +102,6 @@ PerfTools::CpuProfiler.stop if defined? PerfTools
 puts "End benchmarking..."
 
 
-# 2.0.1
-#                                                                             user     system      total        real
-# Querying & Iterating 100 Posts with 10000 Comments and 100 Users        2.290000   0.050000   2.340000 (  2.366174)
-
+# 2.2.1
+#                                                                              user     system      total        real
+# Querying & Iterating 1000 Posts with 10000 Comments and 100 Users       27.490000   0.220000  27.710000 ( 27.944401)
