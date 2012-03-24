@@ -13,7 +13,6 @@ module Bullet
           # derive from Bullet::Detector::Association - changing the variable
           # in one subclass will make the change visible to all subclasses!
           @@object_associations = nil
-          @@callers = nil
           @@possible_objects = nil
           @@impossible_objects = nil
           @@call_object_associations = nil
@@ -106,10 +105,6 @@ module Bullet
           # e.g. { [<Post id:1>, <Post id:2>] => [:comments, :user] }
           def eager_loadings
             @@eager_loadings ||= Bullet::Registry::Association.new
-          end
-
-          def callers
-            @@callers ||= []
           end
       end
     end
