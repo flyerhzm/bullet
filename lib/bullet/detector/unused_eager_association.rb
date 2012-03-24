@@ -18,13 +18,13 @@ module Bullet
 
         private
           def create_notification(klazz, associations)
-            notice = Bullet::Notification::UnusedEagerLoading.new( klazz, associations )
-            Bullet.notification_collector.add( notice )
+            notice = Bullet::Notification::UnusedEagerLoading.new(klazz, associations)
+            Bullet.notification_collector.add(notice)
           end
 
-          def call_associations( object, association )
+          def call_associations(object, association)
             all = Set.new
-            eager_loadings.similarly_associated( object, association ).each do |related_object|
+            eager_loadings.similarly_associated(object, association).each do |related_object|
               coa = call_object_associations[related_object]
               next if coa.nil?
               all.merge coa
@@ -32,9 +32,9 @@ module Bullet
             all.to_a
           end
 
-          def diff_object_association( object, association )
-            potential_objects = association - call_associations( object, association )
-            potential_objects.reject {|a| a.is_a?( Hash ) }
+          def diff_object_association(object, association)
+            potential_objects = association - call_associations(object, association)
+            potential_objects.reject { |a| a.is_a?(Hash) }
           end
       end
     end

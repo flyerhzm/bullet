@@ -51,7 +51,6 @@ module Bullet
 
             return false
           end
-
       end
     end
   end

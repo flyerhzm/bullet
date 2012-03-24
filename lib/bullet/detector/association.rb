@@ -20,11 +20,11 @@ module Bullet
         end
 
         def add_object_associations(object, associations)
-          object_associations.add( object, associations )
+          object_associations.add(object, associations)
         end
 
         def add_call_object_associations(object, associations)
-          call_object_associations.add( object, associations )
+          call_object_associations.add(object, associations)
         end
 
         def add_possible_objects(objects)

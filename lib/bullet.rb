@@ -51,7 +51,7 @@ module Bullet
 
     def bullet_logger=(active)
       if active
-        bullet_log_file = File.open( 'log/bullet.log', 'a+' )
+        bullet_log_file = File.open('log/bullet.log', 'a+')
         bullet_log_file.sync
         UniformNotifier.customized_logger = bullet_log_file
       end
@@ -59,15 +59,15 @@ module Bullet
 
     def start_request
       notification_collector.reset
-      DETECTORS.each {|bullet| bullet.start_request}
+      DETECTORS.each { |bullet| bullet.start_request }
     end
 
     def end_request
-      DETECTORS.each {|bullet| bullet.end_request}
+      DETECTORS.each { |bullet| bullet.end_request }
     end
 
     def clear
-      DETECTORS.each {|bullet| bullet.clear}
+      DETECTORS.each { |bullet| bullet.clear }
     end
 
     def notification_collector
@@ -104,5 +104,4 @@ module Bullet
         end
       end
   end
-
 end

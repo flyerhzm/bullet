@@ -8,7 +8,7 @@ module Bullet
         end
 
         def add_counter_cache(object, associations)
-          if conditions_met?( object, associations )
+          if conditions_met?(object, associations)
             create_notification object.class, associations
           end
         end
@@ -22,7 +22,7 @@ module Bullet
         end
 
         private
-          def create_notification( klazz, associations )
+          def create_notification(klazz, associations)
              notice = Bullet::Notification::CounterCache.new klazz, associations
              Bullet.notification_collector.add notice
           end
@@ -35,8 +35,8 @@ module Bullet
             @@impossible_objects ||= Bullet::Registry::Object.new
           end
 
-          def conditions_met?( object, associations )
-            possible_objects.include?( object ) && !impossible_objects.include?( object )
+          def conditions_met?(object, associations)
+            possible_objects.include?(object) && !impossible_objects.include?(object)
           end
       end
     end
