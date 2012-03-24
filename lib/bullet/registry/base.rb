@@ -11,19 +11,19 @@ module Bullet
         @registry[key]
       end
 
-      def each( &block )
-        @registry.each( &block )
+      def each(&block)
+        @registry.each(&block)
       end
 
-      def delete( base )
-        @registry.delete( base )
+      def delete(base)
+        @registry.delete(base)
       end
 
-      def select( *args, &block )
-        @registry.select( *args, &block )
+      def select(*args, &block)
+        @registry.select(*args, &block)
       end
 
-      def add( key, value )
+      def add(key, value)
         @registry[key] ||= Set.new
         if value.is_a? Array
           @registry[key] += value
@@ -32,10 +32,9 @@ module Bullet
         end
       end
 
-      def include?( key, value )
-        @registry[key] && @registry[key].include?( value )
+      def include?(key, value)
+        @registry[key] && @registry[key].include?(value)
       end
-
     end
   end
 end

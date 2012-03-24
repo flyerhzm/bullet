@@ -4,9 +4,9 @@ module Bullet
       attr_accessor :notifier, :url
       attr_reader :base_class, :associations, :path
 
-      def initialize( base_class, associations, path = nil )
+      def initialize(base_class, associations, path = nil)
         @base_class = base_class
-        @associations = associations.is_a?( Array ) ? associations : [ associations ]
+        @associations = Array(associations)
         @path = path
       end
 
@@ -35,14 +35,14 @@ module Bullet
       end
 
       def notify_inline
-        self.notifier.inline_notify( self.full_notice )
+        self.notifier.inline_notify(self.full_notice)
       end
 
       def notify_out_of_channel
-        self.notifier.out_of_channel_notify( self.full_notice )
+        self.notifier.out_of_channel_notify(self.full_notice)
       end
 
-      def eql?( other )
+      def eql?(other)
         klazz_associations_str == other.klazz_associations_str
       end
 
@@ -56,7 +56,7 @@ module Bullet
         end
 
         def associations_str
-          ":include => #{@associations.map{|a| a.to_s.to_sym unless a.is_a? Hash}.inspect}"
+          ":include => #{@associations.map{ |a| a.to_s.to_sym unless a.is_a? Hash }.inspect}"
         end
     end
   end

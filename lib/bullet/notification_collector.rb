@@ -12,7 +12,7 @@ module Bullet
       @collection = Set.new
     end
 
-    def add( value )
+    def add(value)
       @collection << value
     end
 
