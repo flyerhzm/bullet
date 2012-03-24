@@ -77,8 +77,8 @@ module Bullet
       context ".call_association" do
         it "should create notification if conditions met" do
           NPlusOneQuery.should_receive(:conditions_met?).with(@object, :association).and_return(true)
-          NPlusOneQuery.should_receive(:caller_in_project!)
-          NPlusOneQuery.should_receive(:create_notification).with(Object, :association)
+          NPlusOneQuery.should_receive(:caller_in_project).and_return(["caller"])
+          NPlusOneQuery.should_receive(:create_notification).with(["caller"], Object, :association)
           NPlusOneQuery.call_association(@object, :association)
         end
 

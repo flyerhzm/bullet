@@ -21,10 +21,7 @@ module Bullet
 
       protected
         def call_stack_messages
-          @callers.collect do |c|
-            [ 'N+1 Query method call stack',
-              c.collect {|line| "  #{line}"} ].flatten
-          end.join( "\n" )
+          @callers.unshift('N+1 Query method call stack').join( "\n  " )
         end
     end
   end

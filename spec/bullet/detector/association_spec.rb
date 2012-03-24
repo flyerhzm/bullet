@@ -16,7 +16,6 @@ module Bullet
         it "should clear all class variables" do
           Association.clear
           Association.class_variable_get(:@@object_associations).should be_nil
-          Association.class_variable_get(:@@callers).should be_nil
           Association.class_variable_get(:@@possible_objects).should be_nil
           Association.class_variable_get(:@@impossible_objects).should be_nil
           Association.class_variable_get(:@@call_object_associations).should be_nil

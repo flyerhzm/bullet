@@ -11,15 +11,14 @@ module Bullet
           add_call_object_associations(object, associations)
 
           if conditions_met?(object, associations)
-            caller_in_project!
-            create_notification object.class, associations
+            create_notification caller_in_project, object.class, associations
           end
         end
 
         private
-          def create_notification(klazz, associations)
-            notice = Bullet::Notification::NPlusOneQuery.new( callers, klazz, associations )
-            Bullet.notification_collector.add( notice )
+          def create_notification(callers, klazz, associations)
+            notice = Bullet::Notification::NPlusOneQuery.new(callers, klazz, associations)
+            Bullet.notification_collector.add(notice)
           end
 
           # decide whether the object.associations is unpreloaded or not.
@@ -27,11 +26,9 @@ module Bullet
             possible?(object) && !impossible?(object) && !association?(object, associations)
           end
 
-          def caller_in_project!
-            vender_root ||= Rails.root.join('vendor').to_s
-            callers << caller.select { |c| c.include?(Rails.root) }.
-                              reject { |c| c.include?(vender_root) }
-            callers.uniq!
+          def caller_in_project
+            vendor_root = "#{Rails.root}/vendor"
+            caller.select { |c| c.include?(Rails.root) && !c.include?(vendor_root) }
           end
 
           def possible?(object)
