@@ -1,5 +1,4 @@
 module Bullet
-  LOAD_TARGET_RGX = /load_target/
   module ActiveRecord
     def self.enable
       require 'active_record'
@@ -11,7 +10,7 @@ module Bullet
           def find_every(options)
             records = origin_find_every(options)
 
-            if records 
+            if records
               if records.size > 1
                 Bullet::Detector::Association.add_possible_objects(records)
                 Bullet::Detector::Counter.add_possible_objects(records)
@@ -41,7 +40,7 @@ module Bullet
         end
       end
 
-      ::ActiveRecord::Associations::ClassMethods.class_eval do      
+      ::ActiveRecord::Associations::ClassMethods.class_eval do
         # add include in named_scope
         alias_method :origin_find_with_associations, :find_with_associations
         def find_with_associations(options)
@@ -75,19 +74,19 @@ module Bullet
           origin_load_target
         end
       end
-      
+
       ::ActiveRecord::Associations::AssociationProxy.class_eval do
         # call has_one and belong_to association
         alias_method :origin_load_target, :load_target
         def load_target
           # avoid stack level too deep
           result = origin_load_target
-          Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name) unless caller.find {|c| c =~ LOAD_TARGET_RGX }
+          Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name) unless caller.any? {|c| c.include?("load_target") }
           Bullet::Detector::Association.add_possible_objects(result)
           result
         end
       end
-      
+
       ::ActiveRecord::Associations::HasManyAssociation.class_eval do
         alias_method :origin_has_cached_counter?, :has_cached_counter?
         def has_cached_counter?

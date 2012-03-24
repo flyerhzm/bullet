@@ -28,9 +28,9 @@ module Bullet
           end
 
           def caller_in_project!
-            vender_root ||= File.join(Rails.root, 'vendor')
-            callers << caller.select { |c| c =~ /#{Rails.root}/ }.
-                              reject { |c| c =~ /#{vender_root}/ }
+            vender_root ||= Rails.root.join('vendor').to_s
+            callers << caller.select { |c| c.include?(Rails.root) }.
+                              reject { |c| c.include?(vender_root) }
             callers.uniq!
           end
 

@@ -2,9 +2,9 @@ require 'set'
 require 'uniform_notifier'
 
 module Bullet
-  if Rails.version =~ /^3\.0/
+  if Rails.version =~ /\A3\.0/
     autoload :ActiveRecord, 'bullet/active_record3'
-  elsif Rails.version =~ /^3\.[12]/
+  elsif Rails.version =~ /\A3\.[12]/
     autoload :ActiveRecord, 'bullet/active_record31'
   else
     autoload :ActiveRecord, 'bullet/active_record2'
@@ -39,7 +39,7 @@ module Bullet
       @enable = enable
       if enable?
         Bullet::ActiveRecord.enable
-        if Rails.version =~ /^2./
+        if Rails.version =~ /\A2./
           Bullet::ActionController.enable
         end
       end

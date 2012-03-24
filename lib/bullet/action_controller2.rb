@@ -2,8 +2,7 @@ module Bullet
   class ActionController
     def self.enable
       require 'action_controller'
-      case Rails.version
-      when /^2.3/
+      if Rails.version =~ /\A2.3/
         ::ActionController::Dispatcher.middleware.use Bullet::Rack
         ::ActionController::Dispatcher.class_eval do
           class <<self
@@ -14,7 +13,7 @@ module Bullet
             end
           end
         end
-      when /^2.[2|1]/
+      elsif Rails.version =~ /\A2.[12]/
         ::ActionController::Dispatcher.class_eval do
           alias_method :origin_reload_application, :reload_application
           def reload_application
@@ -30,7 +29,8 @@ module Bullet
             response = origin_process(request, response, method = :perform_action, *arguments)
 
             if Bullet.notification?
-              if response.headers["type"] and response.headers["type"].include? 'text/html' and response.body =~ %r{<html.*</html>}m
+              if response.headers["type"] && response.headers["type"].include?('text/html') &&
+                  response.body.include?("<html>") && response.body.include?("</html>")
                 response.body <<= Bullet.gather_inline_notifications
                 response.headers["Content-Length"] = response.body.length.to_s
               end
