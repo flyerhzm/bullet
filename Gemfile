@@ -10,6 +10,7 @@ gem 'mysql'
 gem 'activerecord-import'
 
 gem "rspec"
-gem "watchr"
+gem "guard"
+gem "guard-rspec"
 
 gem "perftools.rb"
