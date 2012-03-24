@@ -5,7 +5,7 @@ source "http://rubygems.org"
 gemspec
 
 gem 'rails'
-gem 'sqlite3-ruby', :require => 'sqlite3'
+gem 'sqlite3'
 gem 'mysql'
 gem 'activerecord-import'
 
