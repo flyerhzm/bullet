@@ -102,6 +102,23 @@ PerfTools::CpuProfiler.stop if defined? PerfTools
 puts "End benchmarking..."
 
 
-# 2.2.1
+# Run benchmark with bundler
+#
+#     bundle exec ruby perf/benchmark.rb
+#
+# bullet 2.3.0 with rails 3.2.2
 #                                                                              user     system      total        real
-# Querying & Iterating 1000 Posts with 10000 Comments and 100 Users       27.490000   0.220000  27.710000 ( 27.944401)
+# Querying & Iterating 1000 Posts with 10000 Comments and 100 Users       16.460000   0.190000  16.650000 ( 16.968246)
+#
+# bullet 2.3.0 with rails 3.1.4
+#                                                                              user     system      total        real
+# Querying & Iterating 1000 Posts with 10000 Comments and 100 Users       14.600000   0.130000  14.730000 ( 14.937590)
+#
+# bullet 2.3.0 with rails 3.0.12
+#                                                                              user     system      total        real
+# Querying & Iterating 1000 Posts with 10000 Comments and 100 Users       26.120000   0.430000  26.550000 ( 27.179304)
+#
+#
+# bullet 2.2.1 with rails 3.0.12
+#                                                                              user     system      total        real
+# Querying & Iterating 1000 Posts with 10000 Comments and 100 Users       29.970000   0.270000  30.240000 ( 30.452083)
