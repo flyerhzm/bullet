@@ -27,8 +27,9 @@ module Bullet
           end
 
           def caller_in_project
-            vendor_root = "#{Rails.root}/vendor"
-            caller.select { |c| c.include?(Rails.root) && !c.include?(vendor_root) }
+            rails_root = Rails.root.to_s
+            vendor_root = rails_root + "/vendor"
+            caller.select { |c| c.include?(rails_root) && !c.include?(vendor_root) }
           end
 
           def possible?(object_ar_key)
