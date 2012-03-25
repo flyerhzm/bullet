@@ -1,4 +1,4 @@
-h1. Bullet
+h1. Bullet !https://gemnasium.com/flyerhzm/bullet.png?travis(Dependency Status)!:https://gemnasium.com/flyerhzm/bullet
 
 !https://secure.travis-ci.org/flyerhzm/bullet.png!:http://travis-ci.org/flyerhzm/bullet
 
