@@ -19,12 +19,6 @@ module Bullet
           subject.add(another_post.ar_key)
           subject.should be_include(another_post.ar_key)
         end
-
-        it "should add an array of objects" do
-          subject.add([post.ar_key, another_post.ar_key])
-          subject.should be_include(post.ar_key)
-          subject.should be_include(another_post.ar_key)
-        end
       end
     end
   end
