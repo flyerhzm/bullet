@@ -29,8 +29,12 @@ module Bullet
           end
         end
 
-        def add_possible_objects(objects)
-          possible_objects.add Array(objects).map(&:ar_key)
+        def add_possible_objects(object_or_objects)
+          if object_or_objects.is_a? Array
+            object_or_objects.each { |object| possible_objects.add object.ar_key }
+          else
+            possible_objects.add object_or_objects.ar_key
+          end
         end
 
         def add_impossible_object(object)

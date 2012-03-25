@@ -4,9 +4,9 @@ module Bullet
       attr_accessor :notifier, :url
       attr_reader :base_class, :associations, :path
 
-      def initialize(base_class, associations, path = nil)
+      def initialize(base_class, association_or_associations, path = nil)
         @base_class = base_class
-        @associations = Array(associations)
+        @associations = association_or_associations.is_a?(Array) ?  association_or_associations : [association_or_associations]
         @path = path
       end
 
