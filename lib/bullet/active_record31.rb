@@ -69,13 +69,12 @@ module Bullet
         end
       end
 
-      ::ActiveRecord::Associations::Association.class_eval do
-        # call has_one and belong_to association
-        alias_method :origin_load_target, :load_target
-        def load_target
-          # avoid stack level too deep
-          result = origin_load_target
-          Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name) unless caller.any? {|c| c.include?("load_target") }
+      ::ActiveRecord::Associations::SingularAssociation.class_eval do
+        # call has_one and belongs_to associations
+        alias_method :origin_reader, :reader
+        def reader(force_reload = false)
+          result = origin_reader(force_reload)
+          Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name)
           Bullet::Detector::Association.add_possible_objects(result)
           result
         end
