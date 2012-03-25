@@ -3,6 +3,7 @@ require 'spec_helper'
 # This test is just used for http://github.com/flyerhzm/bullet/issues#issue/20
 describe Bullet::Detector::Association do
   before(:each) do
+    Bullet.clear
     Bullet.start_request
   end
 

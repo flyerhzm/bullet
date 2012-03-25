@@ -1,6 +1,12 @@
 require 'set'
 require 'uniform_notifier'
 
+class Object
+  def ar_key
+    "#{self.class}:#{self.id}"
+  end
+end
+
 module Bullet
   if Rails.version =~ /\A3\.0/
     autoload :ActiveRecord, 'bullet/active_record3'

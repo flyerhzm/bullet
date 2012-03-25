@@ -20,28 +20,30 @@ module Bullet
         end
 
         def add_object_associations(object, associations)
-          object_associations.add(object, associations)
+          object_associations.add(object.ar_key, associations)
         end
 
         def add_call_object_associations(object, associations)
-          call_object_associations.add(object, associations)
+          if object.id
+            call_object_associations.add(object.ar_key, associations)
+          end
         end
 
         def add_possible_objects(objects)
-          possible_objects.add objects
+          possible_objects.add Array(objects).map(&:ar_key)
         end
 
         def add_impossible_object(object)
-          impossible_objects.add object
+          impossible_objects.add object.ar_key
         end
 
         def add_eager_loadings(objects, associations)
-          objects = Array(objects)
+          object_ar_keys = Array(objects).map(&:ar_key)
 
           to_add = nil
           to_merge, to_delete = [], []
           eager_loadings.each do |k, v|
-            key_objects_overlap = k & objects
+            key_objects_overlap = k & object_ar_keys
 
             next if key_objects_overlap.empty?
 
@@ -51,10 +53,10 @@ module Bullet
             else
               to_merge << [key_objects_overlap, ( eager_loadings[k].dup  << associations )]
 
-              keys_without_objects = k - objects
+              keys_without_objects = k - object_ar_keys
               to_merge << [keys_without_objects, eager_loadings[k]]
               to_delete << k
-              objects = objects - k
+              object_ar_keys = object_ar_keys - k
             end
           end
 
@@ -62,13 +64,13 @@ module Bullet
           to_merge.each { |k,val| eager_loadings.merge k, val }
           to_delete.each { |k| eager_loadings.delete k }
 
-          eager_loadings.add objects, associations unless objects.empty?
+          eager_loadings.add object_ar_keys, associations unless object_ar_keys.empty?
         end
 
         private
           # object_associations keep the object relationships
           # that the object has many associations.
-          # e.g. { <Post id:1> => [:comments] }
+          # e.g. { "Post:1" => [:comments] }
           # the object_associations keep all associations that may be or may no be
           # unpreload associations or unused preload associations.
           def object_associations
@@ -77,7 +79,7 @@ module Bullet
 
           # call_object_assciations keep the object relationships
           # that object.associations is called.
-          # e.g. { <Post id:1> => [:comments] }
+          # e.g. { "Post:1" => [:comments] }
           # they are used to detect unused preload associations.
           def call_object_associations
             @@call_object_associations ||= Bullet::Registry::Base.new
@@ -85,14 +87,14 @@ module Bullet
 
           # possible_objects keep the class to object relationships
           # that the objects may cause N+1 query.
-          # e.g. { Post => [<Post id:1>, <Post id:2>] }
+          # e.g. { Post => ["Post:1", "Post:2"] }
           def possible_objects
             @@possible_objects ||= Bullet::Registry::Object.new
           end
 
           # impossible_objects keep the class to objects relationships
           # that the objects may not cause N+1 query.
-          # e.g. { Post => [<Post id:1>, <Post id:2>] }
+          # e.g. { Post => ["Post:1", "Post:2"] }
           # Notice: impossible_objects are not accurate,
           # if find collection returns only one object, then the object is impossible object,
           # impossible_objects are used to avoid treating 1+1 query to N+1 query.
@@ -102,7 +104,7 @@ module Bullet
 
           # eager_loadings keep the object relationships
           # that the associations are preloaded by find :include.
-          # e.g. { [<Post id:1>, <Post id:2>] => [:comments, :user] }
+          # e.g. { ["Post:1", "Post:2"] => [:comments, :user] }
           def eager_loadings
             @@eager_loadings ||= Bullet::Registry::Association.new
           end

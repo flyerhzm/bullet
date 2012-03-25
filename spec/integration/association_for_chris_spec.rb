@@ -3,6 +3,7 @@ require 'spec_helper'
 # This test is just used for http://github.com/flyerhzm/bullet/issues/#issue/14
 describe Bullet::Detector::Association do
   before(:each) do
+    Bullet.clear
     Bullet.start_request
   end
 
@@ -29,6 +30,7 @@ describe Bullet::Detector::Association do
       Deal.includes({:hotel => :location}).each do |deal|
         deal.hotel.location.name
       end
+      Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
       Bullet::Detector::Association.should_not be_has_unused_preload_associations
     end
   end

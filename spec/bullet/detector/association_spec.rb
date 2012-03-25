@@ -3,7 +3,11 @@ require 'spec_helper'
 module Bullet
   module Detector
     describe Association do
-      after(:each) { Association.clear }
+      before :all do
+        @post1 = Post.first
+        @post2 = Post.last
+      end
+      before(:each) { Association.clear }
 
       context ".start_request" do
         it "should set @@checked to false" do
@@ -25,71 +29,60 @@ module Bullet
 
       context ".add_object_association" do
         it "should add object, associations pair" do
-          object = Object.new
-          Association.add_object_associations(object, :associations)
-          Association.send(:object_associations).should be_include(object, :associations)
+          Association.add_object_associations(@post1, :associations)
+          Association.send(:object_associations).should be_include(@post1.ar_key, :associations)
         end
       end
 
       context ".add_call_object_associations" do
         it "should add call object, associations pair" do
-          object = Object.new
-          Association.add_call_object_associations(object, :associations)
-          Association.send(:call_object_associations).should be_include(object, :associations)
+          Association.add_call_object_associations(@post1, :associations)
+          Association.send(:call_object_associations).should be_include(@post1.ar_key, :associations)
         end
       end
 
       context ".add_possible_objects" do
         it "should add possible objects" do
-          object1 = Object.new
-          object2 = Object.new
-          Association.add_possible_objects([object1, object2])
-          Association.send(:possible_objects).should be_include(object1)
-          Association.send(:possible_objects).should be_include(object2)
+          Association.add_possible_objects([@post1, @post2])
+          Association.send(:possible_objects).should be_include(@post1.ar_key)
+          Association.send(:possible_objects).should be_include(@post2.ar_key)
         end
       end
 
       context ".add_impossible_object" do
         it "should add impossible object" do
-          object = Object.new
-          Association.add_impossible_object(object)
-          Association.send(:impossible_objects).should be_include(object)
+          Association.add_impossible_object(@post1)
+          Association.send(:impossible_objects).should be_include(@post1.ar_key)
         end
       end
 
       context ".add_eager_loadings" do
-        before :each do
-          @object1 = Object.new
-          @object2 = Object.new
-          Association.clear
-        end
-
         it "should add objects, associations pair when eager_loadings are empty" do
-          Association.add_eager_loadings([@object1, @object2], :associations)
-          Association.send(:eager_loadings).should be_include([@object1, @object2], :associations)
+          Association.add_eager_loadings([@post1, @post2], :associations)
+          Association.send(:eager_loadings).should be_include([@post1.ar_key, @post2.ar_key], :associations)
         end
 
         it "should add objects, associations pair for existing eager_loadings" do
-          Association.add_eager_loadings([@object1, @object2], :association1)
-          Association.add_eager_loadings([@object1, @object2], :association2)
-          Association.send(:eager_loadings).should be_include([@object1, @object2], :association1)
-          Association.send(:eager_loadings).should be_include([@object1, @object2], :association2)
+          Association.add_eager_loadings([@post1, @post2], :association1)
+          Association.add_eager_loadings([@post1, @post2], :association2)
+          Association.send(:eager_loadings).should be_include([@post1.ar_key, @post2.ar_key], :association1)
+          Association.send(:eager_loadings).should be_include([@post1.ar_key, @post2.ar_key], :association2)
         end
 
         it "should merge objects, associations pair for existing eager_loadings" do
-          Association.add_eager_loadings(@object1, :association1)
-          Association.add_eager_loadings([@object1, @object2], :association2)
-          Association.send(:eager_loadings).should be_include([@object1], :association1)
-          Association.send(:eager_loadings).should be_include([@object1], :association2)
-          Association.send(:eager_loadings).should be_include([@object1, @object2], :association2)
+          Association.add_eager_loadings(@post1, :association1)
+          Association.add_eager_loadings([@post1, @post2], :association2)
+          Association.send(:eager_loadings).should be_include([@post1.ar_key], :association1)
+          Association.send(:eager_loadings).should be_include([@post1.ar_key], :association2)
+          Association.send(:eager_loadings).should be_include([@post1.ar_key, @post2.ar_key], :association2)
         end
 
         it "should delete objects, associations pair for existing eager_loadings" do
-          Association.add_eager_loadings([@object1, @object2], :association1)
-          Association.add_eager_loadings(@object1, :association2)
-          Association.send(:eager_loadings).should be_include([@object1], :association1)
-          Association.send(:eager_loadings).should be_include([@object1], :association2)
-          Association.send(:eager_loadings).should be_include([@object2], :association1)
+          Association.add_eager_loadings([@post1, @post2], :association1)
+          Association.add_eager_loadings(@post1, :association2)
+          Association.send(:eager_loadings).should be_include([@post1.ar_key], :association1)
+          Association.send(:eager_loadings).should be_include([@post1.ar_key], :association2)
+          Association.send(:eager_loadings).should be_include([@post2.ar_key], :association1)
         end
       end
     end
