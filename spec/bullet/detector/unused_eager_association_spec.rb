@@ -12,13 +12,13 @@ module Bullet
         end
 
         it "should get call associations if object and association are both in eager_loadings and call_object_associations" do
-          UnusedEagerAssociation.add_eager_loadings(@post, :association)
+          UnusedEagerAssociation.add_eager_loadings([@post], :association)
           UnusedEagerAssociation.add_call_object_associations(@post, :association)
           UnusedEagerAssociation.send(:call_associations, @post.ar_key, Set.new([:association])).should == [:association]
         end
 
         it "should not get call associations if not exist in call_object_associations" do
-          UnusedEagerAssociation.add_eager_loadings(@post, :association)
+          UnusedEagerAssociation.add_eager_loadings([@post], :association)
           UnusedEagerAssociation.send(:call_associations, @post.ar_key, Set.new([:association])).should be_empty
         end
       end
@@ -29,7 +29,7 @@ module Bullet
         end
 
         it "should return empty if associations exist in call_association" do
-          UnusedEagerAssociation.add_eager_loadings(@post, :association)
+          UnusedEagerAssociation.add_eager_loadings([@post], :association)
           UnusedEagerAssociation.add_call_object_associations(@post, :association)
           UnusedEagerAssociation.send(:diff_object_association, @post.ar_key, Set.new([:association])).should be_empty
         end
@@ -50,7 +50,7 @@ module Bullet
         it "should not create notification if object_association_diff is empty" do
           UnusedEagerAssociation.clear
           UnusedEagerAssociation.add_object_associations(@post, :association)
-          UnusedEagerAssociation.add_eager_loadings(@post, :association)
+          UnusedEagerAssociation.add_eager_loadings([@post], :association)
           UnusedEagerAssociation.add_call_object_associations(@post, :association)
           UnusedEagerAssociation.send(:diff_object_association, @post.ar_key, Set.new([:association])).should be_empty
           UnusedEagerAssociation.should_not_receive(:create_notification).with("Post", [:association])
