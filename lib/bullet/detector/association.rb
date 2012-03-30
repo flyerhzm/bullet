@@ -40,7 +40,7 @@ module Bullet
         end
 
         def add_eager_loadings(objects, associations)
-          object_ar_keys = Array(objects).map(&:ar_key)
+          object_ar_keys = objects.map(&:ar_key)
 
           to_add = nil
           to_merge, to_delete = [], []
