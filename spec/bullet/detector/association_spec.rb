@@ -47,6 +47,10 @@ module Bullet
           Association.send(:possible_objects).should be_include(@post1.ar_key)
           Association.send(:possible_objects).should be_include(@post2.ar_key)
         end
+
+        it "should not raise error if object is nil" do
+          lambda { Association.add_possible_objects(nil) }.should_not raise_error
+        end
       end
 
       context ".add_impossible_object" do
