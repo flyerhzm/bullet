@@ -30,8 +30,10 @@ module Bullet
         def add_possible_objects(object_or_objects)
           if object_or_objects.is_a? Array
             object_or_objects.each { |object| possible_objects.add object.ar_key }
-          else
+          elsif object_or_objects.is_a? ::ActiveRecord::Base
             possible_objects.add object_or_objects.ar_key if object_or_objects.id
+          else
+            # do nothing
           end
         end
 
