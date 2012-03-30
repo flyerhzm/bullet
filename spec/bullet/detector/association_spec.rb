@@ -70,7 +70,7 @@ module Bullet
         end
 
         it "should merge objects, associations pair for existing eager_loadings" do
-          Association.add_eager_loadings(@post1, :association1)
+          Association.add_eager_loadings([@post1], :association1)
           Association.add_eager_loadings([@post1, @post2], :association2)
           Association.send(:eager_loadings).should be_include([@post1.ar_key], :association1)
           Association.send(:eager_loadings).should be_include([@post1.ar_key], :association2)
@@ -79,7 +79,7 @@ module Bullet
 
         it "should delete objects, associations pair for existing eager_loadings" do
           Association.add_eager_loadings([@post1, @post2], :association1)
-          Association.add_eager_loadings(@post1, :association2)
+          Association.add_eager_loadings([@post1], :association2)
           Association.send(:eager_loadings).should be_include([@post1.ar_key], :association1)
           Association.send(:eager_loadings).should be_include([@post1.ar_key], :association2)
           Association.send(:eager_loadings).should be_include([@post2.ar_key], :association1)
