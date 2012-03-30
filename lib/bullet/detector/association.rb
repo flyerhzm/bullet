@@ -20,25 +20,23 @@ module Bullet
         end
 
         def add_object_associations(object, associations)
-          object_associations.add(object.ar_key, associations)
+          object_associations.add(object.ar_key, associations) if object.id
         end
 
         def add_call_object_associations(object, associations)
-          if object.id
-            call_object_associations.add(object.ar_key, associations)
-          end
+          call_object_associations.add(object.ar_key, associations) if object.id
         end
 
         def add_possible_objects(object_or_objects)
           if object_or_objects.is_a? Array
             object_or_objects.each { |object| possible_objects.add object.ar_key }
           else
-            possible_objects.add object_or_objects.ar_key
+            possible_objects.add object_or_objects.ar_key if object_or_objects.id
           end
         end
 
         def add_impossible_object(object)
-          impossible_objects.add object.ar_key
+          impossible_objects.add object.ar_key if object.id
         end
 
         def add_eager_loadings(objects, associations)
