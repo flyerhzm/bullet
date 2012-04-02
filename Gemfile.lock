@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    bullet (2.2.1)
+    bullet (2.3.0)
       uniform_notifier (~> 1.0.0)
 
 GEM
@@ -104,7 +104,7 @@ GEM
       polyglot
       polyglot (>= 0.3.1)
     tzinfo (0.3.32)
-    uniform_notifier (1.0.1)
+    uniform_notifier (1.0.2)
 
 PLATFORMS
   ruby
