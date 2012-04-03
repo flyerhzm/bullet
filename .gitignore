@@ -8,3 +8,4 @@ tags
 .bundle
 *.gem
 benchmark_profile*
+/nbproject/private/
