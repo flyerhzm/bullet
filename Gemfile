@@ -8,6 +8,7 @@ gem 'rails'
 gem 'sqlite3'
 gem 'mysql'
 gem 'activerecord-import'
+gem 'mongoid'
 
 gem "rspec"
 gem "guard"
