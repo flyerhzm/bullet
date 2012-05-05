@@ -1,5 +1,5 @@
 module Support
-  module Seed
+  module SqliteSeed
     def seed_db
       newspaper1 = Newspaper.create(:name => "First Newspaper")
       newspaper2 = Newspaper.create(:name => "Second Newspaper")

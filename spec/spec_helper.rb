@@ -3,6 +3,7 @@ require 'rspec/autorun'
 require 'rails'
 require 'active_record'
 require 'action_controller'
+require 'mongoid'
 
 module Rails
   class <<self
@@ -21,9 +22,8 @@ MODELS = File.join(File.dirname(__FILE__), "models")
 $LOAD_PATH.unshift(MODELS)
 
 # Autoload every model for the test suite that sits in spec/models.
-Dir[ File.join(MODELS, "*.rb") ].sort.each do |file|
-  name = File.basename(file, ".rb")
-  autoload name.camelize.to_sym, name
+Dir[ File.join(MODELS, "**/*.rb") ].sort.each do |file|
+  require file
 end
 
 SUPPORT = File.join(File.dirname(__FILE__), "support")
@@ -31,12 +31,15 @@ Dir[ File.join(SUPPORT, "*.rb") ].sort.each { |file| require file }
 
 RSpec.configure do |config|
   config.before(:suite) do
-    Support::Seed.setup_db
-    Support::Seed.seed_db
+    Support::SqliteSeed.setup_db
+    Support::SqliteSeed.seed_db
+    Support::MongoSeed.setup_db
+    Support::MongoSeed.seed_db
   end
 
   config.after(:suite) do
-    Support::Seed.teardown_db
+    Support::SqliteSeed.teardown_db
+    Support::MongoSeed.teardown_db
   end
 
   config.filter_run :focus => true
