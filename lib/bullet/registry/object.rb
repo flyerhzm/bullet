@@ -1,14 +1,12 @@
 module Bullet
   module Registry
     class Object < Base
-      def add(object_ar_key)
-        klazz = object_ar_key.split(":").first
-        super(klazz, object_ar_key)
+      def add(bullet_ar_key)
+        super(bullet_ar_key.bullet_class_name, bullet_ar_key)
       end
 
-      def include?(object_ar_key)
-        klazz = object_ar_key.split(":").first
-        super(klazz, object_ar_key)
+      def include?(bullet_ar_key)
+        super(bullet_ar_key.bullet_class_name, bullet_ar_key)
       end
     end
   end

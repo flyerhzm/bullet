@@ -33,7 +33,7 @@ module Bullet
 
         # returns true if a given object has a specific association
         def creating_object_association_for?(object, association)
-          object_associations[object.ar_key].present? && object_associations[object.ar_key].include?(association)
+          object_associations[object.bullet_ar_key].present? && object_associations[object.bullet_ar_key].include?(association)
         end
 
         # returns true if a given class includes the specific unpreloaded association

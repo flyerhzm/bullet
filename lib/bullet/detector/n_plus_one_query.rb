@@ -10,7 +10,7 @@ module Bullet
           @@checked = true
           add_call_object_associations(object, associations)
 
-          if conditions_met?(object.ar_key, associations)
+          if conditions_met?(object.bullet_ar_key, associations)
             create_notification caller_in_project, object.class.to_s, associations
           end
         end
@@ -22,8 +22,8 @@ module Bullet
           end
 
           # decide whether the object.associations is unpreloaded or not.
-          def conditions_met?(object_ar_key, associations)
-            possible?(object_ar_key) && !impossible?(object_ar_key) && !association?(object_ar_key, associations)
+          def conditions_met?(bullet_ar_key, associations)
+            possible?(bullet_ar_key) && !impossible?(bullet_ar_key) && !association?(bullet_ar_key, associations)
           end
 
           def caller_in_project
@@ -32,17 +32,17 @@ module Bullet
             caller.select { |c| c.include?(rails_root) && !c.include?(vendor_root) }
           end
 
-          def possible?(object_ar_key)
-            possible_objects.include? object_ar_key
+          def possible?(bullet_ar_key)
+            possible_objects.include? bullet_ar_key
           end
 
-          def impossible?(object_ar_key)
-            impossible_objects.include? object_ar_key
+          def impossible?(bullet_ar_key)
+            impossible_objects.include? bullet_ar_key
           end
 
           # check if object => associations already exists in object_associations.
-          def association?(object_ar_key, associations)
-            value = object_associations[object_ar_key]
+          def association?(bullet_ar_key, associations)
+            value = object_associations[bullet_ar_key]
             if value
               value.each do |v|
                 result = v.is_a?(Hash) ? v.has_key?(associations) : v == associations
