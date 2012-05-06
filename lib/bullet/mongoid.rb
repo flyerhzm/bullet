@@ -3,11 +3,29 @@ module Bullet
     def self.enable
       require 'mongoid'
       ::Mongoid::Contexts::Mongo.class_eval do
+        alias_method :origin_first, :first
+        alias_method :origin_last, :last
         alias_method :origin_iterate, :iterate
+
+        def first
+          result = origin_first
+          Bullet::Detector::Association.add_impossible_object(result)
+          result
+        end
+
+        def last
+          result = origin_last
+          Bullet::Detector::Association.add_impossible_object(result)
+          result
+        end
 
         def iterate(&block)
           records = execute.to_a
-          Bullet::Detector::Association.add_possible_objects(records)
+          if records.size > 1
+            Bullet::Detector::Association.add_possible_objects(records)
+          elsif records.size == 1
+            Bullet::Detector::Association.add_impossible_object(records.first)
+          end
           origin_iterate(&block)
         end
       end
@@ -17,7 +35,6 @@ module Bullet
 
         def set_relation(name, relation)
           Bullet::Detector::NPlusOneQuery.call_association(self, name)
-          Bullet::Detector::Association.add_possible_objects(relation)
           origin_set_relation(name, relation)
         end
       end
@@ -29,7 +46,6 @@ module Bullet
           associations = criteria.inclusions.map(&:name)
           docs.each do |doc|
             Bullet::Detector::Association.add_object_associations(doc, associations)
-            #Bullet::Detector::NPlusOneQuery.call_association(doc, associations)
           end
           Bullet::Detector::Association.add_eager_loadings(docs, associations)
           origin_eager_load(docs)

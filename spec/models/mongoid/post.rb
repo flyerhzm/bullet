@@ -3,4 +3,6 @@ class Mongoid::Post
 
   has_many :comments, :class_name => "Mongoid::Comment"
   belongs_to :category, :class_name => "Mongoid::Category"
+
+  scope :preload_comments, lambda { includes(:comments) }
 end
