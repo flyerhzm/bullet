@@ -8,30 +8,30 @@ module Bullet
 
       context ".call_associations" do
         it "should get empty array if eager_loadgins" do
-          UnusedEagerAssociation.send(:call_associations, @post.ar_key, Set.new([:association])).should be_empty
+          UnusedEagerAssociation.send(:call_associations, @post.bullet_ar_key, Set.new([:association])).should be_empty
         end
 
         it "should get call associations if object and association are both in eager_loadings and call_object_associations" do
           UnusedEagerAssociation.add_eager_loadings([@post], :association)
           UnusedEagerAssociation.add_call_object_associations(@post, :association)
-          UnusedEagerAssociation.send(:call_associations, @post.ar_key, Set.new([:association])).should == [:association]
+          UnusedEagerAssociation.send(:call_associations, @post.bullet_ar_key, Set.new([:association])).should == [:association]
         end
 
         it "should not get call associations if not exist in call_object_associations" do
           UnusedEagerAssociation.add_eager_loadings([@post], :association)
-          UnusedEagerAssociation.send(:call_associations, @post.ar_key, Set.new([:association])).should be_empty
+          UnusedEagerAssociation.send(:call_associations, @post.bullet_ar_key, Set.new([:association])).should be_empty
         end
       end
 
       context ".diff_object_association" do
         it "should return associations not exist in call_association" do
-          UnusedEagerAssociation.send(:diff_object_association, @post.ar_key, Set.new([:association])).should == [:association]
+          UnusedEagerAssociation.send(:diff_object_association, @post.bullet_ar_key, Set.new([:association])).should == [:association]
         end
 
         it "should return empty if associations exist in call_association" do
           UnusedEagerAssociation.add_eager_loadings([@post], :association)
           UnusedEagerAssociation.add_call_object_associations(@post, :association)
-          UnusedEagerAssociation.send(:diff_object_association, @post.ar_key, Set.new([:association])).should be_empty
+          UnusedEagerAssociation.send(:diff_object_association, @post.bullet_ar_key, Set.new([:association])).should be_empty
         end
       end
 
@@ -52,7 +52,7 @@ module Bullet
           UnusedEagerAssociation.add_object_associations(@post, :association)
           UnusedEagerAssociation.add_eager_loadings([@post], :association)
           UnusedEagerAssociation.add_call_object_associations(@post, :association)
-          UnusedEagerAssociation.send(:diff_object_association, @post.ar_key, Set.new([:association])).should be_empty
+          UnusedEagerAssociation.send(:diff_object_association, @post.bullet_ar_key, Set.new([:association])).should be_empty
           UnusedEagerAssociation.should_not_receive(:create_notification).with("Post", [:association])
           UnusedEagerAssociation.check_unused_preload_associations
         end

@@ -1,11 +1,7 @@
 require 'set'
 require 'uniform_notifier'
-
-class Object
-  def ar_key
-    "#{self.class}:#{self.id}"
-  end
-end
+require 'bullet/ext/object'
+require 'bullet/ext/string'
 
 module Bullet
   if Rails.version =~ /\A3\.0/

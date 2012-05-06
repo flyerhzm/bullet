@@ -20,34 +20,34 @@ module Bullet
         end
 
         def add_object_associations(object, associations)
-          object_associations.add(object.ar_key, associations) if object.id
+          object_associations.add(object.bullet_ar_key, associations) if object.id
         end
 
         def add_call_object_associations(object, associations)
-          call_object_associations.add(object.ar_key, associations) if object.id
+          call_object_associations.add(object.bullet_ar_key, associations) if object.id
         end
 
         def add_possible_objects(object_or_objects)
           if object_or_objects.is_a? Array
-            object_or_objects.each { |object| possible_objects.add object.ar_key }
+            object_or_objects.each { |object| possible_objects.add object.bullet_ar_key }
           elsif object_or_objects.is_a? ::ActiveRecord::Base
-            possible_objects.add object_or_objects.ar_key if object_or_objects.id
+            possible_objects.add object_or_objects.bullet_ar_key if object_or_objects.id
           else
             # do nothing
           end
         end
 
         def add_impossible_object(object)
-          impossible_objects.add object.ar_key if object.id
+          impossible_objects.add object.bullet_ar_key if object.id
         end
 
         def add_eager_loadings(objects, associations)
-          object_ar_keys = objects.map(&:ar_key)
+          bullet_ar_keys = objects.map(&:bullet_ar_key)
 
           to_add = nil
           to_merge, to_delete = [], []
           eager_loadings.each do |k, v|
-            key_objects_overlap = k & object_ar_keys
+            key_objects_overlap = k & bullet_ar_keys
 
             next if key_objects_overlap.empty?
 
@@ -57,10 +57,10 @@ module Bullet
             else
               to_merge << [key_objects_overlap, ( eager_loadings[k].dup  << associations )]
 
-              keys_without_objects = k - object_ar_keys
+              keys_without_objects = k - bullet_ar_keys
               to_merge << [keys_without_objects, eager_loadings[k]]
               to_delete << k
-              object_ar_keys = object_ar_keys - k
+              bullet_ar_keys = bullet_ar_keys - k
             end
           end
 
@@ -68,7 +68,7 @@ module Bullet
           to_merge.each { |k,val| eager_loadings.merge k, val }
           to_delete.each { |k| eager_loadings.delete k }
 
-          eager_loadings.add object_ar_keys, associations unless object_ar_keys.empty?
+          eager_loadings.add bullet_ar_keys, associations unless bullet_ar_keys.empty?
         end
 
         private
