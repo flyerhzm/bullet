@@ -10,42 +10,6 @@ describe Bullet::Detector::Association, 'has_many' do
     Bullet.end_request
   end
 
-  context "for unused cases" do
-    #If you have the same record created twice with different includes
-    #  the hash value get's accumulated includes, which leads to false Unused eager loading
-    #it "should not incorrectly mark associations as unused when multiple object instances" do
-      #comments_with_author = Comment.includes(:author)
-      #comments_with_post = Comment.includes(:post)
-      #comments_with_author.each { |c| c.author.name }
-      #comments_with_author.each { |c| c.post.name }
-      #Bullet::Association.check_unused_preload_associations
-      #Bullet::Association.should be_unused_preload_associations_for(Comment, :post)
-      #Bullet::Association.should be_detecting_unpreloaded_association_for(Comment, :post)
-    #end
-
-    # same as above with different Models being queried
-    #it "should not incorrectly mark associations as unused when multiple object instances different Model" do
-      #post_with_comments = Post.includes(:comments)
-      #comments_with_author = Comment.includes(:author)
-      #post_with_comments.each { |p| p.comments.first.author.name }
-      #comments_with_author.each { |c| c.name }
-      #Bullet::Association.check_unused_preload_associations
-      #Bullet::Association.should be_unused_preload_associations_for(Comment, :author)
-      #Bullet::Association.should be_detecting_unpreloaded_association_for(Comment, :author)
-    #end
-
-    # this test passes right now. But is a regression test to ensure that if only a small set of returned records
-    # is not used that a unused preload association error is not generated
-    it  "should not have unused when small set of returned records are discarded" do
-      comments_with_author = Comment.includes(:author)
-      comment_collection = comments_with_author.limit(2)
-      comment_collection.collect { |com| com.author.name }
-      Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
-      Bullet::Detector::Association.should_not be_unused_preload_associations_for(Comment, :author)
-    end
-  end
-
-
   context "comments => posts => category" do
 
     # this happens because the post isn't a possible object even though the writer is access through the post
@@ -536,6 +500,7 @@ end
 
 describe Bullet::Detector::Association, "STI" do
   before(:each) do
+    Bullet.clear
     Bullet.start_request
   end
 
@@ -543,35 +508,41 @@ describe Bullet::Detector::Association, "STI" do
     Bullet.end_request
   end
 
-  it "should detect unpreload associations" do
-    Page.all.each do |page|
-      page.author.name
+  context "page => author" do
+    it "should detect non preload associations" do
+      Page.all.each do |page|
+        page.author.name
+      end
+      Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
+      Bullet::Detector::Association.should_not be_has_unused_preload_associations
+
+      Bullet::Detector::Association.should be_detecting_unpreloaded_association_for(Page, :author)
     end
-    Bullet::Detector::Association.should_not be_completely_preloading_associations
-    Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
-    Bullet::Detector::Association.should_not be_has_unused_preload_associations
-  end
 
-  it "should not detect unpreload associations" do
-    Page.find(:all, :include => :author).each do |page|
-      page.author.name
+    it "should detect preload associations" do
+      Page.find(:all, :include => :author).each do |page|
+        page.author.name
+      end
+      Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
+      Bullet::Detector::Association.should_not be_has_unused_preload_associations
+
+      Bullet::Detector::Association.should be_completely_preloading_associations
     end
-    Bullet::Detector::Association.should be_completely_preloading_associations
-    Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
-    Bullet::Detector::Association.should_not be_has_unused_preload_associations
-  end
 
-  it "should detect unused preload associations" do
-    Page.find(:all, :include => :author).collect(&:name)
-    Bullet::Detector::Association.should be_completely_preloading_associations
-    Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
-    Bullet::Detector::Association.should be_has_unused_preload_associations
-  end
+    it "should detect unused preload associations" do
+      Page.find(:all, :include => :author).collect(&:name)
+      Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
+      Bullet::Detector::Association.should be_unused_preload_associations_for(Page, :author)
 
-  it "should not detect unused preload associations" do
-    Page.all.collect(&:name)
-    Bullet::Detector::Association.should be_completely_preloading_associations
-    Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
-    Bullet::Detector::Association.should_not be_has_unused_preload_associations
+      Bullet::Detector::Association.should be_completely_preloading_associations
+    end
+
+    it "should not detect preload associations" do
+      Page.all.collect(&:name)
+      Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
+      Bullet::Detector::Association.should_not be_has_unused_preload_associations
+
+      Bullet::Detector::Association.should be_completely_preloading_associations
+    end
   end
 end
