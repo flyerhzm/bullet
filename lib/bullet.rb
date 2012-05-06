@@ -16,6 +16,7 @@ module Bullet
     autoload :ActiveRecord, 'bullet/active_record2'
     autoload :ActionController, 'bullet/action_controller2'
   end
+  autoload :Mongoid, 'bullet/mongoid'
   autoload :Rack, 'bullet/rack'
   autoload :BulletLogger, 'bullet/logger'
   autoload :Notification, 'bullet/notification'
@@ -48,6 +49,7 @@ module Bullet
         if Rails.version =~ /\A2./
           Bullet::ActionController.enable
         end
+        Bullet::Mongoid.enable
       end
     end
 
