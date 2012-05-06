@@ -20,6 +20,12 @@ module Support
 
       entry1 = category1.entries.create(:name => 'first')
       entry2 = category1.entries.create(:name => 'second')
+
+      company1 = Mongoid::Company.create(:name => 'first')
+      company2 = Mongoid::Company.create(:name => 'second')
+
+      Mongoid::Address.create(:name => 'first', :company => company1)
+      Mongoid::Address.create(:name => 'second', :company => company2)
     end
 
     def setup_db
