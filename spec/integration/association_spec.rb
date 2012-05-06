@@ -369,6 +369,7 @@ end
 
 describe Bullet::Detector::Association, 'has_and_belongs_to_many' do
   before(:each) do
+    Bullet.clear
     Bullet.start_request
   end
 
@@ -376,35 +377,48 @@ describe Bullet::Detector::Association, 'has_and_belongs_to_many' do
     Bullet.end_request
   end
 
-  it "should detect unpreload associations" do
-    Student.all.each do |student|
-      student.teachers.collect(&:name)
+  context "students <=> teachers" do
+    it "should detect non preload associations" do
+      Student.all.each do |student|
+        student.teachers.map(&:name)
+      end
+      Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
+      Bullet::Detector::Association.should_not be_has_unused_preload_associations
+
+      Bullet::Detector::Association.should be_detecting_unpreloaded_association_for(Student, :teachers)
     end
-    Bullet::Detector::Association.should_not be_completely_preloading_associations
-  end
 
-  it "should detect no unpreload associations" do
-    Student.includes(:teachers).each do |student|
-      student.teachers.collect(&:name)
+    it "should detect preload associations" do
+      Student.includes(:teachers).each do |student|
+        student.teachers.map(&:name)
+      end
+      Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
+      Bullet::Detector::Association.should_not be_has_unused_preload_associations
+
+      Bullet::Detector::Association.should be_completely_preloading_associations
     end
-    Bullet::Detector::Association.should be_completely_preloading_associations
-  end
 
-  it "should detect unused preload associations" do
-    Student.includes(:teachers).collect(&:name)
-    Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
-    Bullet::Detector::Association.should be_has_unused_preload_associations
-  end
+    it "should detect unused preload associations" do
+      Student.includes(:teachers).map(&:name)
+      Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
+      Bullet::Detector::Association.should be_unused_preload_associations_for(Student, :teachers)
 
-  it "should detect no unused preload associations" do
-    Student.all.collect(&:name)
-    Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
-    Bullet::Detector::Association.should_not be_has_unused_preload_associations
+      Bullet::Detector::Association.should be_completely_preloading_associations
+    end
+
+    it "should detect no unused preload associations" do
+      Student.all.collect(&:name)
+      Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
+      Bullet::Detector::Association.should_not be_has_unused_preload_associations
+
+      Bullet::Detector::Association.should be_completely_preloading_associations
+    end
   end
 end
 
 describe Bullet::Detector::Association, 'has_many :through' do
   before(:each) do
+    Bullet.clear
     Bullet.start_request
   end
 
@@ -412,37 +426,48 @@ describe Bullet::Detector::Association, 'has_many :through' do
     Bullet.end_request
   end
 
-  it "should detect unpreload associations" do
-    Firm.all.each do |firm|
-      firm.clients.collect(&:name)
+  context "firm => clients" do
+    it "should detect non preload associations" do
+      Firm.all.each do |firm|
+        firm.clients.map(&:name)
+      end
+      Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
+      Bullet::Detector::Association.should_not be_has_unused_preload_associations
+
+      Bullet::Detector::Association.should be_detecting_unpreloaded_association_for(Firm, :clients)
     end
-    Bullet::Detector::Association.should_not be_completely_preloading_associations
-  end
 
-  it "should detect no unpreload associations" do
-    Firm.includes(:clients).each do |firm|
-      firm.clients.collect(&:name)
+    it "should detect preload associations" do
+      Firm.includes(:clients).each do |firm|
+        firm.clients.map(&:name)
+      end
+      Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
+      Bullet::Detector::Association.should_not be_has_unused_preload_associations
+
+      Bullet::Detector::Association.should be_completely_preloading_associations
     end
-    Bullet::Detector::Association.should be_completely_preloading_associations
-  end
 
-  it "should detect no unused preload associations" do
-    Firm.all.collect(&:name)
-    Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
-    Bullet::Detector::Association.should_not be_has_unused_preload_associations
-  end
+    it "should not detect preload associations" do
+      Firm.all.collect(&:name)
+      Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
+      Bullet::Detector::Association.should_not be_has_unused_preload_associations
 
-  it "should detect unused preload associations" do
-    Firm.includes(:clients).collect(&:name)
-    Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
-    Bullet::Detector::Association.should be_has_unused_preload_associations
+      Bullet::Detector::Association.should be_completely_preloading_associations
+    end
+
+    it "should detect unused preload associations" do
+      Firm.includes(:clients).collect(&:name)
+      Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
+      Bullet::Detector::Association.should be_unused_preload_associations_for(Firm, :clients)
+
+      Bullet::Detector::Association.should be_completely_preloading_associations
+    end
   end
 end
 
-
-
 describe Bullet::Detector::Association, "has_one" do
   before(:each) do
+    Bullet.clear
     Bullet.start_request
   end
 
@@ -450,30 +475,42 @@ describe Bullet::Detector::Association, "has_one" do
     Bullet.end_request
   end
 
-  it "should detect unpreload association" do
-    Company.all.each do |company|
-      company.address.name
+  context "compay => address" do
+    it "should detect non preload association" do
+      Company.all.each do |company|
+        company.address.name
+      end
+      Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
+      Bullet::Detector::Association.should_not be_has_unused_preload_associations
+
+      Bullet::Detector::Association.should be_detecting_unpreloaded_association_for(Company, :address)
     end
-    Bullet::Detector::Association.should_not be_completely_preloading_associations
-  end
 
-  it "should detect no unpreload association" do
-    Company.find(:all, :include => :address).each do |company|
-      company.address.name
+    it "should detect preload association" do
+      Company.find(:all, :include => :address).each do |company|
+        company.address.name
+      end
+      Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
+      Bullet::Detector::Association.should_not be_has_unused_preload_associations
+
+      Bullet::Detector::Association.should be_completely_preloading_associations
     end
-    Bullet::Detector::Association.should be_completely_preloading_associations
-  end
 
-  it "should detect no unused preload association" do
-    Company.all.collect(&:name)
-    Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
-    Bullet::Detector::Association.should_not be_has_unused_preload_associations
-  end
+    it "should not detect preload association" do
+      Company.all.collect(&:name)
+      Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
+      Bullet::Detector::Association.should_not be_has_unused_preload_associations
 
-  it "should detect unused preload association" do
-    Company.find(:all, :include => :address).collect(&:name)
-    Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
-    Bullet::Detector::Association.should be_has_unused_preload_associations
+      Bullet::Detector::Association.should be_completely_preloading_associations
+    end
+
+    it "should detect unused preload association" do
+      Company.find(:all, :include => :address).collect(&:name)
+      Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
+      Bullet::Detector::Association.should be_unused_preload_associations_for(Company, :address)
+
+      Bullet::Detector::Association.should be_completely_preloading_associations
+    end
   end
 end
 
