@@ -1,7 +1,7 @@
 class Post < ActiveRecord::Base
   belongs_to :category
-  has_many :comments
   belongs_to :writer
+  has_many :comments
 
   scope :preload_comments, lambda { includes(:comments) }
   scope :in_category_name, lambda { |name|
