@@ -254,11 +254,17 @@ describe Bullet::Detector::Association, 'has_many' do
       Post.includes(:comments).each do |post|
         post.comments.first.name
       end
+      Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
+      Bullet::Detector::Association.should_not be_unused_preload_associations_for(Post, :comments)
+
       Bullet::Detector::Association.should be_completely_preloading_associations
     end
 
     it "should no preload only one post => commnets" do
       Post.first.comments.collect(&:name)
+      Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
+      Bullet::Detector::Association.should_not be_has_unused_preload_associations
+
       Bullet::Detector::Association.should be_completely_preloading_associations
     end
   end
