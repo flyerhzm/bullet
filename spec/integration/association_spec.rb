@@ -516,6 +516,7 @@ end
 
 describe Bullet::Detector::Association, "call one association that in possible objects" do
   before(:each) do
+    Bullet.clear
     Bullet.start_request
   end
 
@@ -523,9 +524,9 @@ describe Bullet::Detector::Association, "call one association that in possible o
     Bullet.end_request
   end
 
-  it "should detect no unpreload association" do
-    Contact.all
-    Contact.first.emails.collect(&:name)
+  it "should not detect preload association" do
+    Post.all
+    Post.first.comments.map(&:name)
     Bullet::Detector::Association.should be_completely_preloading_associations
   end
 end
