@@ -10,55 +10,6 @@ describe Bullet::Detector::Association, 'has_many' do
     Bullet.end_request
   end
 
-  context "comments => posts => category" do
-    # this happens because the post isn't a possible object even though the writer is access through the post
-    # which leads to an 1+N queries
-    it "should detect unpreloaded writer" do
-      Comment.includes([:author, :post]).where(["base_users.id = ?", BaseUser.first]).each do |com|
-        com.post.writer.name
-      end
-      Bullet::Detector::Association.should be_detecting_unpreloaded_association_for(Post, :writer)
-    end
-
-    # this happens because the comment doesn't break down the hash into keys
-    # properly creating an association from comment to post
-    it "should detect preload of comment => post" do
-      comments = Comment.includes([:author, {:post => :writer}]).where(["base_users.id = ?", BaseUser.first]).each do |com|
-        com.post.writer.name
-      end
-      Bullet::Detector::Association.should_not be_detecting_unpreloaded_association_for(Comment, :post)
-      Bullet::Detector::Association.should be_completely_preloading_associations
-    end
-
-    it "should detect preload of post => writer" do
-      comments = Comment.includes([:author, {:post => :writer}]).where(["base_users.id = ?", BaseUser.first]).each do |com|
-        com.post.writer.name
-      end
-      Bullet::Detector::Association.should be_creating_object_association_for(comments.first, :author)
-      Bullet::Detector::Association.should_not be_detecting_unpreloaded_association_for(Post, :writer)
-      Bullet::Detector::Association.should be_completely_preloading_associations
-    end
-
-    # To flyerhzm: This does not detect that newspaper is unpreloaded. The association is
-    # not within possible objects, and thus cannot be detected as unpreloaded
-    it "should detect unpreloading of writer => newspaper" do
-      comments = Comment.all(:include => {:post => :writer}, :conditions => "posts.name like '%first%'").each do |com|
-        com.post.writer.newspaper.name
-      end
-      Bullet::Detector::Association.should be_detecting_unpreloaded_association_for(Writer, :newspaper)
-    end
-
-    # when we attempt to access category, there is an infinite overflow because load_target is hijacked leading to
-    # a repeating loop of calls in this test
-    it "should not raise a stack error from posts to category" do
-      lambda {
-        Comment.includes({:post => :category}).each do |com|
-          com.post.category
-        end
-      }.should_not raise_error(SystemStackError)
-    end
-  end
-
   context "post => comments" do
     it "should detect non preload post => comments" do
       Post.all.each do |post|
@@ -371,6 +322,54 @@ describe Bullet::Detector::Association, 'belongs_to' do
       Bullet::Detector::Association.should_not be_has_unused_preload_associations
 
       Bullet::Detector::Association.should be_completely_preloading_associations
+    end
+  end
+
+  context "comment => author, post => writer" do
+    # this happens because the post isn't a possible object even though the writer is access through the post
+    # which leads to an 1+N queries
+    it "should detect non preloaded writer" do
+      Comment.includes([:author, :post]).where(["base_users.id = ?", BaseUser.first]).each do |comment|
+        comment.post.writer.name
+      end
+      Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
+      Bullet::Detector::Association.should_not be_has_unused_preload_associations
+
+      Bullet::Detector::Association.should be_detecting_unpreloaded_association_for(Post, :writer)
+    end
+
+    # this happens because the comment doesn't break down the hash into keys
+    # properly creating an association from comment to post
+    it "should detect unused preload with comment => author" do
+      Comment.includes([:author, {:post => :writer}]).where(["base_users.id = ?", BaseUser.first]).each do |comment|
+        comment.post.writer.name
+      end
+      Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
+      Bullet::Detector::Association.should be_unused_preload_associations_for(Comment, :author)
+
+      Bullet::Detector::Association.should be_completely_preloading_associations
+    end
+
+    # To flyerhzm: This does not detect that newspaper is unpreloaded. The association is
+    # not within possible objects, and thus cannot be detected as unpreloaded
+    it "should detect non preloading with writer => newspaper" do
+      Comment.all(:include => {:post => :writer}, :conditions => "posts.name like '%first%'").each do |comment|
+        comment.post.writer.newspaper.name
+      end
+      Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
+      Bullet::Detector::Association.should_not be_has_unused_preload_associations
+
+      Bullet::Detector::Association.should be_detecting_unpreloaded_association_for(Writer, :newspaper)
+    end
+
+    # when we attempt to access category, there is an infinite overflow because load_target is hijacked leading to
+    # a repeating loop of calls in this test
+    it "should not raise a stack error from posts to category" do
+      lambda {
+        Comment.includes({:post => :category}).each do |com|
+          com.post.category
+        end
+      }.should_not raise_error(SystemStackError)
     end
   end
 end
