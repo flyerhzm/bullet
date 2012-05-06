@@ -83,7 +83,7 @@ describe Bullet::Detector::Association, 'has_many' do
       Bullet::Detector::Association.should be_completely_preloading_associations
     end
 
-    it "should detect unused with category => [posts, entries]" do
+    it "should detect unused preload with category => [posts, entries]" do
       Mongoid::Category.includes([:posts, :entries]).map(&:name)
       Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
       Bullet::Detector::Association.should be_unused_preload_associations_for(Mongoid::Category, :posts)
@@ -102,6 +102,25 @@ describe Bullet::Detector::Association, 'has_many' do
 
       Bullet::Detector::Association.should be_completely_preloading_associations
     end
+  end
 
+  context "post => comment" do
+    it "should detect unused preload with post => comments" do
+      Mongoid::Post.includes(:comments).each do |post|
+        post.comments.first.name
+      end
+      Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
+      Bullet::Detector::Association.should_not be_unused_preload_associations_for(Mongoid::Post, :comments)
+
+      Bullet::Detector::Association.should be_completely_preloading_associations
+    end
+
+    it "should detect preload with post => commnets" do
+      Mongoid::Post.first.comments.collect(&:name)
+      Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
+      Bullet::Detector::Association.should_not be_has_unused_preload_associations
+
+      Bullet::Detector::Association.should be_completely_preloading_associations
+    end
   end
 end
