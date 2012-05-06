@@ -329,6 +329,38 @@ describe Bullet::Detector::Association, 'belongs_to' do
       Bullet::Detector::Association.should be_completely_preloading_associations
     end
   end
+
+  context "comment => post => category" do
+    it "should detect non preload association with comment => post" do
+      Comment.all.each do |comment|
+        comment.post.category.name
+      end
+      Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
+      Bullet::Detector::Association.should_not be_has_unused_preload_associations
+
+      Bullet::Detector::Association.should be_detecting_unpreloaded_association_for(Comment, :post)
+    end
+
+    it "should detect non preload association with post => category" do
+      Comment.includes(:post).each do |comment|
+        comment.post.category.name
+      end
+      Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
+      Bullet::Detector::Association.should_not be_has_unused_preload_associations
+
+      Bullet::Detector::Association.should be_detecting_unpreloaded_association_for(Post, :category)
+    end
+
+    it "should not detect unpreload association" do
+      Comment.includes(:post => :category).each do |comment|
+        comment.post.category.name
+      end
+      Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
+      Bullet::Detector::Association.should_not be_has_unused_preload_associations
+
+      Bullet::Detector::Association.should be_completely_preloading_associations
+    end
+  end
 end
 
 describe Bullet::Detector::Association, 'has_and_belongs_to_many' do

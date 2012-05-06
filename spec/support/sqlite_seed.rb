@@ -86,19 +86,6 @@ module Support
       submission2 = category1.submissions.create(:name => "submission2", :user => user2)
       submission3 = category2.submissions.create(:name => "submission3", :user => user1)
       submission4 = category2.submissions.create(:name => "submission4", :user => user2)
-
-      location1 = Location.create(:name => "location1")
-      location2 = Location.create(:name => "location2")
-
-      hotel1 = location1.hotels.create(:name => "hotel1")
-      hotel2 = location1.hotels.create(:name => "hotel2")
-      hotel3 = location2.hotels.create(:name => "hotel3")
-      hotel4 = location2.hotels.create(:name => "hotel4")
-
-      deal1 = hotel1.deals.create(:name => "deal1")
-      deal2 = hotel2.deals.create(:name => "deal2")
-      deal3 = hotel3.deals.create(:name => "deal3")
-      deal4 = hotel4.deals.create(:name => "deal4")
     end
 
     def setup_db
