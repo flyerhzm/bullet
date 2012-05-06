@@ -54,14 +54,6 @@ module Support
       Address.create(:name => 'first', :company => company1)
       Address.create(:name => 'second', :company => company2)
 
-      contact1 = Contact.create(:name => 'first')
-      contact2 = Contact.create(:name => 'second')
-
-      email1 = contact1.emails.create(:name => 'first')
-      email2 = contact1.emails.create(:name => 'second')
-      email3 = contact2.emails.create(:name => 'third')
-      email4 = contact2.emails.create(:name => 'fourth')
-
       country1 = Country.create(:name => 'first')
       country2 = Country.create(:name => 'second')
 
