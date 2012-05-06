@@ -31,10 +31,10 @@ Dir[ File.join(SUPPORT, "*.rb") ].sort.each { |file| require file }
 
 RSpec.configure do |config|
   config.before(:suite) do
-    Support::SqliteSeed.setup_db
-    Support::SqliteSeed.seed_db
     Support::MongoSeed.setup_db
+    Support::SqliteSeed.setup_db
     Support::MongoSeed.seed_db
+    Support::SqliteSeed.seed_db
   end
 
   config.after(:suite) do

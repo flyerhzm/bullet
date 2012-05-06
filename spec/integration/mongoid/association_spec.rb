@@ -123,4 +123,81 @@ describe Bullet::Detector::Association, 'has_many' do
       Bullet::Detector::Association.should be_completely_preloading_associations
     end
   end
+
+  context "scope preload_comments" do
+    it "should detect preload post => comments with scope" do
+      Mongoid::Post.preload_comments.each do |post|
+        post.comments.map(&:name)
+      end
+      Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
+      Bullet::Detector::Association.should_not be_has_unused_preload_associations
+
+      Bullet::Detector::Association.should be_completely_preloading_associations
+    end
+
+    it "should detect unused preload with scope" do
+      Mongoid::Post.preload_comments.map(&:name)
+      Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
+      Bullet::Detector::Association.should be_unused_preload_associations_for(Mongoid::Post, :comments)
+
+      Bullet::Detector::Association.should be_completely_preloading_associations
+    end
+  end
+end
+
+describe Bullet::Detector::Association, 'belongs_to' do
+  before(:each) do
+    Bullet.clear
+    Bullet.start_request
+  end
+
+  after(:each) do
+    Bullet.end_request
+  end
+
+  context "comment => post" do
+    it "should detect non preload with comment => post" do
+      Mongoid::Comment.all.each do |comment|
+        comment.post.name
+      end
+      Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
+      Bullet::Detector::Association.should_not be_has_unused_preload_associations
+
+      Bullet::Detector::Association.should be_detecting_unpreloaded_association_for(Mongoid::Comment, :post)
+    end
+
+    it "should detect preload with one comment => post" do
+      Mongoid::Comment.first.post.name
+      Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
+      Bullet::Detector::Association.should_not be_has_unused_preload_associations
+
+      Bullet::Detector::Association.should be_completely_preloading_associations
+    end
+
+    it "should dtect preload with comment => post" do
+      Mongoid::Comment.includes(:post).each do |comment|
+        comment.post.name
+      end
+      Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
+      Bullet::Detector::Association.should_not be_has_unused_preload_associations
+
+      Bullet::Detector::Association.should be_completely_preloading_associations
+    end
+
+    it "should not detect preload with comment => post" do
+      Mongoid::Comment.all.collect(&:name)
+      Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
+      Bullet::Detector::Association.should_not be_has_unused_preload_associations
+
+      Bullet::Detector::Association.should be_completely_preloading_associations
+    end
+
+    it "should detect unused preload with comments => post" do
+      Mongoid::Comment.includes(:post).map(&:name)
+      Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
+      Bullet::Detector::Association.should be_unused_preload_associations_for(Mongoid::Comment, :post)
+
+      Bullet::Detector::Association.should be_completely_preloading_associations
+    end
+  end
 end

@@ -228,7 +228,7 @@ describe Bullet::Detector::Association, 'has_many' do
       Bullet::Detector::Association.should be_completely_preloading_associations
     end
 
-    it "should detect unused with category => [posts, entries]" do
+    it "should detect unused preload with category => [posts, entries]" do
       Category.includes([:posts, :entries]).map(&:name)
       Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
       Bullet::Detector::Association.should be_unused_preload_associations_for(Category, :posts)
@@ -249,8 +249,8 @@ describe Bullet::Detector::Association, 'has_many' do
     end
   end
 
-  context "no preload" do
-    it "should no preload only display only one post => comment" do
+  context "post => comment" do
+    it "should detect unused preload with post => comments" do
       Post.includes(:comments).each do |post|
         post.comments.first.name
       end
@@ -260,7 +260,7 @@ describe Bullet::Detector::Association, 'has_many' do
       Bullet::Detector::Association.should be_completely_preloading_associations
     end
 
-    it "should no preload only one post => commnets" do
+    it "should detect preload with post => commnets" do
       Post.first.comments.collect(&:name)
       Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
       Bullet::Detector::Association.should_not be_has_unused_preload_associations
@@ -274,96 +274,95 @@ describe Bullet::Detector::Association, 'has_many' do
       Post.in_category_name('first').all.each do |post|
         post.category.name
       end
+      Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
+      Bullet::Detector::Association.should_not be_has_unused_preload_associations
+
       Bullet::Detector::Association.should be_completely_preloading_associations
     end
 
     it "should not be unused preload post => category" do
-      Post.in_category_name('first').all.collect(&:name)
-      Bullet::Detector::Association.should be_completely_preloading_associations
+      Post.in_category_name('first').all.map(&:name)
       Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
       Bullet::Detector::Association.should_not be_has_unused_preload_associations
+
+      Bullet::Detector::Association.should be_completely_preloading_associations
     end
   end
 
-  context "scope preload_posts" do
-    it "should no preload post => comments with scope" do
-      Post.preload_posts.each do |post|
-        post.comments.collect(&:name)
-      end
-      Bullet::Detector::Association.should be_completely_preloading_associations
-    end
-
-    it "should unused preload with scope" do
-      Post.preload_posts.collect(&:name)
-      Bullet::Detector::Association.should be_completely_preloading_associations
-      Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
-      Bullet::Detector::Association.should be_has_unused_preload_associations
-    end
-  end
-
-  context "no unused" do
-    it "should no unused only display only one post => comment" do
-      Post.includes(:comments).each do |post|
-        i = 0
-        post.comments.each do |comment|
-          if i == 0
-            comment.name
-          else
-            i += 1
-          end
-        end
+  context "scope preload_comments" do
+    it "should detect preload post => comments with scope" do
+      Post.preload_comments.each do |post|
+        post.comments.map(&:name)
       end
       Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
       Bullet::Detector::Association.should_not be_has_unused_preload_associations
+
+      Bullet::Detector::Association.should be_completely_preloading_associations
+    end
+
+    it "should detect unused preload with scope" do
+      Post.preload_comments.map(&:name)
+      Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
+      Bullet::Detector::Association.should be_unused_preload_associations_for(Post, :comments)
+
+      Bullet::Detector::Association.should be_completely_preloading_associations
     end
   end
+end
 
-  context "belongs_to" do
-    it "should preload comments => post" do
+describe Bullet::Detector::Association, 'belongs_to' do
+  before(:each) do
+    Bullet.clear
+    Bullet.start_request
+  end
+
+  after(:each) do
+    Bullet.end_request
+  end
+
+  context "comment => post" do
+    it "should detect non preload with comment => post" do
       Comment.all.each do |comment|
         comment.post.name
       end
-      Bullet::Detector::Association.should_not be_completely_preloading_associations
+      Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
+      Bullet::Detector::Association.should_not be_has_unused_preload_associations
+
+      Bullet::Detector::Association.should be_detecting_unpreloaded_association_for(Comment, :post)
     end
 
-    it "should no preload comment => post" do
+    it "should detect preload with one comment => post" do
       Comment.first.post.name
+      Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
+      Bullet::Detector::Association.should_not be_has_unused_preload_associations
+
       Bullet::Detector::Association.should be_completely_preloading_associations
     end
 
-    it "should no preload comments => post" do
+    it "should dtect preload with comment => post" do
       Comment.includes(:post).each do |comment|
         comment.post.name
       end
+      Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
+      Bullet::Detector::Association.should_not be_has_unused_preload_associations
+
       Bullet::Detector::Association.should be_completely_preloading_associations
     end
 
-    it "should detect no unused preload comments => post" do
+    it "should not detect preload with comment => post" do
       Comment.all.collect(&:name)
       Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
       Bullet::Detector::Association.should_not be_has_unused_preload_associations
+
+      Bullet::Detector::Association.should be_completely_preloading_associations
     end
 
-    it "should detect unused preload comments => post" do
-      Comment.includes(:post).collect(&:name)
+    it "should detect unused preload with comments => post" do
+      Comment.includes(:post).map(&:name)
       Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
-      Bullet::Detector::Association.should be_has_unused_preload_associations
-    end
+      Bullet::Detector::Association.should be_unused_preload_associations_for(Comment, :post)
 
-    it "should dectect no unused preload comments => post" do
-      Comment.all.each do |comment|
-        comment.post.name
-      end
-      Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
-      Bullet::Detector::Association.should_not be_has_unused_preload_associations
-    end
-
-    it "should dectect no unused preload comments => post" do
-      Comment.includes(:post).each do |comment|
-        comment.post.name
-      end
-      Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
-      Bullet::Detector::Association.should_not be_has_unused_preload_associations
+      Bullet::Detector::Association.should be_completely_preloading_associations
     end
   end
 end
