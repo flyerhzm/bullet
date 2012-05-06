@@ -29,7 +29,7 @@ module Bullet
           associations = criteria.inclusions.map(&:name)
           docs.each do |doc|
             Bullet::Detector::Association.add_object_associations(doc, associations)
-            Bullet::Detector::NPlusOneQuery.call_association(doc, associations)
+            #Bullet::Detector::NPlusOneQuery.call_association(doc, associations)
           end
           Bullet::Detector::Association.add_eager_loadings(docs, associations)
           origin_eager_load(docs)
