@@ -9,6 +9,7 @@ gem 'sqlite3'
 gem 'mysql'
 gem 'activerecord-import'
 gem 'mongoid'
+gem 'bson_ext'
 
 gem "rspec"
 gem "guard"
