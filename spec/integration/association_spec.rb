@@ -527,6 +527,9 @@ describe Bullet::Detector::Association, "call one association that in possible o
   it "should not detect preload association" do
     Post.all
     Post.first.comments.map(&:name)
+    Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
+    Bullet::Detector::Association.should_not be_has_unused_preload_associations
+
     Bullet::Detector::Association.should be_completely_preloading_associations
   end
 end
