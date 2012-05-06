@@ -11,7 +11,6 @@ describe Bullet::Detector::Association, 'has_many' do
   end
 
   context "comments => posts => category" do
-
     # this happens because the post isn't a possible object even though the writer is access through the post
     # which leads to an 1+N queries
     it "should detect unpreloaded writer" do
@@ -230,6 +229,19 @@ describe Bullet::Detector::Association, 'has_many' do
       Bullet::Detector::Association.should_not be_has_unused_preload_associations
 
       Bullet::Detector::Association.should be_completely_preloading_associations
+    end
+  end
+
+  context "category => posts => writer" do
+    it "should not detect unused preload associations" do
+      category = Category.includes({:posts => :writer}).order("id DESC").find_by_name('first')
+      category.posts.map do |post|
+        post.name
+        post.writer.name
+      end
+      Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
+      Bullet::Detector::Association.should_not be_unused_preload_associations_for(Category, :posts)
+      Bullet::Detector::Association.should_not be_unused_preload_associations_for(Post, :writer)
     end
   end
 
