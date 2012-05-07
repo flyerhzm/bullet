@@ -45,10 +45,14 @@ module Bullet
           require 'mongoid'
           Bullet::Mongoid.enable
         rescue LoadError
+        end
+        begin
+          require 'active_record'
           Bullet::ActiveRecord.enable
           if Rails.version =~ /\A2./
             Bullet::ActionController.enable
           end
+        rescue LoadError
         end
       end
     end
