@@ -28,6 +28,7 @@ module Bullet
         end
 
         def add_possible_objects(object_or_objects)
+          return unless object_or_objects
           if object_or_objects.is_a? Array
             object_or_objects.each { |object| possible_objects.add object.bullet_ar_key }
           else
