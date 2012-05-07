@@ -4,7 +4,7 @@ source "http://rubygems.org"
 
 gemspec
 
-gem 'rails'
+gem 'rails', '3.2.3'
 gem 'sqlite3'
 gem 'mysql'
 gem 'activerecord-import'
