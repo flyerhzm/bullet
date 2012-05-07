@@ -41,11 +41,15 @@ module Bullet
     def enable=(enable)
       @enable = enable
       if enable?
-        Bullet::ActiveRecord.enable
-        if Rails.version =~ /\A2./
-          Bullet::ActionController.enable
+        begin
+          require 'mongoid'
+          Bullet::Mongoid.enable
+        rescue LoadError
+          Bullet::ActiveRecord.enable
+          if Rails.version =~ /\A2./
+            Bullet::ActionController.enable
+          end
         end
-        Bullet::Mongoid.enable
       end
     end
 
