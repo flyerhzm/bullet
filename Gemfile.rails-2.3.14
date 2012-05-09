@@ -7,8 +7,6 @@ gemspec
 gem 'rails', '2.3.14'
 gem 'sqlite3'
 gem 'mysql'
-gem 'activerecord-import'
-gem 'mongoid'
 gem 'bson_ext'
 
 gem "rspec"
