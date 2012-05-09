@@ -7,9 +7,14 @@ describe Object do
       post.bullet_ar_key.should == "Post:#{post.id}"
     end
 
-    it "should return class with namesapce and id composition" do
-      post = Mongoid::Post.first
-      post.bullet_ar_key.should == "Mongoid::Post:#{post.id}"
+    begin
+      require 'mongoid'
+
+      it "should return class with namesapce and id composition" do
+        post = Mongoid::Post.first
+        post.bullet_ar_key.should == "Mongoid::Post:#{post.id}"
+      end
+    rescue LoadError
     end
   end
 end
