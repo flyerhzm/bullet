@@ -2,7 +2,8 @@ module Bullet
   module Mongoid
     def self.enable
       require 'mongoid'
-      ::Mongoid::Contexts::Mongo.class_eval do
+      context = Mongoid::VERSION.split('.').first.to_i < 3 ? ::Mongoid::Contexts : ::Mongoid::Contextual
+      context::Mongo.class_eval do
         alias_method :origin_first, :first
         alias_method :origin_last, :last
         alias_method :origin_iterate, :iterate
@@ -39,7 +40,7 @@ module Bullet
         end
       end
 
-      ::Mongoid::Contexts::Mongo.class_eval do
+      context::Mongo.class_eval do
         alias_method :origin_eager_load, :eager_load
 
         def eager_load(docs)
