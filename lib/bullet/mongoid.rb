@@ -2,7 +2,7 @@ module Bullet
   module Mongoid
     def self.enable
       require 'mongoid'
-      context = Mongoid::VERSION.split('.').first.to_i < 3 ? ::Mongoid::Contexts : ::Mongoid::Contextual
+      context = ::Mongoid::VERSION.split('.').first.to_i < 3 ? ::Mongoid::Contexts : ::Mongoid::Contextual
       context::Mongo.class_eval do
         alias_method :origin_first, :first
         alias_method :origin_last, :last
