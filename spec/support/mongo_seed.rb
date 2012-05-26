@@ -29,11 +29,16 @@ module Support
     end
 
     def setup_db
-      Mongoid.database = Mongo::Connection.new("localhost", 27017).db("bullet")
+      #Mongoid.database = Mongo::Connection.new("localhost", 27017).db("bullet")
+      Mongoid.configure do |config|
+        config.connect_to("bullet")
+      end
     end
 
     def teardown_db
-      Mongoid.database.collections.select {|c| c.name !~ /system/ }.map(&:drop)
+      #Mongoid.database.collections.select {|c| c.name !~ /system/ }.map(&:drop)
+      Mongoid.purge!
+      Mongoid::IdentityMap.clear
     end
 
     extend self
