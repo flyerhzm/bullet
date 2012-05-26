@@ -1,7 +1,7 @@
-require 'spec_helper'
-
 begin
   require 'mongoid'
+  require 'spec_helper'
+
   describe Bullet::Detector::Association, 'has_many' do
     before(:each) do
       Bullet.clear
@@ -64,8 +64,8 @@ begin
 
       it "should detect preload with category => posts, but not with category => entries" do
         Mongoid::Category.includes(:posts).each do |category|
-          category.posts.collect(&:name)
-          category.entries.collect(&:name)
+          category.posts.map(&:name)
+          category.entries.map(&:name)
         end
         Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
         Bullet::Detector::Association.should_not be_has_unused_preload_associations
@@ -118,7 +118,7 @@ begin
       end
 
       it "should detect preload with post => commnets" do
-        Mongoid::Post.first.comments.collect(&:name)
+        Mongoid::Post.first.comments.map(&:name)
         Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
         Bullet::Detector::Association.should_not be_has_unused_preload_associations
 
@@ -187,7 +187,7 @@ begin
       end
 
       it "should not detect preload with comment => post" do
-        Mongoid::Comment.all.collect(&:name)
+        Mongoid::Comment.all.map(&:name)
         Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
         Bullet::Detector::Association.should_not be_has_unused_preload_associations
 
@@ -236,7 +236,7 @@ begin
       end
 
       it "should not detect preload association" do
-        Mongoid::Company.all.collect(&:name)
+        Mongoid::Company.all.map(&:name)
         Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
         Bullet::Detector::Association.should_not be_has_unused_preload_associations
 
@@ -244,7 +244,7 @@ begin
       end
 
       it "should detect unused preload association" do
-        Mongoid::Company.includes(:address).collect(&:name)
+        Mongoid::Company.includes(:address).map(&:name)
         Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
         Bullet::Detector::Association.should be_unused_preload_associations_for(Mongoid::Company, :address)
 
