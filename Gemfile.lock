@@ -1,3 +1,13 @@
+GIT
+  remote: git://github.com/mongoid/mongoid.git
+  revision: 7376d0081ac50c0d5087668ea0421760578bd1e3
+  specs:
+    mongoid (3.0.0)
+      activemodel (~> 3.1)
+      moped (~> 1.0.0.beta)
+      origin (~> 1.0.0.beta)
+      tzinfo (~> 0.3.22)
+
 PATH
   remote: .
   specs:
@@ -59,14 +69,10 @@ GEM
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     mime-types (1.18)
-    mongo (1.6.2)
-      bson (~> 1.6.2)
-    mongoid (2.4.9)
-      activemodel (~> 3.1)
-      mongo (~> 1.3)
-      tzinfo (~> 0.3.22)
-    multi_json (1.3.4)
+    moped (1.0.0.beta)
+    multi_json (1.3.5)
     mysql (2.8.1)
+    origin (1.0.0.beta)
     perftools.rb (2.0.0)
     polyglot (0.3.3)
     rack (1.4.1)
@@ -124,7 +130,7 @@ DEPENDENCIES
   bullet!
   guard
   guard-rspec
-  mongoid
+  mongoid!
   mysql
   perftools.rb
   rails (= 3.2.3)
