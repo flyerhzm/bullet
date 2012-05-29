@@ -8,7 +8,7 @@ gem 'rails', '3.2.3'
 gem 'sqlite3'
 gem 'mysql'
 gem 'activerecord-import'
-gem 'mongoid', :git => "git://github.com/mongoid/mongoid.git"
+gem 'mongoid', '3.0.0.rc'
 gem 'bson_ext'
 
 gem "rspec"
