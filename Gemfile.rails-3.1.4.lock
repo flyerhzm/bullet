@@ -65,7 +65,7 @@ GEM
       activemodel (~> 3.1)
       mongo (~> 1.3)
       tzinfo (~> 0.3.22)
-    multi_json (1.3.5)
+    multi_json (1.3.6)
     mysql (2.8.1)
     perftools.rb (2.0.0)
     polyglot (0.3.3)
@@ -126,7 +126,7 @@ DEPENDENCIES
   bullet!
   guard
   guard-rspec
-  mongoid
+  mongoid (= 2.4.10)
   mysql
   perftools.rb
   rails (= 3.1.4)
