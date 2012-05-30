@@ -7,3 +7,5 @@ gemfile:
   - Gemfile.rails-3.0.12
   - Gemfile.rails-2.3.14
 env: DB=sqlite
+before_install:
+  - echo "yes" | gem uninstall json
