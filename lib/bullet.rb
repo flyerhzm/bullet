@@ -12,10 +12,14 @@ module Bullet
     autoload :ActiveRecord, 'bullet/active_record2'
     autoload :ActionController, 'bullet/action_controller2'
   end
-  if Mongoid::VERSION =~ /\A2\.4/
-    autoload :Mongoid, 'bullet/mongoid24'
-  elsif Mongoid::VERSION =~ /\A3/
-    autoload :Mongoid, 'bullet/mongoid3'
+  begin
+    require 'mongoid'
+    if Mongoid::VERSION =~ /\A2\.4/
+      autoload :Mongoid, 'bullet/mongoid24'
+    elsif Mongoid::VERSION =~ /\A3/
+      autoload :Mongoid, 'bullet/mongoid3'
+    end
+  rescue LoadError
   end
   autoload :Rack, 'bullet/rack'
   autoload :BulletLogger, 'bullet/logger'
