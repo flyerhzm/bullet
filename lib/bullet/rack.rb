@@ -9,7 +9,7 @@ module Bullet
 
       Bullet.start_request
       status, headers, response = @app.call(env)
-      return [status, headers, response] if empty?(response)
+      return [status, headers, response] if file?(response) || empty?(response)
 
       response_body = nil
       if Bullet.notification?
@@ -29,6 +29,14 @@ module Bullet
       # response may be ["Not Found"], ["Move Permanently"], etc.
       (response.is_a?(Array) && response.size <= 1) ||
       !response.body.is_a?(String) || response.body.empty?
+    end
+    
+    # fix issue (receiving 0 byte files) if response is a ActionDispatch::Response
+    def file?(response)
+      # response may be a file
+      response.is_a?(::ActionDispatch::Response) && 
+        response.instance_variable_get("@sending_file") && 
+        response.instance_variable_get("@body")
     end
 
     def html_request?(headers, response)
