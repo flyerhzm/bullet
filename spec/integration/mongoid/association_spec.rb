@@ -1,7 +1,6 @@
-begin
-  require 'mongoid'
-  require 'spec_helper'
+require 'spec_helper'
 
+if mongoid?
   describe Bullet::Detector::Association do
     before(:each) do
       Bullet.clear
@@ -249,5 +248,4 @@ begin
       end
     end
   end
-rescue LoadError
 end
