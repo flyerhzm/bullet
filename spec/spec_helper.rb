@@ -18,6 +18,7 @@ end
 
 $LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + "/../lib"))
 require 'bullet'
+extend Bullet::Dependency
 Bullet.enable = true
 ActiveRecord::Migration.verbose = false
 
@@ -43,13 +44,13 @@ RSpec.configure do |config|
     Support::SqliteSeed.teardown_db
   end
 
+  config.extend Bullet::Dependency
+
   config.filter_run :focus => true
   config.run_all_when_everything_filtered = true
 end
 
-begin
-  require 'mongoid'
-
+if mongoid?
   # Autoload every model for the test suite that sits in spec/models.
   Dir[ File.join(MODELS, "mongoid", "*.rb") ].sort.each { |file| require file }
   require File.join(SUPPORT, "mongo_seed.rb")
@@ -64,5 +65,4 @@ begin
       Support::MongoSeed.teardown_db
     end
   end
-rescue LoadError
 end

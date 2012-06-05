@@ -2,8 +2,11 @@ require 'set'
 require 'uniform_notifier'
 require 'bullet/ext/object'
 require 'bullet/ext/string'
+require 'bullet/dependency'
 
 module Bullet
+  extend Dependency
+
   if Rails.version =~ /\A3\.0/
     autoload :ActiveRecord, 'bullet/active_record3'
   elsif Rails.version =~ /\A3\.[12]/
@@ -12,14 +15,12 @@ module Bullet
     autoload :ActiveRecord, 'bullet/active_record2'
     autoload :ActionController, 'bullet/action_controller2'
   end
-  begin
-    require 'mongoid'
+  if mongoid?
     if Mongoid::VERSION =~ /\A2\.4/
       autoload :Mongoid, 'bullet/mongoid24'
     elsif Mongoid::VERSION =~ /\A3/
       autoload :Mongoid, 'bullet/mongoid3'
     end
-  rescue LoadError
   end
   autoload :Rack, 'bullet/rack'
   autoload :BulletLogger, 'bullet/logger'
@@ -49,18 +50,14 @@ module Bullet
     def enable=(enable)
       @enable = enable
       if enable?
-        begin
-          require 'mongoid'
+        if mongoid?
           Bullet::Mongoid.enable
-        rescue LoadError
         end
-        begin
-          require 'active_record'
+        if active_record?
           Bullet::ActiveRecord.enable
           if Rails.version =~ /\A2./
             Bullet::ActionController.enable
           end
-        rescue LoadError
         end
       end
     end
