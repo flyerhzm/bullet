@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-if Rails.version.to_i > 2
+if active_record2?
   describe Bullet::Detector::Counter do
     before(:each) do
       Bullet.start_request

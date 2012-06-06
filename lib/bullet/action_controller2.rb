@@ -2,7 +2,7 @@ module Bullet
   class ActionController
     def self.enable
       require 'action_controller'
-      if Rails.version =~ /\A2.3/
+      if active_record23?
         ::ActionController::Dispatcher.middleware.use Bullet::Rack
         ::ActionController::Dispatcher.class_eval do
           class <<self
@@ -13,7 +13,7 @@ module Bullet
             end
           end
         end
-      elsif Rails.version =~ /\A2.[12]/
+      elsif active_record21? || active_record22?
         ::ActionController::Dispatcher.class_eval do
           alias_method :origin_reload_application, :reload_application
           def reload_application
