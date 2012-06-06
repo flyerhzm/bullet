@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-if Rails.version.to_i > 2
+if active_record3?
   describe Bullet::Detector::Association, 'has_many' do
     before(:each) do
       Bullet.clear

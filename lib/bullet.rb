@@ -7,20 +7,12 @@ require 'bullet/dependency'
 module Bullet
   extend Dependency
 
-  if Rails.version =~ /\A3\.0/
-    autoload :ActiveRecord, 'bullet/active_record3'
-  elsif Rails.version =~ /\A3\.[12]/
-    autoload :ActiveRecord, 'bullet/active_record31'
-  else
-    autoload :ActiveRecord, 'bullet/active_record2'
-    autoload :ActionController, 'bullet/action_controller2'
+  if active_record?
+    autoload :ActiveRecord, "bullet/#{active_record_version}"
+    autoload :ActionController, 'bullet/action_controller2' if active_record2?
   end
   if mongoid?
-    if Mongoid::VERSION =~ /\A2\.4/
-      autoload :Mongoid, 'bullet/mongoid24'
-    elsif Mongoid::VERSION =~ /\A3/
-      autoload :Mongoid, 'bullet/mongoid3'
-    end
+    autoload :Mongoid, "bullet/#{mongoid_version}"
   end
   autoload :Rack, 'bullet/rack'
   autoload :BulletLogger, 'bullet/logger'
@@ -55,9 +47,7 @@ module Bullet
         end
         if active_record?
           Bullet::ActiveRecord.enable
-          if Rails.version =~ /\A2./
-            Bullet::ActionController.enable
-          end
+          Bullet::ActionController.enable if active_record2?
         end
       end
     end
