@@ -3,8 +3,8 @@ rvm:
   - 1.9.3
 gemfile:
   - Gemfile
-  - Gemfile.rails-3.1.4
-  - Gemfile.rails-3.0.12
+  - Gemfile.rails-3.1.5
+  - Gemfile.rails-3.0.13
   - Gemfile.rails-2.3.14
 env: DB=sqlite
 before_install:
