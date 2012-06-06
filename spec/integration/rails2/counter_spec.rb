@@ -31,7 +31,7 @@ if active_record2?
 
     it "should not need counter cache with part of cities" do
       Country.all.each do |country|
-        country.cities.where(:name => 'first').size
+        country.cities.find(:all, :conditions => {:name => 'first'}).size
       end
       Bullet.collected_counter_cache_notifications.should be_empty
     end
