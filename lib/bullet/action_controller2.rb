@@ -1,5 +1,7 @@
 module Bullet
   class ActionController
+    extend Dependency
+
     def self.enable
       require 'action_controller'
       if active_record23?
