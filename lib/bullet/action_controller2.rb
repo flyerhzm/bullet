@@ -29,8 +29,7 @@ module Bullet
             response = origin_process(request, response, method = :perform_action, *arguments)
 
             if Bullet.notification?
-              if response.headers["type"] && response.headers["type"].include?('text/html') &&
-                  response.body.include?("<html>") && response.body.include?("</html>")
+              if response.headers["type"] && response.headers["type"].include?('text/html') && response.body.include?("<html>")
                 response.body <<= Bullet.gather_inline_notifications
                 response.headers["Content-Length"] = response.body.length.to_s
               end

@@ -37,10 +37,7 @@ module Bullet
     end
 
     def html_request?(headers, response)
-      headers['Content-Type'] &&
-        headers['Content-Type'].include?('text/html') &&
-        response.body.include?("<html>") &&
-        response.body.include?("</html>")
+      headers['Content-Type'] && headers['Content-Type'].include?('text/html') && response.body.include?("<html>")
     end
 
     def no_browser_cache(headers)
