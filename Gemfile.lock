@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    bullet (4.1.1)
+    bullet (4.1.2)
       uniform_notifier (~> 1.0.0)
 
 GEM
