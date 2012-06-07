@@ -28,7 +28,8 @@ module Bullet
     def empty?(response)
       # response may be ["Not Found"], ["Move Permanently"], etc.
       (response.is_a?(Array) && response.size <= 1) ||
-      !response.body.is_a?(String) || response.body.empty?
+        !response.respond_to?(:body) ||
+        !response.body.is_a?(String) || response.body.empty?
     end
 
     # if send file?
