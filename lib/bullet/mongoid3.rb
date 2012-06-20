@@ -10,13 +10,13 @@ module Bullet
 
         def first
           result = origin_first
-          Bullet::Detector::Association.add_impossible_object(result)
+          Bullet::Detector::Association.add_impossible_object(result) if result
           result
         end
 
         def last
           result = origin_last
-          Bullet::Detector::Association.add_impossible_object(result)
+          Bullet::Detector::Association.add_impossible_object(result) if result
           result
         end
 
