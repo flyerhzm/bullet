@@ -11,6 +11,20 @@ if mongoid?
       Mongoid::IdentityMap.clear
     end
 
+    context 'embeds_many' do
+      context "posts => users" do
+        it "should detect nothing" do
+          Mongoid::Post.all.each do |post|
+            post.users.map(&:name)
+          end
+          Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
+          Bullet::Detector::Association.should_not be_has_unused_preload_associations
+
+          Bullet::Detector::Association.should be_completely_preloading_associations
+        end
+      end
+    end
+
     context 'has_many' do
       context "posts => comments" do
         it "should detect non preload posts => comments" do
