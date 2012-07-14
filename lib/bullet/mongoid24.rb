@@ -45,7 +45,9 @@ module Bullet
         alias_method :origin_set_relation, :set_relation
 
         def set_relation(name, relation)
-          Bullet::Detector::NPlusOneQuery.call_association(self, name)
+          if relation && relation.metadata.macro !~ /embed/
+            Bullet::Detector::NPlusOneQuery.call_association(self, name)
+          end
           origin_set_relation(name, relation)
         end
       end
