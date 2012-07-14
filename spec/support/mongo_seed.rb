@@ -8,6 +8,10 @@ module Support
       post1a = category1.posts.create(:name => 'like first')
       post2 = category2.posts.create(:name => 'second')
 
+      post1.users << Mongoid::User.create(:name => 'first')
+      post1.users << Mongoid::User.create(:name => 'another')
+      post2.users << Mongoid::User.create(:name => 'second')
+
       comment1 = post1.comments.create(:name => 'first')
       comment2 = post1.comments.create(:name => 'first2')
       comment3 = post1.comments.create(:name => 'first3')
