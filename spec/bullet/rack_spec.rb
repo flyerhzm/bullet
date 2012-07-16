@@ -22,6 +22,12 @@ module Bullet
         middleware.should be_html_request(headers, response)
       end
 
+      it "should be true if Content-Type is text/html and http body contains html tag with attributes" do
+        headers = {"Content-Type" => "text/html"}
+        response = stub(:body => "<html attr='hello'><head></head><body></body></html>")
+        middleware.should be_html_request(headers, response)
+      end
+
       it "should be false if there is no Content-Type header" do
         headers = {}
         response = stub(:body => "<html><head></head><body></body></html>")
