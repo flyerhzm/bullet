@@ -12,6 +12,15 @@ The Bullet gem now supports **activerecord** 2.1, 2.2, 2.3, 3.0, 3.1, 3.2 and **
 
 ****************************************************************************
 
+h2. External Introduction
+
+* "http://railscasts.com/episodes/372-bullet":http://railscasts.com/episodes/372-bullet
+* "http://ruby5.envylabs.com/episodes/9-episode-8-september-8-2009":http://ruby5.envylabs.com/episodes/9-episode-8-september-8-2009
+* "http://railslab.newrelic.com/2009/10/23/episode-19-on-the-edge-part-1":http://railslab.newrelic.com/2009/10/23/episode-19-on-the-edge-part-1
+* "http://weblog.rubyonrails.org/2009/10/22/community-highlights":http://weblog.rubyonrails.org/2009/10/22/community-highlights
+
+****************************************************************************
+
 h2. Install
 
 You can install it as a gem:
@@ -157,14 +166,6 @@ end
 </code></pre>
 
 Don't forget enabling bullet in test environment.
-
-****************************************************************************
-
-h2. Links
-
-* "http://weblog.rubyonrails.org/2009/10/22/community-highlights":http://weblog.rubyonrails.org/2009/10/22/community-highlights
-* "http://ruby5.envylabs.com/episodes/9-episode-8-september-8-2009":http://ruby5.envylabs.com/episodes/9-episode-8-september-8-2009
-* "http://railslab.newrelic.com/2009/10/23/episode-19-on-the-edge-part-1":http://railslab.newrelic.com/2009/10/23/episode-19-on-the-edge-part-1
 
 ****************************************************************************
 
