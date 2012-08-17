@@ -101,20 +101,9 @@ These two lines are notifications that unused eager loadings have been encounter
 
 ****************************************************************************
 
-h2. Growl Support
+h2. Growl and XMPP/Jabber Support
 
 see "https://github.com/flyerhzm/uniform_notifier":https://github.com/flyerhzm/uniform_notifier
-
-****************************************************************************
-
-h2. XMPP/Jabber Support
-
-To get XMPP support up-and-running for Bullet, follow the steps below:
-* Install the xmpp4r gem: <code>sudo gem install xmpp4r</code>
-* Make both the bullet and the receipient account add each other as contacts.
-  This will require you to manually log into both accounts, add each other
-  as contact and confirm each others contact request.
-* Boot up your application. Bullet will automatically send an XMPP notification when XMPP is turned on.
 
 ****************************************************************************
 
