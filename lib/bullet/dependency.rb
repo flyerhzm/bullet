@@ -24,7 +24,7 @@ module Bullet
                                      'active_record2'
                                    elsif active_record30?
                                      'active_record3'
-                                   elsif active_record31? || active_record32?
+                                   elsif active_record31? || active_record32? || active_record4?
                                      'active_record31'
                                    end
                                  end
@@ -58,6 +58,10 @@ module Bullet
 
     def active_record3?
       ::ActiveRecord::VERSION::MAJOR == 3
+    end
+
+    def active_record4?
+      ::ActiveRecord::VERSION::MAJOR == 4
     end
 
     def active_record30?
