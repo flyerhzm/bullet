@@ -1,0 +1,19 @@
+# Use `bundle install` in order to install these gems
+# Use `bundle exec rake` in order to run the specs using the bundle
+source "http://rubygems.org"
+
+gemspec
+
+gem 'rails', github: 'rails/rails'
+gem 'journey', github: 'rails/journey'
+gem 'activerecord-deprecated_finders', github: 'rails/activerecord-deprecated_finders'
+gem 'sqlite3'
+gem 'mysql'
+gem 'activerecord-import'
+gem 'mongoid', github: 'slbug/mongoid'
+
+gem "rspec"
+gem "guard"
+gem "guard-rspec"
+
+gem "perftools.rb"
