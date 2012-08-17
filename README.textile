@@ -103,19 +103,7 @@ These two lines are notifications that unused eager loadings have been encounter
 
 h2. Growl Support
 
-To get Growl support up-and-running for Bullet, follow the steps below:
-* Install the ruby-growl gem: <code>gem install ruby-growl</code>
-* Open the Growl preference pane in Systems Preferences
-* Click the "Network" tab
-* Make sure both "Listen for incoming notifications" and "Allow remote application registration" are checked. *Note*: If you set a password, you will need to set <code>Bullet.growl = { :password => 'growl password' }</code> in the config file.
-* Restart Growl ("General" tab -> Stop Growl -> Start Growl)
-* Boot up your application. Bullet will automatically send a Growl notification when Growl is turned on. If you do not see it when your application loads, make sure it is enabled in your initializer and double-check the steps above.
-
-****************************************************************************
-
-h2. Ruby 1.9 issue
-
-ruby-growl gem has an issue about md5 in ruby 1.9, if you use growl and ruby 1.9, check this gist http://gist.github.com/300184
+see "https://github.com/flyerhzm/uniform_notifier":https://github.com/flyerhzm/uniform_notifier
 
 ****************************************************************************
 
