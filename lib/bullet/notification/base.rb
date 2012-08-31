@@ -19,7 +19,12 @@ module Bullet
       end
 
       def whoami
-        "user: " << `whoami`.chomp
+        user = `whoami`
+        if user
+          "user: #{user.chomp}"
+        else
+          ""
+        end
       end
 
       def body_with_caller
