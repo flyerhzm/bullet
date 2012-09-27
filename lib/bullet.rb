@@ -33,7 +33,7 @@ module Bullet
     attr_accessor :enable, :disable_browser_cache
     attr_reader :notification_collector
 
-    delegate :alert=, :console=, :growl=, :rails_logger=, :xmpp=, :to => UniformNotifier
+    delegate :alert=, :console=, :growl=, :rails_logger=, :xmpp=, :airbrake= :to => UniformNotifier
 
     DETECTORS = [ Bullet::Detector::NPlusOneQuery,
                   Bullet::Detector::UnusedEagerAssociation,
