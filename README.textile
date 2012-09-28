@@ -50,6 +50,7 @@ config.after_initialize do
                   :receiver => 'your_account@jabber.org',
                   :show_online_status => true }
   Bullet.rails_logger = true
+  Bullet.airbrake = true
   Bullet.disable_browser_cache = true
 end
 </code></pre>
@@ -61,6 +62,7 @@ The code above will enable all six of the Bullet notification systems:
 * <code>Bullet.alert</code>: pop up a JavaScript alert in the browser
 * <code>Bullet.bullet_logger</code>: log to the Bullet log file (Rails.root/log/bullet.log)
 * <code>Bullet.rails_logger</code>: add warnings directly to the Rails log
+* <code>Bullet.airbrake</code>: add notifications to airbrake
 * <code>Bullet.console</code>: log warnings to your browser's console.log (Safari/Webkit browsers or Firefox w/Firebug installed)
 * <code>Bullet.growl</code>: pop up Growl warnings if your system has Growl installed. Requires a little bit of configuration
 * <code>Bullet.xmpp</code>: send XMPP/Jabber notifications to the receiver indicated. Note that the code will currently not handle the adding of contacts, so you will need to make both accounts indicated know each other manually before you will receive any notifications. If you restart the development server frequently, the 'coming online' sound for the bullet account may start to annoy - in this case set :show_online_status to false; you will still get notifications, but the bullet account won't announce it's online status anymore.
@@ -101,7 +103,7 @@ These two lines are notifications that unused eager loadings have been encounter
 
 ****************************************************************************
 
-h2. Growl and XMPP/Jabber Support
+h2. Growl, XMPP/Jabber and Airbrake Support
 
 see "https://github.com/flyerhzm/uniform_notifier":https://github.com/flyerhzm/uniform_notifier
 
