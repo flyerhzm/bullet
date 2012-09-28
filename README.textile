@@ -57,7 +57,7 @@ end
 
 The notifier of bullet is a wrap of "uniform_notifier":https://github.com/flyerhzm/uniform_notifier
 
-The code above will enable all six of the Bullet notification systems:
+The code above will enable all seven of the Bullet notification systems:
 * <code>Bullet.enable</code>: enable Bullet gem, otherwise do nothing
 * <code>Bullet.alert</code>: pop up a JavaScript alert in the browser
 * <code>Bullet.bullet_logger</code>: log to the Bullet log file (Rails.root/log/bullet.log)
