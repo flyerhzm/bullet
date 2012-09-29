@@ -10,7 +10,6 @@ gem 'activerecord-deprecated_finders', github: 'rails/activerecord-deprecated_fi
 gem 'sqlite3'
 gem 'mysql'
 gem 'activerecord-import'
-gem 'mongoid', github: 'slbug/mongoid'
 
 gem "rspec"
 gem "guard"
