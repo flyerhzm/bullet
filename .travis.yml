@@ -10,4 +10,5 @@ gemfile:
 env: DB=sqlite
 services: mongodb
 before_install:
-  - echo "yes" | gem uninstall json
+  - gem uninstall json
+  - gem install bundler
