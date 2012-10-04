@@ -3,7 +3,7 @@ module Bullet
     def mongoid?
       @mongoid ||= begin
                      require 'mongoid'
-                     true
+                     mongoid_version.present?
                    rescue LoadError
                      false
                    end
