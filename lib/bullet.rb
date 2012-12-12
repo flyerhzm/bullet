@@ -58,7 +58,7 @@ module Bullet
 
     def bullet_logger=(active)
       if active
-        bullet_log_file = File.open('log/bullet.log', 'a+')
+        bullet_log_file = File.open("#{Rails.root}/log/bullet.log", 'a+')
         bullet_log_file.sync = true
         UniformNotifier.customized_logger = bullet_log_file
       end
