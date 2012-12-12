@@ -15,7 +15,7 @@ module Bullet
       if Bullet.notification?
         if status == 200 && !response.body.frozen? && html_request?(headers, response)
           response_body = response.body << Bullet.gather_inline_notifications
-          headers['Content-Length'] = response_body.length.to_s
+          headers['Content-Length'] = response_body.bytesize.to_s
         end
         Bullet.perform_out_of_channel_notifications(env)
       end
