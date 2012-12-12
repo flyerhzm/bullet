@@ -87,6 +87,16 @@ module Bullet
           headers["Content-Length"].should == "56"
           response.should == ["<html><head></head><body></body></html><bullet></bullet>"]
         end
+
+        it "should set the right Content-Length if response body contains accents" do
+          response = Support::ResponseDouble.new
+          response.body = "<html><head></head><body>é</body></html>"
+          app.response = response
+          Bullet.should_receive(:notification?).and_return(true)
+          Bullet.should_receive(:gather_inline_notifications).and_return("<bullet></bullet>")
+          status, headers, response = middleware.call([200, {"Content-Type" => "text/html"}])
+          headers["Content-Length"].should == "58"
+        end
       end
 
       context "when Bullet is disabled" do
