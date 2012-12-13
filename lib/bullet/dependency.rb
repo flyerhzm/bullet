@@ -83,5 +83,9 @@ module Bullet
     def mongoid3?
       ::Mongoid::VERSION =~ /\A3/
     end
+
+    def rails2?
+      ::Rails::VERSION::MAJOR < 3
+    end
   end
 end
