@@ -33,7 +33,7 @@ module Bullet
             if Bullet.notification?
               if response.headers["type"] && response.headers["type"].include?('text/html') && response.body.include?("<html>")
                 response.body <<= Bullet.gather_inline_notifications
-                response.headers["Content-Length"] = response.body.length.to_s
+                response.headers["Content-Length"] = response.body.bytesize.to_s
               end
 
               Bullet.perform_out_of_channel_notifications
