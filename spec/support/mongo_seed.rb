@@ -33,7 +33,7 @@ module Support
     end
 
     def setup_db
-      if Mongoid::VERSION =~ /\A2\.4/
+      if Mongoid::VERSION =~ /\A2\.[4|5]/
         Mongoid.configure do |config|
           config.master = Mongo::Connection.new.db("bullet")
         end

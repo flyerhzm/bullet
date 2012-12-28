@@ -25,17 +25,17 @@ module Bullet
                                    elsif active_record30?
                                      'active_record3'
                                    elsif active_record31? || active_record32? || active_record4?
-                                     'active_record31'
+                                     'active_record3x'
                                    end
                                  end
     end
 
     def mongoid_version
       @mongoid_version ||= begin
-                             if mongoid24?
-                               'mongoid24'
-                             elsif mongoid3?
-                               'mongoid3'
+                             if mongoid2x?
+                               'mongoid2x'
+                             elsif mongoid3x?
+                               'mongoid3x'
                              end
                            end
     end
@@ -76,11 +76,11 @@ module Bullet
       active_record3? && ::ActiveRecord::VERSION::MINOR == 2
     end
 
-    def mongoid24?
-      ::Mongoid::VERSION =~ /\A2\.4/
+    def mongoid2x?
+      ::Mongoid::VERSION =~ /\A2\.[4|5]/
     end
 
-    def mongoid3?
+    def mongoid3x?
       ::Mongoid::VERSION =~ /\A3/
     end
 
