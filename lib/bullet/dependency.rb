@@ -32,8 +32,8 @@ module Bullet
 
     def mongoid_version
       @mongoid_version ||= begin
-                             if mongoid24?
-                               'mongoid24'
+                             if mongoid24_or_later?
+                               'mongoid24_or_later'
                              elsif mongoid3?
                                'mongoid3'
                              end
@@ -76,8 +76,8 @@ module Bullet
       active_record3? && ::ActiveRecord::VERSION::MINOR == 2
     end
 
-    def mongoid24?
-      ::Mongoid::VERSION =~ /\A2\.4/
+    def mongoid24_or_later?
+      ::Mongoid::VERSION =~ /\A2\.([4-9]|[1-9][0-9]+)/
     end
 
     def mongoid3?
