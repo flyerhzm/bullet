@@ -152,11 +152,10 @@ The bullet plugin/gem use rack middleware for http request. If you want to bulle
 <pre><code>
 Bullet.start_request if Bullet.enable?
 # run job
-if Bullet.enable?
-  Bullet.growl_notification
-  Bullet.log_notification('JobServer: ')
-  Bullet.end_request
+if Bulelt.enable? && Bullet.notification?
+  Bullet.perform_out_of_channel_notifications
 end
+Bullet.end_request if Bullet.enable?
 </code></pre>
 
 Or you want to use it in test mode
@@ -167,10 +166,10 @@ before(:each)
 end
 
 after(:each)
-  if Bullet.enable?
+  if Bulelt.enable? && Bullet.notification?
     Bullet.perform_out_of_channel_notifications
-    Bullet.end_request
   end
+  Bullet.end_request if Bullet.enable?
 end
 </code></pre>
 
