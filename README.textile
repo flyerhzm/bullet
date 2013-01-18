@@ -122,7 +122,7 @@ The bullet gem use rack middleware for http request. If you want to bullet for w
 <pre><code>
 Bullet.start_request if Bullet.enable?
 # run job
-if Bulelt.enable? && Bullet.notification?
+if Bullet.enable? && Bullet.notification?
   Bullet.perform_out_of_channel_notifications
 end
 Bullet.end_request if Bullet.enable?
@@ -136,7 +136,7 @@ before(:each)
 end
 
 after(:each)
-  if Bulelt.enable? && Bullet.notification?
+  if Bullet.enable? && Bullet.notification?
     Bullet.perform_out_of_channel_notifications
   end
   Bullet.end_request if Bullet.enable?
