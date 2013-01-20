@@ -4,11 +4,9 @@ source "http://rubygems.org"
 
 gemspec
 
-gem 'rails', '3.1.8'
+gem 'rails', '2.3.15'
 gem 'sqlite3'
 gem 'mysql'
-gem 'activerecord-import'
-gem 'mongoid', '2.4.12'
 gem 'bson_ext'
 
 gem "rspec"

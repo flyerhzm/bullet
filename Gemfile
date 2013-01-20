@@ -4,11 +4,11 @@ source "http://rubygems.org"
 
 gemspec
 
-gem 'rails', '3.2.5'
+gem 'rails', '3.2.11'
 gem 'sqlite3'
 gem 'mysql'
 gem 'activerecord-import'
-gem 'mongoid', '3.0.0.rc'
+gem 'mongoid', '3.0.17'
 
 gem "rspec"
 gem "guard"
