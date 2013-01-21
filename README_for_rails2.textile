@@ -400,4 +400,4 @@ In the meanwhile, there's a log appended into <code>log/bullet.log</code> file.
 ****************************************************************************
 
 
-Copyright (c) 2009 - 2012 Richard Huang (flyerhzm@gmail.com), released under the MIT license
+Copyright (c) 2009 - 2013 Richard Huang (flyerhzm@gmail.com), released under the MIT license
