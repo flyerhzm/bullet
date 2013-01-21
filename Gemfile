@@ -8,7 +8,7 @@ gem 'rails', '3.2.11'
 gem 'sqlite3'
 gem 'mysql'
 gem 'activerecord-import'
-gem 'mongoid', '3.0.17'
+gem 'mongoid', '3.0.9'
 
 gem "rspec"
 gem "guard"
