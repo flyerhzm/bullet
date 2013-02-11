@@ -20,7 +20,6 @@ module Bullet
         Bullet.perform_out_of_channel_notifications(env)
       end
       Bullet.end_request
-      no_browser_cache(headers) if Bullet.disable_browser_cache
       [status, headers, response_body ? [response_body] : response]
     end
 
@@ -40,12 +39,6 @@ module Bullet
 
     def html_request?(headers, response)
       headers['Content-Type'] && headers['Content-Type'].include?('text/html') && response.body.include?("<html")
-    end
-
-    def no_browser_cache(headers)
-      headers["Cache-Control"] = "no-cache, no-store, max-age=0, must-revalidate"
-      headers["Pragma"] = "no-cache"
-      headers["Expires"] = "Wed, 09 Sep 2009 09:09:09 GMT"
     end
   end
 end

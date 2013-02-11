@@ -6,16 +6,6 @@ module Bullet
     let(:middleware) { Bullet::Rack.new app }
     let(:app) { Support::AppDouble.new }
 
-    context "#no_browser_cache" do
-      it "should add no cache meta in http headers" do
-        headers = {}
-        middleware.no_browser_cache(headers)
-        headers["Cache-Control"].should == "no-cache, no-store, max-age=0, must-revalidate"
-        headers["Pragma"].should == "no-cache"
-        headers["Expires"].should == "Wed, 09 Sep 2009 09:09:09 GMT"
-      end
-    end
-
     context "#html_request?" do
       it "should be true if Content-Type is text/html and http body contains html tag" do
         headers = {"Content-Type" => "text/html"}
