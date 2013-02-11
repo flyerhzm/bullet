@@ -44,7 +44,6 @@ config.after_initialize do
   Bullet.console = true
   Bullet.growl = true
   Bullet.rails_logger = true
-  Bullet.disable_browser_cache = true
   Bullet.xmpp = { :account => 'bullets_account@jabber.org',
                   :password => 'bullets_password_for_jabber',
                   :receiver => 'your_account@jabber.org',
@@ -61,7 +60,6 @@ The code above will enable all five of the Bullet notification systems:
 * <code>Bullet.rails_logger</code>: add warnings directly to the Rails log
 * <code>Bullet.console</code>: log warnings to your browser's console.log (Safari/Webkit browsers or Firefox w/Firebug installed)
 * <code>Bullet.growl</code>: pop up Growl warnings if your system has Growl installed. Requires a little bit of configuration
-* <code>Bullet.disable_browser_cache</code>: disable browser cache which usually causes unexpected problems
 
 ****************************************************************************
 
@@ -252,7 +250,6 @@ config.after_initialize do
   Bullet.console = true
 #  Bullet.growl = true
   Bullet.rails_logger = true
-  Bullet.disable_browser_cache = true
 end
 </code></pre>
 
