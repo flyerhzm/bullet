@@ -30,7 +30,7 @@ module Bullet
   end
 
   class <<self
-    attr_accessor :enable, :disable_browser_cache
+    attr_accessor :enable
     attr_reader :notification_collector
 
     delegate :alert=, :console=, :growl=, :rails_logger=, :xmpp=, :airbrake=, :to => UniformNotifier
