@@ -6,12 +6,10 @@ gemspec
 
 gem 'rails', '3.2.11'
 gem 'sqlite3'
-gem 'mysql'
+gem 'mysql2'
 gem 'activerecord-import'
 gem 'mongoid', '3.0.9'
 
 gem "rspec"
 gem "guard"
 gem "guard-rspec"
-
-gem "perftools.rb"

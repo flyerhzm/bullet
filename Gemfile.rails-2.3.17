@@ -4,13 +4,11 @@ source "http://rubygems.org"
 
 gemspec
 
-gem 'rails', '2.3.15'
+gem 'rails', '2.3.17'
 gem 'sqlite3'
-gem 'mysql'
+gem 'mysql2'
 gem 'bson_ext'
 
 gem "rspec"
 gem "guard"
 gem "guard-rspec"
-
-gem "perftools.rb"

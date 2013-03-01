@@ -4,15 +4,11 @@ source "http://rubygems.org"
 
 gemspec
 
-gem 'rails', github: 'rails/rails'
-gem 'journey', github: 'rails/journey'
-gem 'activerecord-deprecated_finders', github: 'rails/activerecord-deprecated_finders'
+gem 'rails', '4.0.0.beta1'
 gem 'sqlite3'
-gem 'mysql'
+gem 'mysql2'
 gem 'activerecord-import'
 
 gem "rspec"
 gem "guard"
 gem "guard-rspec"
-
-gem "perftools.rb"
