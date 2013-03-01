@@ -27,7 +27,7 @@ class User < ActiveRecord::Base
 end
 
 # create database bullet_benchmark;
-ActiveRecord::Base.establish_connection(:adapter => 'mysql', :database => 'bullet_benchmark', :server => '/tmp/mysql.socket', :username => 'root')
+ActiveRecord::Base.establish_connection(:adapter => 'mysql2', :database => 'bullet_benchmark', :server => '/tmp/mysql.socket', :username => 'root')
 
 ActiveRecord::Base.connection.tables.each do |table|
   ActiveRecord::Base.connection.drop_table(table)
@@ -79,8 +79,6 @@ puts "Start benchmarking..."
 
 Bullet.enable = true
 
-PerfTools::CpuProfiler.start(ARGV[0]|| "benchmark_profile") if defined? PerfTools
-
 Benchmark.bm(70) do |bm|
   bm.report("Querying & Iterating #{posts_size} Posts with #{comments_size} Comments and #{users_size} Users") do
     10.times do
@@ -98,7 +96,6 @@ Benchmark.bm(70) do |bm|
   end
 end
 
-PerfTools::CpuProfiler.stop if defined? PerfTools
 puts "End benchmarking..."
 
 
