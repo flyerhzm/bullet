@@ -1,12 +1,12 @@
 language: ruby
 rvm:
-  - 1.9.3
+  - 2.0.0
 gemfile:
   - Gemfile
   - Gemfile.rails-4-beta
-  - Gemfile.rails-3.1.5
-  - Gemfile.rails-3.0.13
-  - Gemfile.rails-2.3.14
+  - Gemfile.rails-3.2.12
+  - Gemfile.rails-3.1.11
+  - Gemfile.rails-3.0.20
 env: DB=sqlite
 services: mongodb
 before_install:
