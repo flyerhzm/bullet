@@ -24,8 +24,10 @@ module Bullet
                                      'active_record2'
                                    elsif active_record30?
                                      'active_record3'
-                                   elsif active_record31? || active_record32? || active_record4?
+                                   elsif active_record31? || active_record32?
                                      'active_record3x'
+                                   elsif active_record4?
+                                     'active_record4'
                                    end
                                  end
     end
