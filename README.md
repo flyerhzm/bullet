@@ -138,6 +138,20 @@ end
 
 Don't forget enabling bullet in test environment.
 
+### API access
+
+after `end_request`, you can fetch warnings then do whatever you want
+
+```ruby
+Bullet.start_request if Bullet.enable?
+# run anything
+if Bullet.enable? && Bullet.notification?
+  Bullet.perform_out_of_channel_notifications
+end
+Bullet.end_request if Bullet.enable?
+warnings = Bullet.warnings
+```
+
 ## Contributors
 
 [https://github.com/flyerhzm/bullet/contributors](https://github.com/flyerhzm/bullet/contributors)

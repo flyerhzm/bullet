@@ -101,6 +101,15 @@ module Bullet
       end
     end
 
+    def warnings
+      notification_collector.collection.inject({}) do |warnings, notification|
+        warning_type = notification.class.to_s.split(':').last.tableize
+        warnings[warning_type] ||= []
+        warnings[warning_type] << notification
+        warnings
+      end
+    end
+
     private
       def for_each_active_notifier_with_notification
         UniformNotifier.active_notifiers.each do |notifier|
