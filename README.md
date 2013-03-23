@@ -1,4 +1,4 @@
-h1. Bullet
+# Bullet
 
 !https://secure.travis-ci.org/flyerhzm/bullet.png!:http://travis-ci.org/flyerhzm/bullet
 
@@ -8,72 +8,71 @@ The Bullet gem is designed to help you increase your application's performance b
 
 Best practice is to use Bullet in development mode or custom mode (staging, profile, etc.). The last thing you want is your clients getting alerts about how lazy you are.
 
-The Bullet gem now supports **activerecord** 2.1, 2.2, 2.3, 3.0, 3.1, 3.2 and **mongoid** >= 2.4.1.
+The Bullet gem now supports **activerecord** 2.1, 2.2, 2.3, 3.0, 3.1,
+3.2, 4.0 and **mongoid** >= 2.4.1.
 
-****************************************************************************
+## External Introduction
 
-h2. External Introduction
+* [http://railscasts.com/episodes/372-bullet](http://railscasts.com/episodes/372-bullet)
+* [http://ruby5.envylabs.com/episodes/9-episode-8-september-8-2009](http://ruby5.envylabs.com/episodes/9-episode-8-september-8-2009)
+* [http://railslab.newrelic.com/2009/10/23/episode-19-on-the-edge-part-1](http://railslab.newrelic.com/2009/10/23/episode-19-on-the-edge-part-1)
+* [http://weblog.rubyonrails.org/2009/10/22/community-highlights](http://weblog.rubyonrails.org/2009/10/22/community-highlights)
 
-* "http://railscasts.com/episodes/372-bullet":http://railscasts.com/episodes/372-bullet
-* "http://ruby5.envylabs.com/episodes/9-episode-8-september-8-2009":http://ruby5.envylabs.com/episodes/9-episode-8-september-8-2009
-* "http://railslab.newrelic.com/2009/10/23/episode-19-on-the-edge-part-1":http://railslab.newrelic.com/2009/10/23/episode-19-on-the-edge-part-1
-* "http://weblog.rubyonrails.org/2009/10/22/community-highlights":http://weblog.rubyonrails.org/2009/10/22/community-highlights
-
-****************************************************************************
-
-h2. Install
+## Install
 
 You can install it as a gem:
-<pre><code>
+
+```
 gem install bullet
-</code></pre>
+
+```
 
 or add it into a Gemfile (Bundler):
-<pre><code>
+
+
+```ruby
 gem "bullet", :group => "development"
-</code></pre>
+```
 
-****************************************************************************
+## Configuration
 
-h2. Configuration
+Bullet won't do ANYTHING unless you tell it to explicitly. Append to
+`config/environments/development.rb` initializer with the following code:
 
-Bullet won't do ANYTHING unless you tell it to explicitly. Append to <code>config/environments/development.rb</code> initializer with the following code:
-<pre><code>
+```ruby
 config.after_initialize do
   Bullet.enable = true
-  Bullet.alert = true
-  Bullet.bullet_logger = true
+  Bullet.alert = true Bullet.bullet_logger = true
   Bullet.console = true
   Bullet.growl = true
-  Bullet.xmpp = { :account => 'bullets_account@jabber.org',
+  Bullet.xmpp = { :account  => 'bullets_account@jabber.org',
                   :password => 'bullets_password_for_jabber',
                   :receiver => 'your_account@jabber.org',
                   :show_online_status => true }
   Bullet.rails_logger = true
   Bullet.airbrake = true
 end
-</code></pre>
+```
 
-The notifier of bullet is a wrap of "uniform_notifier":https://github.com/flyerhzm/uniform_notifier
+The notifier of bullet is a wrap of [uniform_notifier](https://github.com/flyerhzm/uniform_notifier)
 
 The code above will enable all seven of the Bullet notification systems:
-* <code>Bullet.enable</code>: enable Bullet gem, otherwise do nothing
-* <code>Bullet.alert</code>: pop up a JavaScript alert in the browser
-* <code>Bullet.bullet_logger</code>: log to the Bullet log file (Rails.root/log/bullet.log)
-* <code>Bullet.rails_logger</code>: add warnings directly to the Rails log
-* <code>Bullet.airbrake</code>: add notifications to airbrake
-* <code>Bullet.console</code>: log warnings to your browser's console.log (Safari/Webkit browsers or Firefox w/Firebug installed)
-* <code>Bullet.growl</code>: pop up Growl warnings if your system has Growl installed. Requires a little bit of configuration
-* <code>Bullet.xmpp</code>: send XMPP/Jabber notifications to the receiver indicated. Note that the code will currently not handle the adding of contacts, so you will need to make both accounts indicated know each other manually before you will receive any notifications. If you restart the development server frequently, the 'coming online' sound for the bullet account may start to annoy - in this case set :show_online_status to false; you will still get notifications, but the bullet account won't announce it's online status anymore.
+* `Bullet.enable`: enable Bullet gem, otherwise do nothing
+* `Bullet.alert`: pop up a JavaScript alert in the browser
+* `Bullet.bullet_logger`: log to the Bullet log file (Rails.root/log/bullet.log)
+* `Bullet.rails_logger`: add warnings directly to the Rails log
+* `Bullet.airbrake`: add notifications to airbrake
+* `Bullet.console`: log warnings to your browser's console.log (Safari/Webkit browsers or Firefox w/Firebug installed)
+* `Bullet.growl`: pop up Growl warnings if your system has Growl installed. Requires a little bit of configuration
+* `Bullet.xmpp`: send XMPP/Jabber notifications to the receiver indicated. Note that the code will currently not handle the adding of contacts, so you will need to make both accounts indicated know each other manually before you will receive any notifications. If you restart the development server frequently, the 'coming online' sound for the bullet account may start to annoy - in this case set :show_online_status to false; you will still get notifications, but the bullet account won't announce it's online status anymore.
 
-****************************************************************************
+## Log
 
-h2. Log
-
-The Bullet log <code>log/bullet.log</code> will look something like this:
+The Bullet log `log/bullet.log` will look something like this:
 
 * N+1 Query:
-<pre><code>
+
+```
 2009-08-25 20:40:17[INFO] N+1 Query: PATH_INFO: /posts;    model: Post => associations: [comments]·
 Add to your finder: :include => [:comments]
 2009-08-25 20:40:17[INFO] N+1 Query: method call stack:·
@@ -81,54 +80,50 @@ Add to your finder: :include => [:comments]
 /Users/richard/Downloads/test/app/views/posts/index.html.erb:8:in `each'
 /Users/richard/Downloads/test/app/views/posts/index.html.erb:8:in `_run_erb_app47views47posts47index46html46erb'
 /Users/richard/Downloads/test/app/controllers/posts_controller.rb:7:in `index'
-</code></pre>
+```
 
 The first two lines are notifications that N+1 queries have been encountered. The remaining lines are stack traces so you can find exactly where the queries were invoked in your code, and fix them.
 
 * Unused eager loading:
-<pre><code>
+
+```
 2009-08-25 20:53:56[INFO] Unused eager loadings: PATH_INFO: /posts;    model: Post => associations: [comments]·
 Remove from your finder: :include => [:comments]
-</code></pre>
+```
 
 These two lines are notifications that unused eager loadings have been encountered.
 
 * Need counter cache:
-<pre><code>
+
+```
 2009-09-11 09:46:50[INFO] Need Counter Cache
   Post => [:comments]
-</code></pre>
+```
 
-****************************************************************************
+## Growl, XMPP/Jabber and Airbrake Support
 
-h2. Growl, XMPP/Jabber and Airbrake Support
+see [https://github.com/flyerhzm/uniform_notifier](https://github.com/flyerhzm/uniform_notifier)
 
-see "https://github.com/flyerhzm/uniform_notifier":https://github.com/flyerhzm/uniform_notifier
-
-****************************************************************************
-
-h2. Important
+## Important
 
 If you find bullet does not work for you, *please disable your browser's cache*.
 
-****************************************************************************
-
-h2. Advance
+## Advance
 
 The bullet gem use rack middleware for http request. If you want to bullet for without http server, such as job server. You can do like this:
 
-<pre><code>
+```ruby
 Bullet.start_request if Bullet.enable?
 # run job
 if Bullet.enable? && Bullet.notification?
   Bullet.perform_out_of_channel_notifications
 end
 Bullet.end_request if Bullet.enable?
-</code></pre>
+```
 
 Or you want to use it in test mode
 
-<pre><code>
+```ruby
 before(:each)
   Bullet.start_request if Bullet.enable?
 end
@@ -139,35 +134,31 @@ after(:each)
   end
   Bullet.end_request if Bullet.enable?
 end
-</code></pre>
+```
 
 Don't forget enabling bullet in test environment.
 
-****************************************************************************
+## Contributors
 
-h2. Contributors
+[https://github.com/flyerhzm/bullet/contributors](https://github.com/flyerhzm/bullet/contributors)
 
-"https://github.com/flyerhzm/bullet/contributors":https://github.com/flyerhzm/bullet/contributors
-
-****************************************************************************
-
-h2. Step by step example
+## Step by step example
 
 Bullet is designed to function as you browse through your application in development. It will alert you whenever it encounters N+1 queries or unused eager loading.
 
 1. setup test environment
 
-<pre><code>
+```
 $ rails new test_bullet
 $ cd test_bullet
 $ rails g scaffold post name:string
 $ rails g scaffold comment name:string post_id:integer
 $ bundle exec rake db:migrate
-</code></pre>
+```
 
-2. change <code>app/model/post.rb</code> and <code>app/model/comment.rb</code>
+2. change `app/model/post.rb` and `app/model/comment.rb`
 
-<pre><code>
+```ruby
 class Post < ActiveRecord::Base
   has_many :comments
 end
@@ -175,22 +166,22 @@ end
 class Comment < ActiveRecord::Base
   belongs_to :post
 end
-</code></pre>
+```
 
-3. go to <code>rails c</code> and execute
+3. go to `rails c` and execute
 
-<pre><code>
+```ruby
 post1 = Post.create(:name => 'first')
 post2 = Post.create(:name => 'second')
 post1.comments.create(:name => 'first')
 post1.comments.create(:name => 'second')
 post2.comments.create(:name => 'third')
 post2.comments.create(:name => 'fourth')
-</code></pre>
+```
 
-4. change the <code>app/views/posts/index.html.erb</code> to produce a N+1 query
+4. change the `app/views/posts/index.html.erb` to produce a N+1 query
 
-<pre><code>
+```
 <% @posts.each do |post| %>
   <tr>
     <td><%= post.name %></td>
@@ -200,21 +191,24 @@ post2.comments.create(:name => 'fourth')
     <td><%= link_to 'Destroy', post, :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
 <% end %>
-</code></pre>
+```
 
-5. add bullet gem to <code>Gemfile</code>
+5. add bullet gem to `Gemfile`
 
-<pre><code>
+```ruby
 gem "bullet"
-</code></pre>
+```
 
 And run
 
-<pre><code>bundle install</code></pre>
+```
+bundle install
+```
 
-6. enable the bullet gem in development, add a line to <code>config/environments/development.rb</code>
+6. enable the bullet gem in development, add a line to
+`config/environments/development.rb`
 
-<pre><code>
+```ruby
 config.after_initialize do
   Bullet.enable = true
   Bullet.alert = true
@@ -223,28 +217,28 @@ config.after_initialize do
 #  Bullet.growl = true
   Bullet.rails_logger = true
 end
-</code></pre>
+```
 
 7. start server
 
-<pre><code>
+```
 $ rails s
-</code></pre>
+```
 
 8. input http://localhost:3000/posts in browser, then you will see a popup alert box says
 
-<pre><code>
+```
 The request has unused preload associations as follows:
 None
 The request has N+1 queries as follows:
 model: Post => associations: [comment]
-</code></pre>
+```
 
 which means there is a N+1 query from post object to comments associations.
 
-In the meanwhile, there's a log appended into <code>log/bullet.log</code> file
+In the meanwhile, there's a log appended into `log/bullet.log` file
 
-<pre><code>
+```
 2010-03-07 14:12:18[INFO] N+1 Query in /posts
   Post => [:comments]
   Add to your finder: :include => [:comments]
@@ -253,55 +247,57 @@ In the meanwhile, there's a log appended into <code>log/bullet.log</code> file
   /home/flyerhzm/Downloads/test_bullet/app/views/posts/index.html.erb:11:in `each'
   /home/flyerhzm/Downloads/test_bullet/app/views/posts/index.html.erb:11:in `_render_template__600522146_80203160_0'
   /home/flyerhzm/Downloads/test_bullet/app/controllers/posts_controller.rb:7:in `index'
-</code></pre>
+```
 
 The generated SQLs are
 
-<pre><code>
-  Post Load (1.0ms)   SELECT * FROM "posts"
-  Comment Load (0.4ms)   SELECT * FROM "comments" WHERE ("comments".post_id = 1)
-  Comment Load (0.3ms)   SELECT * FROM "comments" WHERE ("comments".post_id = 2)
-</code></pre>
+```
+Post Load (1.0ms)   SELECT * FROM "posts"
+Comment Load (0.4ms)   SELECT * FROM "comments" WHERE ("comments".post_id = 1)
+Comment Load (0.3ms)   SELECT * FROM "comments" WHERE ("comments".post_id = 2)
+```
 
 
-9. fix the N+1 query, change <code>app/controllers/posts_controller.rb</code> file
+9. fix the N+1 query, change `app/controllers/posts_controller.rb` file
 
-<pre><code>
-  def index
-    @posts = Post.includes(:comments)
+```ruby
+def index
+  @posts = Post.includes(:comments)
 
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @posts }
-    end
+  respond_to do |format|
+    format.html # index.html.erb
+    format.xml  { render :xml => @posts }
   end
-</code></pre>
+end
+```
 
 10. refresh http://localhost:3000/posts page, no alert box and no log appended.
 
 The generated SQLs are
 
-<pre><code>
-  Post Load (0.5ms)   SELECT * FROM "posts"
-  Comment Load (0.5ms)   SELECT "comments".* FROM "comments" WHERE ("comments".post_id IN (1,2))
-</code></pre>
+```
+Post Load (0.5ms)   SELECT * FROM "posts"
+Comment Load (0.5ms)   SELECT "comments".* FROM "comments" WHERE ("comments".post_id IN (1,2))
+```
 
 a N+1 query fixed. Cool!
 
-11. now simulate unused eager loading. Change <code>app/controllers/posts_controller.rb</code> and <code>app/views/posts/index.html.erb</code>
+11. now simulate unused eager loading. Change
+`app/controllers/posts_controller.rb` and
+`app/views/posts/index.html.erb`
 
-<pre><code>
-  def index
-    @posts = Post.includes(:comments)
+```ruby
+def index
+  @posts = Post.includes(:comments)
 
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @posts }
-    end
+  respond_to do |format|
+    format.html # index.html.erb
+    format.xml  { render :xml => @posts }
   end
-</code></pre>
+end
+```
 
-<pre><code>
+```
 <% @posts.each do |post| %>
   <tr>
     <td><%= post.name %></td>
@@ -310,38 +306,39 @@ a N+1 query fixed. Cool!
     <td><%= link_to 'Destroy', post, :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
 <% end %>
-</code></pre>
+```
 
 12. refresh http://localhost:3000/posts page, then you will see a popup alert box says
 
-<pre><code>
+```
 The request has unused preload associations as follows:
 model: Post => associations: [comment]
 The request has N+1 queries as follows:
 None
-</code></pre>
+```
 
-In the meanwhile, there's a log appended into <code>log/bullet.log</code> file
+In the meanwhile, there's a log appended into `log/bullet.log` file
 
-<pre><code>
+```
 2009-08-25 21:13:22[INFO] Unused preload associations: PATH_INFO: /posts;    model: Post => associations: [comments]·
 Remove from your finder: :include => [:comments]
-</code></pre>
+```
 
-13. simulate counter_cache. Change <code>app/controllers/posts_controller.rb</code> and <code>app/views/posts/index.html.erb</code>
+13. simulate counter_cache. Change `app/controllers/posts_controller.rb`
+and `app/views/posts/index.html.erb`
 
-<pre><code>
-  def index
-    @posts = Post.all
+```ruby
+def index
+  @posts = Post.all
 
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @posts }
-    end
+  respond_to do |format|
+    format.html # index.html.erb
+    format.xml  { render :xml => @posts }
   end
-</code></pre>
+end
+```
 
-<pre><code>
+```
 <% @posts.each do |post| %>
   <tr>
     <td><%= post.name %></td>
@@ -351,23 +348,21 @@ Remove from your finder: :include => [:comments]
     <td><%= link_to 'Destroy', post, :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
 <% end %>
-</code></pre>
+```
 
 14. refresh http://localhost:3000/posts page, then you will see a popup alert box says
 
-<pre><code>
+```
 Need counter cache
   Post => [:comments]
-</code></pre>
+```
 
-In the meanwhile, there's a log appended into <code>log/bullet.log</code> file.
+In the meanwhile, there's a log appended into `log/bullet.log` file.
 
-<pre><code>
+```
 2009-09-11 10:07:10[INFO] Need Counter Cache
   Post => [:comments]
-</code></pre>
-
-****************************************************************************
+```
 
 
 Copyright (c) 2009 - 2013 Richard Huang (flyerhzm@gmail.com), released under the MIT license
