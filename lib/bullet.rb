@@ -37,7 +37,7 @@ module Bullet
 
     DETECTORS = [ Bullet::Detector::NPlusOneQuery,
                   Bullet::Detector::UnusedEagerAssociation,
-                  Bullet::Detector::Counter ]
+                  Bullet::Detector::CounterCache ]
 
     def enable=(enable)
       @enable = enable

@@ -1,6 +1,6 @@
 module Bullet
   module Detector
-    class Counter < Base
+    class CounterCache < Base
       class <<self
         def clear
           @@possible_objects = nil

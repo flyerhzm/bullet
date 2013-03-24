@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 if active_record2?
-  describe Bullet::Detector::Counter do
+  describe Bullet::Detector::CounterCache do
     before(:each) do
       Bullet.start_request
     end
