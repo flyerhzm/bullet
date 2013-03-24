@@ -66,6 +66,15 @@ The code above will enable all seven of the Bullet notification systems:
 * `Bullet.growl`: pop up Growl warnings if your system has Growl installed. Requires a little bit of configuration
 * `Bullet.xmpp`: send XMPP/Jabber notifications to the receiver indicated. Note that the code will currently not handle the adding of contacts, so you will need to make both accounts indicated know each other manually before you will receive any notifications. If you restart the development server frequently, the 'coming online' sound for the bullet account may start to annoy - in this case set :show_online_status to false; you will still get notifications, but the bullet account won't announce it's online status anymore.
 
+Bullet also allows you to disable n_plus_one_query, unused_eager_loading
+and counter_cache detectors respectively
+
+```ruby
+Bullet.n_plus_one_query_enable = false
+Bullet.unused_eager_loading_enable = false
+Bullet.counter_cache_enable = false
+```
+
 ## Log
 
 The Bullet log `log/bullet.log` will look something like this:
@@ -160,7 +169,7 @@ warnings = Bullet.warnings
 
 Bullet is designed to function as you browse through your application in development. It will alert you whenever it encounters N+1 queries or unused eager loading.
 
-1. setup test environment
+1\. setup test environment
 
 ```
 $ rails new test_bullet
@@ -170,7 +179,7 @@ $ rails g scaffold comment name:string post_id:integer
 $ bundle exec rake db:migrate
 ```
 
-2. change `app/model/post.rb` and `app/model/comment.rb`
+2\. change `app/model/post.rb` and `app/model/comment.rb`
 
 ```ruby
 class Post < ActiveRecord::Base
@@ -182,7 +191,7 @@ class Comment < ActiveRecord::Base
 end
 ```
 
-3. go to `rails c` and execute
+3\. go to `rails c` and execute
 
 ```ruby
 post1 = Post.create(:name => 'first')
@@ -193,7 +202,7 @@ post2.comments.create(:name => 'third')
 post2.comments.create(:name => 'fourth')
 ```
 
-4. change the `app/views/posts/index.html.erb` to produce a N+1 query
+4\. change the `app/views/posts/index.html.erb` to produce a N+1 query
 
 ```
 <% @posts.each do |post| %>
@@ -207,7 +216,7 @@ post2.comments.create(:name => 'fourth')
 <% end %>
 ```
 
-5. add bullet gem to `Gemfile`
+5\. add bullet gem to `Gemfile`
 
 ```ruby
 gem "bullet"
@@ -219,7 +228,7 @@ And run
 bundle install
 ```
 
-6. enable the bullet gem in development, add a line to
+6\. enable the bullet gem in development, add a line to
 `config/environments/development.rb`
 
 ```ruby
@@ -233,13 +242,13 @@ config.after_initialize do
 end
 ```
 
-7. start server
+7\. start server
 
 ```
 $ rails s
 ```
 
-8. input http://localhost:3000/posts in browser, then you will see a popup alert box says
+8\. input http://localhost:3000/posts in browser, then you will see a popup alert box says
 
 ```
 The request has unused preload associations as follows:
@@ -272,7 +281,7 @@ Comment Load (0.3ms)   SELECT * FROM "comments" WHERE ("comments".post_id = 2)
 ```
 
 
-9. fix the N+1 query, change `app/controllers/posts_controller.rb` file
+9\. fix the N+1 query, change `app/controllers/posts_controller.rb` file
 
 ```ruby
 def index
@@ -285,7 +294,7 @@ def index
 end
 ```
 
-10. refresh http://localhost:3000/posts page, no alert box and no log appended.
+10\. refresh http://localhost:3000/posts page, no alert box and no log appended.
 
 The generated SQLs are
 
@@ -296,7 +305,7 @@ Comment Load (0.5ms)   SELECT "comments".* FROM "comments" WHERE ("comments".pos
 
 a N+1 query fixed. Cool!
 
-11. now simulate unused eager loading. Change
+11\. now simulate unused eager loading. Change
 `app/controllers/posts_controller.rb` and
 `app/views/posts/index.html.erb`
 
@@ -322,7 +331,7 @@ end
 <% end %>
 ```
 
-12. refresh http://localhost:3000/posts page, then you will see a popup alert box says
+12\. refresh http://localhost:3000/posts page, then you will see a popup alert box says
 
 ```
 The request has unused preload associations as follows:
@@ -338,7 +347,7 @@ In the meanwhile, there's a log appended into `log/bullet.log` file
 Remove from your finder: :include => [:comments]
 ```
 
-13. simulate counter_cache. Change `app/controllers/posts_controller.rb`
+13\. simulate counter_cache. Change `app/controllers/posts_controller.rb`
 and `app/views/posts/index.html.erb`
 
 ```ruby
@@ -364,7 +373,7 @@ end
 <% end %>
 ```
 
-14. refresh http://localhost:3000/posts page, then you will see a popup alert box says
+14\. refresh http://localhost:3000/posts page, then you will see a popup alert box says
 
 ```
 Need counter cache
