@@ -10,22 +10,22 @@ module Bullet
 
         def first
           result = origin_first
-          Bullet::Detector::Association.add_impossible_object(result) if result
+          Bullet::Detector::NPlusOneQuery.add_impossible_object(result) if result
           result
         end
 
         def last
           result = origin_last
-          Bullet::Detector::Association.add_impossible_object(result) if result
+          Bullet::Detector::NPlusOneQuery.add_impossible_object(result) if result
           result
         end
 
         def each(&block)
           records = query.map{ |doc| ::Mongoid::Factory.from_db(klass, doc) }
           if records.length > 1
-            Bullet::Detector::Association.add_possible_objects(records)
+            Bullet::Detector::NPlusOneQuery.add_possible_objects(records)
           elsif records.size == 1
-            Bullet::Detector::Association.add_impossible_object(records.first)
+            Bullet::Detector::NPlusOneQuery.add_impossible_object(records.first)
           end
           origin_each(&block)
         end
@@ -33,9 +33,9 @@ module Bullet
         def eager_load(docs)
           associations = criteria.inclusions.map(&:name)
           docs.each do |doc|
-            Bullet::Detector::Association.add_object_associations(doc, associations)
+            Bullet::Detector::NPlusOneQuery.add_object_associations(doc, associations)
           end
-          Bullet::Detector::Association.add_eager_loadings(docs, associations)
+          Bullet::Detector::UnusedEagerLoading.add_eager_loadings(docs, associations)
           origin_eager_load(docs)
         end
       end

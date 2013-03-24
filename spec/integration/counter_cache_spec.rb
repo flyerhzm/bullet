@@ -35,5 +35,17 @@ if active_record3? || active_record4?
       end
       Bullet.collected_counter_cache_notifications.should be_empty
     end
+
+    context "disable" do
+      before { Bullet.counter_cache_enable = false }
+      after { Bullet.counter_cache_enable = true }
+
+      it "should not detect counter cache" do
+        Country.all.each do |country|
+          country.cities.size
+        end
+        expect(Bullet.collected_counter_cache_notifications).to be_empty
+      end
+    end
   end
 end

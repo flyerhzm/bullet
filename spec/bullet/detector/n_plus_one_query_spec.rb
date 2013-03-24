@@ -3,7 +3,10 @@ require 'spec_helper'
 module Bullet
   module Detector
     describe NPlusOneQuery do
-      before(:all) { @post = Post.first }
+      before(:all) do
+        @post = Post.first
+        @post2 = Post.last
+      end
       before(:each) { NPlusOneQuery.clear }
 
       context ".call_association" do
@@ -87,6 +90,25 @@ module Bullet
           NPlusOneQuery.should_not_receive(:caller_in_project!)
           NPlusOneQuery.should_not_receive(:create_notification).with("Post", :association)
           NPlusOneQuery.call_association(@post, :association)
+        end
+      end
+
+      context ".add_possible_objects" do
+        it "should add possible objects" do
+          NPlusOneQuery.add_possible_objects([@post, @post2])
+          NPlusOneQuery.send(:possible_objects).should be_include(@post.bullet_ar_key)
+          NPlusOneQuery.send(:possible_objects).should be_include(@post2.bullet_ar_key)
+        end
+
+        it "should not raise error if object is nil" do
+          lambda { NPlusOneQuery.add_possible_objects(nil) }.should_not raise_error
+        end
+      end
+
+      context ".add_impossible_object" do
+        it "should add impossible object" do
+          NPlusOneQuery.add_impossible_object(@post)
+          NPlusOneQuery.send(:impossible_objects).should be_include(@post.bullet_ar_key)
         end
       end
     end

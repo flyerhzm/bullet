@@ -40,55 +40,6 @@ module Bullet
           Association.send(:call_object_associations).should be_include(@post1.bullet_ar_key, :associations)
         end
       end
-
-      context ".add_possible_objects" do
-        it "should add possible objects" do
-          Association.add_possible_objects([@post1, @post2])
-          Association.send(:possible_objects).should be_include(@post1.bullet_ar_key)
-          Association.send(:possible_objects).should be_include(@post2.bullet_ar_key)
-        end
-
-        it "should not raise error if object is nil" do
-          lambda { Association.add_possible_objects(nil) }.should_not raise_error
-        end
-      end
-
-      context ".add_impossible_object" do
-        it "should add impossible object" do
-          Association.add_impossible_object(@post1)
-          Association.send(:impossible_objects).should be_include(@post1.bullet_ar_key)
-        end
-      end
-
-      context ".add_eager_loadings" do
-        it "should add objects, associations pair when eager_loadings are empty" do
-          Association.add_eager_loadings([@post1, @post2], :associations)
-          Association.send(:eager_loadings).should be_include([@post1.bullet_ar_key, @post2.bullet_ar_key], :associations)
-        end
-
-        it "should add objects, associations pair for existing eager_loadings" do
-          Association.add_eager_loadings([@post1, @post2], :association1)
-          Association.add_eager_loadings([@post1, @post2], :association2)
-          Association.send(:eager_loadings).should be_include([@post1.bullet_ar_key, @post2.bullet_ar_key], :association1)
-          Association.send(:eager_loadings).should be_include([@post1.bullet_ar_key, @post2.bullet_ar_key], :association2)
-        end
-
-        it "should merge objects, associations pair for existing eager_loadings" do
-          Association.add_eager_loadings([@post1], :association1)
-          Association.add_eager_loadings([@post1, @post2], :association2)
-          Association.send(:eager_loadings).should be_include([@post1.bullet_ar_key], :association1)
-          Association.send(:eager_loadings).should be_include([@post1.bullet_ar_key], :association2)
-          Association.send(:eager_loadings).should be_include([@post1.bullet_ar_key, @post2.bullet_ar_key], :association2)
-        end
-
-        it "should delete objects, associations pair for existing eager_loadings" do
-          Association.add_eager_loadings([@post1, @post2], :association1)
-          Association.add_eager_loadings([@post1], :association2)
-          Association.send(:eager_loadings).should be_include([@post1.bullet_ar_key], :association1)
-          Association.send(:eager_loadings).should be_include([@post1.bullet_ar_key], :association2)
-          Association.send(:eager_loadings).should be_include([@post2.bullet_ar_key], :association1)
-        end
-      end
     end
   end
 end
