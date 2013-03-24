@@ -75,6 +75,18 @@ Bullet.unused_eager_loading_enable = false
 Bullet.counter_cache_enable = false
 ```
 
+## Whitelist
+
+Sometimes bullet may notify n plus one query, unused eager loading or
+counter cache you don't care about or they occur in the third party gems
+that you can't fix, you can add whitelist to bullet
+
+```ruby
+Bullet.add_whitelist :type => :n_plus_one_query, :class_name => "Post", :association => :comments
+Bullet.add_whitelist :type => :unused_eager_loading, :class_name => "Post", :association => :comments
+Bullet.add_whitelist :type => :counter_cache, :class_name => "Country", :association => :cities
+```
+
 ## Log
 
 The Bullet log `log/bullet.log` will look something like this:
