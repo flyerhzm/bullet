@@ -51,8 +51,12 @@ module Bullet
 
         private
           def create_notification(klazz, associations)
-            notice = Bullet::Notification::UnusedEagerLoading.new(klazz, associations)
-            Bullet.notification_collector.add(notice)
+            notify_associations = Array(associations) - Bullet.get_whitelist_associations(:unused_eager_loading, klazz)
+
+            if notify_associations.present?
+              notice = Bullet::Notification::UnusedEagerLoading.new(klazz, notify_associations)
+              Bullet.notification_collector.add(notice)
+            end
           end
 
           def call_associations(bullet_ar_key, associations)

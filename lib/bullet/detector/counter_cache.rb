@@ -33,8 +33,12 @@ module Bullet
 
         private
           def create_notification(klazz, associations)
-             notice = Bullet::Notification::CounterCache.new klazz, associations
-             Bullet.notification_collector.add notice
+            notify_associations = Array(associations) - Bullet.get_whitelist_associations(:counter_cache, klazz)
+
+            if notify_associations.present?
+              notice = Bullet::Notification::CounterCache.new klazz, notify_associations
+              Bullet.notification_collector.add notice
+            end
           end
 
           def possible_objects

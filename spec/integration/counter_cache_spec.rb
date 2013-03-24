@@ -47,5 +47,17 @@ if active_record3? || active_record4?
         expect(Bullet.collected_counter_cache_notifications).to be_empty
       end
     end
+
+    context "whitelist" do
+      before { Bullet.add_whitelist :type => :counter_cache, :class_name => "Country", :association => :cities }
+      after { Bullet.reset_whitelist }
+
+      it "should not detect counter cache" do
+        Country.all.each do |country|
+          country.cities.size
+        end
+        expect(Bullet.collected_counter_cache_notifications).to be_empty
+      end
+    end
   end
 end
