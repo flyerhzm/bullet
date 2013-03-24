@@ -30,7 +30,7 @@ module Bullet
   end
 
   class <<self
-    attr_accessor :enable
+    attr_writer :enable, :n_plus_one_query_enable, :unused_eager_loading_enable, :counter_cache_enable
     attr_reader :notification_collector
 
     delegate :alert=, :console=, :growl=, :rails_logger=, :xmpp=, :airbrake=, :to => UniformNotifier
@@ -40,7 +40,7 @@ module Bullet
                   Bullet::Detector::CounterCache ]
 
     def enable=(enable)
-      @enable = enable
+      @enable = @n_plus_one_query_enable = @unused_eager_loading_enable = @counter_cache_enable = enable
       if enable?
         if mongoid?
           Bullet::Mongoid.enable
@@ -53,7 +53,19 @@ module Bullet
     end
 
     def enable?
-      @enable == true
+      !!@enable
+    end
+
+    def n_plus_one_query_enable?
+      self.enable? && !!@n_plus_one_query_enable
+    end
+
+    def unused_eager_loading_enable?
+      self.enable? && !!@unused_eager_loading_enable
+    end
+
+    def counter_cache_enable?
+      self.enable? && !!@counter_cache_enable
     end
 
     def bullet_logger=(active)

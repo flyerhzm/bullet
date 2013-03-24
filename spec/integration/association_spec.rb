@@ -589,5 +589,51 @@ if active_record3? || active_record4?
         Bullet::Detector::Association.should be_completely_preloading_associations
       end
     end
+
+    context "disable n plus one query" do
+      before { Bullet.n_plus_one_query_enable = false }
+      after { Bullet.n_plus_one_query_enable = true }
+
+      it "should not detect n plus one query" do
+        Post.all.each do |post|
+          post.comments.map(&:name)
+        end
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+
+        expect(Bullet::Detector::Association).not_to be_detecting_unpreloaded_association_for(Post, :comments)
+        expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
+      end
+
+      it "should still detect unused eager loading" do
+        Post.includes(:comments).map(&:name)
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+
+        expect(Bullet::Detector::Association).to be_completely_preloading_associations
+        expect(Bullet::Detector::Association).to be_unused_preload_associations_for(Post, :comments)
+      end
+    end
+
+    context "disable unused eager loading" do
+      before { Bullet.unused_eager_loading_enable = false }
+      after { Bullet.unused_eager_loading_enable = true }
+
+      it "should not detect unused eager loading" do
+        Post.includes(:comments).map(&:name)
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+
+        expect(Bullet::Detector::Association).to be_completely_preloading_associations
+        expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
+      end
+
+      it "should still detect n plus one query" do
+        Post.all.each do |post|
+          post.comments.map(&:name)
+        end
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+
+        expect(Bullet::Detector::Association).to be_detecting_unpreloaded_association_for(Post, :comments)
+        expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
+      end
+    end
   end
 end

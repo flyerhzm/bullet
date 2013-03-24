@@ -8,12 +8,16 @@ module Bullet
         end
 
         def add_counter_cache(object, associations)
+          return unless Bullet.counter_cache_enable?
+
           if conditions_met?(object.bullet_ar_key, associations)
             create_notification object.class.to_s, associations
           end
         end
 
         def add_possible_objects(object_or_objects)
+          return unless Bullet.counter_cache_enable?
+
           if object_or_objects.is_a? Array
             object_or_objects.each { |object| possible_objects.add object.bullet_ar_key }
           else
@@ -22,6 +26,8 @@ module Bullet
         end
 
         def add_impossible_object(object)
+          return unless Bullet.counter_cache_enable?
+
           impossible_objects.add object.bullet_ar_key
         end
 

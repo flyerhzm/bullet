@@ -15,6 +15,21 @@ module Bullet
           end
         end
 
+        def add_possible_objects(object_or_objects)
+          return unless Bullet.n_plus_one_query_enable?
+          return if object_or_objects.blank?
+          if object_or_objects.is_a? Array
+            object_or_objects.each { |object| possible_objects.add object.bullet_ar_key }
+          else
+            possible_objects.add object_or_objects.bullet_ar_key if object_or_objects.id
+          end
+        end
+
+        def add_impossible_object(object)
+          return unless Bullet.n_plus_one_query_enable?
+          impossible_objects.add object.bullet_ar_key if object.id
+        end
+
         private
           def create_notification(callers, klazz, associations)
             notice = Bullet::Notification::NPlusOneQuery.new(callers, klazz, associations)

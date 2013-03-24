@@ -9,10 +9,10 @@ module Bullet
         def to_a
           records = origin_to_a
           if records.size > 1
-            Bullet::Detector::Association.add_possible_objects(records)
+            Bullet::Detector::NPlusOneQuery.add_possible_objects(records)
             Bullet::Detector::CounterCache.add_possible_objects(records)
           elsif records.size == 1
-            Bullet::Detector::Association.add_impossible_object(records.first)
+            Bullet::Detector::NPlusOneQuery.add_impossible_object(records.first)
             Bullet::Detector::CounterCache.add_impossible_object(records.first)
           end
           records
@@ -29,7 +29,7 @@ module Bullet
           records.each do |record|
             Bullet::Detector::Association.add_object_associations(record, associations)
           end
-          Bullet::Detector::Association.add_eager_loadings(records, associations)
+          Bullet::Detector::UnusedEagerLoading.add_eager_loadings(records, associations)
           origin_preload_associations(records, associations, preload_options={})
         end
       end
@@ -44,7 +44,7 @@ module Bullet
             Bullet::Detector::Association.add_object_associations(record, associations)
             Bullet::Detector::NPlusOneQuery.call_association(record, associations)
           end
-          Bullet::Detector::Association.add_eager_loadings(records, associations)
+          Bullet::Detector::UnusedEagerLoading.add_eager_loadings(records, associations)
           records
         end
       end
@@ -88,7 +88,7 @@ module Bullet
           # avoid stack level too deep
           result = origin_load_target
           Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name) unless caller.any? { |c| c.include?("load_target") }
-          Bullet::Detector::Association.add_possible_objects(result)
+          Bullet::Detector::NPlusOneQuery.add_possible_objects(result)
           result
         end
       end
