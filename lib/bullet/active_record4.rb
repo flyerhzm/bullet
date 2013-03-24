@@ -10,10 +10,10 @@ module Bullet
           records = origin_to_a
           if records.size > 1
             Bullet::Detector::Association.add_possible_objects(records)
-            Bullet::Detector::Counter.add_possible_objects(records)
+            Bullet::Detector::CounterCache.add_possible_objects(records)
           elsif records.size == 1
             Bullet::Detector::Association.add_impossible_object(records.first)
-            Bullet::Detector::Counter.add_impossible_object(records.first)
+            Bullet::Detector::CounterCache.add_impossible_object(records.first)
           end
           records
         end
@@ -85,7 +85,7 @@ module Bullet
 
         def has_cached_counter?(reflection = reflection)
           result = origin_has_cached_counter?(reflection)
-          Bullet::Detector::Counter.add_counter_cache(owner, reflection.name) unless result
+          Bullet::Detector::CounterCache.add_counter_cache(owner, reflection.name) unless result
           result
         end
       end
