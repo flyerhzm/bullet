@@ -36,7 +36,7 @@ module Bullet
     delegate :alert=, :console=, :growl=, :rails_logger=, :xmpp=, :airbrake=, :to => UniformNotifier
 
     DETECTORS = [ Bullet::Detector::NPlusOneQuery,
-                  Bullet::Detector::UnusedEagerAssociation,
+                  Bullet::Detector::UnusedEagerLoading,
                   Bullet::Detector::CounterCache ]
 
     def enable=(enable)
@@ -82,7 +82,7 @@ module Bullet
     end
 
     def notification?
-      Bullet::Detector::UnusedEagerAssociation.check_unused_preload_associations
+      Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
       notification_collector.notifications_present?
     end
 
