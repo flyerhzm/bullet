@@ -635,5 +635,51 @@ if active_record3? || active_record4?
         expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
       end
     end
+
+    context "whitelist n plus one query" do
+      before { Bullet.add_whitelist :type => :n_plus_one_query, :class_name => "Post", :association => :comments }
+      after { Bullet.reset_whitelist }
+
+      it "should not detect n plus one query" do
+        Post.all.each do |post|
+          post.comments.map(&:name)
+        end
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+
+        expect(Bullet::Detector::Association).not_to be_detecting_unpreloaded_association_for(Post, :comments)
+        expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
+      end
+
+      it "should still detect unused eager loading" do
+        Post.includes(:comments).map(&:name)
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+
+        expect(Bullet::Detector::Association).to be_completely_preloading_associations
+        expect(Bullet::Detector::Association).to be_unused_preload_associations_for(Post, :comments)
+      end
+    end
+
+    context "whitelist unused eager loading" do
+      before { Bullet.add_whitelist :type => :unused_eager_loading, :class_name => "Post", :association => :comments }
+      after { Bullet.reset_whitelist }
+
+      it "should not detect unused eager loading" do
+        Post.includes(:comments).map(&:name)
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+
+        expect(Bullet::Detector::Association).to be_completely_preloading_associations
+        expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
+      end
+
+      it "should still detect n plus one query" do
+        Post.all.each do |post|
+          post.comments.map(&:name)
+        end
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+
+        expect(Bullet::Detector::Association).to be_detecting_unpreloaded_association_for(Post, :comments)
+        expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
+      end
+    end
   end
 end

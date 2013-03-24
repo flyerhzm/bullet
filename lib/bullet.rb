@@ -31,7 +31,7 @@ module Bullet
 
   class <<self
     attr_writer :enable, :n_plus_one_query_enable, :unused_eager_loading_enable, :counter_cache_enable
-    attr_reader :notification_collector
+    attr_reader :notification_collector, :whitelist
 
     delegate :alert=, :console=, :growl=, :rails_logger=, :xmpp=, :airbrake=, :to => UniformNotifier
 
@@ -42,6 +42,7 @@ module Bullet
     def enable=(enable)
       @enable = @n_plus_one_query_enable = @unused_eager_loading_enable = @counter_cache_enable = enable
       if enable?
+        reset_whitelist
         if mongoid?
           Bullet::Mongoid.enable
         end
@@ -66,6 +67,19 @@ module Bullet
 
     def counter_cache_enable?
       self.enable? && !!@counter_cache_enable
+    end
+
+    def add_whitelist(options)
+      @whitelist[options[:type]][options[:class_name].classify] ||= []
+      @whitelist[options[:type]][options[:class_name].classify] << options[:association].to_s.tableize.to_sym
+    end
+
+    def get_whitelist_associations(type, class_name)
+      Array(@whitelist[type][class_name])
+    end
+
+    def reset_whitelist
+      @whitelist = {:n_plus_one_query => {}, :unused_eager_loading => {}, :counter_cache => {}}
     end
 
     def bullet_logger=(active)
