@@ -1,6 +1,6 @@
 module Bullet
   module Detector
-    class UnusedEagerAssociation < Association
+    class UnusedEagerLoading < Association
       class <<self
         # check if there are unused preload associations.
         #   get related_objects from eager_loadings associated with object and associations
