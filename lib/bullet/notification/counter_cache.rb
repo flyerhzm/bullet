@@ -8,6 +8,9 @@ module Bullet
       def title
         "Need Counter Cache"
       end
+
+      def caller_list; '' end
+      
     end
   end
 end

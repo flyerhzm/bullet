@@ -8,6 +8,9 @@ module Bullet
       def title
         "Unused Eager Loading #{@path ? "in #{@path}" : 'detected'}"
       end
+
+      def caller_list; '' end
+
     end
   end
 end

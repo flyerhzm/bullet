@@ -18,6 +18,10 @@ module Bullet
         raise NoMethodError.new("no method body defined")
       end
 
+      def caller_list
+        raise NoMethodError.new("no method caller_list defined")
+      end
+
       def whoami
         user = `whoami`
         if user
@@ -36,15 +40,33 @@ module Bullet
       end
 
       def full_notice
-        [whoami, url, title, body_with_caller].compact.join("\n")
+        {
+          whoami: whoami, 
+          url: url, 
+          title: title, 
+          body: body, #_with_caller
+          calllist: caller_list,
+        }
       end
 
       def notify_inline
-        self.notifier.inline_notify(self.full_notice)
+        self.notifier.inline_notify(self.full_notice.values.compact.join("\n"))
       end
 
       def notify_out_of_channel
-        self.notifier.out_of_channel_notify(self.full_notice)
+        msg = self.full_notice
+        stem = "\n= ".bullet_color('red') + ' '
+        outer= "\n========================================".bullet_color('red')
+
+        strOut =  outer + "\tbullet".bullet_color('gray')
+        strOut += stem + msg[:title].bullet_color('yellow') + stem
+        strOut += stem + '  ' + msg[:url]
+        strOut += stem + msg[:body].split("\n").join(stem) unless msg[:body].blank?
+        strOut += stem + stem + msg[:calllist].split("\n").uniq!.join(stem) unless msg[:calllist].blank?
+        strOut += stem + stem + msg[:whoami]
+        strOut += outer + "\n\n"
+
+        self.notifier.out_of_channel_notify(strOut)
       end
 
       def eql?(other)
