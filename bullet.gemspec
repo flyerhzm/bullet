@@ -10,8 +10,8 @@ Gem::Specification.new do |s|
   s.authors     = ["Richard Huang"]
   s.email       = ["flyerhzm@gmail.com"]
   s.homepage    = "http://github.com/flyerhzm/bullet"
-  s.summary     = "A rails plugin to kill N+1 queries and unused eager loading."
-  s.description = "A rails plugin to kill N+1 queries and unused eager loading."
+  s.summary     = "help to kill N+1 queries and unused eager loading."
+  s.description = "help to kill N+1 queries and unused eager loading."
 
   s.required_rubygems_version = ">= 1.3.6"
 
