@@ -3,7 +3,7 @@ class Post < ActiveRecord::Base
 
   belongs_to :category
   belongs_to :writer
-  has_many :comments
+  has_many :comments, :inverse_of => :post
 
   if active_record2?
     named_scope :preload_comments, lambda { {:include => :comments} }

@@ -91,6 +91,14 @@ module Bullet
           Bullet::Detector::NPlusOneQuery.add_possible_objects(result)
           result
         end
+
+        alias_method :origin_set_inverse_instance, :set_inverse_instance
+        def set_inverse_instance(record, instance)
+          if record && we_can_set_the_inverse_on_this?(record)
+            Bullet::Detector::NPlusOneQuery.add_impossible_object(record)
+          end
+          origin_set_inverse_instance(record, instance)
+        end
       end
 
       ::ActiveRecord::Associations::HasManyAssociation.class_eval do

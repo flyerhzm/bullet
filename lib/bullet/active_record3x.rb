@@ -80,6 +80,16 @@ module Bullet
         end
       end
 
+      ::ActiveRecord::Associations::Association.class_eval do
+        alias_method :origin_set_inverse_instance, :set_inverse_instance
+        def set_inverse_instance(record)
+          if record && invertible_for?(record)
+            Bullet::Detector::NPlusOneQuery.add_impossible_object(record)
+          end
+          origin_set_inverse_instance(record)
+        end
+      end
+
       ::ActiveRecord::Associations::HasManyAssociation.class_eval do
         alias_method :origin_has_cached_counter?, :has_cached_counter?
 

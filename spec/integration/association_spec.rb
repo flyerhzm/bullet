@@ -47,6 +47,19 @@ if active_record3? || active_record4?
 
         Bullet::Detector::Association.should be_completely_preloading_associations
       end
+
+      it "should detect non preload comment => post with inverse_of" do
+        Post.includes(:comments).each do |post|
+          post.comments.each do |comment|
+            comment.name
+            comment.post.name
+          end
+        end
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+        Bullet::Detector::Association.should_not be_has_unused_preload_associations
+
+        Bullet::Detector::Association.should be_completely_preloading_associations
+      end
     end
 
     context "category => posts => comments" do
