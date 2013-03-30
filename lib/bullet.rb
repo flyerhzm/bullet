@@ -7,13 +7,8 @@ require 'bullet/dependency'
 module Bullet
   extend Dependency
 
-  if active_record?
-    autoload :ActiveRecord, "bullet/#{active_record_version}"
-    autoload :ActionController, 'bullet/action_controller2' if active_record2?
-  end
-  if mongoid?
-    autoload :Mongoid, "bullet/#{mongoid_version}"
-  end
+  autoload :ActiveRecord, "bullet/#{active_record_version}" if active_record?
+  autoload :Mongoid, "bullet/#{mongoid_version}" if mongoid?
   autoload :Rack, 'bullet/rack'
   autoload :BulletLogger, 'bullet/logger'
   autoload :Notification, 'bullet/notification'
@@ -43,13 +38,8 @@ module Bullet
       @enable = @n_plus_one_query_enable = @unused_eager_loading_enable = @counter_cache_enable = enable
       if enable?
         reset_whitelist
-        if mongoid?
-          Bullet::Mongoid.enable
-        end
-        if active_record?
-          Bullet::ActiveRecord.enable
-          Bullet::ActionController.enable if active_record2?
-        end
+        Bullet::Mongoid.enable if mongoid?
+        Bullet::ActiveRecord.enable if active_record?
       end
     end
 
