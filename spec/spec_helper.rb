@@ -1,11 +1,5 @@
 require 'rspec'
-begin
-  require 'rails'
-rescue LoadError
-  # rails 2.3
-  require 'initializer'
-end
-require 'action_controller'
+require 'rails'
 
 module Rails
   class <<self

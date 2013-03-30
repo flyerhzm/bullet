@@ -20,9 +20,7 @@ module Bullet
 
     def active_record_version
       @active_record_version ||= begin
-                                   if active_record2?
-                                     'active_record2'
-                                   elsif active_record30?
+                                   if active_record30?
                                      'active_record3'
                                    elsif active_record31? || active_record32?
                                      'active_record3x'
@@ -40,22 +38,6 @@ module Bullet
                                'mongoid3x'
                              end
                            end
-    end
-
-    def active_record2?
-      ::ActiveRecord::VERSION::MAJOR == 2
-    end
-
-    def active_record23?
-      active_record2? && ::ActiveRecord::VERSION::MINOR == 3
-    end
-
-    def active_record22?
-      active_record2? && ::ActiveRecord::VERSION::MINOR == 2
-    end
-
-    def active_record21?
-      active_record2? && ::ActiveRecord::VERSION::MINOR == 1
     end
 
     def active_record3?
@@ -84,10 +66,6 @@ module Bullet
 
     def mongoid3x?
       ::Mongoid::VERSION =~ /\A3/
-    end
-
-    def rails2?
-      ::Rails::VERSION::MAJOR < 3
     end
   end
 end
