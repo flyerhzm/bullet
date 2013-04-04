@@ -43,7 +43,8 @@ Bullet won't do ANYTHING unless you tell it to explicitly. Append to
 ```ruby
 config.after_initialize do
   Bullet.enable = true
-  Bullet.alert = true Bullet.bullet_logger = true
+  Bullet.alert = true 
+  Bullet.bullet_logger = true
   Bullet.console = true
   Bullet.growl = true
   Bullet.xmpp = { :account  => 'bullets_account@jabber.org',
