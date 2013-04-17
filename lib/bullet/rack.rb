@@ -1,5 +1,7 @@
 module Bullet
   class Rack
+    include Dependency
+
     def initialize(app)
       @app = app
     end
@@ -13,8 +15,8 @@ module Bullet
 
       response_body = nil
       if Bullet.notification?
-        if status == 200 && !response.body.frozen? && html_request?(headers, response)
-          response_body = response.body << Bullet.gather_inline_notifications
+        if status == 200 && !response_body(response).frozen? && html_request?(headers, response)
+          response_body = response_body(response) << Bullet.gather_inline_notifications
           headers['Content-Length'] = response_body.bytesize.to_s
         end
         Bullet.perform_out_of_channel_notifications(env)
@@ -26,10 +28,14 @@ module Bullet
     # fix issue if response's body is a Proc
     def empty?(response)
       # response may be ["Not Found"], ["Move Permanently"], etc.
-      (response.is_a?(Array) && response.size <= 1) ||
-        !response.respond_to?(:body) ||
-        !response.body.respond_to?(:empty?) ||
-        response.body.empty?
+      if rails?
+        (response.is_a?(Array) && response.size <= 1) ||
+          !response.respond_to?(:body) ||
+          !response_body(response).respond_to?(:empty?) ||
+          response_body(response).empty?
+      else
+        response_body(response).empty?
+      end
     end
 
     # if send file?
@@ -38,7 +44,11 @@ module Bullet
     end
 
     def html_request?(headers, response)
-      headers['Content-Type'] && headers['Content-Type'].include?('text/html') && response.body.include?("<html")
+      headers['Content-Type'] && headers['Content-Type'].include?('text/html') && response_body(response).include?("<html")
+    end
+
+    def response_body(response)
+      rails? ? response.body : response.first
     end
   end
 end
