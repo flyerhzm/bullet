@@ -1,6 +1,8 @@
 module Bullet
   module Detector
     class NPlusOneQuery < Association
+      extend Dependency
+
       class <<self
         # executed when object.assocations is called.
         # first, it keeps this method call for object.association.
@@ -46,9 +48,9 @@ module Bullet
           end
 
           def caller_in_project
-            rails_root = Rails.root.to_s
-            vendor_root = rails_root + "/vendor"
-            caller.select { |c| c.include?(rails_root) && !c.include?(vendor_root) }
+            app_root = rails? ? Rails.root.to_s : Dir.pwd
+            vendor_root = app_root + "/vendor"
+            caller.select { |c| c.include?(app_root) && !c.include?(vendor_root) }
           end
 
           def possible?(bullet_ar_key)

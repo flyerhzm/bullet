@@ -67,5 +67,14 @@ module Bullet
     def mongoid3x?
       ::Mongoid::VERSION =~ /\A3/
     end
+
+    def rails?
+      @rails ||= begin
+                   require 'rails'
+                   true
+                 rescue LoadError
+                   false
+               end
+    end
   end
 end
