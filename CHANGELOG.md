@@ -1,5 +1,9 @@
 # Next Release
 
+## 4.6.0 (04/18/2013)
+
+* Fix Bullet::Rack to support sinatra
+
 ## 4.5.0 (03/24/2013)
 
 * Add api way to access captured associatioin
