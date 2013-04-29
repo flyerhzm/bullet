@@ -13,3 +13,5 @@ gem 'mongoid', '3.0.9'
 gem "rspec"
 gem "guard"
 gem "guard-rspec"
+
+gem 'coveralls', require: false
