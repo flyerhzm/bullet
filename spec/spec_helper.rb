@@ -19,6 +19,9 @@ $LOAD_PATH.unshift(MODELS)
 SUPPORT = File.join(File.dirname(__FILE__), "support")
 Dir[ File.join(SUPPORT, "*.rb") ].reject { |filename| filename =~ /_seed.rb$/ }.sort.each { |file| require file }
 
+require 'coveralls'
+Coveralls.wear!
+
 RSpec.configure do |config|
   config.extend Bullet::Dependency
 
