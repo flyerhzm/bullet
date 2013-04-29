@@ -13,3 +13,5 @@ gem 'bson_ext'
 gem "rspec"
 gem "guard"
 gem "guard-rspec"
+
+gem 'coveralls', require: false
