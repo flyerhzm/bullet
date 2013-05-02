@@ -136,12 +136,9 @@ If you find bullet does not work for you, *please disable your browser's cache*.
 The bullet gem use rack middleware for http request. If you want to bullet for without http server, such as job server. You can do like this:
 
 ```ruby
-Bullet.start_request if Bullet.enable?
-# run job
-if Bullet.enable? && Bullet.notification?
-  Bullet.perform_out_of_channel_notifications
+Bullet.profile do
+  # run job
 end
-Bullet.end_request if Bullet.enable?
 ```
 
 Or you want to use it in test mode
@@ -163,15 +160,12 @@ Don't forget enabling bullet in test environment.
 
 ### API access
 
-after `end_request`, you can fetch warnings then do whatever you want
+after `profile`, you can fetch warnings then do whatever you want
 
 ```ruby
-Bullet.start_request if Bullet.enable?
-# run anything
-if Bullet.enable? && Bullet.notification?
-  Bullet.perform_out_of_channel_notifications
+Bullet.profile do
+  # run anything
 end
-Bullet.end_request if Bullet.enable?
 warnings = Bullet.warnings
 ```
 
