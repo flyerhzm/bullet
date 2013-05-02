@@ -126,6 +126,17 @@ module Bullet
       end
     end
 
+    def profile
+      Bullet.start_request if Bullet.enable?
+
+      yield
+
+      if Bullet.enable? && Bullet.notification?
+        Bullet.perform_out_of_channel_notifications
+      end
+      Bullet.end_request if Bullet.enable?
+    end
+
     private
       def for_each_active_notifier_with_notification
         UniformNotifier.active_notifiers.each do |notifier|
