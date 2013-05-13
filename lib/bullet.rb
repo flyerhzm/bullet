@@ -10,7 +10,6 @@ module Bullet
   autoload :ActiveRecord, "bullet/#{active_record_version}" if active_record?
   autoload :Mongoid, "bullet/#{mongoid_version}" if mongoid?
   autoload :Rack, 'bullet/rack'
-  autoload :BulletLogger, 'bullet/logger'
   autoload :Notification, 'bullet/notification'
   autoload :Detector, 'bullet/detector'
   autoload :Registry, 'bullet/registry'
