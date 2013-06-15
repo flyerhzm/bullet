@@ -31,6 +31,7 @@ end
 
 if active_record?
   ActiveRecord::Migration.verbose = false
+  # ActiveRecord::Base.logger = Logger.new(STDOUT)
 
   # Autoload every active_record model for the test suite that sits in spec/models.
   Dir[ File.join(MODELS, "*.rb") ].sort.each do |filename|
