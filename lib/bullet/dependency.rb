@@ -1,13 +1,12 @@
 module Bullet
   module Dependency
     def mongoid?
-      @mongoid = false
-      # @mongoid ||= begin
-      #                require 'mongoid'
-      #                mongoid_version.present?
-      #              rescue LoadError
-      #                false
-      #              end
+      @mongoid ||= begin
+                     require 'mongoid'
+                     mongoid_version.present?
+                   rescue LoadError
+                     false
+                   end
     end
 
     def active_record?

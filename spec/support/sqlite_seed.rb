@@ -103,9 +103,7 @@ module Support
     end
 
     def setup_db
-      ActiveRecord::Base.establish_connection(:adapter => 'sqlite3', :database => 'test.sqlite')
-
-      teardown_db
+      ActiveRecord::Base.establish_connection(:adapter => 'sqlite3', :database => ':memory:')
 
       ActiveRecord::Schema.define(:version => 1) do
         create_table :addresses do |t|

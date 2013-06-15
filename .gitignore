@@ -12,5 +12,3 @@ benchmark_profile*
 Gemfile*.lock
 coverage/
 .coveralls.yml
-*.sublime-project
-*.sublime-workspace
