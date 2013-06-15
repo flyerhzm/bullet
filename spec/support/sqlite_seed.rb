@@ -86,10 +86,26 @@ module Support
       submission2 = category1.submissions.create(:name => "submission2", :user => user2)
       submission3 = category2.submissions.create(:name => "submission3", :user => user1)
       submission4 = category2.submissions.create(:name => "submission4", :user => user2)
+
+      # -- Added by JC ---
+      jc_post1 = JcPost.create(name: 'post_one')
+      jc_student1 = JcStudent.create(name: 'student_one')
+      jc_student2 = JcStudent.create(name: 'student_two')
+      jc_post2 = JcPost.create(name: 'post_two')
+      jc_teacher1 = JcTeacher.create(name: 'teacher_one')
+      jc_teacher2 = JcTeacher.create(name: 'teacher_two')
+      jc_post1.jc_students << jc_student1
+      jc_post1.jc_teachers << jc_teacher1
+      jc_post1.save
+      jc_post2.jc_students << jc_student2
+      jc_post2.jc_teachers << jc_teacher2
+      jc_post2.save
     end
 
     def setup_db
-      ActiveRecord::Base.establish_connection(:adapter => 'sqlite3', :database => ':memory:')
+      ActiveRecord::Base.establish_connection(:adapter => 'sqlite3', :database => 'test.sqlite')
+
+      teardown_db
 
       ActiveRecord::Schema.define(:version => 1) do
         create_table :addresses do |t|
@@ -221,7 +237,28 @@ module Support
           t.column :name, :string
           t.column :category_id, :integer
         end
+
+        #Added by JC
+        create_table :jc_posts do |t|
+          t.column :name, :string
+        end
+
+        create_table :jc_students do |t|
+          t.column :name, :string
+        end
+
+        create_table :jc_teachers do |t|
+          t.column :name, :string
+        end
+
+        create_table :jc_posts_users do |t|
+          t.column :reader_type, :string
+          t.column :reader_id, :integer
+          t.column :jc_post_id, :integer
+        end
+
       end
+
     end
 
     def teardown_db

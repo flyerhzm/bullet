@@ -694,5 +694,35 @@ if active_record3? || active_record4?
         expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
       end
     end
+
+    context "test for polymorphic relationship with specified source type", focus: true do
+      it "should detect n plus one with no pre-loading" do
+        JcPost.all.each do |jc_post|
+          jc_post.jc_posts_users.map{|pu| pu.reader.name}
+        end
+
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+
+        expect(Bullet::Detector::Association).to be_detecting_unpreloaded_association_for(JcPost, :jc_posts_users)
+        expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
+      end
+
+      it "should not detect n plus one when relationship table has pre-loading" do
+        JcPostsUser.class_eval do
+          default_scope {includes(:reader)}
+        end
+
+        JcPost.all.each do |jc_post|
+          jc_post.jc_posts_users.map{|pu| pu.reader.name}
+        end
+
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+
+        expect(Bullet::Detector::Association).not_to be_detecting_unpreloaded_association_for(JcPost, :jc_posts_users)
+        expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
+      end
+
+    end
+
   end
 end
