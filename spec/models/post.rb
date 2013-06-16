@@ -3,10 +3,8 @@ class Post < ActiveRecord::Base
 
   belongs_to :category
   belongs_to :writer
-  has_many :comments, :inverse_of => :post
+  has_many :comments, inverse_of: :post
 
-  scope :preload_comments, lambda { includes(:comments) }
-  scope :in_category_name, lambda { |name|
-    where(['categories.name = ?', name]).includes(:category)
-  }
+  scope :preload_comments, -> { includes(:comments) }
+  scope :in_category_name, ->(name) { where(['categories.name = ?', name]).includes(:category) }
 end
