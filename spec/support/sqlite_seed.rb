@@ -86,6 +86,13 @@ module Support
       submission2 = category1.submissions.create(:name => "submission2", :user => user2)
       submission3 = category2.submissions.create(:name => "submission3", :user => user1)
       submission4 = category2.submissions.create(:name => "submission4", :user => user2)
+
+      post1.students << student1
+      post1.teachers << teacher1
+      post1.save
+      post2.students << student2
+      post2.teachers << teacher2
+      post2.save
     end
 
     def setup_db
@@ -220,6 +227,12 @@ module Support
         create_table :users do |t|
           t.column :name, :string
           t.column :category_id, :integer
+        end
+
+        create_table :posts_users do |t|
+          t.column :reader_type, :string
+          t.column :reader_id, :integer
+          t.column :post_id, :integer
         end
       end
     end
