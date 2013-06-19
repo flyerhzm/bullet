@@ -1,3 +1,4 @@
+require "active_support/core_ext/module/delegation"
 require 'set'
 require 'uniform_notifier'
 require 'bullet/ext/object'
