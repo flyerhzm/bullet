@@ -1,5 +1,7 @@
 require 'rspec'
 require 'rails'
+require 'active_record'
+require 'mongoid'
 
 module Rails
   class <<self
