@@ -1,7 +1,13 @@
 require 'rspec'
 require 'rails'
-require 'active_record'
-require 'mongoid'
+begin
+  require 'active_record'
+rescue LoadError
+end
+begin
+  require 'mongoid'
+rescue LoadError
+end
 
 module Rails
   class <<self
