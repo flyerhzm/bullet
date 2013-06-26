@@ -1,21 +1,11 @@
 module Bullet
   module Dependency
     def mongoid?
-      @mongoid ||= begin
-                     require 'mongoid'
-                     mongoid_version.present?
-                   rescue LoadError
-                     false
-                   end
+      @mongoid ||= defined? ::Mongoid
     end
 
     def active_record?
-      @active_record ||= begin
-                           require 'active_record'
-                           true
-                         rescue LoadError
-                           false
-                         end
+      @active_record ||= defined? ::ActiveRecord
     end
 
     def active_record_version
@@ -41,11 +31,11 @@ module Bullet
     end
 
     def active_record3?
-      ::ActiveRecord::VERSION::MAJOR == 3
+      active_record? && ::ActiveRecord::VERSION::MAJOR == 3
     end
 
     def active_record4?
-      ::ActiveRecord::VERSION::MAJOR == 4
+      active_record? && ::ActiveRecord::VERSION::MAJOR == 4
     end
 
     def active_record30?
@@ -61,11 +51,11 @@ module Bullet
     end
 
     def mongoid2x?
-      ::Mongoid::VERSION =~ /\A2\.[4|5]/
+      mongoid? && ::Mongoid::VERSION =~ /\A2\.[4|5]/
     end
 
     def mongoid3x?
-      ::Mongoid::VERSION =~ /\A3/
+      mongoid? && ::Mongoid::VERSION =~ /\A3/
     end
 
     def rails?

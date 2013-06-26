@@ -1,5 +1,13 @@
 require 'rspec'
 require 'rails'
+begin
+  require 'active_record'
+rescue LoadError
+end
+begin
+  require 'mongoid'
+rescue LoadError
+end
 
 module Rails
   class <<self
