@@ -131,9 +131,9 @@ see [https://github.com/flyerhzm/uniform_notifier](https://github.com/flyerhzm/u
 
 If you find bullet does not work for you, *please disable your browser's cache*.
 
-## Advance
+## Advanced
 
-The bullet gem use rack middleware for http request. If you want to bullet for without http server, such as job server. You can do like this:
+The bullet gem uses rack middleware to profile requests. If you want to use bullet without an http server, like to profile a job, you can do this:
 
 ```ruby
 Bullet.profile do
@@ -141,7 +141,7 @@ Bullet.profile do
 end
 ```
 
-Or you want to use it in test mode
+Or to use it in test mode:
 
 ```ruby
 before(:each)
@@ -156,7 +156,7 @@ after(:each)
 end
 ```
 
-Don't forget enabling bullet in test environment.
+Don't forget to enable bullet in your test environment.
 
 ### API access
 
