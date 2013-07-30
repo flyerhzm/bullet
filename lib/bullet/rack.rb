@@ -34,7 +34,8 @@ module Bullet
           !response_body(response).respond_to?(:empty?) ||
           response_body(response).empty?
       else
-        response_body(response).empty?
+        body = response_body(response)
+        body && body.empty?
       end
     end
 
