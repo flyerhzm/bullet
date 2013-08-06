@@ -44,7 +44,7 @@ module Bullet
         middleware.should_not be_empty(response)
       end
 
-      it "should be tru if response is not found" do
+      it "should be true if response is not found" do
         response = ["Not Found"]
         middleware.should be_empty(response)
       end
