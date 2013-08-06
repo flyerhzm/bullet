@@ -35,7 +35,7 @@ module Bullet
           response_body(response).empty?
       else
         body = response_body(response)
-        body && body.empty?
+        body.nil? || body.empty?
       end
     end
 
