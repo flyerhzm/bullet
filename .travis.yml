@@ -7,8 +7,8 @@ gemfile:
   - Gemfile.rails-3.2.14
   - Gemfile.rails-3.1.12
   - Gemfile.rails-3.0.20
-  - Gemfile.mongoid-3.1.12
-  - Gemfile.mongoid-3.0.20
+  - Gemfile.mongoid-3.1.4
+  - Gemfile.mongoid-3.0.23
   - Gemfile.mongoid-2.7.1
   - Gemfile.mongoid-2.6.0
   - Gemfile.mongoid-2.5.2
