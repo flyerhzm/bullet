@@ -3,9 +3,9 @@ rvm:
   - 2.0.0
 gemfile:
   - Gemfile
-  - Gemfile.rails-4-beta
-  - Gemfile.rails-3.2.12
-  - Gemfile.rails-3.1.11
+  - Gemfile.rails-4
+  - Gemfile.rails-3.2.14
+  - Gemfile.rails-3.1.12
   - Gemfile.rails-3.0.20
 env: DB=sqlite
 services: mongodb

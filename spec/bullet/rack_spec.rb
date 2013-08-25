@@ -9,38 +9,38 @@ module Bullet
     context "#html_request?" do
       it "should be true if Content-Type is text/html and http body contains html tag" do
         headers = {"Content-Type" => "text/html"}
-        response = stub(:body => "<html><head></head><body></body></html>")
+        response = double(:body => "<html><head></head><body></body></html>")
         middleware.should be_html_request(headers, response)
       end
 
       it "should be true if Content-Type is text/html and http body contains html tag with attributes" do
         headers = {"Content-Type" => "text/html"}
-        response = stub(:body => "<html attr='hello'><head></head><body></body></html>")
+        response = double(:body => "<html attr='hello'><head></head><body></body></html>")
         middleware.should be_html_request(headers, response)
       end
 
       it "should be false if there is no Content-Type header" do
         headers = {}
-        response = stub(:body => "<html><head></head><body></body></html>")
+        response = double(:body => "<html><head></head><body></body></html>")
         middleware.should_not be_html_request(headers, response)
       end
 
       it "should be false if Content-Type is javascript" do
         headers = {"Content-Type" => "text/javascript"}
-        response = stub(:body => "<html><head></head><body></body></html>")
+        response = double(:body => "<html><head></head><body></body></html>")
         middleware.should_not be_html_request(headers, response)
       end
 
       it "should be false if response body doesn't contain html tag" do
         headers = {"Content-Type" => "text/html"}
-        response = stub(:body => "<div>Partial</div>")
+        response = double(:body => "<div>Partial</div>")
         middleware.should_not be_html_request(headers, response)
       end
     end
 
     context "empty?" do
       it "should be false if response is a string and not empty" do
-        response = stub(:body => "<html><head></head><body></body></html>")
+        response = double(:body => "<html><head></head><body></body></html>")
         middleware.should_not be_empty(response)
       end
 
@@ -50,7 +50,7 @@ module Bullet
       end
 
       it "should be true if response body is empty" do
-        response = stub(:body => "")
+        response = double(:body => "")
         middleware.should be_empty(response)
       end
     end
@@ -91,7 +91,7 @@ module Bullet
       end
 
       context "when Bullet is disabled" do
-        before(:each) { Bullet.stub(:enable?, false) }
+        before(:each) { Bullet.stub(:enable? => false) }
 
         it "should not call Bullet.start_request" do
           Bullet.should_not_receive(:start_request)

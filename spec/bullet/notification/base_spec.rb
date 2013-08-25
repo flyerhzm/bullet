@@ -47,7 +47,7 @@ module Bullet
 
       context "#notify_inline" do
         it "should send full_notice to notifier" do
-          notifier = stub
+          notifier = double
           subject.stub(:notifier => notifier, :full_notice => "full_notice")
           notifier.should_receive(:inline_notify).with("full_notice")
           subject.notify_inline
@@ -56,7 +56,7 @@ module Bullet
 
       context "#notify_out_of_channel" do
         it "should send full_out_of_channel to notifier" do
-          notifier = stub
+          notifier = double
           subject.stub(:notifier => notifier, :full_notice => "full_notice")
           notifier.should_receive(:out_of_channel_notify).with("full_notice")
           subject.notify_out_of_channel
