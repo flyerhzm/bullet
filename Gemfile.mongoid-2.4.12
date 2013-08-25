@@ -1,0 +1,15 @@
+source "https://rubygems.org"
+
+gemspec
+
+gem 'rails'
+gem 'sqlite3'
+gem 'mysql2'
+gem 'activerecord-import'
+gem 'mongoid', '2.4.12'
+
+gem "rspec"
+gem "guard"
+gem "guard-rspec"
+
+gem 'coveralls', require: false
