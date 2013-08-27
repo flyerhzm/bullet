@@ -30,6 +30,10 @@ module Bullet
 
     delegate :alert=, :console=, :growl=, :rails_logger=, :xmpp=, :airbrake=, :to => UniformNotifier
 
+    def raise=(should_raise)
+      UniformNotifier.raise=(should_raise ? Notification::UnoptimizedQueryError : false)
+    end
+
     DETECTORS = [ Bullet::Detector::NPlusOneQuery,
                   Bullet::Detector::UnusedEagerLoading,
                   Bullet::Detector::CounterCache ]
