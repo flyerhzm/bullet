@@ -24,7 +24,7 @@ module Bullet
     end
   end
 
-  class <<self
+  class << self
     attr_writer :enable, :n_plus_one_query_enable, :unused_eager_loading_enable, :counter_cache_enable
     attr_reader :notification_collector, :whitelist
 

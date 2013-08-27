@@ -10,7 +10,7 @@ module Bullet
       before(:each) { UnusedEagerLoading.clear }
 
       context ".call_associations" do
-        it "should get empty array if eager_loadgins" do
+        it "should get empty array if eager_loadings" do
           UnusedEagerLoading.send(:call_associations, @post.bullet_ar_key, Set.new([:association])).should be_empty
         end
 
