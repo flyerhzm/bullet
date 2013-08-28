@@ -24,11 +24,15 @@ module Bullet
     end
   end
 
-  class <<self
+  class << self
     attr_writer :enable, :n_plus_one_query_enable, :unused_eager_loading_enable, :counter_cache_enable
     attr_reader :notification_collector, :whitelist
 
     delegate :alert=, :console=, :growl=, :rails_logger=, :xmpp=, :airbrake=, :to => UniformNotifier
+
+    def raise=(should_raise)
+      UniformNotifier.raise=(should_raise ? Notification::UnoptimizedQueryError : false)
+    end
 
     DETECTORS = [ Bullet::Detector::NPlusOneQuery,
                   Bullet::Detector::UnusedEagerLoading,
