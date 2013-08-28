@@ -69,6 +69,7 @@ The code above will enable all seven of the Bullet notification systems:
 * `Bullet.console`: log warnings to your browser's console.log (Safari/Webkit browsers or Firefox w/Firebug installed)
 * `Bullet.growl`: pop up Growl warnings if your system has Growl installed. Requires a little bit of configuration
 * `Bullet.xmpp`: send XMPP/Jabber notifications to the receiver indicated. Note that the code will currently not handle the adding of contacts, so you will need to make both accounts indicated know each other manually before you will receive any notifications. If you restart the development server frequently, the 'coming online' sound for the bullet account may start to annoy - in this case set :show_online_status to false; you will still get notifications, but the bullet account won't announce it's online status anymore.
+* `Bullet.raise`: raise errors, useful for making your specs fail unless they have optimized queries
 
 Bullet also allows you to disable n_plus_one_query, unused_eager_loading
 and counter_cache detectors respectively
