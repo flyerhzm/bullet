@@ -17,6 +17,7 @@ module Bullet
       if Bullet.notification?
         if status == 200 && !response_body(response).frozen? && html_request?(headers, response)
           response_body = response_body(response) << Bullet.gather_inline_notifications
+          add_footer_note(response_body) if Bullet.add_footer
           headers['Content-Length'] = response_body.bytesize.to_s
         end
         Bullet.perform_out_of_channel_notifications(env)
@@ -37,6 +38,10 @@ module Bullet
         body = response_body(response)
         body.nil? || body.empty?
       end
+    end
+
+    def add_footer_note(response_body)
+      response_body << Bullet.footer_info.uniq.join(",")
     end
 
     # if send file?
