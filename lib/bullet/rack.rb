@@ -8,7 +8,6 @@ module Bullet
 
     def call(env)
       return @app.call(env) unless Bullet.enable?
-
       Bullet.start_request
       status, headers, response = @app.call(env)
       return [status, headers, response] if file?(headers) || empty?(response)
@@ -41,7 +40,7 @@ module Bullet
     end
 
     def add_footer_note(response_body)
-      response_body << Bullet.footer_info.uniq.join(",")
+      response_body << "<div #{footer_div_style}>" + Bullet.footer_info.uniq.join("<br>") + "</div>"
     end
 
     # if send file?
@@ -54,7 +53,19 @@ module Bullet
     end
 
     def response_body(response)
-      rails? ? response.body : response.first
+      rails? ? response.body.first : response.first
+    end
+
+    private
+    def footer_div_style
+<<EOF
+style="position: fixed; bottom: 0pt; left: 0pt; cursor: pointer; border-style: solid; border-color: rgb(153, 153, 153);
+ -moz-border-top-colors: none; -moz-border-right-colors: none; -moz-border-bottom-colors: none;
+ -moz-border-left-colors: none; -moz-border-image: none; border-width: 2pt 2pt 0px 0px;
+ padding: 5px; border-radius: 0pt 10pt 0pt 0px; background: none repeat scroll 0% 0% rgba(200, 200, 200, 0.8);
+ color: rgb(119, 119, 119); font-size: 18px;"
+EOF
     end
   end
 end
+
