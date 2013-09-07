@@ -47,6 +47,10 @@ module Bullet
         self.notifier.out_of_channel_notify(self.full_notice)
       end
 
+      def short_notice
+        [whoami, url, title, body].compact.join("\n")
+      end
+
       def eql?(other)
         klazz_associations_str == other.klazz_associations_str
       end
