@@ -212,14 +212,17 @@ if mongoid?
 
     context "has_one" do
       context "company => address" do
-        it "should detect non preload association" do
-          Mongoid::Company.all.each do |company|
-            company.address.name
-          end
-          Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
-          Bullet::Detector::Association.should_not be_has_unused_preload_associations
+        if Mongoid::VERSION !~ /\A3.0/
+          # mongodid 3.0.x doesn't set relation properly, it will query company for each address which causes n+1 query.
+          it "should detect non preload association" do
+            Mongoid::Company.all.each do |company|
+              company.address.name
+            end
+            Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+            Bullet::Detector::Association.should_not be_has_unused_preload_associations
 
-          Bullet::Detector::Association.should be_detecting_unpreloaded_association_for(Mongoid::Company, :address)
+            Bullet::Detector::Association.should be_detecting_unpreloaded_association_for(Mongoid::Company, :address)
+          end
         end
 
         it "should detect preload association" do
