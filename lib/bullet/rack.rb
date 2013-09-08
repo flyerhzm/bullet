@@ -53,7 +53,11 @@ module Bullet
     end
 
     def response_body(response)
-      rails? ? response.body.first : response.first
+      if rails?
+        Array === response.body ? response.body.first : response.body
+      else
+        response.first
+      end
     end
 
     private
