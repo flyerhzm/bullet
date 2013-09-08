@@ -41,11 +41,23 @@ module Support
         Mongoid.configure do |config|
           config.connect_to("bullet")
         end
+      elsif Mongoid::VERSION =~ /\A4/
+        Mongoid.configure do |config|
+          config.load_configuration(
+            sessions: {
+              default: {
+                database: "bullet",
+                hosts: [ "localhost:27017" ]
+              }
+            }
+          )
+        end
       end
     end
 
     def teardown_db
       Mongoid.purge!
+      Mongoid::IdentityMap.clear
     end
 
     extend self

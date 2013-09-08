@@ -26,6 +26,8 @@ module Bullet
                                'mongoid2x'
                              elsif mongoid3x?
                                'mongoid3x'
+                             elsif mongoid4x?
+                               'mongoid4x'
                              end
                            end
     end
@@ -56,6 +58,10 @@ module Bullet
 
     def mongoid3x?
       mongoid? && ::Mongoid::VERSION =~ /\A3/
+    end
+
+    def mongoid4x?
+      mongoid? && ::Mongoid::VERSION =~ /\A4/
     end
 
     def rails?

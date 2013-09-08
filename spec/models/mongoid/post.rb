@@ -1,6 +1,8 @@
 class Mongoid::Post
   include Mongoid::Document
 
+  field :name
+
   has_many :comments, :class_name => "Mongoid::Comment"
   belongs_to :category, :class_name => "Mongoid::Category"
 

@@ -57,6 +57,10 @@ if active_record?
       Support::SqliteSeed.teardown_db
     end
   end
+
+  if ENV["LOG"]
+    ActiveRecord::Base.logger = Logger.new(STDOUT)
+  end
 end
 
 if mongoid?
@@ -71,7 +75,13 @@ if mongoid?
     end
 
     config.after(:suite) do
+      Support::MongoSeed.setup_db
       Support::MongoSeed.teardown_db
     end
+  end
+
+  if ENV["LOG"]
+    Mongoid.logger = Logger.new(STDOUT)
+    Moped.logger = Logger.new(STDOUT)
   end
 end
