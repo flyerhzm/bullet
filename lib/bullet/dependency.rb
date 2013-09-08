@@ -8,6 +8,10 @@ module Bullet
       @active_record ||= defined? ::ActiveRecord
     end
 
+    def rails?
+      @rails ||= defined? ::Rails
+    end
+
     def active_record_version
       @active_record_version ||= begin
                                    if active_record30?
@@ -62,15 +66,6 @@ module Bullet
 
     def mongoid4x?
       mongoid? && ::Mongoid::VERSION =~ /\A4/
-    end
-
-    def rails?
-      @rails ||= begin
-                   require 'rails'
-                   true
-                 rescue LoadError
-                   false
-               end
     end
   end
 end
