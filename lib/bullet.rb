@@ -27,6 +27,7 @@ module Bullet
   class << self
     attr_writer :enable, :n_plus_one_query_enable, :unused_eager_loading_enable, :counter_cache_enable
     attr_reader :notification_collector, :whitelist
+    attr_accessor :add_footer
 
     delegate :alert=, :console=, :growl=, :rails_logger=, :xmpp=, :airbrake=, :to => UniformNotifier
 
@@ -119,6 +120,14 @@ module Bullet
         notification.url = [env['HTTP_HOST'], env['REQUEST_URI']].compact.join
         notification.notify_out_of_channel
       end
+    end
+
+    def footer_info
+      info = []
+      for_each_active_notifier_with_notification do |notification|
+        info << notification.short_notice
+      end
+      info
     end
 
     def warnings
