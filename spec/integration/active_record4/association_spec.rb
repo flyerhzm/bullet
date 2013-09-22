@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-if active_record3? || active_record4?
+if active_record4?
   describe Bullet::Detector::Association, 'has_many' do
     before(:each) do
       Bullet.clear
@@ -212,7 +212,7 @@ if active_record3? || active_record4?
 
     context "scope for_category_name" do
       it "should detect preload with post => category" do
-        Post.in_category_name('first').each do |post|
+        Post.in_category_name('first').references(:categories).each do |post|
           post.category.name
         end
         Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
@@ -222,7 +222,7 @@ if active_record3? || active_record4?
       end
 
       it "should not be unused preload post => category" do
-        Post.in_category_name('first').all.map(&:name)
+        Post.in_category_name('first').references(:categories).map(&:name)
         Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
         Bullet::Detector::Association.should_not be_has_unused_preload_associations
 
@@ -343,7 +343,7 @@ if active_record3? || active_record4?
       # this happens because the post isn't a possible object even though the writer is access through the post
       # which leads to an 1+N queries
       it "should detect non preloaded writer" do
-        Comment.includes([:author, :post]).where(["base_users.id = ?", BaseUser.first]).each do |comment|
+        Comment.includes([:author, :post]).where(["base_users.id = ?", BaseUser.first]).references(:base_users).each do |comment|
           comment.post.writer.name
         end
         Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
@@ -355,7 +355,7 @@ if active_record3? || active_record4?
       # this happens because the comment doesn't break down the hash into keys
       # properly creating an association from comment to post
       it "should detect unused preload with comment => author" do
-        Comment.includes([:author, {:post => :writer}]).where(["base_users.id = ?", BaseUser.first]).each do |comment|
+        Comment.includes([:author, {:post => :writer}]).where(["base_users.id = ?", BaseUser.first]).references(:base_users).each do |comment|
           comment.post.writer.name
         end
         Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
@@ -367,7 +367,7 @@ if active_record3? || active_record4?
       # To flyerhzm: This does not detect that newspaper is unpreloaded. The association is
       # not within possible objects, and thus cannot be detected as unpreloaded
       it "should detect non preloading with writer => newspaper" do
-        Comment.all(:include => {:post => :writer}, :conditions => "posts.name like '%first%'").each do |comment|
+        Comment.includes(:post => :writer).where("posts.name like '%first%'").references(:posts).each do |comment|
           comment.post.writer.newspaper.name
         end
         #Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
@@ -379,11 +379,11 @@ if active_record3? || active_record4?
       # when we attempt to access category, there is an infinite overflow because load_target is hijacked leading to
       # a repeating loop of calls in this test
       it "should not raise a stack error from posts to category" do
-        lambda {
+        expect {
           Comment.includes({:post => :category}).each do |com|
             com.post.category
           end
-        }.should_not raise_error(SystemStackError)
+        }.not_to raise_error()
       end
     end
   end
