@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/rails/rails.git
-  revision: 8a0881813e275e5809028270b48e5eddf6587c8a
+  revision: 80008352675add5a6b4aaded715fc02329a02004
   specs:
     actionmailer (4.1.0.beta)
       actionpack (= 4.1.0.beta)
@@ -92,7 +92,7 @@ GEM
       treetop (~> 1.4.8)
     method_source (0.8.2)
     mime-types (1.25)
-    minitest (5.0.7)
+    minitest (5.0.8)
     multi_json (1.8.0)
     mysql2 (0.3.13)
     polyglot (0.3.3)
