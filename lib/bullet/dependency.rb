@@ -57,7 +57,7 @@ module Bullet
     end
 
     def mongoid2x?
-      mongoid? && ::Mongoid::VERSION =~ /\A2\.[4-7]/
+      mongoid? && ::Mongoid::VERSION =~ /\A2\.[4-8]/
     end
 
     def mongoid3x?
