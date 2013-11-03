@@ -138,40 +138,42 @@ If you find bullet does not work for you, *please disable your browser's cache*.
 
 ## Advanced
 
-The bullet gem uses rack middleware to profile requests. If you want to use bullet without an http server, like to profile a job, you can do this:
+### Profile a job
+
+The bullet gem uses rack middleware to profile requests. If you want to use bullet without an http server, like to profile a job, you can use use profile method and fetch warnings
 
 ```ruby
 Bullet.profile do
-  # run job
+  # do anything
+end
+warnings = Bullet.warnings
+```
+
+### Run in tests
+
+First you need to enable bullet in test environment.
+
+```ruby
+# config/environments/test.rb
+config.after_initialize do
+  Bullet.enable = true
+  Bullet.bullet_logger = true
+  Bullet.raise = true # raise an error if n+1 query occurs
 end
 ```
 
-Or to use it in test mode:
+Then wrap each test in bullet api.
 
 ```ruby
-before(:each)
+# spec/spec_helper.rb
+before(:each) do
   Bullet.start_request if Bullet.enable?
 end
 
-after(:each)
-  if Bullet.enable? && Bullet.notification?
-    Bullet.perform_out_of_channel_notifications
-  end
+after(:each) do
+  Bullet.perform_out_of_channel_notifications if Bullet.enable? && Bullet.notification?
   Bullet.end_request if Bullet.enable?
 end
-```
-
-Don't forget to enable bullet in your test environment.
-
-### API access
-
-after `profile`, you can fetch warnings then do whatever you want
-
-```ruby
-Bullet.profile do
-  # run anything
-end
-warnings = Bullet.warnings
 ```
 
 ## Contributors
