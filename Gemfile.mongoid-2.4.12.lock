@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    bullet (4.7.0)
+    bullet (4.7.1)
       activesupport
       uniform_notifier (>= 1.4.0)
 
