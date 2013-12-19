@@ -18,8 +18,10 @@ module Bullet
                                      'active_record3'
                                    elsif active_record31? || active_record32?
                                      'active_record3x'
-                                   elsif active_record4?
+                                   elsif active_record40?
                                      'active_record4'
+                                   elsif active_record41?
+                                     'active_record41'
                                    end
                                  end
     end
@@ -54,6 +56,14 @@ module Bullet
 
     def active_record32?
       active_record3? && ::ActiveRecord::VERSION::MINOR == 2
+    end
+
+    def active_record40?
+      active_record4? && ::ActiveRecord::VERSION::MINOR == 0
+    end
+
+    def active_record41?
+      active_record4? && ::ActiveRecord::VERSION::MINOR == 1
     end
 
     def mongoid2x?
