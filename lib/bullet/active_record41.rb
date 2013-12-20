@@ -23,9 +23,9 @@ module Bullet
         # include query for one to many associations.
         # keep this eager loadings.
         alias_method :origin_initialize, :initialize
-        def initialize(records, associations, preload_scope = nil)
-          origin_initialize(records, associations, preload_scope)
-          records = [records].flatten.compact.uniq
+        def initialize
+          origin_initialize
+          records = [@records].flatten.compact.uniq
           return if records.empty?
           records.each do |record|
             Bullet::Detector::Association.add_object_associations(record, associations)
