@@ -5,8 +5,15 @@ module Bullet
     describe CounterCache do
       subject { CounterCache.new(Post, [:comments, :votes]) }
 
-      its(:body) { should == "  Post => [:comments, :votes]" }
-      its(:title) { should == "Need Counter Cache" }
+      describe '#body' do
+        subject { super().body }
+        it { should == "  Post => [:comments, :votes]" }
+      end
+
+      describe '#title' do
+        subject { super().title }
+        it { should == "Need Counter Cache" }
+      end
     end
   end
 end

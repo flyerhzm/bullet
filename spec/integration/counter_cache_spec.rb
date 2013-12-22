@@ -14,26 +14,26 @@ if active_record3? || active_record4?
       Country.all.each do |country|
         country.cities.size
       end
-      Bullet.collected_counter_cache_notifications.should_not be_empty
+      expect(Bullet.collected_counter_cache_notifications).not_to be_empty
     end
 
     it "should not need counter cache if already define counter_cache" do
       Person.all.each do |person|
         person.pets.size
       end
-      Bullet.collected_counter_cache_notifications.should be_empty
+      expect(Bullet.collected_counter_cache_notifications).to be_empty
     end
 
     it "should not need counter cache with only one object" do
       Country.first.cities.size
-      Bullet.collected_counter_cache_notifications.should be_empty
+      expect(Bullet.collected_counter_cache_notifications).to be_empty
     end
 
     it "should not need counter cache with part of cities" do
       Country.all.each do |country|
         country.cities.where(:name => 'first').size
       end
-      Bullet.collected_counter_cache_notifications.should be_empty
+      expect(Bullet.collected_counter_cache_notifications).to be_empty
     end
 
     context "disable" do

@@ -10,14 +10,14 @@ module Bullet
 
       context "#include?" do
         it "should include the object" do
-          subject.should be_include(post.bullet_ar_key)
+          expect(subject).to be_include(post.bullet_ar_key)
         end
       end
 
       context "#add" do
         it "should add an object" do
           subject.add(another_post.bullet_ar_key)
-          subject.should be_include(another_post.bullet_ar_key)
+          expect(subject).to be_include(another_post.bullet_ar_key)
         end
       end
     end

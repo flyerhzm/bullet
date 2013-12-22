@@ -5,7 +5,7 @@ module Bullet
     describe Base do
       context ".end_request" do
         it "should call clear" do
-          Base.should_receive(:clear)
+          expect(Base).to receive(:clear)
           Base.end_request
         end
       end
