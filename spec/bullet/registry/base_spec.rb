@@ -32,11 +32,11 @@ module Bullet
 
       context "#include?" do
         it "should include key/value" do
-          subject.include?("key", "value").should be_true
+          subject.include?("key", "value").should be true
         end
 
         it "should not include wrong key/value" do
-          subject.include?("key", "val").should be_false
+          subject.include?("key", "val").should be false
         end
       end
     end

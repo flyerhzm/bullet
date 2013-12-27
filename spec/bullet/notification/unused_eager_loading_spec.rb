@@ -5,8 +5,8 @@ module Bullet
     describe UnusedEagerLoading do
       subject { UnusedEagerLoading.new(Post, [:comments, :votes], "path") }
 
-      its(:body) { should == "  Post => [:comments, :votes]\n  Remove from your finder: :include => [:comments, :votes]" }
-      its(:title) { should == "Unused Eager Loading in path" }
+      it { expect(subject.body).to eq("  Post => [:comments, :votes]\n  Remove from your finder: :include => [:comments, :votes]") }
+      it { expect(subject.title).to eq("Unused Eager Loading in path") }
     end
   end
 end

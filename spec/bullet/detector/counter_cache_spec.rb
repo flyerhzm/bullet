@@ -46,17 +46,17 @@ module Bullet
       context ".conditions_met?" do
         it "should be true when object is possible, not impossible" do
           CounterCache.add_possible_objects(@post1)
-          CounterCache.send(:conditions_met?, @post1.bullet_ar_key, :associations).should be_true
+          CounterCache.send(:conditions_met?, @post1.bullet_ar_key, :associations).should be true
         end
 
-        it "should be false when object is not possible" do
-          CounterCache.send(:conditions_met?, @post1.bullet_ar_key, :associations).should be_false
+        it "should be nil when object is not possible" do
+          CounterCache.send(:conditions_met?, @post1.bullet_ar_key, :associations).should be_nil
         end
 
         it "should be true when object is possible, and impossible" do
           CounterCache.add_possible_objects(@post1)
           CounterCache.add_impossible_object(@post1)
-          CounterCache.send(:conditions_met?, @post1.bullet_ar_key, :associations).should be_false
+          CounterCache.send(:conditions_met?, @post1.bullet_ar_key, :associations).should be false
         end
       end
     end
