@@ -27,7 +27,6 @@ You can install it as a gem:
 
 ```
 gem install bullet
-
 ```
 
 or add it into a Gemfile (Bundler):
