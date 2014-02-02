@@ -3,7 +3,6 @@ require "bundler"
 Bundler.setup
 
 require "rake"
-require "rdoc/task"
 require "rspec"
 require "rspec/core/rake_task"
 
@@ -35,11 +34,19 @@ RSpec::Core::RakeTask.new('spec:progress') do |spec|
   spec.pattern = "spec/**/*_spec.rb"
 end
 
-Rake::RDocTask.new do |rdoc|
-  rdoc.rdoc_dir = "rdoc"
-  rdoc.title = "bullet #{Bullet::VERSION}"
-  rdoc.rdoc_files.include("README*")
-  rdoc.rdoc_files.include("lib/**/*.rb")
+
+begin
+  require 'rdoc/task'
+
+  desc "Generate documentation for the plugin."
+  Rake::RDocTask.new do |rdoc|
+    rdoc.rdoc_dir = "rdoc"
+    rdoc.title = "bullet #{Bullet::VERSION}"
+    rdoc.rdoc_files.include("README*")
+    rdoc.rdoc_files.include("lib/**/*.rb")
+  end
+rescue LoadError
+  puts 'RDocTask is not supported for this platform'
 end
 
 task :default => :spec

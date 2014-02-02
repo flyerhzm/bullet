@@ -12,7 +12,7 @@ module Bullet
       context ".call_association" do
         it "should set @@checked to true" do
           NPlusOneQuery.call_association(@post, :associations)
-          NPlusOneQuery.class_variable_get(:@@checked).should be_true
+          NPlusOneQuery.class_variable_get(:@@checked).should be true
         end
 
         it "should add call_object_associations" do
@@ -24,26 +24,26 @@ module Bullet
       context ".possible?" do
         it "should be true if possible_objects contain" do
           NPlusOneQuery.add_possible_objects(@post)
-          NPlusOneQuery.send(:possible?, @post.bullet_ar_key).should be_true
+          NPlusOneQuery.send(:possible?, @post.bullet_ar_key).should be true
         end
       end
 
       context ".impossible?" do
         it "should be true if impossible_objects contain" do
           NPlusOneQuery.add_impossible_object(@post)
-          NPlusOneQuery.send(:impossible?, @post.bullet_ar_key).should be_true
+          NPlusOneQuery.send(:impossible?, @post.bullet_ar_key).should be true
         end
       end
 
       context ".association?" do
         it "should be true if object, associations pair is already existed" do
           NPlusOneQuery.add_object_associations(@post, :association)
-          NPlusOneQuery.send(:association?, @post.bullet_ar_key, :association).should be_true
+          NPlusOneQuery.send(:association?, @post.bullet_ar_key, :association).should be true
         end
 
         it "should be false if object, association pair is not existed" do
           NPlusOneQuery.add_object_associations(@post, :association1)
-          NPlusOneQuery.send(:association?, @post.bullet_ar_key, :associatio2).should be_false
+          NPlusOneQuery.send(:association?, @post.bullet_ar_key, :associatio2).should be false
         end
       end
 
@@ -52,28 +52,28 @@ module Bullet
           NPlusOneQuery.stub(:possible?).with(@post.bullet_ar_key).and_return(true)
           NPlusOneQuery.stub(:impossible?).with(@post.bullet_ar_key).and_return(false)
           NPlusOneQuery.stub(:association?).with(@post.bullet_ar_key, :associations).and_return(false)
-          NPlusOneQuery.send(:conditions_met?, @post.bullet_ar_key, :associations).should be_true
+          NPlusOneQuery.send(:conditions_met?, @post.bullet_ar_key, :associations).should be true
         end
 
         it "should be false if object is not possible, not impossible and object, associations pair is not already existed" do
           NPlusOneQuery.stub(:possible?).with(@post.bullet_ar_key).and_return(false)
           NPlusOneQuery.stub(:impossible?).with(@post.bullet_ar_key).and_return(false)
           NPlusOneQuery.stub(:association?).with(@post.bullet_ar_key, :associations).and_return(false)
-          NPlusOneQuery.send(:conditions_met?, @post.bullet_ar_key, :associations).should be_false
+          NPlusOneQuery.send(:conditions_met?, @post.bullet_ar_key, :associations).should be false
         end
 
         it "should be false if object is possible, but impossible and object, associations pair is not already existed" do
           NPlusOneQuery.stub(:possible?).with(@post.bullet_ar_key).and_return(true)
           NPlusOneQuery.stub(:impossible?).with(@post.bullet_ar_key).and_return(true)
           NPlusOneQuery.stub(:association?).with(@post.bullet_ar_key, :associations).and_return(false)
-          NPlusOneQuery.send(:conditions_met?, @post.bullet_ar_key, :associations).should be_false
+          NPlusOneQuery.send(:conditions_met?, @post.bullet_ar_key, :associations).should be false
         end
 
         it "should be false if object is possible, not impossible and object, associations pair is already existed" do
           NPlusOneQuery.stub(:possible?).with(@post.bullet_ar_key).and_return(true)
           NPlusOneQuery.stub(:impossible?).with(@post.bullet_ar_key).and_return(false)
           NPlusOneQuery.stub(:association?).with(@post.bullet_ar_key, :associations).and_return(true)
-          NPlusOneQuery.send(:conditions_met?, @post.bullet_ar_key, :associations).should be_false
+          NPlusOneQuery.send(:conditions_met?, @post.bullet_ar_key, :associations).should be false
         end
       end
 

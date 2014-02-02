@@ -383,7 +383,7 @@ if active_record3?
           Comment.includes({:post => :category}).each do |com|
             com.post.category
           end
-        }.should_not raise_error(SystemStackError)
+        }.should_not raise_error
       end
     end
   end

@@ -41,7 +41,7 @@ module Bullet
       context ".check_unused_preload_associations" do
         it "should set @@checked to true" do
           UnusedEagerLoading.check_unused_preload_associations
-          UnusedEagerLoading.class_variable_get(:@@checked).should be_true
+          UnusedEagerLoading.class_variable_get(:@@checked).should be true
         end
 
         it "should create notification if object_association_diff is not empty" do

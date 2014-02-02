@@ -12,7 +12,7 @@ module Bullet
       context ".start_request" do
         it "should set @@checked to false" do
           Association.start_request
-          Association.class_variable_get(:@@checked).should be_false
+          Association.class_variable_get(:@@checked).should be false
         end
       end
 
