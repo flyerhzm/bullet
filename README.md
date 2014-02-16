@@ -10,7 +10,7 @@ The Bullet gem is designed to help you increase your application's performance b
 
 Best practice is to use Bullet in development mode or custom mode (staging, profile, etc.). The last thing you want is your clients getting alerts about how lazy you are.
 
-Bullet gem now supports **activerecord** 3.0, 3.1, 3.2, 4.0 and **mongoid** >= 2.4.1.
+Bullet gem now supports **activerecord** >= 3.0 and **mongoid** >= 2.4.1.
 
 If you use activercord 2.x, please use bullet <= 4.5.0
 
@@ -403,4 +403,4 @@ In the meanwhile, there's a log appended into `log/bullet.log` file.
 ```
 
 
-Copyright (c) 2009 - 2013 Richard Huang (flyerhzm@gmail.com), released under the MIT license
+Copyright (c) 2009 - 2014 Richard Huang (flyerhzm@gmail.com), released under the MIT license
