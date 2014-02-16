@@ -3,7 +3,7 @@
 ## 4.8.0 (02/16/2014)
 
 * Support rails 4.1.0.beta1
-* Update specs to be RSepc 3.0 compatible
+* Update specs to be RSpec 3.0 compatible
 * Update latest minor version activerecord and mongoid on travis
 
 ## 4.7.0 (11/03/2013)
