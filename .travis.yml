@@ -1,21 +1,19 @@
 language: ruby
 rvm:
   - 2.1.0
-  - 2.0.0
-  - jruby-19mode
-  - rbx
 gemfile:
-  - Gemfile.rails-4.0.1
-  - Gemfile.rails-3.2.15
-  - Gemfile.rails-3.1.12
-  - Gemfile.rails-3.0.20
-  - Gemfile.mongoid-3.1.6
-  - Gemfile.mongoid-3.0.23
-  - Gemfile.mongoid-2.7.1
-  - Gemfile.mongoid-2.8.1
-  - Gemfile.mongoid-2.6.0
-  - Gemfile.mongoid-2.5.2
-  - Gemfile.mongoid-2.4.12
+  - Gemfile.rails-4.1
+  - Gemfile.rails-4.0
+  - Gemfile.rails-3.2
+  - Gemfile.rails-3.1
+  - Gemfile.rails-3.0
+  - Gemfile.mongoid-3.1
+  - Gemfile.mongoid-3.0
+  - Gemfile.mongoid-2.8
+  - Gemfile.mongoid-2.7
+  - Gemfile.mongoid-2.6
+  - Gemfile.mongoid-2.5
+  - Gemfile.mongoid-2.4
 env:
   - DB=sqlite
 services:

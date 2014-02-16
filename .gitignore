@@ -11,3 +11,4 @@ benchmark_profile*
 /nbproject/private/
 coverage/
 .coveralls.yml
+Gemfile*.lock
