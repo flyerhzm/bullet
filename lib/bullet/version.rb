@@ -1,4 +1,4 @@
 # encoding: utf-8
 module Bullet
-  VERSION = "4.7.1"
+  VERSION = "4.8.0"
 end

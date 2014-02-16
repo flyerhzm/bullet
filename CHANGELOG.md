@@ -1,5 +1,20 @@
 # Next Release
 
+## 4.8.0 (02/16/2014)
+
+* Support rails 4.1.0.beta1
+* Update specs to be RSepc 3.0 compatible
+* Update latest minor version activerecord and mongoid on travis
+
+## 4.7.0 (11/03/2013)
+
+* Add coverall support
+* Add helper to profile code outside a request
+* Add activesupport dependency
+* Add Bullet.raise notification
+* Add Bullet.add_footer notification
+* Fix activerecord4 warnings in test code
+
 ## 4.6.0 (04/18/2013)
 
 * Fix Bullet::Rack to support sinatra
