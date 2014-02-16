@@ -5,15 +5,8 @@ module Bullet
     describe UnusedEagerLoading do
       subject { UnusedEagerLoading.new(Post, [:comments, :votes], "path") }
 
-      describe '#body' do
-        subject { super().body }
-        it { should == "  Post => [:comments, :votes]\n  Remove from your finder: :include => [:comments, :votes]" }
-      end
-
-      describe '#title' do
-        subject { super().title }
-        it { should == "Unused Eager Loading in path" }
-      end
+      it { expect(subject.body).to eq("  Post => [:comments, :votes]\n  Remove from your finder: :include => [:comments, :votes]") }
+      it { expect(subject.title).to eq("Unused Eager Loading in path") }
     end
   end
 end

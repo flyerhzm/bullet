@@ -1,6 +1,9 @@
 language: ruby
 rvm:
+  - 2.1.0
   - 2.0.0
+  - jruby-19mode
+  - rbx
 gemfile:
   - Gemfile.rails-4.0.1
   - Gemfile.rails-3.2.15
@@ -13,7 +16,7 @@ gemfile:
   - Gemfile.mongoid-2.6.0
   - Gemfile.mongoid-2.5.2
   - Gemfile.mongoid-2.4.12
-env: DB=sqlite
-services: mongodb
-before_install:
-  - gem install bundler
+env:
+  - DB=sqlite
+services:
+  - mongodb
