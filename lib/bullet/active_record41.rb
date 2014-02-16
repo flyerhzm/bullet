@@ -8,29 +8,30 @@ module Bullet
         # if select only one object, then the only one object has impossible to cause N+1 query.
         def to_a
           records = origin_to_a
-          if records.size > 1
-            Bullet::Detector::NPlusOneQuery.add_possible_objects(records)
-            Bullet::Detector::CounterCache.add_possible_objects(records)
-          elsif records.size == 1
-            Bullet::Detector::NPlusOneQuery.add_impossible_object(records.first)
-            Bullet::Detector::CounterCache.add_impossible_object(records.first)
+          if records.first.class.name !~ /^HABTM_/
+            if records.size > 1
+              Bullet::Detector::NPlusOneQuery.add_possible_objects(records)
+              Bullet::Detector::CounterCache.add_possible_objects(records)
+            elsif records.size == 1
+              Bullet::Detector::NPlusOneQuery.add_impossible_object(records.first)
+              Bullet::Detector::CounterCache.add_impossible_object(records.first)
+            end
           end
           records
         end
       end
 
       ::ActiveRecord::Associations::Preloader.class_eval do
-        # include query for one to many associations.
-        # keep this eager loadings.
-        alias_method :origin_initialize, :initialize
-        def initialize
-          origin_initialize
-          records = [@records].flatten.compact.uniq
-          return if records.empty?
-          records.each do |record|
-            Bullet::Detector::Association.add_object_associations(record, associations)
+        alias_method :origin_preloaders_on, :preloaders_on
+
+        def preloaders_on(association, records, scope)
+          if records.first.class.name !~ /^HABTM_/
+            records.each do |record|
+              Bullet::Detector::Association.add_object_associations(record, association)
+            end
+            Bullet::Detector::UnusedEagerLoading.add_eager_loadings(records, association)
           end
-          Bullet::Detector::UnusedEagerLoading.add_eager_loadings(records, associations)
+          origin_preloaders_on(association, records, scope)
         end
       end
 
@@ -52,11 +53,11 @@ module Bullet
       ::ActiveRecord::Associations::JoinDependency.class_eval do
         alias_method :origin_construct_model, :construct_model
         # call join associations
-        def construct_model(record, join, row)
-          associations = join.reflection.name
+        def construct_model(record, node, row, model_cache, id, aliases)
+          associations = node.reflection.name
           Bullet::Detector::Association.add_object_associations(record, associations)
           Bullet::Detector::NPlusOneQuery.call_association(record, associations)
-          origin_construct_model(record, join, row)
+          origin_construct_model(record, node, row, model_cache, id, aliases)
         end
       end
 
@@ -64,7 +65,7 @@ module Bullet
         # call one to many associations
         alias_method :origin_load_target, :load_target
         def load_target
-          Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name)
+          Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name) unless @inversed
           origin_load_target
         end
       end
@@ -74,19 +75,11 @@ module Bullet
         alias_method :origin_reader, :reader
         def reader(force_reload = false)
           result = origin_reader(force_reload)
-          Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name)
-          Bullet::Detector::NPlusOneQuery.add_possible_objects(result)
-          result
-        end
-      end
-
-      ::ActiveRecord::Associations::Association.class_eval do
-        alias_method :origin_set_inverse_instance, :set_inverse_instance
-        def set_inverse_instance(record)
-          if record && invertible_for?(record)
-            Bullet::Detector::NPlusOneQuery.add_impossible_object(record)
+          if @owner.class.name !~ /^HABTM_/
+            Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name) unless @inversed
+            Bullet::Detector::NPlusOneQuery.add_possible_objects(result)
           end
-          origin_set_inverse_instance(record)
+          result
         end
       end
 

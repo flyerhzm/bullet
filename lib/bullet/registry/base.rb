@@ -33,7 +33,7 @@ module Bullet
       end
 
       def include?(key, value)
-        @registry[key] && @registry[key].include?(value)
+        !@registry[key].nil? && @registry[key].include?(value)
       end
     end
   end

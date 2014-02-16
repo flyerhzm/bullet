@@ -32,11 +32,11 @@ module Bullet
 
       context "#include?" do
         it "should include key/value" do
-          expect(subject.include?("key", "value")).to be_true
+          expect(subject.include?("key", "value")).to eq true
         end
 
         it "should not include wrong key/value" do
-          expect(subject.include?("key", "val")).to be_false
+          expect(subject.include?("key", "val")).to eq false
         end
       end
     end

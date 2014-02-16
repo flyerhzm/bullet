@@ -12,7 +12,7 @@ module Bullet
       context ".start_request" do
         it "should set @@checked to false" do
           Association.start_request
-          expect(Association.class_variable_get(:@@checked)).to be_false
+          expect(Association.class_variable_get(:@@checked)).to eq false
         end
       end
 
