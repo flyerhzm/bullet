@@ -50,7 +50,10 @@ module Bullet
           def caller_in_project
             app_root = rails? ? Rails.root.to_s : Dir.pwd
             vendor_root = app_root + "/vendor"
-            caller.select { |c| c.include?(app_root) && !c.include?(vendor_root) }
+            caller.select do |c|
+              c.include?(app_root) && !c.include?(vendor_root) ||
+              Bullet.stacktrace_includes.any? { |include| c.include?(include) }
+            end
           end
 
           def possible?(bullet_ar_key)

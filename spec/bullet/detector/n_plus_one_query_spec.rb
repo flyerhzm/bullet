@@ -93,6 +93,34 @@ module Bullet
         end
       end
 
+      context ".caller_in_project" do
+        it "should include only paths that are in the project" do
+          in_project = File.join(Dir.pwd, 'abc', 'abc.rb')
+          not_in_project = '/def/def.rb'
+
+          expect(NPlusOneQuery).to receive(:caller).and_return([in_project, not_in_project])
+          expect(NPlusOneQuery).to receive(:conditions_met?).with(@post.bullet_ar_key, :association).and_return(true)
+          expect(NPlusOneQuery).to receive(:create_notification).with([in_project], "Post", :association)
+          NPlusOneQuery.call_association(@post, :association)
+        end
+
+        context "stacktrace_includes" do
+          before { Bullet.stacktrace_includes = [ 'def' ] }
+          after { Bullet.stacktrace_includes = nil }
+
+          it "should include paths that are in the stacktrace_include list" do
+            in_project = File.join(Dir.pwd, 'abc', 'abc.rb')
+            included_gem = '/def/def.rb'
+            excluded_gem = '/ghi/ghi.rb'
+
+            expect(NPlusOneQuery).to receive(:caller).and_return([in_project, included_gem, excluded_gem])
+            expect(NPlusOneQuery).to receive(:conditions_met?).with(@post.bullet_ar_key, :association).and_return(true)
+            expect(NPlusOneQuery).to receive(:create_notification).with([in_project, included_gem], "Post", :association)
+            NPlusOneQuery.call_association(@post, :association)
+          end
+        end
+      end
+
       context ".add_possible_objects" do
         it "should add possible objects" do
           NPlusOneQuery.add_possible_objects([@post, @post2])
