@@ -40,15 +40,24 @@ module Bullet
       end
 
       def notify_inline
-        self.notifier.inline_notify(self.full_notice)
+        self.notifier.inline_notify(notification_data)
       end
 
       def notify_out_of_channel
-        self.notifier.out_of_channel_notify(self.full_notice)
+        self.notifier.out_of_channel_notify(notification_data)
       end
 
       def short_notice
         [whoami, url, title, body].compact.join("\n")
+      end
+
+      def notification_data
+        {
+          :user => whoami,
+          :url => url,
+          :title => title,
+          :body => body_with_caller,
+        }
       end
 
       def eql?(other)
