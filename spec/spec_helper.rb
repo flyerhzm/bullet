@@ -13,6 +13,10 @@ module Rails
     def root
       File.expand_path(__FILE__).split('/')[0..-3].join('/')
     end
+
+    def env
+      "test"
+    end
   end
 end
 
@@ -50,10 +54,6 @@ if active_record?
     config.before(:suite) do
       Support::SqliteSeed.setup_db
       Support::SqliteSeed.seed_db
-    end
-
-    config.after(:suite) do
-      Support::SqliteSeed.teardown_db
     end
   end
 
