@@ -49,12 +49,22 @@ module Bullet
         end
       end
 
+      context "#notification_data" do
+        it "should return notification data" do
+          allow(subject).to receive(:whoami).and_return("whoami")
+          allow(subject).to receive(:url).and_return("url")
+          allow(subject).to receive(:title).and_return("title")
+          allow(subject).to receive(:body_with_caller).and_return("body_with_caller")
+          expect(subject.notification_data).to eq(:user => "whoami", :url => "url", :title => "title", :body => "body_with_caller")
+        end
+      end
+
       context "#notify_inline" do
         it "should send full_notice to notifier" do
           notifier = double
           allow(subject).to receive(:notifier).and_return(notifier)
-          allow(subject).to receive(:full_notice).and_return("full_notice")
-          expect(notifier).to receive(:inline_notify).with("full_notice")
+          allow(subject).to receive(:notification_data).and_return(:foo => :bar)
+          expect(notifier).to receive(:inline_notify).with(:foo => :bar)
           subject.notify_inline
         end
       end
@@ -63,8 +73,8 @@ module Bullet
         it "should send full_out_of_channel to notifier" do
           notifier = double
           allow(subject).to receive(:notifier).and_return(notifier)
-          allow(subject).to receive(:full_notice).and_return("full_notice")
-          expect(notifier).to receive(:out_of_channel_notify).with("full_notice")
+          allow(subject).to receive(:notification_data).and_return(:foo => :bar)
+          expect(notifier).to receive(:out_of_channel_notify).with(:foo => :bar)
           subject.notify_out_of_channel
         end
       end
