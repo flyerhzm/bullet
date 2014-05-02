@@ -1,5 +1,12 @@
 # Next Release
 
+## 4.9.0 (04/30/2014)
+
+* Add Bullet.stacktrace_includes option
+* Applied keyword argument fixes on Ruby 2.2.0
+* Add bugsnag notifier
+* Support rails 4.1.0
+
 ## 4.8.0 (02/16/2014)
 
 * Support rails 4.1.0.beta1
