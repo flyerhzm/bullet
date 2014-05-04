@@ -27,7 +27,7 @@ module Bullet
   class << self
     attr_writer :enable, :n_plus_one_query_enable, :unused_eager_loading_enable, :counter_cache_enable, :stacktrace_includes
     attr_reader :notification_collector, :whitelist
-    attr_accessor :add_footer
+    attr_accessor :add_footer, :orm_pathches_applied
 
     delegate :alert=, :console=, :growl=, :rails_logger=, :xmpp=, :airbrake=, :bugsnag=, :to => UniformNotifier
 
@@ -43,8 +43,11 @@ module Bullet
       @enable = @n_plus_one_query_enable = @unused_eager_loading_enable = @counter_cache_enable = enable
       if enable?
         reset_whitelist
-        Bullet::Mongoid.enable if mongoid?
-        Bullet::ActiveRecord.enable if active_record?
+        unless orm_pathches_applied
+          self.orm_pathches_applied = true
+          Bullet::Mongoid.enable if mongoid?
+          Bullet::ActiveRecord.enable if active_record?
+        end
       end
     end
 
