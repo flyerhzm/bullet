@@ -13,6 +13,8 @@ Gem::Specification.new do |s|
   s.summary     = "help to kill N+1 queries and unused eager loading."
   s.description = "help to kill N+1 queries and unused eager loading."
 
+  s.license     = 'MIT'
+
   s.required_rubygems_version = ">= 1.3.6"
 
   s.add_dependency "activesupport"
