@@ -9,7 +9,6 @@ module Bullet
         def check_unused_preload_associations
           return unless Bullet.unused_eager_loading_enable?
 
-          @@checked = true
           object_associations.each do |bullet_ar_key, associations|
             object_association_diff = diff_object_associations bullet_ar_key, associations
             next if object_association_diff.empty?
