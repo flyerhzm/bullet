@@ -58,6 +58,7 @@ if active_record?
   end
 
   if ENV["LOG"]
+    require 'logger'
     ActiveRecord::Base.logger = Logger.new(STDOUT)
   end
 end
