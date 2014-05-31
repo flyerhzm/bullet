@@ -2,10 +2,6 @@ module Bullet
   module Detector
     class Association < Base
       class <<self
-        def start_request
-          @@checked = false
-        end
-
         def clear
           # Note that under ruby class variables are shared among the class
           # that declares them and all classes derived from that class.
@@ -39,7 +35,7 @@ module Bullet
             @@object_associations ||= Bullet::Registry::Base.new
           end
 
-          # call_object_assciations keep the object relationships
+          # call_object_associations keep the object relationships
           # that object.associations is called.
           # e.g. { "Post:1" => [:comments] }
           # they are used to detect unused preload associations.
