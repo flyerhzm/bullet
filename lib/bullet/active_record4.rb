@@ -42,7 +42,6 @@ module Bullet
           associations = (eager_load_values + includes_values).uniq
           records.each do |record|
             Bullet::Detector::Association.add_object_associations(record, associations)
-            Bullet::Detector::NPlusOneQuery.call_association(record, associations)
           end
           Bullet::Detector::UnusedEagerLoading.add_eager_loadings(records, associations)
           records
@@ -50,13 +49,37 @@ module Bullet
       end
 
       ::ActiveRecord::Associations::JoinDependency.class_eval do
+        alias_method :origin_instantiate, :instantiate
         alias_method :origin_construct_association, :construct_association
+
+        def instantiate(rows)
+          @bullet_eager_loadings = {}
+          records = origin_instantiate(rows)
+
+          @bullet_eager_loadings.each do |klazz, eager_loadings_hash|
+            objects = eager_loadings_hash.keys
+            Bullet::Detector::UnusedEagerLoading.add_eager_loadings(objects, eager_loadings_hash[objects.first].to_a)
+          end
+          records
+        end
+
         # call join associations
         def construct_association(record, join, row)
+          result = origin_construct_association(record, join, row)
+
           associations = join.reflection.name
           Bullet::Detector::Association.add_object_associations(record, associations)
-          Bullet::Detector::NPlusOneQuery.call_association(record, associations)
-          origin_construct_association(record, join, row)
+          @bullet_eager_loadings[record.class] ||= {}
+          @bullet_eager_loadings[record.class][record] ||= Set.new
+          @bullet_eager_loadings[record.class][record] << associations
+
+          records = join.instance_variable_get(:@cached_record).values
+          if records.size > 1
+            Bullet::Detector::NPlusOneQuery.add_possible_objects(records)
+            Bullet::Detector::CounterCache.add_possible_objects(records)
+          end
+
+          result
         end
       end
 
