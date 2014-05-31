@@ -101,6 +101,18 @@ if active_record4?
         expect(Bullet::Detector::Association).to be_completely_preloading_associations
       end
 
+      it "should detect preload with category => posts => comments with posts.id > 0" do
+        Category.includes({:posts => :comments}).where('posts.id > 0').each do |category|
+          category.posts.each do |post|
+            post.comments.map(&:name)
+          end
+        end
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+        expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
+
+        expect(Bullet::Detector::Association).to be_completely_preloading_associations
+      end
+
       it "should detect unused preload with category => posts => comments" do
         Category.includes({:posts => :comments}).map(&:name)
         Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
@@ -352,14 +364,12 @@ if active_record4?
         expect(Bullet::Detector::Association).to be_detecting_unpreloaded_association_for(Post, :writer)
       end
 
-      # this happens because the comment doesn't break down the hash into keys
-      # properly creating an association from comment to post
       it "should detect unused preload with comment => author" do
         Comment.includes([:author, {:post => :writer}]).where(["base_users.id = ?", BaseUser.first]).references(:base_users).each do |comment|
           comment.post.writer.name
         end
         Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
-        expect(Bullet::Detector::Association).to be_unused_preload_associations_for(Comment, :author)
+        expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
 
         expect(Bullet::Detector::Association).to be_completely_preloading_associations
       end
