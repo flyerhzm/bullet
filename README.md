@@ -190,6 +190,11 @@ after(:each) do
 end
 ```
 
+## Debug Mode
+
+Bullet outputs some details info, to enable debug mode, set DEBUG=true
+env.
+
 ## Contributors
 
 [https://github.com/flyerhzm/bullet/contributors](https://github.com/flyerhzm/bullet/contributors)

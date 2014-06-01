@@ -95,6 +95,10 @@ module Bullet
       end
     end
 
+    def debug(title, message)
+      puts "[Bullet][#{title}] #{message}" if ENV['DEBUG'] == 'true'
+    end
+
     def start_request
       Thread.current[:bullet_start] = true
       Thread.current[:bullet_notification_collector] = Bullet::NotificationCollector.new

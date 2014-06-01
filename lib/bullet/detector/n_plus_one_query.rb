@@ -12,7 +12,9 @@ module Bullet
           return unless Bullet.start?
           add_call_object_associations(object, associations)
 
+          Bullet.debug("Detector::NPlusOneQuery#call_association", "object: #{object.bullet_ar_key}, associations: #{associations}")
           if conditions_met?(object.bullet_ar_key, associations)
+            Bullet.debug("detect n + 1 query", "object: #{object.bullet_ar_key}, associations: #{associations}")
             create_notification caller_in_project, object.class.to_s, associations
           end
         end
@@ -20,18 +22,18 @@ module Bullet
         def add_possible_objects(object_or_objects)
           return unless Bullet.start?
           return unless Bullet.n_plus_one_query_enable?
-          return if object_or_objects.blank?
-          if object_or_objects.is_a? Array
-            object_or_objects.each { |object| possible_objects.add object.bullet_ar_key }
-          else
-            possible_objects.add object_or_objects.bullet_ar_key if object_or_objects.id
-          end
+
+          objects = Array(object_or_objects)
+          Bullet.debug("Detector::NPlusOneQuery#add_possible_objects", "objects: #{objects.map(&:bullet_ar_key).join(', ')}")
+          objects.each { |object| possible_objects.add object.bullet_ar_key }
         end
 
         def add_impossible_object(object)
           return unless Bullet.start?
           return unless Bullet.n_plus_one_query_enable?
-          impossible_objects.add object.bullet_ar_key if object.id
+
+          Bullet.debug("Detector::NPlusOneQuery#add_impossible_object", "object: #{object.bullet_ar_key}")
+          impossible_objects.add object.bullet_ar_key
         end
 
         private
