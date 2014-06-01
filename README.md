@@ -151,6 +151,18 @@ end
 warnings = Bullet.warnings
 ```
 
+### Work with sinatra
+
+Configure and use bullet rack
+
+```ruby
+configure :development do
+  Bullet.enable = true
+  Bullet.bullet_logger = true
+  use Bullet::Rack
+end
+```
+
 ### Run in tests
 
 First you need to enable bullet in test environment.
