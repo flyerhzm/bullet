@@ -102,7 +102,7 @@ if active_record4?
       end
 
       it "should detect preload with category => posts => comments with posts.id > 0" do
-        Category.includes({:posts => :comments}).where('posts.id > 0').each do |category|
+        Category.includes({:posts => :comments}).where('posts.id > 0').references(:posts).each do |category|
           category.posts.each do |post|
             post.comments.map(&:name)
           end
