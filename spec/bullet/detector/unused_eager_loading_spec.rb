@@ -39,11 +39,6 @@ module Bullet
       end
 
       context ".check_unused_preload_associations" do
-        it "should set @@checked to true" do
-          UnusedEagerLoading.check_unused_preload_associations
-          expect(UnusedEagerLoading.class_variable_get(:@@checked)).to eq true
-        end
-
         it "should create notification if object_association_diff is not empty" do
           UnusedEagerLoading.add_object_associations(@post, :association)
           expect(UnusedEagerLoading).to receive(:create_notification).with("Post", [:association])
