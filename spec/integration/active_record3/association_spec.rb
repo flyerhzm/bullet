@@ -336,8 +336,6 @@ if !mongoid? && active_record3?
     end
 
     context "comment => author, post => writer" do
-      # this happens because the post isn't a possible object even though the writer is access through the post
-      # which leads to an 1+N queries
       it "should detect non preloaded writer" do
         Comment.includes([:author, :post]).where(["base_users.id = ?", BaseUser.first]).each do |comment|
           comment.post.writer.name
@@ -358,20 +356,16 @@ if !mongoid? && active_record3?
         expect(Bullet::Detector::Association).to be_completely_preloading_associations
       end
 
-      # To flyerhzm: This does not detect that newspaper is unpreloaded. The association is
-      # not within possible objects, and thus cannot be detected as unpreloaded
       it "should detect non preloading with writer => newspaper" do
         Comment.all(:include => {:post => :writer}, :conditions => "posts.name like '%first%'").each do |comment|
           comment.post.writer.newspaper.name
         end
-        #Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
-        #Bullet::Detector::Association.should_not be_has_unused_preload_associations
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+        Bullet::Detector::Association.should_not be_has_unused_preload_associations
 
         expect(Bullet::Detector::Association).to be_detecting_unpreloaded_association_for(Writer, :newspaper)
       end
 
-      # when we attempt to access category, there is an infinite overflow because load_target is hijacked leading to
-      # a repeating loop of calls in this test
       it "should not raise a stack error from posts to category" do
         expect {
           Comment.includes({:post => :category}).each do |com|

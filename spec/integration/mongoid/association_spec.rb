@@ -204,7 +204,6 @@ if mongoid?
     context "has_one" do
       context "company => address" do
         if Mongoid::VERSION !~ /\A3.0/
-          # mongodid 3.0.x doesn't set relation properly, it will query company for each address which causes n+1 query.
           it "should detect non preload association" do
             Mongoid::Company.all.each do |company|
               company.address.name
