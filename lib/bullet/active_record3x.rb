@@ -69,15 +69,10 @@ module Bullet
 
           associations = join.reflection.name
           Bullet::Detector::Association.add_object_associations(record, associations)
+          Bullet::Detector::NPlusOneQuery.call_association(record, associations)
           @bullet_eager_loadings[record.class] ||= {}
           @bullet_eager_loadings[record.class][record] ||= Set.new
           @bullet_eager_loadings[record.class][record] << associations
-
-          records = join.instance_variable_get(:@cached_record).values
-          if records.size > 1
-            Bullet::Detector::NPlusOneQuery.add_possible_objects(records)
-            Bullet::Detector::CounterCache.add_possible_objects(records)
-          end
 
           result
         end
