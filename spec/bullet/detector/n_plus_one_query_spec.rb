@@ -10,11 +10,6 @@ module Bullet
       before(:each) { NPlusOneQuery.clear }
 
       context ".call_association" do
-        it "should set @@checked to true" do
-          NPlusOneQuery.call_association(@post, :associations)
-          expect(NPlusOneQuery.class_variable_get(:@@checked)).to eq true
-        end
-
         it "should add call_object_associations" do
           expect(NPlusOneQuery).to receive(:add_call_object_associations).with(@post, :associations)
           NPlusOneQuery.call_association(@post, :associations)

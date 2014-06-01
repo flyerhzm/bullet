@@ -9,13 +9,6 @@ module Bullet
       end
       before(:each) { Association.clear }
 
-      context ".start_request" do
-        it "should set @@checked to false" do
-          Association.start_request
-          expect(Association.class_variable_get(:@@checked)).to eq false
-        end
-      end
-
       context ".clear" do
         it "should clear all class variables" do
           Association.clear
