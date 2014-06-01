@@ -57,7 +57,7 @@ module Support
 
     def teardown_db
       Mongoid.purge!
-      Mongoid::IdentityMap.clear
+      Mongoid::IdentityMap.clear if Mongoid.const_defined?(:IdentityMap)
     end
 
     extend self

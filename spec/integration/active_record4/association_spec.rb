@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-if active_record4?
+if !mongoid? && active_record4?
   describe Bullet::Detector::Association, 'has_many' do
     context "post => comments" do
       it "should detect non preload post => comments" do

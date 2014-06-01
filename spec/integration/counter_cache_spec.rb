@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-if active_record3? || active_record4?
+if !mongoid? && active_record?
   describe Bullet::Detector::CounterCache do
     before(:each) do
       Bullet.start_request

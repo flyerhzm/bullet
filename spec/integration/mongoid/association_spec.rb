@@ -2,8 +2,6 @@ require 'spec_helper'
 
 if mongoid?
   describe Bullet::Detector::Association do
-    after(:each) { Mongoid::IdentityMap.clear }
-
     context 'embeds_many' do
       context "posts => users" do
         it "should detect nothing" do

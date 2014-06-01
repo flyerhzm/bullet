@@ -86,6 +86,14 @@ if mongoid?
       Support::MongoSeed.setup_db
       Support::MongoSeed.teardown_db
     end
+
+    config.before(:each) do
+      Bullet.start_request
+    end
+
+    config.after(:each) do
+      Bullet.end_request
+    end
   end
 
   if ENV["LOG"]

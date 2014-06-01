@@ -1,6 +1,5 @@
 require 'spec_helper'
 
-
 module Bullet
   module Registry
     describe Object do
