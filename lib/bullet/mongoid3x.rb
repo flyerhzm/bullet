@@ -41,13 +41,14 @@ module Bullet
       end
 
       ::Mongoid::Relations::Accessors.class_eval do
-        alias_method :origin_set_relation, :set_relation
+        alias_method :origin_get_relation, :get_relation
 
-        def set_relation(name, relation)
-          if relation && relation.metadata.macro !~ /embed/
+        def get_relation(name, metadata, reload = false)
+          result = origin_get_relation(name, metadata, reload)
+          if metadata.macro !~ /embed/
             Bullet::Detector::NPlusOneQuery.call_association(self, name)
           end
-          origin_set_relation(name, relation)
+          result
         end
       end
     end
