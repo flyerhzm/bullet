@@ -9,6 +9,7 @@ module Bullet
         # then, it checks if this associations call is unpreload.
         #   if it is, keeps this unpreload associations and caller.
         def call_association(object, associations)
+          return unless Bullet.start?
           add_call_object_associations(object, associations)
 
           if conditions_met?(object.bullet_ar_key, associations)
@@ -17,6 +18,7 @@ module Bullet
         end
 
         def add_possible_objects(object_or_objects)
+          return unless Bullet.start?
           return unless Bullet.n_plus_one_query_enable?
           return if object_or_objects.blank?
           if object_or_objects.is_a? Array
@@ -27,6 +29,7 @@ module Bullet
         end
 
         def add_impossible_object(object)
+          return unless Bullet.start?
           return unless Bullet.n_plus_one_query_enable?
           impossible_objects.add object.bullet_ar_key if object.id
         end

@@ -3,11 +3,12 @@ module Bullet
     class CounterCache < Base
       class <<self
         def clear
-          @@possible_objects = nil
-          @@impossible_objects = nil
+          Thread.current[:bullet_counter_possible_objects] = nil
+          Thread.current[:bullet_counter_impossible_objects] = nil
         end
 
         def add_counter_cache(object, associations)
+          return unless Bullet.start?
           return unless Bullet.counter_cache_enable?
 
           if conditions_met?(object.bullet_ar_key, associations)
@@ -16,6 +17,7 @@ module Bullet
         end
 
         def add_possible_objects(object_or_objects)
+          return unless Bullet.start?
           return unless Bullet.counter_cache_enable?
 
           if object_or_objects.is_a? Array
@@ -26,6 +28,7 @@ module Bullet
         end
 
         def add_impossible_object(object)
+          return unless Bullet.start?
           return unless Bullet.counter_cache_enable?
 
           impossible_objects.add object.bullet_ar_key
@@ -42,11 +45,11 @@ module Bullet
           end
 
           def possible_objects
-            @@possible_objects ||= Bullet::Registry::Object.new
+            Thread.current[:bullet_counter_possible_objects]
           end
 
           def impossible_objects
-            @@impossible_objects ||= Bullet::Registry::Object.new
+            Thread.current[:bullet_counter_impossible_objects]
           end
 
           def conditions_met?(bullet_ar_key, associations)

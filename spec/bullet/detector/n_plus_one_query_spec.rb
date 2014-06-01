@@ -7,7 +7,6 @@ module Bullet
         @post = Post.first
         @post2 = Post.last
       end
-      before(:each) { NPlusOneQuery.clear }
 
       context ".call_association" do
         it "should add call_object_associations" do

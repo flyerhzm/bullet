@@ -7,18 +7,6 @@ module Bullet
         @post1 = Post.first
         @post2 = Post.last
       end
-      before(:each) { Association.clear }
-
-      context ".clear" do
-        it "should clear all class variables" do
-          Association.clear
-          expect(Association.class_variable_get(:@@object_associations)).to be_nil
-          expect(Association.class_variable_get(:@@possible_objects)).to be_nil
-          expect(Association.class_variable_get(:@@impossible_objects)).to be_nil
-          expect(Association.class_variable_get(:@@call_object_associations)).to be_nil
-          expect(Association.class_variable_get(:@@eager_loadings)).to be_nil
-        end
-      end
 
       context ".add_object_association" do
         it "should add object, associations pair" do

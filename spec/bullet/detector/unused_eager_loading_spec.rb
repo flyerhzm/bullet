@@ -7,7 +7,6 @@ module Bullet
         @post = Post.first
         @post2 = Post.last
       end
-      before(:each) { UnusedEagerLoading.clear }
 
       context ".call_associations" do
         it "should get empty array if eager_loadings" do
@@ -46,7 +45,6 @@ module Bullet
         end
 
         it "should not create notification if object_association_diff is empty" do
-          UnusedEagerLoading.clear
           UnusedEagerLoading.add_object_associations(@post, :association)
           UnusedEagerLoading.add_eager_loadings([@post], :association)
           UnusedEagerLoading.add_call_object_associations(@post, :association)

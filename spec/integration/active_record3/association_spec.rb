@@ -2,15 +2,6 @@ require 'spec_helper'
 
 if active_record3?
   describe Bullet::Detector::Association, 'has_many' do
-    before(:each) do
-      Bullet.clear
-      Bullet.start_request
-    end
-
-    after(:each) do
-      Bullet.end_request
-    end
-
     context "post => comments" do
       it "should detect non preload post => comments" do
         Post.all.each do |post|
@@ -266,15 +257,6 @@ if active_record3?
   end
 
   describe Bullet::Detector::Association, 'belongs_to' do
-    before(:each) do
-      Bullet.clear
-      Bullet.start_request
-    end
-
-    after(:each) do
-      Bullet.end_request
-    end
-
     context "comment => post" do
       it "should detect non preload with comment => post" do
         Comment.all.each do |comment|
@@ -401,15 +383,6 @@ if active_record3?
   end
 
   describe Bullet::Detector::Association, 'has_and_belongs_to_many' do
-    before(:each) do
-      Bullet.clear
-      Bullet.start_request
-    end
-
-    after(:each) do
-      Bullet.end_request
-    end
-
     context "students <=> teachers" do
       it "should detect non preload associations" do
         Student.all.each do |student|
@@ -450,15 +423,6 @@ if active_record3?
   end
 
   describe Bullet::Detector::Association, 'has_many :through' do
-    before(:each) do
-      Bullet.clear
-      Bullet.start_request
-    end
-
-    after(:each) do
-      Bullet.end_request
-    end
-
     context "firm => clients" do
       it "should detect non preload associations" do
         Firm.all.each do |firm|
@@ -499,15 +463,6 @@ if active_record3?
   end
 
   describe Bullet::Detector::Association, "has_one" do
-    before(:each) do
-      Bullet.clear
-      Bullet.start_request
-    end
-
-    after(:each) do
-      Bullet.end_request
-    end
-
     context "company => address" do
       it "should detect non preload association" do
         Company.all.each do |company|
@@ -548,15 +503,6 @@ if active_record3?
   end
 
   describe Bullet::Detector::Association, "call one association that in possible objects" do
-    before(:each) do
-      Bullet.clear
-      Bullet.start_request
-    end
-
-    after(:each) do
-      Bullet.end_request
-    end
-
     it "should not detect preload association" do
       Post.all
       Post.first.comments.map(&:name)
@@ -568,15 +514,6 @@ if active_record3?
   end
 
   describe Bullet::Detector::Association, "STI" do
-    before(:each) do
-      Bullet.clear
-      Bullet.start_request
-    end
-
-    after(:each) do
-      Bullet.end_request
-    end
-
     context "page => author" do
       it "should detect non preload associations" do
         Page.all.each do |page|

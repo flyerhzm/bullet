@@ -2,14 +2,7 @@ require 'spec_helper'
 
 if mongoid?
   describe Bullet::Detector::Association do
-    before(:each) do
-      Bullet.clear
-      Bullet.start_request
-    end
-    after(:each) do
-      Bullet.end_request
-      Mongoid::IdentityMap.clear
-    end
+    after(:each) { Mongoid::IdentityMap.clear }
 
     context 'embeds_many' do
       context "posts => users" do

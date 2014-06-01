@@ -7,6 +7,7 @@ module Bullet
         #   get call_object_association from associations of call_object_associations whose object is in related_objects
         #   if association not in call_object_association, then the object => association - call_object_association is ununsed preload assocations
         def check_unused_preload_associations
+          return unless Bullet.start?
           return unless Bullet.unused_eager_loading_enable?
 
           object_associations.each do |bullet_ar_key, associations|
@@ -18,6 +19,7 @@ module Bullet
         end
 
         def add_eager_loadings(objects, associations)
+          return unless Bullet.start?
           return unless Bullet.unused_eager_loading_enable?
           bullet_ar_keys = objects.map(&:bullet_ar_key)
 

@@ -55,6 +55,14 @@ if active_record?
       Support::SqliteSeed.setup_db
       Support::SqliteSeed.seed_db
     end
+
+    config.before(:each) do
+      Bullet.start_request
+    end
+
+    config.after(:each) do
+      Bullet.end_request
+    end
   end
 
   if ENV["LOG"]

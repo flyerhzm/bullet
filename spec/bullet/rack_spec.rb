@@ -57,16 +57,10 @@ module Bullet
 
     context "#call" do
       context "when Bullet is enabled" do
-        it "should invoke Bullet.start_request and Bullet.end_request" do
-          expect(Bullet).to receive(:start_request)
-          expect(Bullet).to receive(:end_request)
-          middleware.call([])
-        end
-
         it "should return original response body" do
           expected_response = Support::ResponseDouble.new "Actual body"
           app.response = expected_response
-          status, headers, response = middleware.call([])
+          _, _, response = middleware.call([])
           expect(response).to eq(expected_response)
         end
 

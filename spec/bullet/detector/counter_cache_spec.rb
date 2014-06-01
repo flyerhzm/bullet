@@ -7,14 +7,6 @@ module Bullet
         @post1 = Post.first
         @post2 = Post.last
       end
-      before(:each) { CounterCache.clear }
-
-      context ".clear" do
-        it "should clear all class variables" do
-          expect(CounterCache.class_variable_get(:@@possible_objects)).to be_nil
-          expect(CounterCache.class_variable_get(:@@impossible_objects)).to be_nil
-        end
-      end
 
       context ".add_counter_cache" do
         it "should create notification if conditions met" do

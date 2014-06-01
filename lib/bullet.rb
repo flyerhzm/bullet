@@ -96,20 +96,39 @@ module Bullet
     end
 
     def start_request
-      notification_collector.reset
-      DETECTORS.each { |bullet| bullet.start_request }
+      Thread.current[:bullet_start] = true
+      Thread.current[:bullet_notification_collector] = Bullet::NotificationCollector.new
+
+      Thread.current[:bullet_object_associations] = Bullet::Registry::Base.new
+      Thread.current[:bullet_call_object_associations] = Bullet::Registry::Base.new
+      Thread.current[:bullet_possible_objects] = Bullet::Registry::Object.new
+      Thread.current[:bullet_impossible_objects] = Bullet::Registry::Object.new
+      Thread.current[:bullet_eager_loadings] = Bullet::Registry::Association.new
+
+      Thread.current[:bullet_counter_possible_objects] ||= Bullet::Registry::Object.new
+      Thread.current[:bullet_counter_impossible_objects] ||= Bullet::Registry::Object.new
     end
 
     def end_request
-      DETECTORS.each { |bullet| bullet.end_request }
+      Thread.current[:bullet_start] = nil
+      Thread.current[:bullet_notification_collector] = nil
+
+      Thread.current[:bullet_object_associations] = nil
+      Thread.current[:bullet_possible_objects] = nil
+      Thread.current[:bullet_impossible_objects] = nil
+      Thread.current[:bullet_call_object_associations] = nil
+      Thread.current[:bullet_eager_loadings] = nil
+
+      Thread.current[:bullet_counter_possible_objects] = nil
+      Thread.current[:bullet_counter_impossible_objects] = nil
     end
 
-    def clear
-      DETECTORS.each { |bullet| bullet.clear }
+    def start?
+      Thread.current[:bullet_start]
     end
 
     def notification_collector
-      @notification_collector ||= Bullet::NotificationCollector.new
+      Thread.current[:bullet_notification_collector]
     end
 
     def notification?
