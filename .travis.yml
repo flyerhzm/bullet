@@ -1,6 +1,6 @@
 language: ruby
 rvm:
-  - 2.1.1
+  - 2.1.2
 gemfile:
   - Gemfile.rails-4.1
   - Gemfile.rails-4.0
