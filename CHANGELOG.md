@@ -1,5 +1,12 @@
 # Next Release
 
+## 4.10.0 (06/06/2014)
+
+* Handle join query smarter
+* Support mongoid 4.0
+* Thread safe
+* Add debug mode
+
 ## 4.9.0 (04/30/2014)
 
 * Add Bullet.stacktrace_includes option
