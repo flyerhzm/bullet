@@ -10,7 +10,7 @@ module Bullet
       return @app.call(env) unless Bullet.enable?
       Bullet.start_request
       status, headers, response = @app.call(env)
-      return [status, headers, response] if file?(headers) || empty?(response)
+      return [status, headers, response] if file?(headers) || sse?(response) || empty?(response)
 
       response_body = nil
       if Bullet.notification?
@@ -19,10 +19,13 @@ module Bullet
           add_footer_note(response_body) if Bullet.add_footer
           headers['Content-Length'] = response_body.bytesize.to_s
         end
+      end
+      [status, headers, response_body ? [response_body] : response]
+    ensure
+      if Bullet.enable? && Bullet.notification?
         Bullet.perform_out_of_channel_notifications(env)
       end
       Bullet.end_request
-      [status, headers, response_body ? [response_body] : response]
     end
 
     # fix issue if response's body is a Proc
@@ -43,9 +46,12 @@ module Bullet
       response_body << "<div #{footer_div_style}>" + Bullet.footer_info.uniq.join("<br>") + "</div>"
     end
 
-    # if send file?
     def file?(headers)
       headers["Content-Transfer-Encoding"] == "binary"
+    end
+
+    def sse?(response)
+      response.respond_to? :stream
     end
 
     def html_request?(headers, response)
