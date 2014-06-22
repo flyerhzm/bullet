@@ -1,5 +1,9 @@
 # Next Release
 
+## 4.11.0
+
+* Support empty? call on ar associations
+
 ## 4.10.0 (06/06/2014)
 
 * Handle join query smarter
