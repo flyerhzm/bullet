@@ -637,5 +637,30 @@ if !mongoid? && active_record3?
         expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
       end
     end
+
+    context "fields_for" do
+      require 'action_view'
+      require 'action_controller'
+      require 'active_support'
+      class Helper < ActionView::Base
+        include ActiveSupport::Configurable
+        include ActionController::RequestForgeryProtection
+      end
+      let(:app) { Helper.new }
+
+      it "should not affect bullet" do
+        post = Post.new
+        app.form_for post, url: '/posts' do |p|
+          p.text_field :name
+          p.fields_for :comments do |c|
+            c.text_field :name
+          end
+        end
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+
+        expect(Bullet::Detector::Association).to be_completely_preloading_associations
+        expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
+      end
+    end
   end
 end
