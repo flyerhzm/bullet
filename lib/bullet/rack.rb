@@ -67,7 +67,7 @@ style="position: fixed; bottom: 0pt; left: 0pt; cursor: pointer; border-style: s
  -moz-border-top-colors: none; -moz-border-right-colors: none; -moz-border-bottom-colors: none;
  -moz-border-left-colors: none; -moz-border-image: none; border-width: 2pt 2pt 0px 0px;
  padding: 5px; border-radius: 0pt 10pt 0pt 0px; background: none repeat scroll 0% 0% rgba(200, 200, 200, 0.8);
- color: rgb(119, 119, 119); font-size: 18px;"
+ color: rgb(119, 119, 119); font-size: 18px; font-family: 'Arial', sans-serif; z-index:9999;"
 EOF
     end
   end

@@ -1,4 +1,4 @@
-source "https://rubygems.org"
+source 'https://rubygems.org'
 
 gemspec
 
@@ -7,9 +7,9 @@ gem 'sqlite3', platforms: [:ruby]
 gem 'activerecord-jdbcsqlite3-adapter', platforms: [:jruby]
 gem 'activerecord-import'
 
-gem "rspec"
-gem "guard"
-gem "guard-rspec"
+gem 'rspec'
+gem 'guard'
+gem 'guard-rspec'
 
 gem 'coveralls', require: false
 
