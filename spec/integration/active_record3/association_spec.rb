@@ -51,6 +51,16 @@ if !mongoid? && active_record3?
 
         expect(Bullet::Detector::Association).to be_completely_preloading_associations
       end
+
+      it "should detect non preload post => comments with empty?" do
+        Post.all.each do |post|
+          post.comments.empty?
+        end
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+        expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
+
+        expect(Bullet::Detector::Association).to be_detecting_unpreloaded_association_for(Post, :comments)
+      end
     end
 
     context "category => posts => comments" do

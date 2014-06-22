@@ -97,6 +97,12 @@ module Bullet
           Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name)
           origin_last(*args)
         end
+
+        alias_method :origin_empty?, :empty?
+        def empty?
+          Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name)
+          origin_empty?
+        end
       end
 
       ::ActiveRecord::Associations::AssociationProxy.class_eval do
