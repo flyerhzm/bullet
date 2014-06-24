@@ -10,6 +10,7 @@ module Bullet
         #   if it is, keeps this unpreload associations and caller.
         def call_association(object, associations)
           return unless Bullet.start?
+          return unless object.id
           add_call_object_associations(object, associations)
 
           Bullet.debug("Detector::NPlusOneQuery#call_association", "object: #{object.bullet_ar_key}, associations: #{associations}")
@@ -22,8 +23,9 @@ module Bullet
         def add_possible_objects(object_or_objects)
           return unless Bullet.start?
           return unless Bullet.n_plus_one_query_enable?
-
           objects = Array(object_or_objects)
+          return if objects.map(&:id).compact.empty?
+
           Bullet.debug("Detector::NPlusOneQuery#add_possible_objects", "objects: #{objects.map(&:bullet_ar_key).join(', ')}")
           objects.each { |object| possible_objects.add object.bullet_ar_key }
         end
@@ -31,6 +33,7 @@ module Bullet
         def add_impossible_object(object)
           return unless Bullet.start?
           return unless Bullet.n_plus_one_query_enable?
+          return unless object.id
 
           Bullet.debug("Detector::NPlusOneQuery#add_impossible_object", "object: #{object.bullet_ar_key}")
           impossible_objects.add object.bullet_ar_key
