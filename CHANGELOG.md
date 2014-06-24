@@ -3,6 +3,7 @@
 ## 4.11.0
 
 * Support empty? call on ar associations
+* Skip detecting if object is a new record
 
 ## 4.10.0 (06/06/2014)
 
