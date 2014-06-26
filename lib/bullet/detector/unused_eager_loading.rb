@@ -10,12 +10,12 @@ module Bullet
           return unless Bullet.start?
           return unless Bullet.unused_eager_loading_enable?
 
-          object_associations.each do |bullet_ar_key, associations|
-            object_association_diff = diff_object_associations bullet_ar_key, associations
+          object_associations.each do |bullet_key, associations|
+            object_association_diff = diff_object_associations bullet_key, associations
             next if object_association_diff.empty?
 
-            Bullet.debug("detect unused preload", "object: #{bullet_ar_key}, associations: #{object_association_diff}")
-            create_notification bullet_ar_key.bullet_class_name, object_association_diff
+            Bullet.debug("detect unused preload", "object: #{bullet_key}, associations: #{object_association_diff}")
+            create_notification bullet_key.bullet_class_name, object_association_diff
           end
         end
 
@@ -24,13 +24,13 @@ module Bullet
           return unless Bullet.unused_eager_loading_enable?
           return if objects.map(&:id).compact.empty?
 
-          Bullet.debug("Detector::UnusedEagerLoading#add_eager_loadings", "objects: #{objects.map(&:bullet_ar_key).join(', ')}, associations: #{associations}")
-          bullet_ar_keys = objects.map(&:bullet_ar_key)
+          Bullet.debug("Detector::UnusedEagerLoading#add_eager_loadings", "objects: #{objects.map(&:bullet_key).join(', ')}, associations: #{associations}")
+          bullet_keys = objects.map(&:bullet_key)
 
           to_add = nil
           to_merge, to_delete = [], []
           eager_loadings.each do |k, v|
-            key_objects_overlap = k & bullet_ar_keys
+            key_objects_overlap = k & bullet_keys
 
             next if key_objects_overlap.empty?
 
@@ -40,10 +40,10 @@ module Bullet
             else
               to_merge << [key_objects_overlap, ( eager_loadings[k].dup  << associations )]
 
-              keys_without_objects = k - bullet_ar_keys
+              keys_without_objects = k - bullet_keys
               to_merge << [keys_without_objects, eager_loadings[k]]
               to_delete << k
-              bullet_ar_keys = bullet_ar_keys - k
+              bullet_keys = bullet_keys - k
             end
           end
 
@@ -51,7 +51,7 @@ module Bullet
           to_merge.each { |k,val| eager_loadings.merge k, val }
           to_delete.each { |k| eager_loadings.delete k }
 
-          eager_loadings.add bullet_ar_keys, associations unless bullet_ar_keys.empty?
+          eager_loadings.add bullet_keys, associations unless bullet_keys.empty?
         end
 
         private
@@ -64,18 +64,18 @@ module Bullet
             end
           end
 
-          def call_associations(bullet_ar_key, associations)
+          def call_associations(bullet_key, associations)
             all = Set.new
-            eager_loadings.similarly_associated(bullet_ar_key, associations).each do |related_bullet_ar_key|
-              coa = call_object_associations[related_bullet_ar_key]
+            eager_loadings.similarly_associated(bullet_key, associations).each do |related_bullet_key|
+              coa = call_object_associations[related_bullet_key]
               next if coa.nil?
               all.merge coa
             end
             all.to_a
           end
 
-          def diff_object_associations(bullet_ar_key, associations)
-            potential_associations = associations - call_associations(bullet_ar_key, associations)
+          def diff_object_associations(bullet_key, associations)
+            potential_associations = associations - call_associations(bullet_key, associations)
             potential_associations.reject { |a| a.is_a?(Hash) }
           end
       end

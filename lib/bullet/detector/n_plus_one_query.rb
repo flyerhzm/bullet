@@ -13,9 +13,9 @@ module Bullet
           return unless object.id
           add_call_object_associations(object, associations)
 
-          Bullet.debug("Detector::NPlusOneQuery#call_association", "object: #{object.bullet_ar_key}, associations: #{associations}")
-          if conditions_met?(object.bullet_ar_key, associations)
-            Bullet.debug("detect n + 1 query", "object: #{object.bullet_ar_key}, associations: #{associations}")
+          Bullet.debug("Detector::NPlusOneQuery#call_association", "object: #{object.bullet_key}, associations: #{associations}")
+          if conditions_met?(object.bullet_key, associations)
+            Bullet.debug("detect n + 1 query", "object: #{object.bullet_key}, associations: #{associations}")
             create_notification caller_in_project, object.class.to_s, associations
           end
         end
@@ -26,8 +26,8 @@ module Bullet
           objects = Array(object_or_objects)
           return if objects.map(&:id).compact.empty?
 
-          Bullet.debug("Detector::NPlusOneQuery#add_possible_objects", "objects: #{objects.map(&:bullet_ar_key).join(', ')}")
-          objects.each { |object| possible_objects.add object.bullet_ar_key }
+          Bullet.debug("Detector::NPlusOneQuery#add_possible_objects", "objects: #{objects.map(&:bullet_key).join(', ')}")
+          objects.each { |object| possible_objects.add object.bullet_key }
         end
 
         def add_impossible_object(object)
@@ -35,8 +35,8 @@ module Bullet
           return unless Bullet.n_plus_one_query_enable?
           return unless object.id
 
-          Bullet.debug("Detector::NPlusOneQuery#add_impossible_object", "object: #{object.bullet_ar_key}")
-          impossible_objects.add object.bullet_ar_key
+          Bullet.debug("Detector::NPlusOneQuery#add_impossible_object", "object: #{object.bullet_key}")
+          impossible_objects.add object.bullet_key
         end
 
         private
@@ -50,8 +50,8 @@ module Bullet
           end
 
           # decide whether the object.associations is unpreloaded or not.
-          def conditions_met?(bullet_ar_key, associations)
-            possible?(bullet_ar_key) && !impossible?(bullet_ar_key) && !association?(bullet_ar_key, associations)
+          def conditions_met?(bullet_key, associations)
+            possible?(bullet_key) && !impossible?(bullet_key) && !association?(bullet_key, associations)
           end
 
           def caller_in_project
@@ -63,17 +63,17 @@ module Bullet
             end
           end
 
-          def possible?(bullet_ar_key)
-            possible_objects.include? bullet_ar_key
+          def possible?(bullet_key)
+            possible_objects.include? bullet_key
           end
 
-          def impossible?(bullet_ar_key)
-            impossible_objects.include? bullet_ar_key
+          def impossible?(bullet_key)
+            impossible_objects.include? bullet_key
           end
 
           # check if object => associations already exists in object_associations.
-          def association?(bullet_ar_key, associations)
-            value = object_associations[bullet_ar_key]
+          def association?(bullet_key, associations)
+            value = object_associations[bullet_key]
             if value
               value.each do |v|
                 result = v.is_a?(Hash) ? v.has_key?(associations) : v == associations

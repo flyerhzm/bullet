@@ -7,8 +7,8 @@ module Bullet
           return unless Bullet.counter_cache_enable?
           return unless object.id
 
-          Bullet.debug("Detector::CounterCache#add_counter_cache", "object: #{object.bullet_ar_key}, associations: #{associations}")
-          if conditions_met?(object.bullet_ar_key, associations)
+          Bullet.debug("Detector::CounterCache#add_counter_cache", "object: #{object.bullet_key}, associations: #{associations}")
+          if conditions_met?(object.bullet_key, associations)
             create_notification object.class.to_s, associations
           end
         end
@@ -19,8 +19,8 @@ module Bullet
           objects = Array(object_or_objects)
           return if objects.map(&:id).compact.empty?
 
-          Bullet.debug("Detector::CounterCache#add_possible_objects", "objects: #{objects.map(&:bullet_ar_key).join(', ')}")
-          objects.each { |object| possible_objects.add object.bullet_ar_key }
+          Bullet.debug("Detector::CounterCache#add_possible_objects", "objects: #{objects.map(&:bullet_key).join(', ')}")
+          objects.each { |object| possible_objects.add object.bullet_key }
         end
 
         def add_impossible_object(object)
@@ -28,8 +28,8 @@ module Bullet
           return unless Bullet.counter_cache_enable?
           return unless object.id
 
-          Bullet.debug("Detector::CounterCache#add_impossible_object", "object: #{object.bullet_ar_key}")
-          impossible_objects.add object.bullet_ar_key
+          Bullet.debug("Detector::CounterCache#add_impossible_object", "object: #{object.bullet_key}")
+          impossible_objects.add object.bullet_key
         end
 
         private
@@ -50,8 +50,8 @@ module Bullet
             Thread.current[:bullet_counter_impossible_objects]
           end
 
-          def conditions_met?(bullet_ar_key, associations)
-            possible_objects.include?(bullet_ar_key) && !impossible_objects.include?(bullet_ar_key)
+          def conditions_met?(bullet_key, associations)
+            possible_objects.include?(bullet_key) && !impossible_objects.include?(bullet_key)
           end
       end
     end
