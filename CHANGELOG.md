@@ -1,6 +1,11 @@
 # Next Release
 
-## 4.11.0
+## 4.12.0 (not released yet)
+
+* Use primary_key rather than id for bullet_ar_key
+* Rename bullet_ar_key to bullet_key
+
+## 4.11.0 (06/24/2014)
 
 * Support empty? call on ar associations
 * Skip detecting if object is a new record
