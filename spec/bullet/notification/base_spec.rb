@@ -22,6 +22,35 @@ module Bullet
           user = `whoami`.chomp
           expect(subject.whoami).to eq("user: #{user}")
         end
+
+        it "should leverage ENV parameter" do
+          temp_env_variable("USER", "bogus") do
+            expect(subject.whoami).to eq("user: bogus")
+          end
+        end
+
+        it "should return blank if no user available" do
+          temp_env_variable("USER","") do
+            expect(subject).to receive(:`).with("whoami").and_return("")
+            expect(subject.whoami).to eq("")
+          end
+        end
+
+        it "should return blank if whoami is not available" do
+          temp_env_variable("USER","") do
+            expect(subject).to receive(:`).with("whoami").and_raise(Errno::ENOENT)
+            expect(subject.whoami).to eq("")
+          end
+        end
+
+        def temp_env_variable(name, value)
+          old_value = ENV[name]
+          ENV[name] = value
+          yield
+        ensure
+          ENV[name] = old_value
+        end
+
       end
 
       context "#body_with_caller" do
@@ -46,6 +75,14 @@ module Bullet
           allow(subject).to receive(:title).and_return("title")
           allow(subject).to receive(:body_with_caller).and_return("body_with_caller")
           expect(subject.full_notice).to eq("whoami\nurl\ntitle\nbody_with_caller")
+        end
+
+        it "should return url + title + body_with_caller" do
+          allow(subject).to receive(:whoami).and_return("")
+          allow(subject).to receive(:url).and_return("url")
+          allow(subject).to receive(:title).and_return("title")
+          allow(subject).to receive(:body_with_caller).and_return("body_with_caller")
+          expect(subject.full_notice).to eq("url\ntitle\nbody_with_caller")
         end
       end
 
