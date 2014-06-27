@@ -51,7 +51,7 @@ module Bullet
     end
 
     def sse?(response)
-      response.respond_to? :stream
+      response.respond_to?(:stream) && response.stream.is_a?(ActionController::Live::Buffer)
     end
 
     def html_request?(headers, response)
