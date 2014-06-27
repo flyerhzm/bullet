@@ -4,6 +4,7 @@
 
 * Use primary_key rather than id for bullet_ar_key
 * Rename bullet_ar_key to bullet_key
+* Fix rails sse detect
 
 ## 4.11.0 (06/24/2014)
 
