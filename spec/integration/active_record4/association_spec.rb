@@ -369,7 +369,7 @@ if !mongoid? && active_record4?
           comment.post.writer.newspaper.name
         end
         Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
-        Bullet::Detector::Association.should_not be_has_unused_preload_associations
+        expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
 
         expect(Bullet::Detector::Association).to be_detecting_unpreloaded_association_for(Writer, :newspaper)
       end

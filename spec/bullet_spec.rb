@@ -26,8 +26,8 @@ describe Bullet, focused: true do
 
         context 'enable Bullet again without patching again the orms' do
           before do
-            Bullet::Mongoid.should_not_receive(:enable) if defined? Bullet::Mongoid
-            Bullet::ActiveRecord.should_not_receive(:enable) if defined? Bullet::ActiveRecord
+            expect(Bullet::Mongoid).not_to receive(:enable) if defined? Bullet::Mongoid
+            expect(Bullet::ActiveRecord).not_to receive(:enable) if defined? Bullet::ActiveRecord
             Bullet.enable = true
           end
 
