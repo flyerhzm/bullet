@@ -19,9 +19,9 @@ module Bullet
       end
 
       def whoami
-        user = `whoami`
-        if user
-          "user: #{user.chomp}"
+        @user ||= ENV['USER'].presence || (`whoami`.chomp rescue "")
+        if @user.present?
+          "user: #{@user}"
         else
           ""
         end
@@ -36,7 +36,7 @@ module Bullet
       end
 
       def full_notice
-        [whoami, url, title, body_with_caller].compact.join("\n")
+        [whoami.presence, url, title, body_with_caller].compact.join("\n")
       end
 
       def notify_inline
@@ -48,7 +48,7 @@ module Bullet
       end
 
       def short_notice
-        [whoami, url, title, body].compact.join("\n")
+        [whoami.presence, url, title, body].compact.join("\n")
       end
 
       def notification_data
