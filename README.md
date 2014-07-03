@@ -60,7 +60,7 @@ config.after_initialize do
 end
 ```
 
-The notifier of bullet is a wrap of [uniform_notifier](https://github.com/flyerhzm/uniform_notifier)
+The notifier of Bullet is a wrap of [uniform_notifier](https://github.com/flyerhzm/uniform_notifier)
 
 The code above will enable all seven of the Bullet notification systems:
 * `Bullet.enable`: enable Bullet gem, otherwise do nothing
@@ -70,25 +70,31 @@ The code above will enable all seven of the Bullet notification systems:
 * `Bullet.airbrake`: add notifications to airbrake
 * `Bullet.console`: log warnings to your browser's console.log (Safari/Webkit browsers or Firefox w/Firebug installed)
 * `Bullet.growl`: pop up Growl warnings if your system has Growl installed. Requires a little bit of configuration
-* `Bullet.xmpp`: send XMPP/Jabber notifications to the receiver indicated. Note that the code will currently not handle the adding of contacts, so you will need to make both accounts indicated know each other manually before you will receive any notifications. If you restart the development server frequently, the 'coming online' sound for the bullet account may start to annoy - in this case set :show_online_status to false; you will still get notifications, but the bullet account won't announce it's online status anymore.
+* `Bullet.xmpp`: send XMPP/Jabber notifications to the receiver indicated. Note that the code will currently not handle the adding of contacts, so you will need to make both accounts indicated know each other manually before you will receive any notifications. If you restart the development server frequently, the 'coming online' sound for the Bullet account may start to annoy - in this case set :show_online_status to false; you will still get notifications, but the Bullet account won't announce it's online status anymore.
 * `Bullet.raise`: raise errors, useful for making your specs fail unless they have optimized queries
 * `Bullet.add_footer`: adds the details in the bottom left corner of the page
 * `Bullet.stacktrace_includes`: include paths with any of these substrings in the stack trace, even if they are not in your main app
 
-Bullet also allows you to disable n_plus_one_query, unused_eager_loading
-and counter_cache detectors respectively.
+Bullet also allows you to disable any of its detectors.
 
 ```ruby
-Bullet.n_plus_one_query_enable = false
+# Each of these settings defaults to true
+
+# Detect N+1 queries
+Bullet.n_plus_one_query_enable     = false
+
+# Detect eager-loaded associations which are not used
 Bullet.unused_eager_loading_enable = false
-Bullet.counter_cache_enable = false
+
+# Detect unnecessary COUNT queries which could be avoided
+# with a counter_cache
+Bullet.counter_cache_enable        = false
 ```
 
 ## Whitelist
 
-Sometimes bullet may notify n plus one query, unused eager loading or
-counter cache you don't care about or they occur in the third party gems
-that you can't fix, you can add whitelist to bullet
+Sometimes Bullet may notify you of query problems you don't care to fix, or
+which come from outside your code. You can whitelist these to ignore them:
 
 ```ruby
 Bullet.add_whitelist :type => :n_plus_one_query, :class_name => "Post", :association => :comments
@@ -136,13 +142,13 @@ see [https://github.com/flyerhzm/uniform_notifier](https://github.com/flyerhzm/u
 
 ## Important
 
-If you find bullet does not work for you, *please disable your browser's cache*.
+If you find Bullet does not work for you, *please disable your browser's cache*.
 
 ## Advanced
 
 ### Profile a job
 
-The bullet gem uses rack middleware to profile requests. If you want to use bullet without an http server, like to profile a job, you can use use profile method and fetch warnings
+The Bullet gem uses rack middleware to profile requests. If you want to use Bullet without an http server, like to profile a job, you can use use profile method and fetch warnings
 
 ```ruby
 Bullet.profile do
@@ -153,7 +159,7 @@ warnings = Bullet.warnings
 
 ### Work with sinatra
 
-Configure and use bullet rack
+Configure and use `Bullet::Rack`
 
 ```ruby
 configure :development do
@@ -165,7 +171,7 @@ end
 
 ### Run in tests
 
-First you need to enable bullet in test environment.
+First you need to enable Bullet in test environment.
 
 ```ruby
 # config/environments/test.rb
@@ -176,7 +182,7 @@ config.after_initialize do
 end
 ```
 
-Then wrap each test in bullet api.
+Then wrap each test in Bullet api.
 
 ```ruby
 # spec/spec_helper.rb
@@ -201,11 +207,11 @@ env.
 
 [https://github.com/flyerhzm/bullet/contributors](https://github.com/flyerhzm/bullet/contributors)
 
-## Step by step example
+## Demo
 
-Bullet is designed to function as you browse through your application in development. It will alert you whenever it encounters N+1 queries or unused eager loading.
+Bullet is designed to function as you browse through your application in development. To see it in action, follow these steps to create, detect, and fix example query problems.
 
-1\. setup test environment
+1\. Create an example application
 
 ```
 $ rails new test_bullet
@@ -215,7 +221,7 @@ $ rails g scaffold comment name:string post_id:integer
 $ bundle exec rake db:migrate
 ```
 
-2\. change `app/model/post.rb` and `app/model/comment.rb`
+2\. Change `app/model/post.rb` and `app/model/comment.rb`
 
 ```ruby
 class Post < ActiveRecord::Base
@@ -227,7 +233,7 @@ class Comment < ActiveRecord::Base
 end
 ```
 
-3\. go to `rails c` and execute
+3\. Go to `rails c` and execute
 
 ```ruby
 post1 = Post.create(:name => 'first')
@@ -238,7 +244,7 @@ post2.comments.create(:name => 'third')
 post2.comments.create(:name => 'fourth')
 ```
 
-4\. change the `app/views/posts/index.html.erb` to produce a N+1 query
+4\. Change the `app/views/posts/index.html.erb` to produce a N+1 query
 
 ```
 <% @posts.each do |post| %>
@@ -252,7 +258,7 @@ post2.comments.create(:name => 'fourth')
 <% end %>
 ```
 
-5\. add bullet gem to `Gemfile`
+5\. Add the `bullet` gem to the `Gemfile`
 
 ```ruby
 gem "bullet"
@@ -264,7 +270,7 @@ And run
 bundle install
 ```
 
-6\. enable the bullet gem in development, add a line to
+6\. enable the Bullet gem in development, add a line to
 `config/environments/development.rb`
 
 ```ruby
@@ -279,13 +285,13 @@ config.after_initialize do
 end
 ```
 
-7\. start server
+7\. Start the server
 
 ```
 $ rails s
 ```
 
-8\. input http://localhost:3000/posts in browser, then you will see a popup alert box says
+8\. Visit `http://localhost:3000/posts` in browser, and you will see a popup alert box that says
 
 ```
 The request has unused preload associations as follows:
@@ -294,7 +300,7 @@ The request has N+1 queries as follows:
 model: Post => associations: [comment]
 ```
 
-which means there is a N+1 query from post object to comments associations.
+which means there is a N+1 query from the Post object to its Comment association.
 
 In the meanwhile, there's a log appended into `log/bullet.log` file
 
@@ -309,7 +315,7 @@ In the meanwhile, there's a log appended into `log/bullet.log` file
   /home/flyerhzm/Downloads/test_bullet/app/controllers/posts_controller.rb:7:in `index'
 ```
 
-The generated SQLs are
+The generated SQL is:
 
 ```
 Post Load (1.0ms)   SELECT * FROM "posts"
@@ -317,8 +323,7 @@ Comment Load (0.4ms)   SELECT * FROM "comments" WHERE ("comments".post_id = 1)
 Comment Load (0.3ms)   SELECT * FROM "comments" WHERE ("comments".post_id = 2)
 ```
 
-
-9\. fix the N+1 query, change `app/controllers/posts_controller.rb` file
+9\. To fix the N+1 query, change `app/controllers/posts_controller.rb` file
 
 ```ruby
 def index
@@ -331,18 +336,18 @@ def index
 end
 ```
 
-10\. refresh http://localhost:3000/posts page, no alert box and no log appended.
+10\. Refresh `http://localhost:3000/posts`. Now there's no alert box and nothing new in the log.
 
-The generated SQLs are
+The generated SQL is:
 
 ```
 Post Load (0.5ms)   SELECT * FROM "posts"
 Comment Load (0.5ms)   SELECT "comments".* FROM "comments" WHERE ("comments".post_id IN (1,2))
 ```
 
-a N+1 query fixed. Cool!
+N+1 query fixed. Cool!
 
-11\. now simulate unused eager loading. Change
+11\. Now simulate unused eager loading. Change
 `app/controllers/posts_controller.rb` and
 `app/views/posts/index.html.erb`
 
@@ -368,7 +373,7 @@ end
 <% end %>
 ```
 
-12\. refresh http://localhost:3000/posts page, then you will see a popup alert box says
+12\. Refresh `http://localhost:3000/posts`, and you will see a popup alert box that says
 
 ```
 The request has unused preload associations as follows:
@@ -377,14 +382,14 @@ The request has N+1 queries as follows:
 None
 ```
 
-In the meanwhile, there's a log appended into `log/bullet.log` file
+Meanwhile, there's a line appended to `log/bullet.log`
 
 ```
 2009-08-25 21:13:22[INFO] Unused preload associations: PATH_INFO: /posts;    model: Post => associations: [comments]·
 Remove from your finder: :include => [:comments]
 ```
 
-13\. simulate counter_cache. Change `app/controllers/posts_controller.rb`
+13\. Simulate counter_cache. Change `app/controllers/posts_controller.rb`
 and `app/views/posts/index.html.erb`
 
 ```ruby
@@ -410,19 +415,18 @@ end
 <% end %>
 ```
 
-14\. refresh http://localhost:3000/posts page, then you will see a popup alert box says
+14\. Refresh `http://localhost:3000/posts`, then you will see a popup alert box that says
 
 ```
 Need counter cache
   Post => [:comments]
 ```
 
-In the meanwhile, there's a log appended into `log/bullet.log` file.
+Meanwhile, there's a line appended to `log/bullet.log`
 
 ```
 2009-09-11 10:07:10[INFO] Need Counter Cache
   Post => [:comments]
 ```
-
 
 Copyright (c) 2009 - 2014 Richard Huang (flyerhzm@gmail.com), released under the MIT license
