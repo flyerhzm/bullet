@@ -75,13 +75,20 @@ The code above will enable all seven of the Bullet notification systems:
 * `Bullet.add_footer`: adds the details in the bottom left corner of the page
 * `Bullet.stacktrace_includes`: include paths with any of these substrings in the stack trace, even if they are not in your main app
 
-Bullet also allows you to disable n_plus_one_query, unused_eager_loading
-and counter_cache detectors respectively.
+Bullet also allows you to disable any of its detectors.
 
 ```ruby
-Bullet.n_plus_one_query_enable = false
+# Each of these settings defaults to true
+
+# Detect N+1 queries
+Bullet.n_plus_one_query_enable     = false
+
+# Detect eager-loaded associations which are not used
 Bullet.unused_eager_loading_enable = false
-Bullet.counter_cache_enable = false
+
+# Detect unnecessary COUNT queries which could be avoided
+# with a counter_cache
+Bullet.counter_cache_enable        = false
 ```
 
 ## Whitelist
