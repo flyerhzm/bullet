@@ -27,6 +27,7 @@ module Bullet
         def preloaders_on(association, records, scope)
           if records.first.class.name !~ /^HABTM_/
             records.each do |record|
+              next unless record
               Bullet::Detector::Association.add_object_associations(record, association)
             end
             Bullet::Detector::UnusedEagerLoading.add_eager_loadings(records, association)
