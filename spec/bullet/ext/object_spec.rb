@@ -14,4 +14,18 @@ describe Object do
       end
     end
   end
+
+  context "primary_key_value" do
+    it "should return id" do
+      post = Post.first
+      expect(post.primary_key_value).to eq(post.id)
+    end
+
+    it "should return primary key value" do
+      post = Post.first
+      Post.primary_key = 'name'
+      expect(post.primary_key_value).to eq(post.name)
+      Post.primary_key = 'id'
+    end
+  end
 end
