@@ -98,19 +98,9 @@ module Bullet
         alias_method :origin_reader, :reader
         def reader(force_reload = false)
           result = origin_reader(force_reload)
-          Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name)
+          Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name) unless @inversed
           Bullet::Detector::NPlusOneQuery.add_possible_objects(result)
           result
-        end
-      end
-
-      ::ActiveRecord::Associations::Association.class_eval do
-        alias_method :origin_set_inverse_instance, :set_inverse_instance
-        def set_inverse_instance(record)
-          if record && invertible_for?(record)
-            Bullet::Detector::NPlusOneQuery.add_impossible_object(record)
-          end
-          origin_set_inverse_instance(record)
         end
       end
 

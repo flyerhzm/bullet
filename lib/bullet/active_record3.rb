@@ -119,7 +119,7 @@ module Bullet
         alias_method :origin_set_inverse_instance, :set_inverse_instance
         def set_inverse_instance(record, instance)
           if record && we_can_set_the_inverse_on_this?(record)
-            Bullet::Detector::NPlusOneQuery.add_impossible_object(record)
+            Bullet::Detector::NPlusOneQuery.add_inversed_object(record, @reflection.inverse_of.name)
           end
           origin_set_inverse_instance(record, instance)
         end

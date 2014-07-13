@@ -39,7 +39,7 @@ if !mongoid? && active_record3?
         expect(Bullet::Detector::Association).to be_completely_preloading_associations
       end
 
-      it "should detect non preload comment => post with inverse_of" do
+      it "should not detect non preload comment => post with inverse_of" do
         Post.includes(:comments).each do |post|
           post.comments.each do |comment|
             comment.name

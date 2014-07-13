@@ -1,7 +1,7 @@
 class Post < ActiveRecord::Base
   extend Bullet::Dependency
 
-  belongs_to :category
+  belongs_to :category, inverse_of: :posts
   belongs_to :writer
   has_many :comments, inverse_of: :post
 

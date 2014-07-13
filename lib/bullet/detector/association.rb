@@ -48,11 +48,17 @@ module Bullet
           # impossible_objects keep the class to objects relationships
           # that the objects may not cause N+1 query.
           # e.g. { Post => ["Post:1", "Post:2"] }
-          # Notice: impossible_objects are not accurate,
           # if find collection returns only one object, then the object is impossible object,
           # impossible_objects are used to avoid treating 1+1 query to N+1 query.
           def impossible_objects
             Thread.current[:bullet_impossible_objects]
+          end
+
+          # inversed_objects keeps object relationships
+          # that association is inversed.
+          # e.g. { "Comment:1" => ["post"] }
+          def inversed_objects
+            Thread.current[:bullet_inversed_objects]
           end
 
           # eager_loadings keep the object relationships
