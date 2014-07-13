@@ -65,7 +65,7 @@ if active_record?
     end
   end
 
-  if ENV["LOG"]
+  if ENV["BULLET_LOG"]
     require 'logger'
     ActiveRecord::Base.logger = Logger.new(STDOUT)
   end
@@ -96,7 +96,7 @@ if mongoid?
     end
   end
 
-  if ENV["LOG"]
+  if ENV["BULLET_LOG"]
     Mongoid.logger = Logger.new(STDOUT)
     Moped.logger = Logger.new(STDOUT)
   end
