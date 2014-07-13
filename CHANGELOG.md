@@ -1,11 +1,12 @@
 # Next Release
 
-## 4.12.0 (not released yet)
+## 4.12.0
 
-* Use primary_key rather than id for bullet_ar_key
+* Fix false n+1 queries caused by inversed objects.
+* Replace .id with .primary_key_value
 * Rename bullet_ar_key to bullet_key
 * Fix rails sse detect
-* Fix bullet in rails test
+* Fix bullet using in test environment
 * Memoize whoami
 
 ## 4.11.0 (06/24/2014)

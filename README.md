@@ -200,8 +200,8 @@ end
 
 ## Debug Mode
 
-Bullet outputs some details info, to enable debug mode, set DEBUG=true
-env.
+Bullet outputs some details info, to enable debug mode, set
+`BULLET_DEBUG=true` env.
 
 ## Contributors
 
