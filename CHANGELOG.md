@@ -1,6 +1,10 @@
 # Next Release
 
-## 4.12.0
+## 4.13.0 (07/19/2014)
+
+* Support include? call on ar associations
+
+## 4.12.0 (07/13/2014)
 
 * Fix false n+1 queries caused by inversed objects.
 * Replace .id with .primary_key_value
