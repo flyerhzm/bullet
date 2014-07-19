@@ -61,6 +61,17 @@ if !mongoid? && active_record3?
 
         expect(Bullet::Detector::Association).to be_detecting_unpreloaded_association_for(Post, :comments)
       end
+
+      it "should detect non preload post => comments with include?" do
+        comment = Comment.last
+        Post.all.each do |post|
+          post.comments.include?(comment)
+        end
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+        expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
+
+        expect(Bullet::Detector::Association).to be_detecting_unpreloaded_association_for(Post, :comments)
+      end
     end
 
     context "category => posts => comments" do
