@@ -12,7 +12,7 @@ Best practice is to use Bullet in development mode or custom mode (staging, prof
 
 Bullet gem now supports **activerecord** >= 3.0 and **mongoid** >= 2.4.1.
 
-If you use activercord 2.x, please use bullet <= 4.5.0
+If you use activerecord 2.x, please use bullet <= 4.5.0
 
 ## External Introduction
 
