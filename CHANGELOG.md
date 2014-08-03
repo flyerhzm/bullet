@@ -1,5 +1,9 @@
 # Next Release
 
+## 4.13.1
+
+* Fix swallow exception issue
+
 ## 4.13.0 (07/19/2014)
 
 * Support include? call on ar associations
