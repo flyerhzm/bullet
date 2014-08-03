@@ -20,11 +20,11 @@ module Bullet
           headers['Content-Length'] = response_body.bytesize.to_s
         end
       end
-      [status, headers, response_body ? [response_body] : response]
-    ensure
       if Bullet.enable? && Bullet.notification?
         Bullet.perform_out_of_channel_notifications(env)
       end
+      [status, headers, response_body ? [response_body] : response]
+    ensure
       Bullet.end_request
     end
 
