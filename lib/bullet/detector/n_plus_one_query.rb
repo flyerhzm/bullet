@@ -10,6 +10,7 @@ module Bullet
         #   if it is, keeps this unpreload associations and caller.
         def call_association(object, associations)
           return unless Bullet.start?
+          return unless Bullet.n_plus_one_query_enable?
           return unless object.primary_key_value
           return if inversed_objects.include?(object.bullet_key, associations)
           add_call_object_associations(object, associations)
