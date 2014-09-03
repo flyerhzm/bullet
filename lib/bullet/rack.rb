@@ -43,7 +43,7 @@ module Bullet
     end
 
     def add_footer_note(response_body)
-      response_body << "<div #{footer_div_style}>" + Bullet.footer_info.uniq.join("<br>") + "</div>"
+      response_body << "<div data-is-bullet-footer #{footer_div_style}>" + Bullet.footer_info.uniq.join("<br>") + "</div>"
     end
 
     def file?(headers)
