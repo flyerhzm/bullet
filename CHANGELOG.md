@@ -1,5 +1,10 @@
 # Next Release
 
+## 4.13.2
+
+* Fix warning: `*' interpreted as argument prefix
+* Polish notification output
+
 ## 4.13.1
 
 * Fix swallow exception issue
