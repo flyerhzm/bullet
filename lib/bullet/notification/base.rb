@@ -18,6 +18,10 @@ module Bullet
         raise NoMethodError.new("no method body defined")
       end
 
+      def call_stack_messages
+        ""
+      end
+
       def whoami
         @user ||= ENV['USER'].presence || (`whoami`.chomp rescue "")
         if @user.present?
@@ -28,15 +32,7 @@ module Bullet
       end
 
       def body_with_caller
-        body
-      end
-
-      def standard_notice
-        @standard_notifice ||= title + "\n" + body
-      end
-
-      def full_notice
-        [whoami.presence, url, title, body_with_caller].compact.join("\n")
+        "#{body}\n#{call_stack_messages}\n"
       end
 
       def notify_inline
@@ -48,7 +44,7 @@ module Bullet
       end
 
       def short_notice
-        [whoami.presence, url, title, body].compact.join("\n")
+        [whoami.presence, url, title, body].compact.join("  ")
       end
 
       def notification_data
