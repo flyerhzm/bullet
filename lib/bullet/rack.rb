@@ -43,7 +43,7 @@ module Bullet
     end
 
     def add_footer_note(response_body)
-      response_body << "<div data-is-bullet-footer #{footer_div_style}>" + Bullet.footer_info.uniq.join("<br>") + "</div>"
+      response_body << "<div #{footer_div_attributes}>" + Bullet.footer_info.uniq.join("<br>") + "</div>"
     end
 
     def file?(headers)
@@ -67,9 +67,9 @@ module Bullet
     end
 
     private
-    def footer_div_style
+    def footer_div_attributes
 <<EOF
-style="position: fixed; bottom: 0pt; left: 0pt; cursor: pointer; border-style: solid; border-color: rgb(153, 153, 153);
+data-is-bullet-footer style="position: fixed; bottom: 0pt; left: 0pt; cursor: pointer; border-style: solid; border-color: rgb(153, 153, 153);
  -moz-border-top-colors: none; -moz-border-right-colors: none; -moz-border-bottom-colors: none;
  -moz-border-left-colors: none; -moz-border-image: none; border-width: 2pt 2pt 0px 0px;
  padding: 5px; border-radius: 0pt 10pt 0pt 0px; background: none repeat scroll 0% 0% rgba(200, 200, 200, 0.8);
@@ -78,4 +78,3 @@ EOF
     end
   end
 end
-
