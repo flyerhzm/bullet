@@ -1,6 +1,6 @@
 class Object
   def bullet_key
-    [self.class, self.primary_key_value].join(':')
+    "#{self.class}:#{self.primary_key_value}"
   end
 
   def primary_key_value
