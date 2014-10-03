@@ -56,33 +56,8 @@ module Bullet
       context "#body_with_caller" do
         it "should return body" do
           allow(subject).to receive(:body).and_return("body")
-          expect(subject.body_with_caller).to eq("body")
-        end
-      end
-
-      context "#standard_notice" do
-        it "should return title + body" do
-          allow(subject).to receive(:title).and_return("title")
-          allow(subject).to receive(:body).and_return("body")
-          expect(subject.standard_notice).to eq("title\nbody")
-        end
-      end
-
-      context "#full_notice" do
-        it "should return whoami + url + title + body_with_caller" do
-          allow(subject).to receive(:whoami).and_return("whoami")
-          allow(subject).to receive(:url).and_return("url")
-          allow(subject).to receive(:title).and_return("title")
-          allow(subject).to receive(:body_with_caller).and_return("body_with_caller")
-          expect(subject.full_notice).to eq("whoami\nurl\ntitle\nbody_with_caller")
-        end
-
-        it "should return url + title + body_with_caller" do
-          allow(subject).to receive(:whoami).and_return("")
-          allow(subject).to receive(:url).and_return("url")
-          allow(subject).to receive(:title).and_return("title")
-          allow(subject).to receive(:body_with_caller).and_return("body_with_caller")
-          expect(subject.full_notice).to eq("url\ntitle\nbody_with_caller")
+          allow(subject).to receive(:call_stack_messages).and_return("call_stack_messages")
+          expect(subject.body_with_caller).to eq("body\ncall_stack_messages\n")
         end
       end
 
