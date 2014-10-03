@@ -85,7 +85,18 @@ module Bullet
         alias_method :origin_load_target, :load_target
         def load_target
           Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name) unless @inversed
-          origin_load_target
+          records = origin_load_target
+
+          if records.first.class.name !~ /^HABTM_/
+            if records.size > 1
+              Bullet::Detector::NPlusOneQuery.add_possible_objects(records)
+              Bullet::Detector::CounterCache.add_possible_objects(records)
+            elsif records.size == 1
+              Bullet::Detector::NPlusOneQuery.add_impossible_object(records.first)
+              Bullet::Detector::CounterCache.add_impossible_object(records.first)
+            end
+          end
+          records
         end
 
         alias_method :origin_empty?, :empty?
@@ -115,11 +126,21 @@ module Bullet
       end
 
       ::ActiveRecord::Associations::HasManyAssociation.class_eval do
-        alias_method :origin_has_cached_counter?, :has_cached_counter?
+        alias_method :origin_many_empty?, :empty?
+        def empty?
+          Thread.current[:bullet_collection_empty] = true
+          result = origin_many_empty?
+          Thread.current[:bullet_collection_empty] = nil
+          Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name)
+          result
+        end
 
+        alias_method :origin_has_cached_counter?, :has_cached_counter?
         def has_cached_counter?(reflection = reflection())
           result = origin_has_cached_counter?(reflection)
-          Bullet::Detector::CounterCache.add_counter_cache(owner, reflection.name) unless result
+          if !result && !Thread.current[:bullet_collection_empty]
+            Bullet::Detector::CounterCache.add_counter_cache(owner, reflection.name)
+          end
           result
         end
       end
