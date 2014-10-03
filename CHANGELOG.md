@@ -1,13 +1,10 @@
 # Next Release
 
-## 4.13.2
+## 4.14.0 (10/03/2014)
 
-* Fix warning: `*' interpreted as argument prefix
+* Support rails 4.2
 * Polish notification output
-
-## 4.13.1
-
-* Fix swallow exception issue
+* Fix warning: `*' interpreted as argument prefix
 
 ## 4.13.0 (07/19/2014)
 
