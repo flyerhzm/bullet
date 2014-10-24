@@ -70,7 +70,7 @@ module Bullet
           expect(Bullet).to receive(:perform_out_of_channel_notifications)
           status, headers, response = middleware.call([200, {"Content-Type" => "text/html"}])
           expect(headers["Content-Length"]).to eq("56")
-          expect(response).to eq(["<html><head></head><body></body></html><bullet></bullet>"])
+          expect(response).to eq(["<html><head></head><body><bullet></bullet></body></html>"])
         end
 
         it "should set the right Content-Length if response body contains accents" do

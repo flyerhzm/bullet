@@ -15,8 +15,9 @@ module Bullet
       response_body = nil
       if Bullet.notification?
         if status == 200 && !response_body(response).frozen? && html_request?(headers, response)
-          response_body = response_body(response) << Bullet.gather_inline_notifications
-          add_footer_note(response_body) if Bullet.add_footer
+          response_body = response_body(response)
+          append_to_html_body(response_body, footer_note) if Bullet.add_footer
+          append_to_html_body(response_body, Bullet.gather_inline_notifications)
           headers['Content-Length'] = response_body.bytesize.to_s
         end
       end
@@ -42,8 +43,17 @@ module Bullet
       end
     end
 
-    def add_footer_note(response_body)
-      response_body << "<div #{footer_div_attributes}>" + Bullet.footer_info.uniq.join("<br>") + "</div>"
+    def append_to_html_body(response_body, content)
+      if response_body.include?('</body>')
+        position = response_body.rindex('</body>')
+        response_body.insert(position, content)
+      else
+        response_body << content
+      end
+    end
+
+    def footer_note
+      "<div #{footer_div_attributes}>" + Bullet.footer_info.uniq.join("<br>") + "</div>"
     end
 
     def file?(headers)
