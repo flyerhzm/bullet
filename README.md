@@ -67,6 +67,7 @@ The code above will enable all seven of the Bullet notification systems:
 * `Bullet.alert`: pop up a JavaScript alert in the browser
 * `Bullet.bullet_logger`: log to the Bullet log file (Rails.root/log/bullet.log)
 * `Bullet.rails_logger`: add warnings directly to the Rails log
+* `Bullet.bugsnag`: add notifications to bugsnag
 * `Bullet.airbrake`: add notifications to airbrake
 * `Bullet.console`: log warnings to your browser's console.log (Safari/Webkit browsers or Firefox w/Firebug installed)
 * `Bullet.growl`: pop up Growl warnings if your system has Growl installed. Requires a little bit of configuration
