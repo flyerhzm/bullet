@@ -515,6 +515,17 @@ if !mongoid? && active_record4?
     end
   end
 
+  describe Bullet::Detector::Association, "has_one => has_many" do
+    it "should not detect preload association" do
+      user = User.first
+      user.submission.replies.map(&:name)
+      Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+      expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
+
+      expect(Bullet::Detector::Association).to be_completely_preloading_associations
+    end
+  end
+
   describe Bullet::Detector::Association, "call one association that in possible objects" do
     it "should not detect preload association" do
       Post.all

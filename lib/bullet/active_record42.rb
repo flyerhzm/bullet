@@ -121,6 +121,9 @@ module Bullet
             Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name) unless @inversed
             Bullet::Detector::NPlusOneQuery.add_possible_objects(result)
           end
+          if ::ActiveRecord::Reflection::HasOneReflection === @reflection
+            Bullet::Detector::NPlusOneQuery.add_impossible_object(result)
+          end
           result
         end
       end

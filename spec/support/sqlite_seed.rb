@@ -82,10 +82,13 @@ module Support
       user1 = User.create(:name => 'user1', :category => category1)
       user2 = User.create(:name => 'user2', :category => category1)
 
-      submission1 = category1.submissions.create(:name => "submission1", :user => user1)
-      submission2 = category1.submissions.create(:name => "submission2", :user => user2)
-      submission3 = category2.submissions.create(:name => "submission3", :user => user1)
-      submission4 = category2.submissions.create(:name => "submission4", :user => user2)
+      submission1 = user1.create_submission(:name => "submission1")
+      submission2 = user2.create_submission(:name => "submission2")
+
+      submission1.replies.create(:name => 'reply1')
+      submission1.replies.create(:name => 'reply2')
+      submission2.replies.create(:name => 'reply3')
+      submission2.replies.create(:name => 'reply4')
     end
 
     def setup_db
@@ -211,9 +214,13 @@ module Support
           t.column :name, :string
         end
 
+        create_table :replies do |t|
+          t.column :name, :string
+          t.column :submission_id, :integer
+        end
+
         create_table :submissions do |t|
           t.column :name, :string
-          t.column :category_id, :integer
           t.column :user_id, :integer
         end
 
