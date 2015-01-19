@@ -1,5 +1,10 @@
 # Next Release
 
+## 4.14.1
+
+* Fix has_one then has_many associations in rails 4.2
+* Append js and dom to html body in proper position
+
 ## 4.14.0 (10/03/2014)
 
 * Support rails 4.2
