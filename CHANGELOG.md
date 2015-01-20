@@ -1,5 +1,9 @@
 # Next Release
 
+## 4.14.2
+
+* Hotfix nil object when add_impossible_object
+
 ## 4.14.1
 
 * Fix has_one then has_many associations in rails 4.2
