@@ -81,6 +81,7 @@ module Support
 
       user1 = User.create(:name => 'user1', :category => category1)
       user2 = User.create(:name => 'user2', :category => category1)
+      user3 = User.create(:name => 'user3', :category => category1)
 
       submission1 = user1.create_submission(:name => "submission1")
       submission2 = user2.create_submission(:name => "submission2")

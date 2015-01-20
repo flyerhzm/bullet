@@ -524,6 +524,10 @@ if !mongoid? && active_record4?
 
       expect(Bullet::Detector::Association).to be_completely_preloading_associations
     end
+
+    it "should allow null values for has_one" do
+      expect(User.all.map(&:submission)).to include(nil)
+    end
   end
 
   describe Bullet::Detector::Association, "call one association that in possible objects" do
