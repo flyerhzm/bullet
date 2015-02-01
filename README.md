@@ -430,4 +430,4 @@ Meanwhile, there's a line appended to `log/bullet.log`
   Post => [:comments]
 ```
 
-Copyright (c) 2009 - 2014 Richard Huang (flyerhzm@gmail.com), released under the MIT license
+Copyright (c) 2009 - 2015 Richard Huang (flyerhzm@gmail.com), released under the MIT license
