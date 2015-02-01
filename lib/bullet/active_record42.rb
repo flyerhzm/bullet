@@ -117,8 +117,8 @@ module Bullet
         alias_method :origin_reader, :reader
         def reader(force_reload = false)
           result = origin_reader(force_reload)
-          if @owner.class.name !~ /^HABTM_/
-            Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name) unless @inversed
+          if @owner.class.name !~ /^HABTM_/ && !@inversed
+            Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name)
             Bullet::Detector::NPlusOneQuery.add_possible_objects(result)
           end
           if ::ActiveRecord::Reflection::HasOneReflection === @reflection && result

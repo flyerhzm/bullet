@@ -14,7 +14,7 @@ module Support
       category2 = Category.create(:name => 'second')
 
       post1 = category1.posts.create(:name => 'first', :writer => writer1)
-      post1a = category1.posts.create(:name => 'like first', :writer => writer2)
+      post1a = category1.posts.create(:name => 'like first', :writer => writer2, active: false)
       post2 = category2.posts.create(:name => 'second', :writer => writer2)
 
       comment1 = post1.comments.create(:name => 'first', :author => writer1)
@@ -194,6 +194,7 @@ module Support
           t.column :name, :string
           t.column :category_id, :integer
           t.column :writer_id, :integer
+          t.column :active, :boolean, :default => true
         end
 
         create_table :relationships do |t|

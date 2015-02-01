@@ -56,11 +56,11 @@ if active_record?
       Support::SqliteSeed.seed_db
     end
 
-    config.before(:each) do
+    config.before(:example) do
       Bullet.start_request
     end
 
-    config.after(:each) do
+    config.after(:example) do
       Bullet.end_request
     end
   end

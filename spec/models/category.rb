@@ -3,4 +3,8 @@ class Category < ActiveRecord::Base
   has_many :entries
 
   has_many :users
+
+  def draft_post
+    posts.draft.first_or_create
+  end
 end

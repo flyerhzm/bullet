@@ -104,8 +104,10 @@ module Bullet
         alias_method :origin_reader, :reader
         def reader(force_reload = false)
           result = origin_reader(force_reload)
-          Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name) unless @inversed
-          Bullet::Detector::NPlusOneQuery.add_possible_objects(result)
+          unless @inversed
+            Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name)
+            Bullet::Detector::NPlusOneQuery.add_possible_objects(result)
+          end
           result
         end
       end

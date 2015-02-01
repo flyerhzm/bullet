@@ -219,6 +219,20 @@ if !mongoid? && active_record4?
 
         expect(Bullet::Detector::Association).to be_completely_preloading_associations
       end
+
+      it "should not detect unused preload with category => posts" do
+        category = Category.first
+        category.draft_post.destroy!
+        post = category.draft_post
+        post.update_attributes!(link: true)
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+        expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
+
+        expect(Bullet::Detector::Association).to be_completely_preloading_associations
+
+        Support::SqliteSeed.setup_db
+        Support::SqliteSeed.seed_db
+      end
     end
 
     context "category => posts => writer" do
@@ -313,7 +327,7 @@ if !mongoid? && active_record4?
         expect(Bullet::Detector::Association).to be_completely_preloading_associations
       end
 
-      it "should detect unused preload with comments => post" do
+      it "should detect unused preload with comment => post" do
         Comment.includes(:post).map(&:name)
         Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
         expect(Bullet::Detector::Association).to be_unused_preload_associations_for(Comment, :post)
