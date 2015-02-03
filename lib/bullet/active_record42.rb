@@ -2,6 +2,23 @@ module Bullet
   module ActiveRecord
     def self.enable
       require 'active_record'
+      ::ActiveRecord::Base.class_eval do
+        class <<self
+          alias_method :origin_find, :find
+          def find(*args)
+            result = origin_find(*args)
+            if result.is_a? Array
+              Bullet::Detector::NPlusOneQuery.add_possible_objects(result)
+              Bullet::Detector::CounterCache.add_possible_objects(result)
+            elsif result.is_a? ::ActiveRecord::Base
+              Bullet::Detector::NPlusOneQuery.add_impossible_object(result)
+              Bullet::Detector::CounterCache.add_impossible_object(result)
+            end
+            result
+          end
+        end
+      end
+
       ::ActiveRecord::Relation.class_eval do
         alias_method :origin_to_a, :to_a
         # if select a collection of objects, then these objects have possible to cause N+1 query.
