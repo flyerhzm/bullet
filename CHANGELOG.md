@@ -1,5 +1,9 @@
 # Next Release
 
+## 4.14.4
+
+* Fix false N + 1 warnings on Rails 4.2
+
 ## 4.14.3
 
 * Fix false positive on create
