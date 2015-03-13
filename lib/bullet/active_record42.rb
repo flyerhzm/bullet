@@ -57,6 +57,7 @@ module Bullet
         # add includes in scope
         alias_method :origin_find_with_associations, :find_with_associations
         def find_with_associations
+          return origin_find_with_associations { |r| yield r } if block_given?
           records = origin_find_with_associations
           associations = (eager_load_values + includes_values).uniq
           records.each do |record|
