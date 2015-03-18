@@ -88,30 +88,21 @@ module Bullet
       require 'fileutils'
       root_path = "#{rails? ? Rails.root.to_s : Dir.pwd}"
       FileUtils.mkdir_p(root_path + '/log')
-      @bullet_log_file = File.open("#{root_path}/log/bullet.#{extension}", 'a+')
-      @bullet_log_file.sync = true
-      return @bullet_log_file
+      bullet_log_file = File.open("#{root_path}/log/bullet.#{extension}", 'a+')
+      bullet_log_file.sync = true
+      return bullet_log_file
     end
 
-    def bullet_logger=(active, extension='log')
-      if active
-        file_output_setup("#{extension}")
-        UniformNotifier.customized_logger = @bullet_log_file
-      end
+    def bullet_logger=(active)
+      UniformNotifier.customized_logger = file_output_setup('log') if active
     end
 
-    def json_logger=(active, extension='json')
-      if active
-        file_output_setup("#{extension}")
-        UniformNotifier.json_logger = @bullet_log_file
-      end
+    def json_logger=(active)
+      UniformNotifier.json_logger = file_output_setup('json') if active
     end
 
-    def html_logger=(active, extension='html')
-      if active
-        file_output_setup("#{extension}")
-        UniformNotifier.html_logger = @bullet_log_file
-      end
+    def html_logger=(active)
+      UniformNotifier.html_logger = file_output_setup('html') if active
     end
 
     def debug(title, message)
