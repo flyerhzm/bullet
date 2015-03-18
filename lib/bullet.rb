@@ -29,7 +29,7 @@ module Bullet
     attr_reader :notification_collector, :whitelist
     attr_accessor :add_footer, :orm_pathches_applied
 
-    delegate :alert=, :console=, :growl=, :rails_logger=, :xmpp=, :airbrake=, :bugsnag=, :to => UniformNotifier
+    delegate :alert=, :console=, :growl=, :html_logger=, :json_logger=, :rails_logger=, :xmpp=, :airbrake=, :bugsnag=, :to => UniformNotifier
 
     def raise=(should_raise)
       UniformNotifier.raise=(should_raise ? Notification::UnoptimizedQueryError : false)
@@ -84,14 +84,33 @@ module Bullet
       @whitelist = {:n_plus_one_query => {}, :unused_eager_loading => {}, :counter_cache => {}}
     end
 
-    def bullet_logger=(active)
+    def file_output_setup(extension)
+      require 'fileutils'
+      root_path = "#{rails? ? Rails.root.to_s : Dir.pwd}"
+      FileUtils.mkdir_p(root_path + '/log')
+      @bullet_log_file = File.open("#{root_path}/log/bullet.#{extension}", 'a+')
+      @bullet_log_file.sync = true
+      return @bullet_log_file
+    end
+
+    def bullet_logger=(active, extension='log')
       if active
-        require 'fileutils'
-        root_path = "#{rails? ? Rails.root.to_s : Dir.pwd}"
-        FileUtils.mkdir_p(root_path + '/log')
-        bullet_log_file = File.open("#{root_path}/log/bullet.log", 'a+')
-        bullet_log_file.sync = true
-        UniformNotifier.customized_logger = bullet_log_file
+        file_output_setup("#{extension}")
+        UniformNotifier.customized_logger = @bullet_log_file
+      end
+    end
+
+    def json_logger=(active, extension='json')
+      if active
+        file_output_setup("#{extension}")
+        UniformNotifier.json_logger = @bullet_log_file
+      end
+    end
+
+    def html_logger=(active, extension='html')
+      if active
+        file_output_setup("#{extension}")
+        UniformNotifier.html_logger = @bullet_log_file
       end
     end
 
