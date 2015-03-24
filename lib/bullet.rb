@@ -29,7 +29,7 @@ module Bullet
     attr_reader :notification_collector, :whitelist
     attr_accessor :add_footer, :orm_pathches_applied
 
-    delegate :alert=, :console=, :growl=, :rails_logger=, :xmpp=, :airbrake=, :bugsnag=, :to => UniformNotifier
+    delegate :alert=, :console=, :growl=, :rails_logger=, :xmpp=, :airbrake=, :rollbar=, :bugsnag=, :to => UniformNotifier
 
     def raise=(should_raise)
       UniformNotifier.raise=(should_raise ? Notification::UnoptimizedQueryError : false)
