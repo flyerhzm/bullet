@@ -15,6 +15,12 @@ module Bullet
         "N+1 Query #{@path ? "in #{@path}" : 'detected'}"
       end
 
+      def notification_data
+        super.merge(
+          :backtrace => @callers
+        )
+      end
+
       protected
         def call_stack_messages
           (['N+1 Query method call stack'] + @callers).join( "\n  " )
