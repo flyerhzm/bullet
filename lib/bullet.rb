@@ -160,7 +160,7 @@ module Bullet
 
     def footer_info
       info = []
-      for_each_active_notifier_with_notification do |notification|
+      notification_collector.collection.each do |notification|
         info << notification.short_notice
       end
       info
