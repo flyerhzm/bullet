@@ -58,6 +58,7 @@ config.after_initialize do
   Bullet.rollbar = true
   Bullet.add_footer = true
   Bullet.stacktrace_includes = [ 'your_gem', 'your_middleware' ]
+  Bullet.slack = { webhook_url: 'http://some.slack.url', foo: 'bar' }
 end
 ```
 
@@ -77,6 +78,7 @@ The code above will enable all seven of the Bullet notification systems:
 * `Bullet.raise`: raise errors, useful for making your specs fail unless they have optimized queries
 * `Bullet.add_footer`: adds the details in the bottom left corner of the page
 * `Bullet.stacktrace_includes`: include paths with any of these substrings in the stack trace, even if they are not in your main app
+* `Bullet.slack`: add notifications to slack
 
 Bullet also allows you to disable any of its detectors.
 
