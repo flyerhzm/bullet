@@ -20,8 +20,6 @@ module Bullet
           append_to_html_body(response_body, Bullet.gather_inline_notifications)
           headers['Content-Length'] = response_body.bytesize.to_s
         end
-      end
-      if Bullet.enable? && Bullet.notification?
         Bullet.perform_out_of_channel_notifications(env)
       end
       [status, headers, response_body ? [response_body] : response]
