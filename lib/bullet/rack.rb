@@ -10,7 +10,7 @@ module Bullet
       return @app.call(env) unless Bullet.enable?
       Bullet.start_request
       status, headers, response = @app.call(env)
-      return [status, headers, response] if file?(headers) || sse?(response) || empty?(response)
+      return [status, headers, response] if file?(headers) || sse?(headers) || empty?(response)
 
       response_body = nil
       if Bullet.notification?
@@ -58,8 +58,8 @@ module Bullet
       headers["Content-Transfer-Encoding"] == "binary"
     end
 
-    def sse?(response)
-      response.respond_to?(:stream) && response.stream.is_a?(ActionController::Live::Buffer)
+    def sse?(headers)
+      headers["Content-Type"] == "text/event-stream"
     end
 
     def html_request?(headers, response)
