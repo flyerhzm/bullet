@@ -158,8 +158,9 @@ The Bullet gem uses rack middleware to profile requests. If you want to use Bull
 ```ruby
 Bullet.profile do
   # do anything
+
+  warnings = Bullet.warnings
 end
-warnings = Bullet.warnings
 ```
 
 ### Work with sinatra
