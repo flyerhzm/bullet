@@ -65,7 +65,7 @@ module Bullet
         end
 
         it "should change response body if notification is active" do
-          expect(Bullet).to receive(:notification?).and_return(true).twice
+          expect(Bullet).to receive(:notification?).and_return(true)
           expect(Bullet).to receive(:gather_inline_notifications).and_return("<bullet></bullet>")
           expect(Bullet).to receive(:perform_out_of_channel_notifications)
           status, headers, response = middleware.call([200, {"Content-Type" => "text/html"}])
@@ -77,7 +77,7 @@ module Bullet
           response = Support::ResponseDouble.new
           response.body = "<html><head></head><body>é</body></html>"
           app.response = response
-          expect(Bullet).to receive(:notification?).and_return(true).twice
+          expect(Bullet).to receive(:notification?).and_return(true)
           expect(Bullet).to receive(:gather_inline_notifications).and_return("<bullet></bullet>")
           status, headers, response = middleware.call([200, {"Content-Type" => "text/html"}])
           expect(headers["Content-Length"]).to eq("58")
