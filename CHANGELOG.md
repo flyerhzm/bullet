@@ -1,5 +1,12 @@
 # Next Release
 
+## 4.14.5
+
+* Don't execute query when running `to_sql`
+* Send backtrace to `uniform_notifier`
+* Fix sse response check
+* Dynamically delegate available notifiers to UniformNotifier
+
 ## 4.14.4
 
 * Fix false N + 1 warnings on Rails 4.2
@@ -10,11 +17,11 @@
 
 ## 4.14.2
 
-* Hotfix nil object when add_impossible_object
+* Hotfix nil object when `add_impossible_object`
 
 ## 4.14.1
 
-* Fix has_one then has_many associations in rails 4.2
+* Fix `has_one` then `has_many` associations in rails 4.2
 * Append js and dom to html body in proper position
 
 ## 4.14.0 (10/03/2014)
