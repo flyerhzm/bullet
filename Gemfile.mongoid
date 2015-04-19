@@ -8,7 +8,5 @@ gem 'activerecord-jdbcsqlite3-adapter', platforms: [:jruby]
 gem 'mongoid', github: 'mongoid/mongoid'
 
 gem "rspec"
-gem "guard"
-gem "guard-rspec"
 
 gem 'coveralls', require: false

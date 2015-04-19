@@ -8,8 +8,6 @@ gem 'activerecord-jdbcsqlite3-adapter', platforms: [:jruby]
 gem 'activerecord-import'
 
 gem "rspec"
-gem "guard"
-gem "guard-rspec"
 
 gem 'coveralls', require: false
 
