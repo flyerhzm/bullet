@@ -177,14 +177,17 @@ module Bullet
     end
 
     def profile
-      Bullet.start_request if Bullet.enable?
+      if Bullet.enable?
+        begin
+          Bullet.start_request
 
-      yield
+          yield
 
-      if Bullet.enable? && Bullet.notification?
-        Bullet.perform_out_of_channel_notifications
+          Bullet.perform_out_of_channel_notifications if Bullet.notification?
+        ensure
+          Bullet.end_request
+        end
       end
-      Bullet.end_request if Bullet.enable?
     end
 
     private
