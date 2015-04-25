@@ -53,6 +53,7 @@ config.after_initialize do
                   :receiver => 'your_account@jabber.org',
                   :show_online_status => true }
   Bullet.rails_logger = true
+  Bullet.honeybadger = true
   Bullet.bugsnag = true
   Bullet.airbrake = true
   Bullet.rollbar = true
@@ -69,6 +70,7 @@ The code above will enable all seven of the Bullet notification systems:
 * `Bullet.alert`: pop up a JavaScript alert in the browser
 * `Bullet.bullet_logger`: log to the Bullet log file (Rails.root/log/bullet.log)
 * `Bullet.rails_logger`: add warnings directly to the Rails log
+* `Bullet.honeybadger`: add notifications to Honeybadger
 * `Bullet.bugsnag`: add notifications to bugsnag
 * `Bullet.airbrake`: add notifications to airbrake
 * `Bullet.rollbar`: add notifications to rollbar
