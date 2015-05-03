@@ -347,6 +347,15 @@ if !mongoid? && active_record4?
         expect(Bullet::Detector::Association).to be_detecting_unpreloaded_association_for(Comment, :post)
       end
 
+      it "should not detect non preload association with only one comment" do
+        Comment.first.post.category.name
+
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+        expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
+
+        expect(Bullet::Detector::Association).to be_completely_preloading_associations
+      end
+
       it "should detect non preload association with post => category" do
         Comment.includes(:post).each do |comment|
           comment.post.category.name

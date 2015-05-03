@@ -15,7 +15,7 @@ module Bullet
           add_call_object_associations(object, associations)
 
           Bullet.debug("Detector::NPlusOneQuery#call_association", "object: #{object.bullet_key}, associations: #{associations}")
-          if conditions_met?(object.bullet_key, associations)
+          if conditions_met?(object, associations)
             Bullet.debug("detect n + 1 query", "object: #{object.bullet_key}, associations: #{associations}")
             create_notification caller_in_project, object.class.to_s, associations
           end
@@ -49,6 +49,35 @@ module Bullet
           inversed_objects.add object.bullet_key, association
         end
 
+        # decide whether the object.associations is unpreloaded or not.
+        def conditions_met?(object, associations)
+          possible?(object) && !impossible?(object) && !association?(object, associations)
+        end
+
+        def possible?(object)
+          possible_objects.include? object.bullet_key
+        end
+
+        def impossible?(object)
+          impossible_objects.include? object.bullet_key
+        end
+
+        # check if object => associations already exists in object_associations.
+        def association?(object, associations)
+          value = object_associations[object.bullet_key]
+          if value
+            value.each do |v|
+              # associations == v comparision order is important here because
+              # v variable might be a squeel node where :== method is redefined,
+              # so it does not compare values at all and return unexpected results
+              result = v.is_a?(Hash) ? v.has_key?(associations) : associations == v
+              return true if result
+            end
+          end
+
+          false
+        end
+
         private
           def create_notification(callers, klazz, associations)
             notify_associations = Array(associations) - Bullet.get_whitelist_associations(:n_plus_one_query, klazz)
@@ -59,11 +88,6 @@ module Bullet
             end
           end
 
-          # decide whether the object.associations is unpreloaded or not.
-          def conditions_met?(bullet_key, associations)
-            possible?(bullet_key) && !impossible?(bullet_key) && !association?(bullet_key, associations)
-          end
-
           def caller_in_project
             app_root = rails? ? Rails.root.to_s : Dir.pwd
             vendor_root = app_root + "/vendor"
@@ -71,30 +95,6 @@ module Bullet
               c.include?(app_root) && !c.include?(vendor_root) ||
               Bullet.stacktrace_includes.any? { |include| c.include?(include) }
             end
-          end
-
-          def possible?(bullet_key)
-            possible_objects.include? bullet_key
-          end
-
-          def impossible?(bullet_key)
-            impossible_objects.include? bullet_key
-          end
-
-          # check if object => associations already exists in object_associations.
-          def association?(bullet_key, associations)
-            value = object_associations[bullet_key]
-            if value
-              value.each do |v|
-                # associations == v comparision order is important here because
-                # v variable might be a squeel node where :== method is redefined,
-                # so it does not compare values at all and return unexpected results
-                result = v.is_a?(Hash) ? v.has_key?(associations) : associations == v
-                return true if result
-              end
-            end
-
-            return false
           end
       end
     end

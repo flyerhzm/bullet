@@ -8,7 +8,7 @@ module Bullet
           return unless object.primary_key_value
 
           Bullet.debug("Detector::CounterCache#add_counter_cache", "object: #{object.bullet_key}, associations: #{associations}")
-          if conditions_met?(object.bullet_key, associations)
+          if conditions_met?(object, associations)
             create_notification object.class.to_s, associations
           end
         end
@@ -32,6 +32,18 @@ module Bullet
           impossible_objects.add object.bullet_key
         end
 
+        def conditions_met?(object, associations)
+          possible_objects.include?(object.bullet_key) && !impossible_objects.include?(object.bullet_key)
+        end
+
+        def possible_objects
+          Thread.current[:bullet_counter_possible_objects]
+        end
+
+        def impossible_objects
+          Thread.current[:bullet_counter_impossible_objects]
+        end
+
         private
           def create_notification(klazz, associations)
             notify_associations = Array(associations) - Bullet.get_whitelist_associations(:counter_cache, klazz)
@@ -40,18 +52,6 @@ module Bullet
               notice = Bullet::Notification::CounterCache.new klazz, notify_associations
               Bullet.notification_collector.add notice
             end
-          end
-
-          def possible_objects
-            Thread.current[:bullet_counter_possible_objects]
-          end
-
-          def impossible_objects
-            Thread.current[:bullet_counter_impossible_objects]
-          end
-
-          def conditions_met?(bullet_key, associations)
-            possible_objects.include?(bullet_key) && !impossible_objects.include?(bullet_key)
           end
       end
     end

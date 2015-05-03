@@ -20,6 +20,22 @@ module Bullet
           call_object_associations.add(object.bullet_key, associations)
         end
 
+        # possible_objects keep the class to object relationships
+        # that the objects may cause N+1 query.
+        # e.g. { Post => ["Post:1", "Post:2"] }
+        def possible_objects
+          Thread.current[:bullet_possible_objects]
+        end
+
+        # impossible_objects keep the class to objects relationships
+        # that the objects may not cause N+1 query.
+        # e.g. { Post => ["Post:1", "Post:2"] }
+        # if find collection returns only one object, then the object is impossible object,
+        # impossible_objects are used to avoid treating 1+1 query to N+1 query.
+        def impossible_objects
+          Thread.current[:bullet_impossible_objects]
+        end
+
         private
           # object_associations keep the object relationships
           # that the object has many associations.
@@ -36,22 +52,6 @@ module Bullet
           # they are used to detect unused preload associations.
           def call_object_associations
             Thread.current[:bullet_call_object_associations]
-          end
-
-          # possible_objects keep the class to object relationships
-          # that the objects may cause N+1 query.
-          # e.g. { Post => ["Post:1", "Post:2"] }
-          def possible_objects
-            Thread.current[:bullet_possible_objects]
-          end
-
-          # impossible_objects keep the class to objects relationships
-          # that the objects may not cause N+1 query.
-          # e.g. { Post => ["Post:1", "Post:2"] }
-          # if find collection returns only one object, then the object is impossible object,
-          # impossible_objects are used to avoid treating 1+1 query to N+1 query.
-          def impossible_objects
-            Thread.current[:bullet_impossible_objects]
           end
 
           # inversed_objects keeps object relationships

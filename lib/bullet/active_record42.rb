@@ -137,9 +137,14 @@ module Bullet
           result = origin_reader(force_reload)
           if @owner.class.name !~ /^HABTM_/ && !@inversed
             Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name)
-            Bullet::Detector::NPlusOneQuery.add_possible_objects(result)
+            if Bullet::Detector::NPlusOneQuery.impossible?(@owner)
+              Bullet::Detector::NPlusOneQuery.add_impossible_object(result)
+            else
+              Bullet::Detector::NPlusOneQuery.add_possible_objects(result)
+            end
           end
           if ::ActiveRecord::Reflection::HasOneReflection === @reflection && result
+            Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name)
             Bullet::Detector::NPlusOneQuery.add_impossible_object(result)
           end
           result
