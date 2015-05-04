@@ -1,5 +1,10 @@
 # Next Release
 
+## 4.14.6
+
+* Fix false positive with `belongs_to` -> `belongs_to` for active\_record 4.2
+* Activate active\_record hacks only when Bullet already start
+
 ## 4.14.5
 
 * Don't execute query when running `to_sql`
