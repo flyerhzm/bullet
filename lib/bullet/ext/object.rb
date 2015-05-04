@@ -7,7 +7,11 @@ class Object
     if self.class.respond_to?(:primary_key) && self.class.primary_key
       self.send self.class.primary_key
     else
-      self.id
+      if self.respond_to?(:id)
+        self.id
+      else
+        nil
+      end
     end
   end
 end
