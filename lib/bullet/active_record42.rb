@@ -156,7 +156,7 @@ module Bullet
           if Bullet.start?
             if @owner.class.name !~ /^HABTM_/ && !@inversed
               Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name)
-              if Bullet::Detector::NPlusOneQuery.impossible?(@owner)
+              if Bullet::Detector::NPlusOneQuery.impossible?(@owner) && result
                 Bullet::Detector::NPlusOneQuery.add_impossible_object(result)
               else
                 Bullet::Detector::NPlusOneQuery.add_possible_objects(result)
