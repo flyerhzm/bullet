@@ -109,6 +109,22 @@ Bullet.add_whitelist :type => :unused_eager_loading, :class_name => "Post", :ass
 Bullet.add_whitelist :type => :counter_cache, :class_name => "Country", :association => :cities
 ```
 
+If you want to skip bullet in some specific controller actions, you can
+do like
+
+```ruby
+class ApplicationController < ActionController::Base
+  around_action :skip_bullet
+
+  def skip_bullet
+    Bullet.enable = false
+    yield
+  ensure
+    Bullet.enable = true
+  end
+end
+```
+
 ## Log
 
 The Bullet log `log/bullet.log` will look something like this:
