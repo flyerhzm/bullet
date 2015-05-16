@@ -1,5 +1,9 @@
 # Next Release
 
+## 4.14.8
+
+* compatible with `composite_primary_keys` gem
+
 ## 4.14.7
 
 * Fix AR 4.2 SingularAssociation#reader result can be nil
