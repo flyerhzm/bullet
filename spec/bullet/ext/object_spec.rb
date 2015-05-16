@@ -27,5 +27,11 @@ describe Object do
       expect(post.primary_key_value).to eq(post.name)
       Post.primary_key = 'id'
     end
+
+    it "should return value for multiple primary keys" do
+      post = Post.first
+      allow(Post).to receive(:primary_keys).and_return([:category_id, :writer_id])
+      expect(post.primary_key_value).to eq("#{post.category_id},#{post.writer_id}")
+    end
   end
 end

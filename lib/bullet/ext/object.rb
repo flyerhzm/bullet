@@ -4,7 +4,9 @@ class Object
   end
 
   def primary_key_value
-    if self.class.respond_to?(:primary_key) && self.class.primary_key
+    if self.class.respond_to?(:primary_keys) && self.class.primary_keys
+      self.class.primary_keys.map { |primary_key| self.send primary_key }.join(',')
+    elsif self.class.respond_to?(:primary_key) && self.class.primary_key
       self.send self.class.primary_key
     else
       self.id
