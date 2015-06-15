@@ -36,6 +36,9 @@ or add it into a Gemfile (Bundler):
 gem "bullet", :group => "development"
 ```
 
+**Note**: make sure `bulelt` gem is added after activerecord (rails) and
+mongoid.
+
 ## Configuration
 
 Bullet won't do ANYTHING unless you tell it to explicitly. Append to
