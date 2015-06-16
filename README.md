@@ -36,7 +36,7 @@ or add it into a Gemfile (Bundler):
 gem "bullet", :group => "development"
 ```
 
-**Note**: make sure `bulelt` gem is added after activerecord (rails) and
+**Note**: make sure `bullett` gem is added after activerecord (rails) and
 mongoid.
 
 ## Configuration
