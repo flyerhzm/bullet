@@ -5,7 +5,7 @@ gemspec
 gem 'rails', '~> 4.0.0'
 gem 'sqlite3', platforms: [:ruby]
 gem 'activerecord-jdbcsqlite3-adapter', platforms: [:jruby]
-gem 'mongoid', '~> 5.0.0', github: 'mongoid'
+gem 'mongoid', '~> 5.0.0.beta', github: 'mongoid'
 
 gem "rspec"
 
