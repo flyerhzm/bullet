@@ -23,6 +23,16 @@ module Bullet
         end
       end
 
+      ::ActiveRecord::Persistence.class_eval do
+        def save_with_bullet(*args, &proc)
+          was_new_record = new_record?
+          save_without_bullet(*args, &proc).tap do |result|
+            Bullet::Detector::NPlusOneQuery.add_impossible_object(self) if result && was_new_record
+          end
+        end
+        alias_method_chain :save, :bullet
+      end
+
       ::ActiveRecord::Associations::Preloader.class_eval do
         alias_method :origin_preloaders_on, :preloaders_on
 
