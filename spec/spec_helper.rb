@@ -58,6 +58,7 @@ if active_record?
 
     config.before(:example) do
       Bullet.start_request
+      Bullet.enable = true
     end
 
     config.after(:example) do

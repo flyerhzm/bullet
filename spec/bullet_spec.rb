@@ -38,4 +38,16 @@ describe Bullet, focused: true do
       end
     end
   end
+
+  describe '#start?' do
+    context 'when bullet is disabled' do
+      before(:each) do
+        Bullet.enable = false
+      end
+
+      it 'should not be started' do
+        expect(Bullet).not_to be_start
+      end
+    end
+  end
 end
