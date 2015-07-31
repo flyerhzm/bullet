@@ -132,7 +132,7 @@ module Bullet
     end
 
     def start?
-      Thread.current[:bullet_start]
+      enable? && Thread.current[:bullet_start]
     end
 
     def notification_collector
