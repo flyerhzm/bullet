@@ -16,6 +16,9 @@ module Bullet
   autoload :Registry, 'bullet/registry'
   autoload :NotificationCollector, 'bullet/notification_collector'
 
+  BULLET_DEBUG = 'BULLET_DEBUG'.freeze
+  TRUE = 'true'.freeze
+
   if defined? Rails::Railtie
     class BulletRailtie < Rails::Railtie
       initializer "bullet.configure_rails_initialization" do |app|
@@ -98,7 +101,7 @@ module Bullet
     end
 
     def debug(title, message)
-      puts "[Bullet][#{title}] #{message}" if ENV['BULLET_DEBUG'] == 'true'
+      puts "[Bullet][#{title}] #{message}" if ENV[BULLET_DEBUG] == TRUE
     end
 
     def start_request
