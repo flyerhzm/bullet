@@ -1,5 +1,7 @@
 module Bullet
   module ActiveRecord
+    LOAD_TARGET = 'load_target'.freeze
+
     def self.enable
       require 'active_record'
       ::ActiveRecord::Relation.class_eval do
@@ -138,7 +140,7 @@ module Bullet
           # avoid stack level too deep
           result = origin_load_target
           if Bullet.start?
-            Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name) unless caller.any? { |c| c.include?("load_target") }
+            Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name) unless caller.any? { |c| c.include?(LOAD_TARGET) }
             Bullet::Detector::NPlusOneQuery.add_possible_objects(result)
           end
           result
