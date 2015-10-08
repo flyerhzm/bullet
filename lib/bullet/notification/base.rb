@@ -49,10 +49,10 @@ module Bullet
 
       def notification_data
         {
-          :user => whoami,
-          :url => url,
-          :title => title,
-          :body => body_with_caller,
+          user: whoami,
+          url: url,
+          title: title,
+          body: body_with_caller,
         }
       end
 
@@ -70,7 +70,7 @@ module Bullet
         end
 
         def associations_str
-          ":includes => #{@associations.map{ |a| a.to_s.to_sym unless a.is_a? Hash }.inspect}"
+          "includes: #{@associations.map{ |a| a.to_s.to_sym unless a.is_a? Hash }.inspect}"
         end
     end
   end

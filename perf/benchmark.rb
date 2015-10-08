@@ -27,13 +27,13 @@ class User < ActiveRecord::Base
 end
 
 # create database bullet_benchmark;
-ActiveRecord::Base.establish_connection(:adapter => 'mysql2', :database => 'bullet_benchmark', :server => '/tmp/mysql.socket', :username => 'root')
+ActiveRecord::Base.establish_connection(adapter: 'mysql2', database: 'bullet_benchmark', server: '/tmp/mysql.socket', username: 'root')
 
 ActiveRecord::Base.connection.tables.each do |table|
   ActiveRecord::Base.connection.drop_table(table)
 end
 
-ActiveRecord::Schema.define(:version => 1) do
+ActiveRecord::Schema.define(version: 1) do
   create_table :posts do |t|
     t.column :title, :string
     t.column :body, :string
@@ -56,21 +56,21 @@ posts_size = 1000
 comments_size = 10000
 users = []
 users_size.times do |i|
-  users << User.new(:name => "user#{i}")
+  users << User.new(name: "user#{i}")
 end
 User.import users
 users = User.all
 
 posts = []
 posts_size.times do |i|
-  posts << Post.new(:title => "Title #{i}", :body => "Body #{i}", :user => users[i%100])
+  posts << Post.new(title: "Title #{i}", body: "Body #{i}", user: users[i%100])
 end
 Post.import posts
 posts = Post.all
 
 comments = []
 comments_size.times do |i|
-  comments << Comment.new(:body => "Comment #{i}", :post => posts[i%1000], :user => users[i%100])
+  comments << Comment.new(body: "Comment #{i}", post: posts[i%1000], user: users[i%100])
 end
 Comment.import comments
 
@@ -83,7 +83,7 @@ Benchmark.bm(70) do |bm|
   bm.report("Querying & Iterating #{posts_size} Posts with #{comments_size} Comments and #{users_size} Users") do
     10.times do
       Bullet.start_request
-      Post.select("SQL_NO_CACHE *").includes(:user, :comments => :user).each do |p|
+      Post.select("SQL_NO_CACHE *").includes(:user, comments: :user).each do |p|
         p.title
         p.user.name
         p.comments.each do |c|

@@ -33,7 +33,7 @@ module Bullet
     attr_accessor :add_footer, :orm_pathches_applied
 
     available_notifiers = UniformNotifier::AVAILABLE_NOTIFIERS.map { |notifier| "#{notifier}=" }
-    available_notifiers << { :to => UniformNotifier }
+    available_notifiers << { to: UniformNotifier }
     delegate *available_notifiers
 
     def raise=(should_raise)
@@ -86,7 +86,7 @@ module Bullet
     end
 
     def reset_whitelist
-      @whitelist = {:n_plus_one_query => {}, :unused_eager_loading => {}, :counter_cache => {}}
+      @whitelist = {n_plus_one_query: {}, unused_eager_loading: {}, counter_cache: {}}
     end
 
     def bullet_logger=(active)

@@ -9,38 +9,38 @@ module Bullet
     context "#html_request?" do
       it "should be true if Content-Type is text/html and http body contains html tag" do
         headers = {"Content-Type" => "text/html"}
-        response = double(:body => "<html><head></head><body></body></html>")
+        response = double(body: "<html><head></head><body></body></html>")
         expect(middleware).to be_html_request(headers, response)
       end
 
       it "should be true if Content-Type is text/html and http body contains html tag with attributes" do
         headers = {"Content-Type" => "text/html"}
-        response = double(:body => "<html attr='hello'><head></head><body></body></html>")
+        response = double(body: "<html attr='hello'><head></head><body></body></html>")
         expect(middleware).to be_html_request(headers, response)
       end
 
       it "should be false if there is no Content-Type header" do
         headers = {}
-        response = double(:body => "<html><head></head><body></body></html>")
+        response = double(body: "<html><head></head><body></body></html>")
         expect(middleware).not_to be_html_request(headers, response)
       end
 
       it "should be false if Content-Type is javascript" do
         headers = {"Content-Type" => "text/javascript"}
-        response = double(:body => "<html><head></head><body></body></html>")
+        response = double(body: "<html><head></head><body></body></html>")
         expect(middleware).not_to be_html_request(headers, response)
       end
 
       it "should be false if response body doesn't contain html tag" do
         headers = {"Content-Type" => "text/html"}
-        response = double(:body => "<div>Partial</div>")
+        response = double(body: "<div>Partial</div>")
         expect(middleware).not_to be_html_request(headers, response)
       end
     end
 
     context "empty?" do
       it "should be false if response is a string and not empty" do
-        response = double(:body => "<html><head></head><body></body></html>")
+        response = double(body: "<html><head></head><body></body></html>")
         expect(middleware).not_to be_empty(response)
       end
 
@@ -50,7 +50,7 @@ module Bullet
       end
 
       it "should be true if response body is empty" do
-        response = double(:body => "")
+        response = double(body: "")
         expect(middleware).to be_empty(response)
       end
     end

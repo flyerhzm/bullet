@@ -102,7 +102,7 @@ if !mongoid? && active_record4?
       end
 
       it "should detect preload with category => posts => comments" do
-        Category.includes({:posts => :comments}).each do |category|
+        Category.includes({posts: :comments}).each do |category|
           category.posts.each do |post|
             post.comments.map(&:name)
           end
@@ -114,7 +114,7 @@ if !mongoid? && active_record4?
       end
 
       it "should detect preload with category => posts => comments with posts.id > 0" do
-        Category.includes({:posts => :comments}).where('posts.id > 0').references(:posts).each do |category|
+        Category.includes({posts: :comments}).where('posts.id > 0').references(:posts).each do |category|
           category.posts.each do |post|
             post.comments.map(&:name)
           end
@@ -126,7 +126,7 @@ if !mongoid? && active_record4?
       end
 
       it "should detect unused preload with category => posts => comments" do
-        Category.includes({:posts => :comments}).map(&:name)
+        Category.includes({posts: :comments}).map(&:name)
         Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
         expect(Bullet::Detector::Association).to be_unused_preload_associations_for(Post, :comments)
 
@@ -134,7 +134,7 @@ if !mongoid? && active_record4?
       end
 
       it "should detect unused preload with post => commnets, no category => posts" do
-        Category.includes({:posts => :comments}).each do |category|
+        Category.includes({posts: :comments}).each do |category|
           category.posts.map(&:name)
         end
         Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
@@ -237,7 +237,7 @@ if !mongoid? && active_record4?
 
     context "category => posts => writer" do
       it "should not detect unused preload associations" do
-        category = Category.includes({:posts => :writer}).order("id DESC").find_by_name('first')
+        category = Category.includes({posts: :writer}).order("id DESC").find_by_name('first')
         category.posts.map do |post|
           post.name
           post.writer.name
@@ -367,7 +367,7 @@ if !mongoid? && active_record4?
       end
 
       it "should not detect unpreload association" do
-        Comment.includes(:post => :category).each do |comment|
+        Comment.includes(post: :category).each do |comment|
           comment.post.category.name
         end
         Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
@@ -389,7 +389,7 @@ if !mongoid? && active_record4?
       end
 
       it "should detect unused preload with comment => author" do
-        Comment.includes([:author, {:post => :writer}]).where(["base_users.id = ?", BaseUser.first]).references(:base_users).each do |comment|
+        Comment.includes([:author, {post: :writer}]).where(["base_users.id = ?", BaseUser.first]).references(:base_users).each do |comment|
           comment.post.writer.name
         end
         Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
@@ -399,7 +399,7 @@ if !mongoid? && active_record4?
       end
 
       it "should detect non preloading with writer => newspaper" do
-        Comment.includes(:post => :writer).where("posts.name like '%first%'").references(:posts).each do |comment|
+        Comment.includes(post: :writer).where("posts.name like '%first%'").references(:posts).each do |comment|
           comment.post.writer.newspaper.name
         end
         Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
@@ -410,7 +410,7 @@ if !mongoid? && active_record4?
 
       it "should not raise a stack error from posts to category" do
         expect {
-          Comment.includes({:post => :category}).each do |com|
+          Comment.includes({post: :category}).each do |com|
             com.post.category
           end
         }.not_to raise_error()
@@ -667,7 +667,7 @@ if !mongoid? && active_record4?
     end
 
     context "whitelist n plus one query" do
-      before { Bullet.add_whitelist :type => :n_plus_one_query, :class_name => "Post", :association => :comments }
+      before { Bullet.add_whitelist type: :n_plus_one_query, class_name: "Post", association: :comments }
       after { Bullet.reset_whitelist }
 
       it "should not detect n plus one query" do
@@ -690,7 +690,7 @@ if !mongoid? && active_record4?
     end
 
     context "whitelist unused eager loading" do
-      before { Bullet.add_whitelist :type => :unused_eager_loading, :class_name => "Post", :association => :comments }
+      before { Bullet.add_whitelist type: :unused_eager_loading, class_name: "Post", association: :comments }
       after { Bullet.reset_whitelist }
 
       it "should not detect unused eager loading" do
