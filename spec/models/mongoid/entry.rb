@@ -3,5 +3,5 @@ class Mongoid::Entry
 
   field :name
 
-  belongs_to :category, :class_name => "Mongoid::Category"
+  belongs_to :category, class_name: "Mongoid::Category"
 end
