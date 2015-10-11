@@ -162,8 +162,8 @@ module Bullet
 
         def has_cached_counter?
           result = origin_has_cached_counter?
-          if Bullet.start?
-            Bullet::Detector::CounterCache.add_counter_cache(@owner, @reflection.name) unless result
+          if Bullet.start? && !result
+            Bullet::Detector::CounterCache.add_counter_cache(@owner, @reflection.name)
           end
           result
         end
@@ -173,8 +173,8 @@ module Bullet
         alias_method :origin_has_cached_counter?, :has_cached_counter?
         def has_cached_counter?
           result = origin_has_cached_counter?
-          if Bullet.start?
-            Bullet::Detector::CounterCache.add_counter_cache(@owner, @reflection.name) unless result
+          if Bullet.start? && !result
+            Bullet::Detector::CounterCache.add_counter_cache(@owner, @reflection.name)
           end
           result
         end

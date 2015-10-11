@@ -29,6 +29,13 @@ if !mongoid? && active_record?
       expect(Bullet.collected_counter_cache_notifications).to be_empty
     end
 
+    it "should need counter cache for has_many through" do
+      Client.all.each do |client|
+        client.firms.size
+      end
+      expect(Bullet.collected_counter_cache_notifications).not_to be_empty
+    end
+
     it "should not need counter cache with part of cities" do
       Country.all.each do |country|
         country.cities.where(:name => 'first').size

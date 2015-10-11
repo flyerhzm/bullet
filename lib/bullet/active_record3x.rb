@@ -145,8 +145,8 @@ module Bullet
 
         def has_cached_counter?(reflection = reflection())
           result = origin_has_cached_counter?(reflection)
-          if Bullet.start?
-            Bullet::Detector::CounterCache.add_counter_cache(owner, reflection.name) unless result
+          if Bullet.start? && !result
+            Bullet::Detector::CounterCache.add_counter_cache(owner, reflection.name)
           end
           result
         end

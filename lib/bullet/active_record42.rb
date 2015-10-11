@@ -180,9 +180,7 @@ module Bullet
       ::ActiveRecord::Associations::HasManyAssociation.class_eval do
         alias_method :origin_many_empty?, :empty?
         def empty?
-          Thread.current[:bullet_collection_empty] = true
           result = origin_many_empty?
-          Thread.current[:bullet_collection_empty] = nil
           if Bullet.start?
             Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name)
           end
@@ -192,10 +190,19 @@ module Bullet
         alias_method :origin_has_cached_counter?, :has_cached_counter?
         def has_cached_counter?(reflection = reflection())
           result = origin_has_cached_counter?(reflection)
-          if Bullet.start?
-            if !result && !Thread.current[:bullet_collection_empty]
-              Bullet::Detector::CounterCache.add_counter_cache(owner, reflection.name)
-            end
+          if Bullet.start? && !result
+            Bullet::Detector::CounterCache.add_counter_cache(owner, reflection.name)
+          end
+          result
+        end
+      end
+
+      ::ActiveRecord::Associations::HasManyThroughAssociation.class_eval do
+        alias_method :origin_has_cached_counter?, :has_cached_counter?
+        def has_cached_counter?(reflection = reflection())
+          result = origin_has_cached_counter?(reflection)
+          if Bullet.start? && !result
+            Bullet::Detector::CounterCache.add_counter_cache(owner, reflection.name)
           end
           result
         end
