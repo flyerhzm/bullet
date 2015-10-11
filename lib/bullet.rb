@@ -77,6 +77,7 @@ module Bullet
     end
 
     def add_whitelist(options)
+      reset_whitelist
       @whitelist[options[:type]][options[:class_name].classify] ||= []
       @whitelist[options[:type]][options[:class_name].classify] << options[:association].to_sym
     end
@@ -86,7 +87,7 @@ module Bullet
     end
 
     def reset_whitelist
-      @whitelist = {:n_plus_one_query => {}, :unused_eager_loading => {}, :counter_cache => {}}
+      @whitelist ||= {:n_plus_one_query => {}, :unused_eager_loading => {}, :counter_cache => {}}
     end
 
     def bullet_logger=(active)
