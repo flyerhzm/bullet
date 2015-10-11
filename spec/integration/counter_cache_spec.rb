@@ -50,7 +50,7 @@ if !mongoid? && active_record?
 
     context "whitelist" do
       before { Bullet.add_whitelist :type => :counter_cache, :class_name => "Country", :association => :cities }
-      after { Bullet.reset_whitelist }
+      after { Bullet.clear_whitelist }
 
       it "should not detect counter cache" do
         Country.all.each do |country|

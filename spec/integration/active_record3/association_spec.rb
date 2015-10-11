@@ -624,7 +624,7 @@ if !mongoid? && active_record3?
 
     context "whitelist n plus one query" do
       before { Bullet.add_whitelist :type => :n_plus_one_query, :class_name => "Post", :association => :comments }
-      after { Bullet.reset_whitelist }
+      after { Bullet.clear_whitelist }
 
       it "should not detect n plus one query" do
         Post.all.each do |post|
@@ -647,7 +647,7 @@ if !mongoid? && active_record3?
 
     context "whitelist unused eager loading" do
       before { Bullet.add_whitelist :type => :unused_eager_loading, :class_name => "Post", :association => :comments }
-      after { Bullet.reset_whitelist }
+      after { Bullet.clear_whitelist }
 
       it "should not detect unused eager loading" do
         Post.includes(:comments).map(&:name)

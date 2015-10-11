@@ -90,6 +90,10 @@ module Bullet
       @whitelist ||= {:n_plus_one_query => {}, :unused_eager_loading => {}, :counter_cache => {}}
     end
 
+    def clear_whitelist
+      @whitelist = nil
+    end
+
     def bullet_logger=(active)
       if active
         require 'fileutils'
