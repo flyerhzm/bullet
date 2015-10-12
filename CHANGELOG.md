@@ -1,5 +1,12 @@
 # Next Release
 
+## 4.14.9
+
+* Support mongoid 5.0.0
+* Do not report association queries immediately after object creation to
+  require a preload
+* Detect `counter_cache` for `has_many :through` association
+
 ## 4.14.8
 
 * compatible with `composite_primary_keys` gem
