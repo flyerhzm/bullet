@@ -30,14 +30,14 @@ module Bullet
         end
 
         it "should return blank if no user available" do
-          temp_env_variable("USER","") do
+          temp_env_variable("USER", "") do
             expect(subject).to receive(:`).with("whoami").and_return("")
             expect(subject.whoami).to eq("")
           end
         end
 
         it "should return blank if whoami is not available" do
-          temp_env_variable("USER","") do
+          temp_env_variable("USER", "") do
             expect(subject).to receive(:`).with("whoami").and_raise(Errno::ENOENT)
             expect(subject.whoami).to eq("")
           end
