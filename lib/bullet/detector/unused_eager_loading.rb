@@ -48,7 +48,7 @@ module Bullet
           end
 
           eager_loadings.add(*to_add) if to_add
-          to_merge.each { |k,val| eager_loadings.merge k, val }
+          to_merge.each { |k, val| eager_loadings.merge k, val }
           to_delete.each { |k| eager_loadings.delete k }
 
           eager_loadings.add bullet_keys, associations unless bullet_keys.empty?
