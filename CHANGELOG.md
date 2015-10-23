@@ -1,5 +1,9 @@
 # Next Release
 
+## 4.14.10
+
+* Fix `has_many :through` infinite loop issue
+
 ## 4.14.9
 
 * Support mongoid 5.0.0
