@@ -85,6 +85,21 @@ module Bullet
           expect(NPlusOneQuery).not_to receive(:create_notification).with("Post", :association)
           NPlusOneQuery.call_association(@post, :association)
         end
+
+        context "stacktrace_excludes" do
+          before { Bullet.stacktrace_excludes = [ 'def' ] }
+          after { Bullet.stacktrace_excludes = nil }
+
+          it "should not create notification when stacktrace contains paths that are in the exclude list" do
+            in_project = File.join(Dir.pwd, 'abc', 'abc.rb')
+            included_path = '/ghi/ghi.rb'
+            excluded_path = '/def/def.rb'
+
+            expect(NPlusOneQuery).to receive(:caller).and_return([in_project, included_path, excluded_path])
+            expect(NPlusOneQuery).to_not receive(:create_notification)
+            NPlusOneQuery.call_association(@post, :association)
+          end
+        end
       end
 
       context ".caller_in_project" do

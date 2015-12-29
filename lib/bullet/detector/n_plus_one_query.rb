@@ -15,7 +15,7 @@ module Bullet
           add_call_object_associations(object, associations)
 
           Bullet.debug("Detector::NPlusOneQuery#call_association", "object: #{object.bullet_key}, associations: #{associations}")
-          if conditions_met?(object, associations)
+          if !excluded_stacktrace_path? && conditions_met?(object, associations)
             Bullet.debug("detect n + 1 query", "object: #{object.bullet_key}, associations: #{associations}")
             create_notification caller_in_project, object.class.to_s, associations
           end
@@ -94,6 +94,12 @@ module Bullet
             caller.select do |c|
               c.include?(app_root) && !c.include?(vendor_root) ||
               Bullet.stacktrace_includes.any? { |include| c.include?(include) }
+            end
+          end
+
+          def excluded_stacktrace_path?
+            Bullet.stacktrace_excludes.any? do |excluded_path|
+              caller_in_project.any? { |c| c.include?(excluded_path) }
             end
           end
       end
