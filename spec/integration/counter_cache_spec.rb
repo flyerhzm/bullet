@@ -29,11 +29,20 @@ if !mongoid? && active_record?
       expect(Bullet.collected_counter_cache_notifications).to be_empty
     end
 
-    it "should need counter cache for has_many through" do
-      Client.all.each do |client|
-        client.firms.size
+    if active_record5?
+      it "should not need counter cache for has_many through" do
+        Client.all.each do |client|
+          client.firms.size
+        end
+        expect(Bullet.collected_counter_cache_notifications).to be_empty
       end
-      expect(Bullet.collected_counter_cache_notifications).not_to be_empty
+    else
+      it "should need counter cache for has_many through" do
+        Client.all.each do |client|
+          client.firms.size
+        end
+        expect(Bullet.collected_counter_cache_notifications).not_to be_empty
+      end
     end
 
     it "should not need counter cache with part of cities" do

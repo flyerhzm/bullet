@@ -24,6 +24,8 @@ module Bullet
                                      'active_record41'
                                    elsif active_record42?
                                      'active_record42'
+                                   elsif active_record50?
+                                     'active_record5'
                                    end
                                  end
     end
@@ -50,6 +52,10 @@ module Bullet
       active_record? && ::ActiveRecord::VERSION::MAJOR == 4
     end
 
+    def active_record5?
+      active_record? && ::ActiveRecord::VERSION::MAJOR == 5
+    end
+
     def active_record30?
       active_record3? && ::ActiveRecord::VERSION::MINOR == 0
     end
@@ -72,6 +78,10 @@ module Bullet
 
     def active_record42?
       active_record4? && ::ActiveRecord::VERSION::MINOR == 2
+    end
+
+    def active_record50?
+      active_record5? && ::ActiveRecord::VERSION::MINOR == 0
     end
 
     def mongoid2x?
