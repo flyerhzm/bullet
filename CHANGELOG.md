@@ -1,5 +1,9 @@
 # Next Release
 
+## 5.0.0 (01/06/2015)
+
+* Support Rails 5.0.0.beta1
+
 ## 4.14.10
 
 * Fix `has_many :through` infinite loop issue
