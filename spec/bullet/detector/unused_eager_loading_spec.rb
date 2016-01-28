@@ -5,7 +5,8 @@ module Bullet
     describe UnusedEagerLoading do
       before(:all) do
         @post = Post.first
-        @post2 = Post.last
+        @post2 = Post.second
+        @post3 = Post.last
       end
 
       context ".call_associations" do
@@ -72,7 +73,18 @@ module Bullet
           UnusedEagerLoading.add_eager_loadings([@post, @post2], :association2)
           expect(UnusedEagerLoading.send(:eager_loadings)).to be_include([@post.bullet_key], :association1)
           expect(UnusedEagerLoading.send(:eager_loadings)).to be_include([@post.bullet_key], :association2)
-          expect(UnusedEagerLoading.send(:eager_loadings)).to be_include([@post.bullet_key, @post2.bullet_key], :association2)
+          expect(UnusedEagerLoading.send(:eager_loadings)).to be_include([@post2.bullet_key], :association2)
+        end
+
+        it "should vmerge objects recursively, associations pair for existing eager_loadings" do
+          UnusedEagerLoading.add_eager_loadings([@post, @post2], :association1)
+          UnusedEagerLoading.add_eager_loadings([@post, @post3], :association1)
+          UnusedEagerLoading.add_eager_loadings([@post, @post3], :association2)
+          expect(UnusedEagerLoading.send(:eager_loadings)).to be_include([@post.bullet_key], :association1)
+          expect(UnusedEagerLoading.send(:eager_loadings)).to be_include([@post.bullet_key], :association2)
+          expect(UnusedEagerLoading.send(:eager_loadings)).to be_include([@post2.bullet_key], :association1)
+          expect(UnusedEagerLoading.send(:eager_loadings)).to be_include([@post3.bullet_key], :association1)
+          expect(UnusedEagerLoading.send(:eager_loadings)).to be_include([@post3.bullet_key], :association2)
         end
 
         it "should delete objects, associations pair for existing eager_loadings" do
