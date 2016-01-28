@@ -27,27 +27,25 @@ module Bullet
           Bullet.debug("Detector::UnusedEagerLoading#add_eager_loadings", "objects: #{objects.map(&:bullet_key).join(', ')}, associations: #{associations}")
           bullet_keys = objects.map(&:bullet_key)
 
-          to_add = nil
-          to_merge, to_delete = [], []
+          to_add, to_merge, to_delete = [], [], []
           eager_loadings.each do |k, v|
             key_objects_overlap = k & bullet_keys
 
             next if key_objects_overlap.empty?
 
+            bullet_keys = bullet_keys - k
             if key_objects_overlap == k
-              to_add = [k, associations]
-              break
+              to_add << [k, associations]
             else
               to_merge << [key_objects_overlap, ( eager_loadings[k].dup  << associations )]
 
-              keys_without_objects = k - bullet_keys
+              keys_without_objects = k - key_objects_overlap
               to_merge << [keys_without_objects, eager_loadings[k]]
               to_delete << k
-              bullet_keys = bullet_keys - k
             end
           end
 
-          eager_loadings.add(*to_add) if to_add
+          to_add.each { |k, val| eager_loadings.add k, val }
           to_merge.each { |k, val| eager_loadings.merge k, val }
           to_delete.each { |k| eager_loadings.delete k }
 
