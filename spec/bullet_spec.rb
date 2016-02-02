@@ -85,4 +85,13 @@ describe Bullet, focused: true do
       end
     end
   end
+
+  describe '#add_whitelist' do
+    context 'for ‘special’ class names' do
+      it 'is added to the whitelist successfully' do
+        Bullet.add_whitelist(:type => :n_plus_one_query, :class_name => 'Klass', :association => :department)
+        expect(Bullet.get_whitelist_associations(:n_plus_one_query, 'Klass')).to include :department
+      end
+    end
+  end
 end
