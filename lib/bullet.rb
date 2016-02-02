@@ -82,8 +82,8 @@ module Bullet
 
     def add_whitelist(options)
       reset_whitelist
-      @whitelist[options[:type]][options[:class_name].classify] ||= []
-      @whitelist[options[:type]][options[:class_name].classify] << options[:association].to_sym
+      @whitelist[options[:type]][options[:class_name]] ||= []
+      @whitelist[options[:type]][options[:class_name]] << options[:association].to_sym
     end
 
     def get_whitelist_associations(type, class_name)
