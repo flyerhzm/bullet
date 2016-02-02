@@ -5,7 +5,7 @@ module Bullet
     describe UnusedEagerLoading do
       before(:all) do
         @post = Post.first
-        @post2 = Post.second
+        @post2 = Post.all[1]
         @post3 = Post.last
       end
 
