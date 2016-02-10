@@ -537,6 +537,27 @@ if !mongoid? && active_record3?
     end
   end
 
+  describe Bullet::Detector::Association, "query immediately after creation" do
+    context "document => children" do
+      it 'should not detect non preload associations' do
+        document1 = Document.new
+        document1.children.build
+        document1.save
+
+        document2 = Document.new(parent: document1)
+        document2.save
+        document2.parent
+
+        document1.children.each.first
+
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+        expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
+
+        expect(Bullet::Detector::Association).to be_completely_preloading_associations
+      end
+    end
+  end
+
   describe Bullet::Detector::Association, "STI" do
     context "page => author" do
       it "should detect non preload associations" do
