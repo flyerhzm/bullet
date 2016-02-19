@@ -23,6 +23,24 @@ module Bullet
         end
       end
 
+      ::ActiveRecord::Persistence.class_eval do
+        alias_method :origin_save, :save
+        def save(*args, &proc)
+          was_new_record = new_record?
+          origin_save(*args, &proc).tap do |result|
+            Bullet::Detector::NPlusOneQuery.add_impossible_object(self) if result && was_new_record
+          end
+        end
+
+        alias_method :origin_save!, :save!
+        def save!(*args, &proc)
+          was_new_record = new_record?
+          origin_save!(*args, &proc).tap do |result|
+            Bullet::Detector::NPlusOneQuery.add_impossible_object(self) if result && was_new_record
+          end
+        end
+      end
+
       ::ActiveRecord::AssociationPreload::ClassMethods.class_eval do
         alias_method :origin_preload_associations, :preload_associations
         # include query for one to many associations.

@@ -29,6 +29,14 @@ module Bullet
           end
         end
         alias_method_chain :save, :bullet
+
+        def save_with_bullet!(*args, &proc)
+          was_new_record = new_record?
+          save_without_bullet!(*args, &proc).tap do |result|
+            Bullet::Detector::NPlusOneQuery.add_impossible_object(self) if result && was_new_record
+          end
+        end
+        alias_method_chain :save!, :bullet
       end
 
       ::ActiveRecord::Relation.class_eval do
