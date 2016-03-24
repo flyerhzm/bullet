@@ -23,6 +23,7 @@ Notification instances contain the message that will be displayed, and will
 use a Presenter class to display their message to the user.
 
 So the flow of a request goes like this:
+
 1. Bullet.start_request is called, which resets all the detectors and empties
    the notification collector
 2. The request is handled by Rails, and the installed ActiveRecord extensions
