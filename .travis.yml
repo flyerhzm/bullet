@@ -30,6 +30,12 @@ services:
 matrix:
   exclude:
     - rvm: 1.9.3
+      gemfile: Gemfile.rails-4.0
+    - rvm: 1.9.3
+      gemfile: Gemfile.rails-4.1
+    - rvm: 1.9.3
+      gemfile: Gemfile.rails-4.2
+    - rvm: 1.9.3
       gemfile: Gemfile.rails-5.0
     - rvm: 1.9.3
       gemfile: Gemfile.mongoid-2.4
