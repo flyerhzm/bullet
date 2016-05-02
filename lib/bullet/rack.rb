@@ -67,7 +67,7 @@ module Bullet
     end
 
     def response_body(response)
-      if rails?
+      if response.respond_to?(:body)
         Array === response.body ? response.body.first : response.body
       else
         response.first
