@@ -93,5 +93,36 @@ module Bullet
         end
       end
     end
+
+    describe "#response_body" do
+      let(:response) { double }
+      let(:body_string) { "<html><body>My Body</body></html>" }
+
+      context "when `response` responds to `body`" do
+        before { allow(response).to receive(:body).and_return(body) }
+
+        context "when `body` returns an Array" do
+          let(:body) { [body_string, 'random string'] }
+          it "should return the plain body string" do
+            expect(middleware.response_body(response)).to eq body_string
+          end
+        end
+
+        context "when `body` does not return an Array" do
+          let(:body) { body_string }
+          it "should return the plain body string" do
+            expect(middleware.response_body(response)).to eq body_string
+          end
+        end
+      end
+
+      context "when `response` does not respond to `body`" do
+        before { allow(response).to receive(:first).and_return(body_string) }
+
+        it "should return the plain body string" do
+          expect(middleware.response_body(response)).to eq body_string
+        end
+      end
+    end
   end
 end
