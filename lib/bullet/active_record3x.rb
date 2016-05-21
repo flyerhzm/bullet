@@ -118,7 +118,7 @@ module Bullet
 
         alias_method :origin_empty?, :empty?
         def empty?
-          if Bullet.start?
+          if Bullet.start? && !has_cached_counter?(@reflection)
             Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name)
           end
           origin_empty?

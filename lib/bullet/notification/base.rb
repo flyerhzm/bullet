@@ -57,11 +57,11 @@ module Bullet
       end
 
       def eql?(other)
-        klazz_associations_str == other.klazz_associations_str
+        self.class == other.class && klazz_associations_str == other.klazz_associations_str
       end
 
       def hash
-        klazz_associations_str.hash
+        [self.class, klazz_associations_str].hash
       end
 
       protected

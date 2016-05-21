@@ -159,7 +159,7 @@ module Bullet
 
         alias_method :origin_empty?, :empty?
         def empty?
-          if Bullet.start?
+          if Bullet.start? && !@reflection.has_cached_counter?
             Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name)
           end
           origin_empty?
@@ -199,7 +199,7 @@ module Bullet
           Thread.current[:bullet_collection_empty] = true
           result = origin_many_empty?
           Thread.current[:bullet_collection_empty] = nil
-          if Bullet.start?
+          if Bullet.start? && !@reflection.has_cached_counter?
             Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name)
           end
           result
