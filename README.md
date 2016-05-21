@@ -238,7 +238,9 @@ Bullet outputs some details info, to enable debug mode, set
 
 ## Demo
 
-Bullet is designed to function as you browse through your application in development. To see it in action, follow these steps to create, detect, and fix example query problems.
+Bullet is designed to function as you browse through your application in development. To see it in action,
+you can visit [https://github.com/flyerhzm/bullet_test](https://github.com/flyerhzm/bullet_test) or
+follow these steps to create, detect, and fix example query problems.
 
 1\. Create an example application
 
@@ -458,4 +460,4 @@ Meanwhile, there's a line appended to `log/bullet.log`
   Post => [:comments]
 ```
 
-Copyright (c) 2009 - 2015 Richard Huang (flyerhzm@gmail.com), released under the MIT license
+Copyright (c) 2009 - 2016 Richard Huang (flyerhzm@gmail.com), released under the MIT license
