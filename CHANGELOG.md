@@ -1,55 +1,31 @@
 # Next Release
 
+## 5.1.0 (05/21/2015)
+
+* Fix false alert when `empty?` used with `counter_cache`
+* Fix `alias_method_chain` deprecation for rails 5
+* Add response handling for non-Rails Rack responses
+* Fix false alert when querying immediately after creation
+* Fix UnusedEagerLoading bug when multiple eager loading query include same objects
+
 ## 5.0.0 (01/06/2015)
 
 * Support Rails 5.0.0.beta1
-
-## 4.14.10
-
 * Fix `has_many :through` infinite loop issue
-
-## 4.14.9
-
 * Support mongoid 5.0.0
 * Do not report association queries immediately after object creation to
   require a preload
 * Detect `counter_cache` for `has_many :through` association
-
-## 4.14.8
-
-* compatible with `composite_primary_keys` gem
-
-## 4.14.7
-
+* Compatible with `composite_primary_keys` gem
 * Fix AR 4.2 SingularAssociation#reader result can be nil
 * `perform_out_of_channel_notifications` should always be triggered
-
-## 4.14.6
-
 * Fix false positive with `belongs_to` -> `belongs_to` for active\_record 4.2
 * Activate active\_record hacks only when Bullet already start
-
-## 4.14.5
-
 * Don't execute query when running `to_sql`
 * Send backtrace to `uniform_notifier`
 * Fix sse response check
 * Dynamically delegate available notifiers to UniformNotifier
-
-## 4.14.4
-
-* Fix false N + 1 warnings on Rails 4.2
-
-## 4.14.3
-
-* Fix false positive on create
-
-## 4.14.2
-
 * Hotfix nil object when `add_impossible_object`
-
-## 4.14.1
-
 * Fix `has_one` then `has_many` associations in rails 4.2
 * Append js and dom to html body in proper position
 
