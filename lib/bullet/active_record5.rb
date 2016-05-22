@@ -143,7 +143,9 @@ module Bullet
           records = origin_load_target
 
           if Bullet.start?
-            Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name) unless @inversed
+            if records.size > 1
+              Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name) unless @inversed
+            end
             if records.first.class.name !~ /^HABTM_/
               if records.size > 1
                 Bullet::Detector::NPlusOneQuery.add_possible_objects(records)

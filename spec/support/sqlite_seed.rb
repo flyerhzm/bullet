@@ -16,6 +16,7 @@ module Support
       post1 = category1.posts.create(:name => 'first', :writer => writer1)
       post1a = category1.posts.create(:name => 'like first', :writer => writer2, active: false)
       post2 = category2.posts.create(:name => 'second', :writer => writer2)
+      post3 = category2.posts.create(:name => 'third', :writer => writer2)
 
       comment1 = post1.comments.create(:name => 'first', :author => writer1)
       comment2 = post1.comments.create(:name => 'first2', :author => writer1)

@@ -214,7 +214,7 @@ if !mongoid? && active_record4?
     context "post => comment" do
       it "should detect unused preload with post => comments" do
         Post.includes(:comments).each do |post|
-          post.comments.first.name
+          post.comments.first.name if post.comments.first
         end
         Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
         expect(Bullet::Detector::Association).not_to be_unused_preload_associations_for(Post, :comments)
