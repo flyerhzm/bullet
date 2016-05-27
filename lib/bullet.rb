@@ -190,17 +190,22 @@ module Bullet
     end
 
     def profile
+      return_value = nil
       if Bullet.enable?
         begin
           Bullet.start_request
 
-          yield
+          return_value = yield
 
           Bullet.perform_out_of_channel_notifications if Bullet.notification?
         ensure
           Bullet.end_request
         end
+      else
+        return_value = yield
       end
+
+      return_value
     end
 
     private
