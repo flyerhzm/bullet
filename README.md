@@ -130,6 +130,8 @@ class ApplicationController < ActionController::Base
 end
 ```
 
+Note that you must pick one or the other of these two approaches, not both: [re-enabling Bullet will clear any existing whitelists](https://github.com/flyerhzm/bullet/blob/75ba0171cafbe64f6abb8ab7191cca5aac16fbf9/lib/bullet.rb#L47-L50)
+
 ## Log
 
 The Bullet log `log/bullet.log` will look something like this:
