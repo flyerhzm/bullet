@@ -23,10 +23,12 @@ module Bullet
         @registry.select(*args, &block)
       end
 
-      def add(key, values)
+      def add(key, value)
         @registry[key] ||= Set.new
-        Array(values).each do |value|
-          @registry[key] << value.to_sym
+        if value.is_a? Array
+          @registry[key] += value
+        else
+          @registry[key] << value
         end
       end
 
