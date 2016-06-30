@@ -465,6 +465,16 @@ if !mongoid? && active_record4?
 
         expect(Bullet::Detector::Association).to be_completely_preloading_associations
       end
+
+      it "should detect non preload student => teachers with empty?" do
+        Student.all.each do |student|
+          student.teachers.empty?
+        end
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+        expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
+
+        expect(Bullet::Detector::Association).to be_detecting_unpreloaded_association_for(Student, :teachers)
+      end
     end
   end
 

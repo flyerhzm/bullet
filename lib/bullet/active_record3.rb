@@ -134,6 +134,16 @@ module Bullet
           origin_last(*args)
         end
 
+        alias_method :origin_include?, :include?
+        def include?(object)
+          if Bullet.start?
+            Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name)
+          end
+          origin_include?(object)
+        end
+      end
+
+      ::ActiveRecord::Associations::HasManyAssociation.class_eval do
         alias_method :origin_empty?, :empty?
         def empty?
           if Bullet.start? && !has_cached_counter?
@@ -141,13 +151,15 @@ module Bullet
           end
           origin_empty?
         end
+      end
 
-        alias_method :origin_include?, :include?
-        def include?(object)
+      ::ActiveRecord::Associations::HasAndBelongsToManyAssociation.class_eval do
+        alias_method :origin_empty?, :empty?
+        def empty?
           if Bullet.start?
             Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name)
           end
-          origin_include?(object)
+          origin_empty?
         end
       end
 
