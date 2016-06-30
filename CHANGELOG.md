@@ -1,6 +1,11 @@
 # Next Release
 
-## 5.1.0 (05/21/2015)
+## 5.1.1
+
+* Fix `has_cached_counter?` is not defined in HABTM #297
+* Fix false alert if preloaded association has no records #260
+
+## 5.1.0 (05/21/2016)
 
 * Fix false alert when `empty?` used with `counter_cache`
 * Fix `alias_method_chain` deprecation for rails 5
@@ -8,7 +13,7 @@
 * Fix false alert when querying immediately after creation
 * Fix UnusedEagerLoading bug when multiple eager loading query include same objects
 
-## 5.0.0 (01/06/2015)
+## 5.0.0 (01/06/2016)
 
 * Support Rails 5.0.0.beta1
 * Fix `has_many :through` infinite loop issue
