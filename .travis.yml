@@ -14,6 +14,7 @@ gemfile:
   - Gemfile.rails-3.2
   - Gemfile.rails-3.1
   - Gemfile.rails-3.0
+  - Gemfile.mongoid-6.0
   - Gemfile.mongoid-5.0
   - Gemfile.mongoid-4.0
   - Gemfile.mongoid-3.1
@@ -55,14 +56,20 @@ matrix:
       gemfile: Gemfile.mongoid-4.0
     - rvm: 1.9.3
       gemfile: Gemfile.mongoid-5.0
+    - rvm: 1.9.3
+      gemfile: Gemfile.mongoid-6.0
     - rvm: 2.0
       gemfile: Gemfile.rails-3.0
     - rvm: 2.0
       gemfile: Gemfile.rails-5.0
+    - rvm: 2.0
+      gemfile: Gemfile.mongoid-6.0
     - rvm: 2.1
       gemfile: Gemfile.rails-3.0
     - rvm: 2.1
       gemfile: Gemfile.rails-5.0
+    - rvm: 2.1
+      gemfile: Gemfile.mongoid-6.0
     - rvm: 2.2
       gemfile: Gemfile.rails-5.0
     - rvm: 2.2
@@ -71,6 +78,8 @@ matrix:
       gemfile: Gemfile.rails-3.1
     - rvm: 2.2
       gemfile: Gemfile.rails-3.2
+    - rvm: 2.2
+      gemfile: Gemfile.mongoid-6.0
     - rvm: 2.2
       gemfile: Gemfile.mongoid-3.1
     - rvm: 2.2
