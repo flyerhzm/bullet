@@ -207,7 +207,7 @@ module Bullet
         alias_method :origin_count_records, :count_records
         def count_records
           result = reflection.has_cached_counter?
-          if Bullet.start? && !result
+          if Bullet.start? && !result && !self.is_a?(::ActiveRecord::Associations::ThroughAssociation)
             Bullet::Detector::CounterCache.add_counter_cache(owner, reflection.name)
           end
           origin_count_records
