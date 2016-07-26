@@ -2,7 +2,6 @@
 
 [![Gem Version](https://badge.fury.io/rb/bullet.png)](http://badge.fury.io/rb/bullet)
 [![Build Status](https://secure.travis-ci.org/flyerhzm/bullet.png)](http://travis-ci.org/flyerhzm/bullet)
-[![Coverage Status](https://coveralls.io/repos/flyerhzm/bullet/badge.png?branch=master)](https://coveralls.io/r/flyerhzm/bullet)
 <a href="https://codeclimate.com/github/flyerhzm/bullet"><img src="https://codeclimate.com/github/flyerhzm/bullet.png" /></a>
 [![Coderwall Endorse](http://api.coderwall.com/flyerhzm/endorsecount.png)](http://coderwall.com/flyerhzm)
 
