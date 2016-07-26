@@ -1,9 +1,10 @@
 # Next Release
 
-## 5.1.1
+## 5.2.0 (07/26/2016)
 
 * Fix `has_cached_counter?` is not defined in HABTM #297
 * Fix false alert if preloaded association has no records #260
+* Support Rails 5.0.0
 
 ## 5.1.0 (05/21/2016)
 
