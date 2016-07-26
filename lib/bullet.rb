@@ -208,6 +208,12 @@ module Bullet
       return_value
     end
 
+    def assign_attributes(attributes = {})
+      attributes.each_pair do |key, value|
+        public_send("#{key}=", value)
+      end
+    end
+
     private
       def for_each_active_notifier_with_notification
         UniformNotifier.active_notifiers.each do |notifier|

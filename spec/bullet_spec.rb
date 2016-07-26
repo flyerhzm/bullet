@@ -94,4 +94,13 @@ describe Bullet, focused: true do
       end
     end
   end
+
+  describe '.assign_attributes' do
+    it 'assigns attributes' do
+      Bullet.assign_attributes(enable: true, counter_cache_enable: false)
+
+      expect(Bullet.enable?).to be true
+      expect(Bullet.counter_cache_enable?).to be false
+    end
+  end
 end
