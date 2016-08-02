@@ -124,25 +124,5 @@ module Bullet
         end
       end
     end
-
-    describe "#build_request_uri" do
-      let(:env) { { 'PATH_INFO' => '/path' } }
-
-      context "when QUERY_STRING exists" do
-        before { env['QUERY_STRING'] = 'foo=bar' }
-
-        it "should return PATH_INFO with QUERY_STRING" do
-          expect(middleware.build_request_uri(env)).to eq '/path?foo=bar'
-        end
-      end
-
-      context "when QUERY_STRING does not exists" do
-        before { env['QUERY_STRING'] = '' }
-
-        it "should return PATH_INFO" do
-          expect(middleware.build_request_uri(env)).to eq '/path'
-        end
-      end
-    end
   end
 end

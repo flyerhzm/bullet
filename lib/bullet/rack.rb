@@ -20,7 +20,6 @@ module Bullet
           append_to_html_body(response_body, Bullet.gather_inline_notifications)
           headers['Content-Length'] = response_body.bytesize.to_s
         end
-        env['REQUEST_URI'] ||= build_request_uri(env)
         Bullet.perform_out_of_channel_notifications(env)
       end
       [status, headers, response_body ? [response_body] : response]
@@ -72,14 +71,6 @@ module Bullet
         Array === response.body ? response.body.first : response.body
       else
         response.first
-      end
-    end
-
-    def build_request_uri(env)
-      if env['QUERY_STRING'].present?
-        "#{env['PATH_INFO']}?#{env['QUERY_STRING']}"
-      else
-        env['PATH_INFO']
       end
     end
 
