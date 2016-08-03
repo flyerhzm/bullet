@@ -139,7 +139,7 @@ module Bullet
               if self.is_a? ::ActiveRecord::Associations::ThroughAssociation
                 Bullet::Detector::NPlusOneQuery.call_association(owner, through_reflection.name)
                 association = self.owner.association self.through_reflection.name
-                association.target.each do |through_record|
+                Array(association.target).each do |through_record|
                   Bullet::Detector::NPlusOneQuery.call_association(through_record, source_reflection.name)
                 end
               end
