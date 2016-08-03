@@ -94,4 +94,47 @@ describe Bullet, focused: true do
       end
     end
   end
+
+  describe '#perform_out_of_channel_notifications' do
+    let(:notification) { double }
+
+    before do
+      allow(Bullet).to receive(:for_each_active_notifier_with_notification).and_yield(notification)
+      allow(notification).to receive(:notify_out_of_channel)
+    end
+
+    context 'when called with no args' do
+      it 'should notification.url is nil' do
+        expect(notification).to receive(:url=).with(nil)
+        Bullet.perform_out_of_channel_notifications
+      end
+    end
+
+    context 'when called with Rack environment hash' do
+      let(:env) {
+        {
+          'PATH_INFO' => '/path',
+          'QUERY_STRING' => 'foo=bar',
+        }
+      }
+
+      context "when env['REQUEST_URI'] is nil" do
+        before { env['REQUEST_URI'] = nil }
+
+        it 'should notification.url is built' do
+          expect(notification).to receive(:url=).with('/path?foo=bar')
+          Bullet.perform_out_of_channel_notifications(env)
+        end
+      end
+
+      context "when env['REQUEST_URI'] is present" do
+        before { env['REQUEST_URI'] = 'http://example.com/path' }
+
+        it "should notification.url is env['REQUEST_URI']" do
+          expect(notification).to receive(:url=).with(env['REQUEST_URI'])
+          Bullet.perform_out_of_channel_notifications(env)
+        end
+      end
+    end
+  end
 end

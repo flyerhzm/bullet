@@ -166,8 +166,9 @@ module Bullet
     end
 
     def perform_out_of_channel_notifications(env = {})
+      request_uri = env['REQUEST_URI'] || build_request_uri(env)
       for_each_active_notifier_with_notification do |notification|
-        notification.url = env['REQUEST_URI']
+        notification.url = request_uri
         notification.notify_out_of_channel
       end
     end
@@ -215,6 +216,14 @@ module Bullet
             notification.notifier = notifier
             yield notification
           end
+        end
+      end
+
+      def build_request_uri(env)
+        if env['QUERY_STRING'].present?
+          "#{env['PATH_INFO']}?#{env['QUERY_STRING']}"
+        else
+          env['PATH_INFO']
         end
       end
   end
