@@ -96,6 +96,7 @@ module Bullet
 
       ::ActiveRecord::Associations::JoinDependency.class_eval do
         alias_method :origin_instantiate, :instantiate
+        alias_method :origin_construct, :construct
         alias_method :origin_construct_model, :construct_model
 
         def instantiate(result_set, aliases)
@@ -109,6 +110,27 @@ module Bullet
             end
           end
           records
+        end
+
+        def construct(ar_parent, parent, row, rs, seen, model_cache, aliases)
+          if Bullet.start?
+            unless ar_parent.nil?
+              parent.children.each do |node|
+                key = aliases.column_alias(node, node.primary_key)
+                id = row[key]
+                if id.nil?
+                  associations = node.reflection.name
+                  Bullet::Detector::Association.add_object_associations(ar_parent, associations)
+                  Bullet::Detector::NPlusOneQuery.call_association(ar_parent, associations)
+                  @bullet_eager_loadings[ar_parent.class] ||= {}
+                  @bullet_eager_loadings[ar_parent.class][ar_parent] ||= Set.new
+                  @bullet_eager_loadings[ar_parent.class][ar_parent] << associations
+                end
+              end
+            end
+          end
+
+          origin_construct(ar_parent, parent, row, rs, seen, model_cache, aliases)
         end
 
         # call join associations
@@ -135,9 +157,7 @@ module Bullet
           records = origin_load_target
 
           if Bullet.start?
-            if records.size > 1
-              Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name) unless @inversed
-            end
+            Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name) unless @inversed
             if records.first.class.name !~ /^HABTM_/
               if records.size > 1
                 Bullet::Detector::NPlusOneQuery.add_possible_objects(records)
