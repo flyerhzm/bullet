@@ -1,5 +1,11 @@
 # Next Release
 
+## 5.2.1
+
+* Fix env REQUEST_URI
+* Fix false alert on through association with join sql #301
+* Fix association.target in through_association can be singular #302
+
 ## 5.2.0 (07/26/2016)
 
 * Fix `has_cached_counter?` is not defined in HABTM #297
