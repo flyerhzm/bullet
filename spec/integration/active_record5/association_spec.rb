@@ -13,6 +13,16 @@ if !mongoid? && active_record5?
         expect(Bullet::Detector::Association).to be_detecting_unpreloaded_association_for(Post, :comments)
       end
 
+      it "should detect non preload post => comments for find_by_sql" do
+        Post.find_by_sql("SELECT * FROM posts").each do |post|
+          post.comments.map(&:name)
+        end
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+        expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
+
+        expect(Bullet::Detector::Association).to be_detecting_unpreloaded_association_for(Post, :comments)
+      end
+
       it "should detect preload with post => comments" do
         Post.includes(:comments).each do |post|
           post.comments.map(&:name)

@@ -18,6 +18,21 @@ module Bullet
             end
             result
           end
+
+          alias_method :origin_find_by_sql, :find_by_sql
+          def find_by_sql(sql, binds = [])
+            result = origin_find_by_sql(sql, binds)
+            if Bullet.start?
+              if result.is_a? Array
+                Bullet::Detector::NPlusOneQuery.add_possible_objects(result)
+                Bullet::Detector::CounterCache.add_possible_objects(result)
+              elsif result.is_a? ::ActiveRecord::Base
+                Bullet::Detector::NPlusOneQuery.add_impossible_object(result)
+                Bullet::Detector::CounterCache.add_impossible_object(result)
+              end
+            end
+            result
+          end
         end
       end
 

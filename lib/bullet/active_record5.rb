@@ -20,9 +20,9 @@ module Bullet
       require 'active_record'
       ::ActiveRecord::Base.class_eval do
         class <<self
-          alias_method :origin_find, :find
-          def find(*args)
-            result = origin_find(*args)
+          alias_method :origin_find_by_sql, :find_by_sql
+          def find_by_sql(sql, binds = [], preparable: nil)
+            result = origin_find_by_sql(sql, binds, preparable: nil)
             if Bullet.start?
               if result.is_a? Array
                 Bullet::Detector::NPlusOneQuery.add_possible_objects(result)
