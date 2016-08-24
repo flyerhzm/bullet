@@ -27,7 +27,7 @@ module Bullet
                                    elsif active_record50?
                                      'active_record5'
                                    elsif active_record51?
-                                     'active_record51'
+                                     'active_record5'
                                    end
                                  end
     end
