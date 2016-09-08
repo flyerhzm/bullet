@@ -13,6 +13,16 @@ if !mongoid? && active_record3?
         expect(Bullet::Detector::Association).to be_detecting_unpreloaded_association_for(Post, :comments)
       end
 
+      it "should detect non preload post => comments for find_by_sql" do
+        Post.find_by_sql("SELECT * FROM posts").each do |post|
+          post.comments.map(&:name)
+        end
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+        expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
+
+        expect(Bullet::Detector::Association).to be_detecting_unpreloaded_association_for(Post, :comments)
+      end
+
       it "should detect preload with post => comments" do
         Post.includes(:comments).each do |post|
           post.comments.map(&:name)
@@ -71,6 +81,16 @@ if !mongoid? && active_record3?
         expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
 
         expect(Bullet::Detector::Association).to be_detecting_unpreloaded_association_for(Post, :comments)
+      end
+
+      it "should not detect unused preload person => pets with empty?" do
+        Person.all.each do |person|
+          person.pets.empty?
+        end
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+        expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
+
+        expect(Bullet::Detector::Association).to be_completely_preloading_associations
       end
     end
 
@@ -204,7 +224,7 @@ if !mongoid? && active_record3?
     context "post => comment" do
       it "should detect unused preload with post => comments" do
         Post.includes(:comments).each do |post|
-          post.comments.first.name
+          post.comments.first.name if post.comments.first
         end
         Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
         expect(Bullet::Detector::Association).not_to be_unused_preload_associations_for(Post, :comments)
@@ -442,6 +462,16 @@ if !mongoid? && active_record3?
         expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
 
         expect(Bullet::Detector::Association).to be_completely_preloading_associations
+      end
+
+      it "should detect non preload student => teachers with empty?" do
+        Student.all.each do |student|
+          student.teachers.empty?
+        end
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+        expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
+
+        expect(Bullet::Detector::Association).to be_detecting_unpreloaded_association_for(Student, :teachers)
       end
     end
   end

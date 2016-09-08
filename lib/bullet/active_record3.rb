@@ -4,6 +4,25 @@ module Bullet
 
     def self.enable
       require 'active_record'
+      ::ActiveRecord::Base.class_eval do
+        class <<self
+          alias_method :origin_find_by_sql, :find_by_sql
+          def find_by_sql(sql)
+            result = origin_find_by_sql(sql)
+            if Bullet.start?
+              if result.is_a? Array
+                Bullet::Detector::NPlusOneQuery.add_possible_objects(result)
+                Bullet::Detector::CounterCache.add_possible_objects(result)
+              elsif result.is_a? ::ActiveRecord::Base
+                Bullet::Detector::NPlusOneQuery.add_impossible_object(result)
+                Bullet::Detector::CounterCache.add_impossible_object(result)
+              end
+            end
+            result
+          end
+        end
+      end
+
       ::ActiveRecord::Relation.class_eval do
         alias_method :origin_to_a, :to_a
         # if select a collection of objects, then these objects have possible to cause N+1 query.
@@ -134,20 +153,32 @@ module Bullet
           origin_last(*args)
         end
 
-        alias_method :origin_empty?, :empty?
-        def empty?
-          if Bullet.start?
-            Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name)
-          end
-          origin_empty?
-        end
-
         alias_method :origin_include?, :include?
         def include?(object)
           if Bullet.start?
             Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name)
           end
           origin_include?(object)
+        end
+      end
+
+      ::ActiveRecord::Associations::HasManyAssociation.class_eval do
+        alias_method :origin_empty?, :empty?
+        def empty?
+          if Bullet.start? && !has_cached_counter?
+            Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name)
+          end
+          origin_empty?
+        end
+      end
+
+      ::ActiveRecord::Associations::HasAndBelongsToManyAssociation.class_eval do
+        alias_method :origin_empty?, :empty?
+        def empty?
+          if Bullet.start?
+            Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name)
+          end
+          origin_empty?
         end
       end
 

@@ -2,7 +2,6 @@
 
 [![Gem Version](https://badge.fury.io/rb/bullet.png)](http://badge.fury.io/rb/bullet)
 [![Build Status](https://secure.travis-ci.org/flyerhzm/bullet.png)](http://travis-ci.org/flyerhzm/bullet)
-[![Coverage Status](https://coveralls.io/repos/flyerhzm/bullet/badge.png?branch=master)](https://coveralls.io/r/flyerhzm/bullet)
 <a href="https://codeclimate.com/github/flyerhzm/bullet"><img src="https://codeclimate.com/github/flyerhzm/bullet.png" /></a>
 [![Coderwall Endorse](http://api.coderwall.com/flyerhzm/endorsecount.png)](http://coderwall.com/flyerhzm)
 
@@ -63,7 +62,7 @@ config.after_initialize do
   Bullet.add_footer = true
   Bullet.stacktrace_includes = [ 'your_gem', 'your_middleware' ]
   Bullet.stacktrace_excludes = [ 'their_gem', 'their_middleware' ]
-  Bullet.slack = { webhook_url: 'http://some.slack.url', foo: 'bar' }
+  Bullet.slack = { webhook_url: 'http://some.slack.url', channel: '#default', username: 'notifier' }
 end
 ```
 
@@ -238,7 +237,9 @@ Bullet outputs some details info, to enable debug mode, set
 
 ## Demo
 
-Bullet is designed to function as you browse through your application in development. To see it in action, follow these steps to create, detect, and fix example query problems.
+Bullet is designed to function as you browse through your application in development. To see it in action,
+you can visit [https://github.com/flyerhzm/bullet_test](https://github.com/flyerhzm/bullet_test) or
+follow these steps to create, detect, and fix example query problems.
 
 1\. Create an example application
 
@@ -458,4 +459,4 @@ Meanwhile, there's a line appended to `log/bullet.log`
   Post => [:comments]
 ```
 
-Copyright (c) 2009 - 2015 Richard Huang (flyerhzm@gmail.com), released under the MIT license
+Copyright (c) 2009 - 2016 Richard Huang (flyerhzm@gmail.com), released under the MIT license

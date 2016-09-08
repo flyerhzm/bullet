@@ -18,6 +18,21 @@ module Bullet
             end
             result
           end
+
+          alias_method :origin_find_by_sql, :find_by_sql
+          def find_by_sql(sql, binds = [])
+            result = origin_find_by_sql(sql, binds)
+            if Bullet.start?
+              if result.is_a? Array
+                Bullet::Detector::NPlusOneQuery.add_possible_objects(result)
+                Bullet::Detector::CounterCache.add_possible_objects(result)
+              elsif result.is_a? ::ActiveRecord::Base
+                Bullet::Detector::NPlusOneQuery.add_impossible_object(result)
+                Bullet::Detector::CounterCache.add_impossible_object(result)
+              end
+            end
+            result
+          end
         end
       end
 
@@ -96,6 +111,7 @@ module Bullet
 
       ::ActiveRecord::Associations::JoinDependency.class_eval do
         alias_method :origin_instantiate, :instantiate
+        alias_method :origin_construct, :construct
         alias_method :origin_construct_model, :construct_model
 
         def instantiate(result_set, aliases)
@@ -109,6 +125,27 @@ module Bullet
             end
           end
           records
+        end
+
+        def construct(ar_parent, parent, row, rs, seen, model_cache, aliases)
+          if Bullet.start?
+            unless ar_parent.nil?
+              parent.children.each do |node|
+                key = aliases.column_alias(node, node.primary_key)
+                id = row[key]
+                if id.nil?
+                  associations = node.reflection.name
+                  Bullet::Detector::Association.add_object_associations(ar_parent, associations)
+                  Bullet::Detector::NPlusOneQuery.call_association(ar_parent, associations)
+                  @bullet_eager_loadings[ar_parent.class] ||= {}
+                  @bullet_eager_loadings[ar_parent.class][ar_parent] ||= Set.new
+                  @bullet_eager_loadings[ar_parent.class][ar_parent] << associations
+                end
+              end
+            end
+          end
+
+          origin_construct(ar_parent, parent, row, rs, seen, model_cache, aliases)
         end
 
         # call join associations
@@ -151,7 +188,7 @@ module Bullet
 
         alias_method :origin_empty?, :empty?
         def empty?
-          if Bullet.start?
+          if Bullet.start? && !has_cached_counter?(@reflection)
             Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name)
           end
           origin_empty?
@@ -191,7 +228,7 @@ module Bullet
           Thread.current[:bullet_collection_empty] = true
           result = origin_many_empty?
           Thread.current[:bullet_collection_empty] = nil
-          if Bullet.start?
+          if Bullet.start? && !has_cached_counter?(@reflection)
             Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name)
           end
           result

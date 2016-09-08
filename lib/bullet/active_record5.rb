@@ -1,12 +1,28 @@
 module Bullet
+  module SaveWithBulletSupport
+    def save(*args)
+      was_new_record = new_record?
+      super(*args).tap do |result|
+        Bullet::Detector::NPlusOneQuery.add_impossible_object(self) if result && was_new_record
+      end
+    end
+
+    def save!(*args)
+      was_new_record = new_record?
+      super(*args).tap do |result|
+        Bullet::Detector::NPlusOneQuery.add_impossible_object(self) if result && was_new_record
+      end
+    end
+  end
+
   module ActiveRecord
     def self.enable
       require 'active_record'
       ::ActiveRecord::Base.class_eval do
         class <<self
-          alias_method :origin_find, :find
-          def find(*args)
-            result = origin_find(*args)
+          alias_method :origin_find_by_sql, :find_by_sql
+          def find_by_sql(sql, binds = [], preparable: nil)
+            result = origin_find_by_sql(sql, binds, preparable: nil)
             if Bullet.start?
               if result.is_a? Array
                 Bullet::Detector::NPlusOneQuery.add_possible_objects(result)
@@ -21,57 +37,33 @@ module Bullet
         end
       end
 
-      ::ActiveRecord::Persistence.class_eval do
-        def save_with_bullet(*args, &proc)
-          was_new_record = new_record?
-          save_without_bullet(*args, &proc).tap do |result|
-            Bullet::Detector::NPlusOneQuery.add_impossible_object(self) if result && was_new_record
-          end
-        end
-        alias_method_chain :save, :bullet
-
-        def save_with_bullet!(*args, &proc)
-          was_new_record = new_record?
-          save_without_bullet!(*args, &proc).tap do |result|
-            Bullet::Detector::NPlusOneQuery.add_impossible_object(self) if result && was_new_record
-          end
-        end
-        alias_method_chain :save!, :bullet
-      end
+      ::ActiveRecord::Base.prepend(SaveWithBulletSupport)
 
       ::ActiveRecord::Relation.class_eval do
-        alias_method :origin_to_a, :to_a
+        alias_method :origin_records, :records
         # if select a collection of objects, then these objects have possible to cause N+1 query.
         # if select only one object, then the only one object has impossible to cause N+1 query.
-        def to_a
-          records = origin_to_a
+        def records
+          result = origin_records
           if Bullet.start?
-            if records.first.class.name !~ /^HABTM_/
-              if records.size > 1
-                Bullet::Detector::NPlusOneQuery.add_possible_objects(records)
-                Bullet::Detector::CounterCache.add_possible_objects(records)
-              elsif records.size == 1
-                Bullet::Detector::NPlusOneQuery.add_impossible_object(records.first)
-                Bullet::Detector::CounterCache.add_impossible_object(records.first)
+            if result.first.class.name !~ /^HABTM_/
+              if result.size > 1
+                Bullet::Detector::NPlusOneQuery.add_possible_objects(result)
+                Bullet::Detector::CounterCache.add_possible_objects(result)
+              elsif result.size == 1
+                Bullet::Detector::NPlusOneQuery.add_impossible_object(result.first)
+                Bullet::Detector::CounterCache.add_impossible_object(result.first)
               end
             end
           end
-          records
-        end
-      end
-
-      ::ActiveRecord::Associations::Association.class_eval do
-        alias_method :origin_initialize, :initialize
-        def initialize(owner, reflection)
-          origin_initialize(owner, reflection)
-          reflection.set_owner owner
+          result
         end
       end
 
       ::ActiveRecord::Associations::Preloader.class_eval do
-        alias_method :origin_preloaders_on, :preloaders_on
+        alias_method :origin_preloaders_for_one, :preloaders_for_one
 
-        def preloaders_on(association, records, scope)
+        def preloaders_for_one(association, records, scope)
           if Bullet.start?
             records.compact!
             if records.first.class.name !~ /^HABTM_/
@@ -81,7 +73,7 @@ module Bullet
               Bullet::Detector::UnusedEagerLoading.add_eager_loadings(records, association)
             end
           end
-          origin_preloaders_on(association, records, scope)
+          origin_preloaders_for_one(association, records, scope)
         end
       end
 
@@ -104,6 +96,7 @@ module Bullet
 
       ::ActiveRecord::Associations::JoinDependency.class_eval do
         alias_method :origin_instantiate, :instantiate
+        alias_method :origin_construct, :construct
         alias_method :origin_construct_model, :construct_model
 
         def instantiate(result_set, aliases)
@@ -117,6 +110,27 @@ module Bullet
             end
           end
           records
+        end
+
+        def construct(ar_parent, parent, row, rs, seen, model_cache, aliases)
+          if Bullet.start?
+            unless ar_parent.nil?
+              parent.children.each do |node|
+                key = aliases.column_alias(node, node.primary_key)
+                id = row[key]
+                if id.nil?
+                  associations = node.reflection.name
+                  Bullet::Detector::Association.add_object_associations(ar_parent, associations)
+                  Bullet::Detector::NPlusOneQuery.call_association(ar_parent, associations)
+                  @bullet_eager_loadings[ar_parent.class] ||= {}
+                  @bullet_eager_loadings[ar_parent.class][ar_parent] ||= Set.new
+                  @bullet_eager_loadings[ar_parent.class][ar_parent] << associations
+                end
+              end
+            end
+          end
+
+          origin_construct(ar_parent, parent, row, rs, seen, model_cache, aliases)
         end
 
         # call join associations
@@ -143,7 +157,14 @@ module Bullet
           records = origin_load_target
 
           if Bullet.start?
-            Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name) unless @inversed
+            if self.is_a? ::ActiveRecord::Associations::ThroughAssociation
+              Bullet::Detector::NPlusOneQuery.call_association(owner, through_reflection.name)
+              association = self.owner.association self.through_reflection.name
+              Array(association.target).each do |through_record|
+                Bullet::Detector::NPlusOneQuery.call_association(through_record, source_reflection.name)
+              end
+            end
+            Bullet::Detector::NPlusOneQuery.call_association(owner, reflection.name) unless @inversed
             if records.first.class.name !~ /^HABTM_/
               if records.size > 1
                 Bullet::Detector::NPlusOneQuery.add_possible_objects(records)
@@ -159,8 +180,8 @@ module Bullet
 
         alias_method :origin_empty?, :empty?
         def empty?
-          if Bullet.start?
-            Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name)
+          if Bullet.start? && !reflection.has_cached_counter?
+            Bullet::Detector::NPlusOneQuery.call_association(owner, reflection.name)
           end
           origin_empty?
         end
@@ -168,7 +189,7 @@ module Bullet
         alias_method :origin_include?, :include?
         def include?(object)
           if Bullet.start?
-            Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name)
+            Bullet::Detector::NPlusOneQuery.call_association(owner, reflection.name)
           end
           origin_include?(object)
         end
@@ -180,9 +201,9 @@ module Bullet
         def reader(force_reload = false)
           result = origin_reader(force_reload)
           if Bullet.start?
-            if @owner.class.name !~ /^HABTM_/ && !@inversed
-              Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name)
-              if Bullet::Detector::NPlusOneQuery.impossible?(@owner)
+            if owner.class.name !~ /^HABTM_/ && !@inversed
+              Bullet::Detector::NPlusOneQuery.call_association(owner, reflection.name)
+              if Bullet::Detector::NPlusOneQuery.impossible?(owner)
                 Bullet::Detector::NPlusOneQuery.add_impossible_object(result) if result
               else
                 Bullet::Detector::NPlusOneQuery.add_possible_objects(result) if result
@@ -196,28 +217,20 @@ module Bullet
       ::ActiveRecord::Associations::HasManyAssociation.class_eval do
         alias_method :origin_many_empty?, :empty?
         def empty?
-          Thread.current[:bullet_collection_empty] = true
           result = origin_many_empty?
-          Thread.current[:bullet_collection_empty] = nil
-          if Bullet.start?
-            Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name)
+          if Bullet.start? && !reflection.has_cached_counter?
+            Bullet::Detector::NPlusOneQuery.call_association(owner, reflection.name)
           end
           result
         end
-      end
 
-      ::ActiveRecord::Reflection::AbstractReflection.class_eval do
-        def set_owner(owner)
-          @owner = owner
-        end
-
-        alias_method :origin_has_cached_counter?, :has_cached_counter?
-        def has_cached_counter?
-          result = origin_has_cached_counter?
-          if Bullet.start? && !result && !Thread.current[:bullet_collection_empty]
-            Bullet::Detector::CounterCache.add_counter_cache(@owner, @name)
+        alias_method :origin_count_records, :count_records
+        def count_records
+          result = reflection.has_cached_counter?
+          if Bullet.start? && !result && !self.is_a?(::ActiveRecord::Associations::ThroughAssociation)
+            Bullet::Detector::CounterCache.add_counter_cache(owner, reflection.name)
           end
-          result
+          origin_count_records
         end
       end
     end
