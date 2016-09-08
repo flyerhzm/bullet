@@ -1,6 +1,8 @@
 module Bullet
   module Detector
     class UnusedEagerLoading < Association
+      extend Dependency
+
       class <<self
         # check if there are unused preload associations.
         #   get related_objects from eager_loadings associated with object and associations
@@ -15,7 +17,7 @@ module Bullet
             next if object_association_diff.empty?
 
             Bullet.debug("detect unused preload", "object: #{bullet_key}, associations: #{object_association_diff}")
-            create_notification bullet_key.bullet_class_name, object_association_diff
+            create_notification(caller_in_project, bullet_key.bullet_class_name, object_association_diff)
           end
         end
 
@@ -53,11 +55,11 @@ module Bullet
         end
 
         private
-          def create_notification(klazz, associations)
+          def create_notification(callers, klazz, associations)
             notify_associations = Array(associations) - Bullet.get_whitelist_associations(:unused_eager_loading, klazz)
 
             if notify_associations.present?
-              notice = Bullet::Notification::UnusedEagerLoading.new(klazz, notify_associations)
+              notice = Bullet::Notification::UnusedEagerLoading.new(callers, klazz, notify_associations)
               Bullet.notification_collector.add(notice)
             end
           end
@@ -75,6 +77,21 @@ module Bullet
           def diff_object_associations(bullet_key, associations)
             potential_associations = associations - call_associations(bullet_key, associations)
             potential_associations.reject { |a| a.is_a?(Hash) }
+          end
+
+          def caller_in_project
+            app_root = rails? ? Rails.root.to_s : Dir.pwd
+            vendor_root = app_root + "/vendor"
+            caller.select do |included_path|
+              included_path.include?(app_root) && !included_path.include?(vendor_root) ||
+              Bullet.stacktrace_includes.any? { |regex| included_path =~ regex }
+            end
+          end
+
+          def excluded_stacktrace_path?
+            Bullet.stacktrace_excludes.any? do |excluded_path|
+              caller_in_project.any? { |regex| excluded_path =~ regex }
+            end
           end
       end
     end

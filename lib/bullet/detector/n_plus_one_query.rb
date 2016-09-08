@@ -91,15 +91,15 @@ module Bullet
           def caller_in_project
             app_root = rails? ? Rails.root.to_s : Dir.pwd
             vendor_root = app_root + "/vendor"
-            caller.select do |c|
-              c.include?(app_root) && !c.include?(vendor_root) ||
-              Bullet.stacktrace_includes.any? { |include| c.include?(include) }
+            caller.select do |included_path|
+              included_path.include?(app_root) && !included_path.include?(vendor_root) ||
+              Bullet.stacktrace_includes.any? { |regex| included_path =~ regex }
             end
           end
 
           def excluded_stacktrace_path?
             Bullet.stacktrace_excludes.any? do |excluded_path|
-              caller_in_project.any? { |c| c.include?(excluded_path) }
+              caller_in_project.any? { |regex| excluded_path =~ regex }
             end
           end
       end

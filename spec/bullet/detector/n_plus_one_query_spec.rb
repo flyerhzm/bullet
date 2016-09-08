@@ -87,7 +87,7 @@ module Bullet
         end
 
         context "stacktrace_excludes" do
-          before { Bullet.stacktrace_excludes = [ 'def' ] }
+          before { Bullet.stacktrace_excludes = [ /def/ ] }
           after { Bullet.stacktrace_excludes = nil }
 
           it "should not create notification when stacktrace contains paths that are in the exclude list" do
@@ -114,7 +114,7 @@ module Bullet
         end
 
         context "stacktrace_includes" do
-          before { Bullet.stacktrace_includes = [ 'def' ] }
+          before { Bullet.stacktrace_includes = [ /def/ ] }
           after { Bullet.stacktrace_includes = nil }
 
           it "should include paths that are in the stacktrace_include list" do

@@ -39,9 +39,11 @@ module Bullet
       end
 
       context ".check_unused_preload_associations" do
+        let(:paths) { ["/dir1", "/dir1/subdir"] }
         it "should create notification if object_association_diff is not empty" do
           UnusedEagerLoading.add_object_associations(@post, :association)
-          expect(UnusedEagerLoading).to receive(:create_notification).with("Post", [:association])
+          allow(UnusedEagerLoading).to receive(:caller_in_project).and_return(paths)
+          expect(UnusedEagerLoading).to receive(:create_notification).with(paths, "Post", [:association])
           UnusedEagerLoading.check_unused_preload_associations
         end
 
