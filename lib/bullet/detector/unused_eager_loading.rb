@@ -2,6 +2,7 @@ module Bullet
   module Detector
     class UnusedEagerLoading < Association
       extend Dependency
+      extend StackTraceFilter
 
       class <<self
         # check if there are unused preload associations.
@@ -77,21 +78,6 @@ module Bullet
           def diff_object_associations(bullet_key, associations)
             potential_associations = associations - call_associations(bullet_key, associations)
             potential_associations.reject { |a| a.is_a?(Hash) }
-          end
-
-          def caller_in_project
-            app_root = rails? ? Rails.root.to_s : Dir.pwd
-            vendor_root = app_root + "/vendor"
-            caller.select do |included_path|
-              included_path.include?(app_root) && !included_path.include?(vendor_root) ||
-              Bullet.stacktrace_includes.any? { |regex| included_path =~ regex }
-            end
-          end
-
-          def excluded_stacktrace_path?
-            Bullet.stacktrace_excludes.any? do |excluded_path|
-              caller_in_project.any? { |regex| excluded_path =~ regex }
-            end
           end
       end
     end

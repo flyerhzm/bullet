@@ -4,6 +4,7 @@ require 'uniform_notifier'
 require 'bullet/ext/object'
 require 'bullet/ext/string'
 require 'bullet/dependency'
+require 'bullet/stack_trace_filter'
 
 module Bullet
   extend Dependency
