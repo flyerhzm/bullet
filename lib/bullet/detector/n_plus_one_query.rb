@@ -2,6 +2,7 @@ module Bullet
   module Detector
     class NPlusOneQuery < Association
       extend Dependency
+      extend StackTraceFilter
 
       class <<self
         # executed when object.assocations is called.
@@ -85,21 +86,6 @@ module Bullet
             if notify_associations.present?
               notice = Bullet::Notification::NPlusOneQuery.new(callers, klazz, notify_associations)
               Bullet.notification_collector.add(notice)
-            end
-          end
-
-          def caller_in_project
-            app_root = rails? ? Rails.root.to_s : Dir.pwd
-            vendor_root = app_root + "/vendor"
-            caller.select do |c|
-              c.include?(app_root) && !c.include?(vendor_root) ||
-              Bullet.stacktrace_includes.any? { |include| c.include?(include) }
-            end
-          end
-
-          def excluded_stacktrace_path?
-            Bullet.stacktrace_excludes.any? do |excluded_path|
-              caller_in_project.any? { |c| c.include?(excluded_path) }
             end
           end
       end

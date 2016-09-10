@@ -1,6 +1,9 @@
 module Bullet
   module Detector
     class UnusedEagerLoading < Association
+      extend Dependency
+      extend StackTraceFilter
+
       class <<self
         # check if there are unused preload associations.
         #   get related_objects from eager_loadings associated with object and associations
@@ -15,7 +18,7 @@ module Bullet
             next if object_association_diff.empty?
 
             Bullet.debug("detect unused preload", "object: #{bullet_key}, associations: #{object_association_diff}")
-            create_notification bullet_key.bullet_class_name, object_association_diff
+            create_notification(caller_in_project, bullet_key.bullet_class_name, object_association_diff)
           end
         end
 
@@ -53,11 +56,11 @@ module Bullet
         end
 
         private
-          def create_notification(klazz, associations)
+          def create_notification(callers, klazz, associations)
             notify_associations = Array(associations) - Bullet.get_whitelist_associations(:unused_eager_loading, klazz)
 
             if notify_associations.present?
-              notice = Bullet::Notification::UnusedEagerLoading.new(klazz, notify_associations)
+              notice = Bullet::Notification::UnusedEagerLoading.new(callers, klazz, notify_associations)
               Bullet.notification_collector.add(notice)
             end
           end

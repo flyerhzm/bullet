@@ -87,7 +87,7 @@ module Bullet
         end
 
         context "stacktrace_excludes" do
-          before { Bullet.stacktrace_excludes = [ 'def' ] }
+          before { Bullet.stacktrace_excludes = [ /def/ ] }
           after { Bullet.stacktrace_excludes = nil }
 
           it "should not create notification when stacktrace contains paths that are in the exclude list" do
@@ -114,17 +114,17 @@ module Bullet
         end
 
         context "stacktrace_includes" do
-          before { Bullet.stacktrace_includes = [ 'def' ] }
+          before { Bullet.stacktrace_includes = [ 'def', /xyz/ ] }
           after { Bullet.stacktrace_includes = nil }
 
           it "should include paths that are in the stacktrace_include list" do
             in_project = File.join(Dir.pwd, 'abc', 'abc.rb')
-            included_gem = '/def/def.rb'
+            included_gems = ['/def/def.rb', 'xyz/xyz.rb']
             excluded_gem = '/ghi/ghi.rb'
 
-            expect(NPlusOneQuery).to receive(:caller).and_return([in_project, included_gem, excluded_gem])
+            expect(NPlusOneQuery).to receive(:caller).and_return([in_project, *included_gems, excluded_gem])
             expect(NPlusOneQuery).to receive(:conditions_met?).with(@post, :association).and_return(true)
-            expect(NPlusOneQuery).to receive(:create_notification).with([in_project, included_gem], "Post", :association)
+            expect(NPlusOneQuery).to receive(:create_notification).with([in_project, *included_gems], "Post", :association)
             NPlusOneQuery.call_association(@post, :association)
           end
         end
