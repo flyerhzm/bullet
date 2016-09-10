@@ -1,11 +1,16 @@
 # Next Release
 
+## 5.4.0 (10/09/2016)
+
+* Support rails 5.1
+* Extract stack trace filtering into module
+
 ## 5.3.0 (15/08/2016)
 
 * Fix false alert on through association with join sql #301
-* Fix association.target in through_association can be singular #302
-* Support find_by_sql #303
-* Fix env REQUEST_URI
+* Fix association.target in `through_association` can be singular #302
+* Support `find_by_sql` #303
+* Fix env `REQUEST_URI`
 
 ## 5.2.0 (07/26/2016)
 
