@@ -28,6 +28,8 @@ module Bullet
                                      'active_record5'
                                    elsif active_record51?
                                      'active_record5'
+                                   else
+                                     raise "Bullet does not support active_record #{::ActiveRecord::VERSION} yet"
                                    end
                                  end
     end
@@ -42,6 +44,8 @@ module Bullet
                                'mongoid4x'
                              elsif mongoid5x?
                                'mongoid5x'
+                             else
+                               raise "Bullet does not support mongoid #{::Mongoid::VERSION} yet"
                              end
                            end
     end
