@@ -1,5 +1,10 @@
 # Next Release
 
+## 5.4.1
+
+* Display http request method #311
+* Raise an error if bullet does not support AR or Mongoid
+
 ## 5.4.0 (10/09/2016)
 
 * Support rails 5.1
