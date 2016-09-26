@@ -222,9 +222,9 @@ module Bullet
 
       def build_request_uri(env)
         if env['QUERY_STRING'].present?
-          "#{env['PATH_INFO']}?#{env['QUERY_STRING']}"
+          "#{env['REQUEST_METHOD']} #{env['PATH_INFO']}?#{env['QUERY_STRING']}"
         else
-          env['PATH_INFO']
+          "#{env['REQUEST_METHOD']} #{env['PATH_INFO']}"
         end
       end
   end

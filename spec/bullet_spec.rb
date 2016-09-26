@@ -103,16 +103,10 @@ describe Bullet, focused: true do
       allow(notification).to receive(:notify_out_of_channel)
     end
 
-    context 'when called with no args' do
-      it 'should notification.url is nil' do
-        expect(notification).to receive(:url=).with(nil)
-        Bullet.perform_out_of_channel_notifications
-      end
-    end
-
     context 'when called with Rack environment hash' do
       let(:env) {
         {
+          'REQUEST_METHOD' => 'GET',
           'PATH_INFO' => '/path',
           'QUERY_STRING' => 'foo=bar',
         }
@@ -122,7 +116,7 @@ describe Bullet, focused: true do
         before { env['REQUEST_URI'] = nil }
 
         it 'should notification.url is built' do
-          expect(notification).to receive(:url=).with('/path?foo=bar')
+          expect(notification).to receive(:url=).with('GET /path?foo=bar')
           Bullet.perform_out_of_channel_notifications(env)
         end
       end
