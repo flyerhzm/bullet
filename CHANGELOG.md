@@ -1,5 +1,9 @@
 # Next Release
 
+## 5.4.2
+
+* Fix "display http request method" #311
+
 ## 5.4.1
 
 * Display http request method #311
