@@ -125,7 +125,7 @@ describe Bullet, focused: true do
         before { env['REQUEST_URI'] = 'http://example.com/path' }
 
         it "should notification.url is env['REQUEST_URI']" do
-          expect(notification).to receive(:url=).with(env['REQUEST_URI'])
+          expect(notification).to receive(:url=).with('GET http://example.com/path')
           Bullet.perform_out_of_channel_notifications(env)
         end
       end
