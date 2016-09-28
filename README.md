@@ -332,7 +332,7 @@ model: Post => associations: [comment]
 
 which means there is a N+1 query from the Post object to its Comment association.
 
-In the meanwhile, there's a log appended into `log/bullet.log` file
+In the meantime, there's a log appended into `log/bullet.log` file
 
 ```
 2010-03-07 14:12:18[INFO] N+1 Query in /posts
