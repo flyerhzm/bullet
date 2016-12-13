@@ -9,8 +9,13 @@ module Bullet
             result = origin_find_by_sql(sql, binds)
             if Bullet.start?
               if result.is_a? Array
-                Bullet::Detector::NPlusOneQuery.add_possible_objects(result)
-                Bullet::Detector::CounterCache.add_possible_objects(result)
+                if result.size > 1
+                  Bullet::Detector::NPlusOneQuery.add_possible_objects(result)
+                  Bullet::Detector::CounterCache.add_possible_objects(result)
+                elsif result.size == 1
+                  Bullet::Detector::NPlusOneQuery.add_impossible_object(result.first)
+                  Bullet::Detector::CounterCache.add_impossible_object(result.first)
+                end
               elsif result.is_a? ::ActiveRecord::Base
                 Bullet::Detector::NPlusOneQuery.add_impossible_object(result)
                 Bullet::Detector::CounterCache.add_impossible_object(result)
