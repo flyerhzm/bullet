@@ -1,5 +1,9 @@
 # Next Release
 
+## 5.4.3
+
+* Fix "false alert" in rails 5 #239
+
 ## 5.4.2
 
 * Fix "display http request method" #311
