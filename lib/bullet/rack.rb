@@ -51,7 +51,7 @@ module Bullet
     end
 
     def footer_note
-      "<div #{footer_div_attributes}>" + Bullet.footer_info.uniq.join("<br>") + "</div>"
+      "<div #{footer_div_attributes}>" + footer_close_button + Bullet.footer_info.uniq.join("<br>") + "</div>"
     end
 
     def file?(headers)
@@ -75,6 +75,7 @@ module Bullet
     end
 
     private
+
     def footer_div_attributes
 <<EOF
 data-is-bullet-footer ondblclick="this.parentNode.removeChild(this);" style="position: fixed; bottom: 0pt; left: 0pt; cursor: pointer; border-style: solid; border-color: rgb(153, 153, 153);
@@ -83,6 +84,10 @@ data-is-bullet-footer ondblclick="this.parentNode.removeChild(this);" style="pos
  padding: 3px 5px; border-radius: 0pt 10pt 0pt 0px; background: none repeat scroll 0% 0% rgba(200, 200, 200, 0.8);
  color: rgb(119, 119, 119); font-size: 16px; font-family: 'Arial', sans-serif; z-index:9999;"
 EOF
+    end
+
+    def footer_close_button
+      "<span onclick='this.parentNode.remove()' style='position:absolute; right: 10px; top: 0px; font-weight: bold; color: #333;'>&times;</span>"
     end
   end
 end
