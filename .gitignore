@@ -12,3 +12,4 @@ benchmark_profile*
 coverage/
 .coveralls.yml
 Gemfile*.lock
+.idea/
