@@ -12,18 +12,18 @@ module Bullet
       end
 
       def title
-        "N+1 Query #{@path ? "in #{@path}" : 'detected'}"
+        "USE eager loading #{@path ? "in #{@path}" : 'detected'}"
       end
 
       def notification_data
         super.merge(
-          :backtrace => @callers
+          :backtrace => []
         )
       end
 
       protected
         def call_stack_messages
-          (['N+1 Query method call stack'] + @callers).join( "\n  " )
+          (['Call stack'] + @callers).join( "\n  " )
         end
     end
   end
