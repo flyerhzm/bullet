@@ -56,6 +56,8 @@ matrix:
       gemfile: Gemfile.mongoid-4.0
     - rvm: 1.9.3
       gemfile: Gemfile.mongoid-5.0
+    - rvm: 1.9.3
+      gemfile: Gemfile.mongoid-6.0
     - rvm: 2.0
       gemfile: Gemfile.rails-3.0
     - rvm: 2.0
