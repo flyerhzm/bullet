@@ -2,10 +2,10 @@ source "https://rubygems.org"
 
 gemspec
 
-gem 'rails', '~> 4.0.0'
+gem 'rails', '~> 5.0.0'
 gem 'sqlite3', platforms: [:ruby]
 gem 'activerecord-jdbcsqlite3-adapter', platforms: [:jruby]
-gem 'mongoid', '~> 5.1.0'
+gem 'mongoid', '~> 6.0.0'
 
 gem "rspec"
 
