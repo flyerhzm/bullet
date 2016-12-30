@@ -170,7 +170,7 @@ module Bullet
       ::ActiveRecord::Associations::HasManyAssociation.class_eval do
         alias_method :origin_empty?, :empty?
         def empty?
-          if Bullet.start? && !has_cached_counter?
+          if Bullet.start? && !loaded? && !has_cached_counter?
             Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name)
           end
           origin_empty?
@@ -180,7 +180,7 @@ module Bullet
       ::ActiveRecord::Associations::HasAndBelongsToManyAssociation.class_eval do
         alias_method :origin_empty?, :empty?
         def empty?
-          if Bullet.start?
+          if Bullet.start? && !loaded?
             Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name)
           end
           origin_empty?
