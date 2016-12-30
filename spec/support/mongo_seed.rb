@@ -33,15 +33,7 @@ module Support
     end
 
     def setup_db
-      if Mongoid::VERSION =~ /\A2\.[4-8]/
-        Mongoid.configure do |config|
-          config.master = Mongo::Connection.new.db("bullet")
-        end
-      elsif Mongoid::VERSION =~ /\A3/
-        Mongoid.configure do |config|
-          config.connect_to("bullet")
-        end
-      elsif Mongoid::VERSION =~ /\A4/
+      if Mongoid::VERSION =~ /\A4/
         Mongoid.configure do |config|
           config.load_configuration(
             sessions: {
@@ -52,7 +44,7 @@ module Support
             }
           )
         end
-      elsif Mongoid::VERSION =~ /\A5/
+      else
         Mongoid.configure do |config|
           config.load_configuration(
               clients: {
