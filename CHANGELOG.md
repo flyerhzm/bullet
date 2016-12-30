@@ -1,17 +1,14 @@
 # Next Release
 
-## 5.4.3
-
-* Fix "false alert" in rails 5 #239
-
-## 5.4.2
-
-* Fix "display http request method" #311
-
-## 5.4.1
+## 5.5.0 (12/30/2016)
 
 * Display http request method #311
+* Add close button to footer
 * Raise an error if bullet does not support AR or Mongoid
+* Avoid double backtrace
+* Fix false alert on counter cache when associations are already loaded #288
+* Fix "false alert" in rails 5 #239
+* Do not support ActiveRecord 3.x and Mongoid 3.x / 4.x anymore
 
 ## 5.4.0 (10/09/2016)
 
