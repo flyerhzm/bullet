@@ -36,7 +36,7 @@ module Bullet
         def add_impossible_object(object)
           return unless Bullet.start?
           return unless Bullet.n_plus_one_query_enable?
-          return unless object.primary_key_value
+          return unless object.try(:primary_key_value)
 
           Bullet.debug("Detector::NPlusOneQuery#add_impossible_object", "object: #{object.bullet_key}")
           impossible_objects.add object.bullet_key
