@@ -21,8 +21,8 @@ module Bullet
       ::ActiveRecord::Base.class_eval do
         class <<self
           alias_method :origin_find_by_sql, :find_by_sql
-          def find_by_sql(sql, binds = [], preparable: nil)
-            result = origin_find_by_sql(sql, binds, preparable: nil)
+          def find_by_sql(sql, binds = [], preparable: nil, &block)
+            result = origin_find_by_sql(sql, binds, preparable: nil, &block)
             if Bullet.start?
               if result.is_a? Array
                 if result.size > 1
