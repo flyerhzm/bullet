@@ -13,7 +13,7 @@ Bullet gem now supports **activerecord** >= 4.0 and **mongoid** >= 4.0.
 
 If you use activerecord 2.x, please use bullet <= 4.5.0
 
-If you use activerecord 3.x, plesae use bullet < 5.5.0
+If you use activerecord 3.x, please use bullet < 5.5.0
 
 ## External Introduction
 
@@ -34,7 +34,7 @@ or add it into a Gemfile (Bundler):
 
 
 ```ruby
-gem "bullet", :group => "development"
+gem 'bullet', group: 'development'
 ```
 
 **Note**: make sure `bullet` gem is added after activerecord (rails) and
