@@ -69,7 +69,7 @@ module Bullet
           value = object_associations[object.bullet_key]
           if value
             value.each do |v|
-              # associations == v comparision order is important here because
+              # associations == v comparison order is important here because
               # v variable might be a squeel node where :== method is redefined,
               # so it does not compare values at all and return unexpected results
               result = v.is_a?(Hash) ? v.key?(associations) : associations == v

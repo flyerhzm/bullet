@@ -28,7 +28,7 @@ So the flow of a request goes like this:
    the notification collector
 2. The request is handled by Rails, and the installed ActiveRecord extensions
    trigger Detector callbacks
-3. Detectors once called, will determine whether something noteworthy happend.
+3. Detectors once called, will determine whether something noteworthy happened.
    If yes, then a Notification is created and stored in the notification collector.
 4. Rails finishes handling the request
 5. For each notification in the collector, Bullet will iterate over each
