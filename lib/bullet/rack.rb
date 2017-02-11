@@ -55,7 +55,7 @@ module Bullet
     end
 
     def file?(headers)
-      headers["Content-Transfer-Encoding"] == "binary"
+      headers["Content-Transfer-Encoding"] == "binary" || headers["Content-Disposition"]
     end
 
     def sse?(headers)
