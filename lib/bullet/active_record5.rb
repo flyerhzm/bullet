@@ -204,7 +204,7 @@ module Bullet
         # call has_one and belongs_to associations
         alias_method :origin_reader, :reader
         def reader(force_reload = false)
-          result = origin_reader(force_reload)
+          result = force_reload ? force_reload_reader : origin_reader
           if Bullet.start?
             if owner.class.name !~ /^HABTM_/ && !@inversed
               Bullet::Detector::NPlusOneQuery.call_association(owner, reflection.name)
