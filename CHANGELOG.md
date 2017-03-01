@@ -1,5 +1,11 @@
 # Next Release
 
+## 5.5.1 (03/01/2016)
+
+* Fix inverse_of for rails 5
+* Fix detect file attachment for rack #319
+* Fix `ActiveRecord::Associations::SingularAssociation#reader` usage for Rails 5.1
+
 ## 5.5.0 (12/30/2016)
 
 * Display http request method #311
