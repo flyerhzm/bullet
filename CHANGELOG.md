@@ -1,6 +1,6 @@
 # Next Release
 
-## 5.5.1 (03/01/2016)
+## 5.5.1 (03/01/2017)
 
 * Fix inverse_of for rails 5
 * Fix detect file attachment for rack #319
