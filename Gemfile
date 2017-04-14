@@ -1,8 +1,13 @@
 source 'https://rubygems.org'
 
+git_source(:github) do |repo_name|
+  repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?('/')
+  "https://github.com/#{repo_name}.git"
+end
+
 gemspec
 
-gem 'rails', github: 'rails/rails'
+gem 'rails', github: 'rails'
 gem 'sqlite3', platforms: [:ruby]
 gem 'activerecord-jdbcsqlite3-adapter', platforms: [:jruby]
 gem 'activerecord-import'
