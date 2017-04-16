@@ -183,6 +183,7 @@ module Bullet
     end
 
     def warnings
+      return unless notification?
       notification_collector.collection.inject({}) do |warnings, notification|
         warning_type = notification.class.to_s.split(':').last.tableize
         warnings[warning_type] ||= []
