@@ -1,5 +1,5 @@
 class String
   def bullet_class_name
-    self.sub(/:[^:]*?$/, "")
+    self.sub(/:[^:]*?$/, "".freeze)
   end
 end

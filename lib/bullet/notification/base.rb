@@ -66,7 +66,7 @@ module Bullet
 
       protected
         def klazz_associations_str
-          "  #{@base_class} => [#{@associations.map(&:inspect).join(', ')}]"
+          "  #{@base_class} => [#{@associations.map(&:inspect).join(', '.freeze)}]"
         end
 
         def associations_str

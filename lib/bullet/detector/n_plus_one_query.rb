@@ -29,7 +29,7 @@ module Bullet
           objects = Array(object_or_objects)
           return if objects.map(&:primary_key_value).compact.empty?
 
-          Bullet.debug("Detector::NPlusOneQuery#add_possible_objects", "objects: #{objects.map(&:bullet_key).join(', ')}")
+          Bullet.debug("Detector::NPlusOneQuery#add_possible_objects", "objects: #{objects.map(&:bullet_key).join(', '.freeze)}")
           objects.each { |object| possible_objects.add object.bullet_key }
         end
 
