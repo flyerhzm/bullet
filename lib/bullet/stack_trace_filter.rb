@@ -5,7 +5,8 @@ module Bullet
     def caller_in_project
       app_root = rails? ? Rails.root.to_s : Dir.pwd
       vendor_root = app_root + VENDOR_PATH
-      caller.select do |caller_path|
+      caller_locations.select do |location|
+        caller_path = location.absolute_path
         caller_path.include?(app_root) && !caller_path.include?(vendor_root) ||
           Bullet.stacktrace_includes.any? do |include_pattern|
           case include_pattern
