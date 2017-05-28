@@ -187,8 +187,8 @@ module Bullet
 
       ::ActiveRecord::Associations::SingularAssociation.prepend(Module.new {
         # call has_one and belongs_to associations
-        def reader(force_reload = false)
-          result = force_reload ? force_reload_reader : super()
+        def target
+          result = super()
           if Bullet.start?
             if owner.class.name !~ /^HABTM_/ && !@inversed
               Bullet::Detector::NPlusOneQuery.call_association(owner, reflection.name)
