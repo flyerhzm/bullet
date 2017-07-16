@@ -303,19 +303,10 @@ And run
 bundle install
 ```
 
-6\. enable the Bullet gem in development, add a line to
-`config/environments/development.rb`
+6\. enable the Bullet gem with generate command
 
-```ruby
-config.after_initialize do
-  Bullet.enable = true
-  Bullet.alert = true
-  Bullet.bullet_logger = true
-  Bullet.console = true
-#  Bullet.growl = true
-  Bullet.rails_logger = true
-  Bullet.add_footer = true
-end
+```
+bundle exec rails g bullet:install
 ```
 
 7\. Start the server
