@@ -1,10 +1,13 @@
 # Next Release
 
-## 5.5.1 (03/01/2017)
+## 5.6.0 (07/16/2017)
 
+* Migrate alias_method to Module#prepend
+* Add install generator
+* Stack trace filter
+* Fix rails 5.1 compatibility
 * Fix inverse_of for rails 5
 * Fix detect file attachment for rack #319
-* Fix `ActiveRecord::Associations::SingularAssociation#reader` usage for Rails 5.1
 
 ## 5.5.0 (12/30/2016)
 
