@@ -211,6 +211,7 @@ module Bullet
     end
 
     private
+
       def for_each_active_notifier_with_notification
         UniformNotifier.active_notifiers.each do |notifier|
           notification_collector.collection.each do |notification|

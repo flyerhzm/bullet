@@ -76,7 +76,6 @@ Comment.import comments
 
 puts "Start benchmarking..."
 
-
 Bullet.enable = true
 
 Benchmark.bm(70) do |bm|
@@ -97,7 +96,6 @@ Benchmark.bm(70) do |bm|
 end
 
 puts "End benchmarking..."
-
 
 # Run benchmark with bundler
 #

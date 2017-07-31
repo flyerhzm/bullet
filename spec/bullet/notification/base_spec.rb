@@ -50,7 +50,6 @@ module Bullet
         ensure
           ENV[name] = old_value
         end
-
       end
 
       context "#body_with_caller" do

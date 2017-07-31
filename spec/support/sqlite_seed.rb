@@ -9,7 +9,6 @@ module Support
       user1 = BaseUser.create(:name => 'third', :newspaper => newspaper1)
       user2 = BaseUser.create(:name => 'fourth', :newspaper => newspaper2)
 
-
       category1 = Category.create(:name => 'first')
       category2 = Category.create(:name => 'second')
 
