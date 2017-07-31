@@ -1,4 +1,4 @@
-require "active_support/core_ext/module/delegation"
+require 'active_support/core_ext/module/delegation'
 require 'set'
 require 'uniform_notifier'
 require 'bullet/ext/object'
@@ -22,7 +22,7 @@ module Bullet
 
   if defined? Rails::Railtie
     class BulletRailtie < Rails::Railtie
-      initializer "bullet.configure_rails_initialization" do |app|
+      initializer 'bullet.configure_rails_initialization' do |app|
         app.middleware.use Bullet::Rack
       end
     end

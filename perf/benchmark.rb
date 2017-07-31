@@ -74,7 +74,7 @@ comments_size.times do |i|
 end
 Comment.import comments
 
-puts "Start benchmarking..."
+puts 'Start benchmarking...'
 
 
 Bullet.enable = true
@@ -83,7 +83,7 @@ Benchmark.bm(70) do |bm|
   bm.report("Querying & Iterating #{posts_size} Posts with #{comments_size} Comments and #{users_size} Users") do
     10.times do
       Bullet.start_request
-      Post.select("SQL_NO_CACHE *").includes(:user, :comments => :user).each do |p|
+      Post.select('SQL_NO_CACHE *').includes(:user, :comments => :user).each do |p|
         p.title
         p.user.name
         p.comments.each do |c|
@@ -96,7 +96,7 @@ Benchmark.bm(70) do |bm|
   end
 end
 
-puts "End benchmarking..."
+puts 'End benchmarking...'
 
 
 # Run benchmark with bundler

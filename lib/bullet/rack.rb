@@ -51,19 +51,19 @@ module Bullet
     end
 
     def footer_note
-      "<div #{footer_div_attributes}>" + footer_close_button + Bullet.footer_info.uniq.join("<br>") + "</div>"
+      "<div #{footer_div_attributes}>" + footer_close_button + Bullet.footer_info.uniq.join('<br>') + '</div>'
     end
 
     def file?(headers)
-      headers["Content-Transfer-Encoding"] == "binary" || headers["Content-Disposition"]
+      headers['Content-Transfer-Encoding'] == 'binary' || headers['Content-Disposition']
     end
 
     def sse?(headers)
-      headers["Content-Type"] == "text/event-stream"
+      headers['Content-Type'] == 'text/event-stream'
     end
 
     def html_request?(headers, response)
-      headers['Content-Type'] && headers['Content-Type'].include?('text/html') && response_body(response).include?("<html")
+      headers['Content-Type'] && headers['Content-Type'].include?('text/html') && response_body(response).include?('<html')
     end
 
     def response_body(response)

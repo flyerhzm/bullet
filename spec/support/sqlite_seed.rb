@@ -1,8 +1,8 @@
 module Support
   module SqliteSeed
     def seed_db
-      newspaper1 = Newspaper.create(:name => "First Newspaper")
-      newspaper2 = Newspaper.create(:name => "Second Newspaper")
+      newspaper1 = Newspaper.create(:name => 'First Newspaper')
+      newspaper2 = Newspaper.create(:name => 'Second Newspaper')
 
       writer1 = Writer.create(:name => 'first', :newspaper => newspaper1)
       writer2 = Writer.create(:name => 'second', :newspaper => newspaper2)
@@ -22,8 +22,8 @@ module Support
       comment2 = post1.comments.create(:name => 'first2', :author => writer1)
       comment3 = post1.comments.create(:name => 'first3', :author => writer1)
       comment4 = post1.comments.create(:name => 'second', :author => writer2)
-      comment8 = post1a.comments.create(:name => "like first 1", :author => writer1)
-      comment9 = post1a.comments.create(:name => "like first 2", :author => writer2)
+      comment8 = post1a.comments.create(:name => 'like first 1', :author => writer1)
+      comment9 = post1a.comments.create(:name => 'like first 2', :author => writer2)
       comment5 = post2.comments.create(:name => 'third', :author => user1)
       comment6 = post2.comments.create(:name => 'fourth', :author => user2)
       comment7 = post2.comments.create(:name => 'fourth', :author => writer1)
@@ -83,8 +83,8 @@ module Support
       user1 = User.create(:name => 'user1', :category => category1)
       user2 = User.create(:name => 'user2', :category => category1)
 
-      submission1 = user1.create_submission(:name => "submission1")
-      submission2 = user2.create_submission(:name => "submission2")
+      submission1 = user1.create_submission(:name => 'submission1')
+      submission2 = user2.create_submission(:name => 'submission2')
 
       submission1.replies.create(:name => 'reply1')
       submission1.replies.create(:name => 'reply2')

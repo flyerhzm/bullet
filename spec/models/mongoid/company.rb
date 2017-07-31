@@ -3,5 +3,5 @@ class Mongoid::Company
 
   field :name
 
-  has_one :address, :class_name => "Mongoid::Address"
+  has_one :address, :class_name => 'Mongoid::Address'
 end

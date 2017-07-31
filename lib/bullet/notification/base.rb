@@ -11,23 +11,23 @@ module Bullet
       end
 
       def title
-        raise NoMethodError.new("no method title defined")
+        raise NoMethodError.new('no method title defined')
       end
 
       def body
-        raise NoMethodError.new("no method body defined")
+        raise NoMethodError.new('no method body defined')
       end
 
       def call_stack_messages
-        ""
+        ''
       end
 
       def whoami
-        @user ||= ENV['USER'].presence || (`whoami`.chomp rescue "")
+        @user ||= ENV['USER'].presence || (`whoami`.chomp rescue '')
         if @user.present?
           "user: #{@user}"
         else
-          ""
+          ''
         end
       end
 
@@ -44,7 +44,7 @@ module Bullet
       end
 
       def short_notice
-        [whoami.presence, url, title, body].compact.join("  ")
+        [whoami.presence, url, title, body].compact.join('  ')
       end
 
       def notification_data

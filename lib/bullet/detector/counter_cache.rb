@@ -7,7 +7,7 @@ module Bullet
           return unless Bullet.counter_cache_enable?
           return unless object.primary_key_value
 
-          Bullet.debug("Detector::CounterCache#add_counter_cache", "object: #{object.bullet_key}, associations: #{associations}")
+          Bullet.debug('Detector::CounterCache#add_counter_cache', "object: #{object.bullet_key}, associations: #{associations}")
           if conditions_met?(object, associations)
             create_notification object.class.to_s, associations
           end
@@ -19,7 +19,7 @@ module Bullet
           objects = Array(object_or_objects)
           return if objects.map(&:primary_key_value).compact.empty?
 
-          Bullet.debug("Detector::CounterCache#add_possible_objects", "objects: #{objects.map(&:bullet_key).join(', ')}")
+          Bullet.debug('Detector::CounterCache#add_possible_objects', "objects: #{objects.map(&:bullet_key).join(', ')}")
           objects.each { |object| possible_objects.add object.bullet_key }
         end
 
@@ -28,7 +28,7 @@ module Bullet
           return unless Bullet.counter_cache_enable?
           return unless object.primary_key_value
 
-          Bullet.debug("Detector::CounterCache#add_impossible_object", "object: #{object.bullet_key}")
+          Bullet.debug('Detector::CounterCache#add_impossible_object', "object: #{object.bullet_key}")
           impossible_objects.add object.bullet_key
         end
 
