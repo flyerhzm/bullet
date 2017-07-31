@@ -8,13 +8,13 @@ module Bullet
 
     context "#html_request?" do
       it "should be true if Content-Type is text/html and http body contains html tag" do
-        headers = {"Content-Type" => "text/html"}
+        headers = { "Content-Type" => "text/html" }
         response = double(:body => "<html><head></head><body></body></html>")
         expect(middleware).to be_html_request(headers, response)
       end
 
       it "should be true if Content-Type is text/html and http body contains html tag with attributes" do
-        headers = {"Content-Type" => "text/html"}
+        headers = { "Content-Type" => "text/html" }
         response = double(:body => "<html attr='hello'><head></head><body></body></html>")
         expect(middleware).to be_html_request(headers, response)
       end
@@ -26,13 +26,13 @@ module Bullet
       end
 
       it "should be false if Content-Type is javascript" do
-        headers = {"Content-Type" => "text/javascript"}
+        headers = { "Content-Type" => "text/javascript" }
         response = double(:body => "<html><head></head><body></body></html>")
         expect(middleware).not_to be_html_request(headers, response)
       end
 
       it "should be false if response body doesn't contain html tag" do
-        headers = {"Content-Type" => "text/html"}
+        headers = { "Content-Type" => "text/html" }
         response = double(:body => "<div>Partial</div>")
         expect(middleware).not_to be_html_request(headers, response)
       end
@@ -68,7 +68,7 @@ module Bullet
           expect(Bullet).to receive(:notification?).and_return(true)
           expect(Bullet).to receive(:gather_inline_notifications).and_return("<bullet></bullet>")
           expect(Bullet).to receive(:perform_out_of_channel_notifications)
-          status, headers, response = middleware.call({"Content-Type" => "text/html"})
+          status, headers, response = middleware.call({ "Content-Type" => "text/html" })
           expect(headers["Content-Length"]).to eq("56")
           expect(response).to eq(["<html><head></head><body><bullet></bullet></body></html>"])
         end
@@ -79,7 +79,7 @@ module Bullet
           app.response = response
           expect(Bullet).to receive(:notification?).and_return(true)
           expect(Bullet).to receive(:gather_inline_notifications).and_return("<bullet></bullet>")
-          status, headers, response = middleware.call({"Content-Type" => "text/html"})
+          status, headers, response = middleware.call({ "Content-Type" => "text/html" })
           expect(headers["Content-Length"]).to eq("58")
         end
       end
