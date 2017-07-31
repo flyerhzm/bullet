@@ -38,12 +38,12 @@ module Bullet
     delegate *available_notifiers
 
     def raise=(should_raise)
-      UniformNotifier.raise=(should_raise ? Notification::UnoptimizedQueryError : false)
+      UniformNotifier.raise = (should_raise ? Notification::UnoptimizedQueryError : false)
     end
 
-    DETECTORS = [ Bullet::Detector::NPlusOneQuery,
+    DETECTORS = [Bullet::Detector::NPlusOneQuery,
                   Bullet::Detector::UnusedEagerLoading,
-                  Bullet::Detector::CounterCache ]
+                  Bullet::Detector::CounterCache]
 
     def enable=(enable)
       @enable = @n_plus_one_query_enable = @unused_eager_loading_enable = @counter_cache_enable = enable
@@ -92,7 +92,7 @@ module Bullet
     end
 
     def reset_whitelist
-      @whitelist ||= {:n_plus_one_query => {}, :unused_eager_loading => {}, :counter_cache => {}}
+      @whitelist ||= { :n_plus_one_query => {}, :unused_eager_loading => {}, :counter_cache => {} }
     end
 
     def clear_whitelist
@@ -163,7 +163,7 @@ module Bullet
       for_each_active_notifier_with_notification do |notification|
         responses << notification.notify_inline
       end
-      responses.join( "\n" )
+      responses.join("\n")
     end
 
     def perform_out_of_channel_notifications(env = {})

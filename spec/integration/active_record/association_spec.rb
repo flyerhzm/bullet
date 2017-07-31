@@ -122,7 +122,7 @@ if active_record?
       end
 
       it "should detect preload with category => posts => comments" do
-        Category.includes({:posts => :comments}).each do |category|
+        Category.includes({ :posts => :comments }).each do |category|
           category.posts.each do |post|
             post.comments.map(&:name)
           end
@@ -134,7 +134,7 @@ if active_record?
       end
 
       it "should detect preload with category => posts => comments with posts.id > 0" do
-        Category.includes({:posts => :comments}).where('posts.id > 0').references(:posts).each do |category|
+        Category.includes({ :posts => :comments }).where('posts.id > 0').references(:posts).each do |category|
           category.posts.each do |post|
             post.comments.map(&:name)
           end
@@ -146,7 +146,7 @@ if active_record?
       end
 
       it "should detect unused preload with category => posts => comments" do
-        Category.includes({:posts => :comments}).map(&:name)
+        Category.includes({ :posts => :comments }).map(&:name)
         Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
         expect(Bullet::Detector::Association).to be_unused_preload_associations_for(Post, :comments)
 
@@ -154,7 +154,7 @@ if active_record?
       end
 
       it "should detect unused preload with post => commnets, no category => posts" do
-        Category.includes({:posts => :comments}).each do |category|
+        Category.includes({ :posts => :comments }).each do |category|
           category.posts.map(&:name)
         end
         Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
@@ -257,7 +257,7 @@ if active_record?
 
     context "category => posts => writer" do
       it "should not detect unused preload associations" do
-        category = Category.includes({:posts => :writer}).order("id DESC").find_by_name('first')
+        category = Category.includes({ :posts => :writer }).order("id DESC").find_by_name('first')
         category.posts.map do |post|
           post.name
           post.writer.name
@@ -409,7 +409,7 @@ if active_record?
       end
 
       it "should detect unused preload with comment => author" do
-        Comment.includes([:author, {:post => :writer}]).where(["base_users.id = ?", BaseUser.first]).references(:base_users).each do |comment|
+        Comment.includes([:author, { :post => :writer }]).where(["base_users.id = ?", BaseUser.first]).references(:base_users).each do |comment|
           comment.post.writer.name
         end
         Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
@@ -430,7 +430,7 @@ if active_record?
 
       it "should not raise a stack error from posts to category" do
         expect {
-          Comment.includes({:post => :category}).each do |com|
+          Comment.includes({ :post => :category }).each do |com|
             com.post.category
           end
         }.not_to raise_error()
