@@ -1,6 +1,6 @@
 module Bullet
   module StackTraceFilter
-    VENDOR_PATH = "/vendor".freeze
+    VENDOR_PATH = '/vendor'.freeze
 
     def caller_in_project
       app_root = rails? ? Rails.root.to_s : Dir.pwd
