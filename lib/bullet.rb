@@ -43,7 +43,7 @@ module Bullet
 
     DETECTORS = [ Bullet::Detector::NPlusOneQuery,
                   Bullet::Detector::UnusedEagerLoading,
-                  Bullet::Detector::CounterCache ]
+                  Bullet::Detector::CounterCache ].freeze
 
     def enable=(enable)
       @enable = @n_plus_one_query_enable = @unused_eager_loading_enable = @counter_cache_enable = enable
