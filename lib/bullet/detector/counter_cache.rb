@@ -45,6 +45,7 @@ module Bullet
         end
 
         private
+
           def create_notification(klazz, associations)
             notify_associations = Array(associations) - Bullet.get_whitelist_associations(:counter_cache, klazz)
 
