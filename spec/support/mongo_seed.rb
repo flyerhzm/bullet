@@ -39,7 +39,7 @@ module Support
             sessions: {
               default: {
                 database: 'bullet',
-                hosts: [ 'localhost:27017' ]
+                hosts: ['localhost:27017']
               }
             }
           )
@@ -50,7 +50,7 @@ module Support
               clients: {
                   default: {
                       database: 'bullet',
-                      hosts: [ 'localhost:27017' ]
+                      hosts: ['localhost:27017']
                   }
               }
           )
