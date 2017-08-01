@@ -1,5 +1,9 @@
 # Next Release
 
+## 5.6.1 (08/01/2017)
+
+* Fix caller_path in the case of nil
+
 ## 5.6.0 (07/16/2017)
 
 * Migrate alias_method to Module#prepend
