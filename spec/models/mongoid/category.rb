@@ -3,6 +3,6 @@ class Mongoid::Category
 
   field :name
 
-  has_many :posts, :class_name => "Mongoid::Post"
-  has_many :entries, :class_name => "Mongoid::Entry"
+  has_many :posts, :class_name => 'Mongoid::Post'
+  has_many :entries, :class_name => 'Mongoid::Entry'
 end

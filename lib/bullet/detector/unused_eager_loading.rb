@@ -17,7 +17,7 @@ module Bullet
             object_association_diff = diff_object_associations bullet_key, associations
             next if object_association_diff.empty?
 
-            Bullet.debug("detect unused preload", "object: #{bullet_key}, associations: #{object_association_diff}")
+            Bullet.debug('detect unused preload', "object: #{bullet_key}, associations: #{object_association_diff}")
             create_notification(caller_in_project, bullet_key.bullet_class_name, object_association_diff)
           end
         end
@@ -27,7 +27,7 @@ module Bullet
           return unless Bullet.unused_eager_loading_enable?
           return if objects.map(&:primary_key_value).compact.empty?
 
-          Bullet.debug("Detector::UnusedEagerLoading#add_eager_loadings", "objects: #{objects.map(&:bullet_key).join(', ')}, associations: #{associations}")
+          Bullet.debug('Detector::UnusedEagerLoading#add_eager_loadings', "objects: #{objects.map(&:bullet_key).join(', ')}, associations: #{associations}")
           bullet_keys = objects.map(&:bullet_key)
 
           to_add, to_merge, to_delete = [], [], []

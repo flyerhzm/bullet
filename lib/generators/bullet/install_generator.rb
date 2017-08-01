@@ -7,7 +7,7 @@ Description:
       DESC
 
       def enable_in_development
-        environment(nil, env: "development") do
+        environment(nil, env: 'development') do
           <<-"FILE".strip
 
   config.after_initialize do
@@ -22,12 +22,12 @@ Description:
           FILE
         end
 
-        say "Enabled bullet in config/environments/development.rb"
+        say 'Enabled bullet in config/environments/development.rb'
       end
 
       def enable_in_test
-        if yes?("Would you like to enable bullet in test environment? (y/n)")
-          environment(nil, env: "test") do
+        if yes?('Would you like to enable bullet in test environment? (y/n)')
+          environment(nil, env: 'test') do
             <<-"FILE".strip
 
   config.after_initialize do
@@ -38,7 +38,7 @@ Description:
             FILE
           end
 
-          say "Enabled bullet in config/environments/test.rb"
+          say 'Enabled bullet in config/environments/test.rb'
         end
       end
     end

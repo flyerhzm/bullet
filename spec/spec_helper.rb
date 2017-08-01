@@ -15,20 +15,20 @@ module Rails
     end
 
     def env
-      "test"
+      'test'
     end
   end
 end
 
-$LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + "/../lib"))
+$LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + '/../lib'))
 require 'bullet'
 extend Bullet::Dependency
 Bullet.enable = true
 
-MODELS = File.join(File.dirname(__FILE__), "models")
+MODELS = File.join(File.dirname(__FILE__), 'models')
 $LOAD_PATH.unshift(MODELS)
-SUPPORT = File.join(File.dirname(__FILE__), "support")
-Dir[ File.join(SUPPORT, "*.rb") ].reject { |filename| filename =~ /_seed.rb$/ }.sort.each { |file| require file }
+SUPPORT = File.join(File.dirname(__FILE__), 'support')
+Dir[ File.join(SUPPORT, '*.rb') ].reject { |filename| filename =~ /_seed.rb$/ }.sort.each { |file| require file }
 
 RSpec.configure do |config|
   config.extend Bullet::Dependency
@@ -41,11 +41,11 @@ if active_record?
   ActiveRecord::Migration.verbose = false
 
   # Autoload every active_record model for the test suite that sits in spec/models.
-  Dir[ File.join(MODELS, "*.rb") ].sort.each do |filename|
-    name = File.basename(filename, ".rb")
+  Dir[ File.join(MODELS, '*.rb') ].sort.each do |filename|
+    name = File.basename(filename, '.rb')
     autoload name.camelize.to_sym, name
   end
-  require File.join(SUPPORT, "sqlite_seed.rb")
+  require File.join(SUPPORT, 'sqlite_seed.rb')
 
   RSpec.configure do |config|
     config.before(:suite) do
@@ -63,7 +63,7 @@ if active_record?
     end
   end
 
-  if ENV["BULLET_LOG"]
+  if ENV['BULLET_LOG']
     require 'logger'
     ActiveRecord::Base.logger = Logger.new(STDOUT)
   end
@@ -71,8 +71,8 @@ end
 
 if mongoid?
   # Autoload every mongoid model for the test suite that sits in spec/models.
-  Dir[ File.join(MODELS, "mongoid", "*.rb") ].sort.each { |file| require file }
-  require File.join(SUPPORT, "mongo_seed.rb")
+  Dir[ File.join(MODELS, 'mongoid', '*.rb') ].sort.each { |file| require file }
+  require File.join(SUPPORT, 'mongo_seed.rb')
 
   RSpec.configure do |config|
     config.before(:suite) do
@@ -94,7 +94,7 @@ if mongoid?
     end
   end
 
-  if ENV["BULLET_LOG"]
+  if ENV['BULLET_LOG']
     Mongoid.logger = Logger.new(STDOUT)
     Moped.logger = Logger.new(STDOUT)
   end

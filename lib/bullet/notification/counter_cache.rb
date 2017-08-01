@@ -6,7 +6,7 @@ module Bullet
       end
 
       def title
-        "Need Counter Cache"
+        'Need Counter Cache'
       end
     end
   end

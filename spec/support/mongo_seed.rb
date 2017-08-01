@@ -16,8 +16,8 @@ module Support
       comment2 = post1.comments.create(:name => 'first2')
       comment3 = post1.comments.create(:name => 'first3')
       comment4 = post1.comments.create(:name => 'second')
-      comment8 = post1a.comments.create(:name => "like first 1")
-      comment9 = post1a.comments.create(:name => "like first 2")
+      comment8 = post1a.comments.create(:name => 'like first 1')
+      comment9 = post1a.comments.create(:name => 'like first 2')
       comment5 = post2.comments.create(:name => 'third')
       comment6 = post2.comments.create(:name => 'fourth')
       comment7 = post2.comments.create(:name => 'fourth')
@@ -38,8 +38,8 @@ module Support
           config.load_configuration(
             sessions: {
               default: {
-                database: "bullet",
-                hosts: [ "localhost:27017" ]
+                database: 'bullet',
+                hosts: [ 'localhost:27017' ]
               }
             }
           )
@@ -49,8 +49,8 @@ module Support
           config.load_configuration(
               clients: {
                   default: {
-                      database: "bullet",
-                      hosts: [ "localhost:27017" ]
+                      database: 'bullet',
+                      hosts: [ 'localhost:27017' ]
                   }
               }
           )

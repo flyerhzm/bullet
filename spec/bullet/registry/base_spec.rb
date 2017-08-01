@@ -3,40 +3,40 @@ require 'spec_helper'
 module Bullet
   module Registry
     describe Base do
-      subject { Base.new.tap { |base| base.add("key", "value") } }
+      subject { Base.new.tap { |base| base.add('key', 'value') } }
 
-      context "#[]" do
-        it "should get value by key" do
-          expect(subject["key"]).to eq(Set.new(["value"]))
+      context '#[]' do
+        it 'should get value by key' do
+          expect(subject['key']).to eq(Set.new(['value']))
         end
       end
 
-      context "#delete" do
-        it "should delete key" do
-          subject.delete("key")
-          expect(subject["key"]).to be_nil
+      context '#delete' do
+        it 'should delete key' do
+          subject.delete('key')
+          expect(subject['key']).to be_nil
         end
       end
 
-      context "#add" do
-        it "should add value with string" do
-          subject.add("key", "new_value")
-          expect(subject["key"]).to eq(Set.new(["value", "new_value"]))
+      context '#add' do
+        it 'should add value with string' do
+          subject.add('key', 'new_value')
+          expect(subject['key']).to eq(Set.new(['value', 'new_value']))
         end
 
-        it "should add value with array" do
-          subject.add("key", ["value1", "value2"])
-          expect(subject["key"]).to eq(Set.new(["value", "value1", "value2"]))
+        it 'should add value with array' do
+          subject.add('key', ['value1', 'value2'])
+          expect(subject['key']).to eq(Set.new(['value', 'value1', 'value2']))
         end
       end
 
-      context "#include?" do
-        it "should include key/value" do
-          expect(subject.include?("key", "value")).to eq true
+      context '#include?' do
+        it 'should include key/value' do
+          expect(subject.include?('key', 'value')).to eq true
         end
 
-        it "should not include wrong key/value" do
-          expect(subject.include?("key", "val")).to eq false
+        it 'should not include wrong key/value' do
+          expect(subject.include?('key', 'val')).to eq false
         end
       end
     end

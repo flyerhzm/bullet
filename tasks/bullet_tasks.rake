@@ -1,8 +1,8 @@
 namespace :bullet do
   namespace :log do
-    desc "Truncates the bullet log file to zero bytes"
+    desc 'Truncates the bullet log file to zero bytes'
     task :clear do
-      f = File.open("log/bullet.log", "w")
+      f = File.open('log/bullet.log', 'w')
       f.close
     end
   end

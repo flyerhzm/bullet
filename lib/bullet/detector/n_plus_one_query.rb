@@ -16,9 +16,9 @@ module Bullet
           return if inversed_objects.include?(object.bullet_key, associations)
           add_call_object_associations(object, associations)
 
-          Bullet.debug("Detector::NPlusOneQuery#call_association".freeze, "object: #{object.bullet_key}, associations: #{associations}")
+          Bullet.debug('Detector::NPlusOneQuery#call_association'.freeze, "object: #{object.bullet_key}, associations: #{associations}")
           if !excluded_stacktrace_path? && conditions_met?(object, associations)
-            Bullet.debug("detect n + 1 query", "object: #{object.bullet_key}, associations: #{associations}")
+            Bullet.debug('detect n + 1 query', "object: #{object.bullet_key}, associations: #{associations}")
             create_notification caller_in_project, object.class.to_s, associations
           end
         end
@@ -29,7 +29,7 @@ module Bullet
           objects = Array(object_or_objects)
           return if objects.map(&:primary_key_value).compact.empty?
 
-          Bullet.debug("Detector::NPlusOneQuery#add_possible_objects".freeze, "objects: #{objects.map(&:bullet_key).join(', '.freeze)}")
+          Bullet.debug('Detector::NPlusOneQuery#add_possible_objects'.freeze, "objects: #{objects.map(&:bullet_key).join(', '.freeze)}")
           objects.each { |object| possible_objects.add object.bullet_key }
         end
 
@@ -38,7 +38,7 @@ module Bullet
           return unless Bullet.n_plus_one_query_enable?
           return unless object.primary_key_value
 
-          Bullet.debug("Detector::NPlusOneQuery#add_impossible_object".freeze, "object: #{object.bullet_key}")
+          Bullet.debug('Detector::NPlusOneQuery#add_impossible_object'.freeze, "object: #{object.bullet_key}")
           impossible_objects.add object.bullet_key
         end
 
@@ -47,7 +47,7 @@ module Bullet
           return unless Bullet.n_plus_one_query_enable?
           return unless object.primary_key_value
 
-          Bullet.debug("Detector::NPlusOneQuery#add_inversed_object".freeze, "object: #{object.bullet_key}, association: #{association}")
+          Bullet.debug('Detector::NPlusOneQuery#add_inversed_object'.freeze, "object: #{object.bullet_key}, association: #{association}")
           inversed_objects.add object.bullet_key, association
         end
 
