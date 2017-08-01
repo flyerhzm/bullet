@@ -81,6 +81,7 @@ module Bullet
         end
 
         private
+
           def create_notification(callers, klazz, associations)
             notify_associations = Array(associations) - Bullet.get_whitelist_associations(:n_plus_one_query, klazz)
 
