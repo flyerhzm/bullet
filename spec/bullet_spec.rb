@@ -4,7 +4,6 @@ describe Bullet, focused: true do
   subject { Bullet }
 
   describe '#enable' do
-
     context 'enable Bullet' do
       before do
         # Bullet.enable
