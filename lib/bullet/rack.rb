@@ -14,7 +14,7 @@ module Bullet
       response_body = nil
       if Bullet.notification?
         if !file?(headers) && !sse?(headers) && !empty?(response) &&
-            status == 200 && !response_body(response).frozen? && html_request?(headers, response)
+           status == 200 && !response_body(response).frozen? && html_request?(headers, response)
           response_body = response_body(response)
           append_to_html_body(response_body, footer_note) if Bullet.add_footer
           append_to_html_body(response_body, Bullet.gather_inline_notifications)
