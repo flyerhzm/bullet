@@ -37,6 +37,7 @@ module Bullet
         end
 
         private
+
           # object_associations keep the object relationships
           # that the object has many associations.
           # e.g. { "Post:1" => [:comments] }
