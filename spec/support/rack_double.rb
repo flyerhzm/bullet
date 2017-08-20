@@ -23,6 +23,7 @@ module Support
     end
 
     private
+
     def status
       @status || 200
     end
