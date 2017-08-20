@@ -6,7 +6,7 @@ module Bullet
 
       def initialize(base_class, association_or_associations, path = nil)
         @base_class = base_class
-        @associations = association_or_associations.is_a?(Array) ?  association_or_associations : [association_or_associations]
+        @associations = association_or_associations.is_a?(Array) ? association_or_associations : [association_or_associations]
         @path = path
       end
 
@@ -71,7 +71,7 @@ module Bullet
         end
 
         def associations_str
-          ":includes => #{@associations.map{ |a| a.to_s.to_sym unless a.is_a? Hash }.inspect}"
+          ":includes => #{@associations.map { |a| a.to_s.to_sym unless a.is_a? Hash }.inspect}"
         end
     end
   end
