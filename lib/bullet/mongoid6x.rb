@@ -21,7 +21,7 @@ module Bullet
         end
 
         def each(&block)
-          records = view.map{ |doc| ::Mongoid::Factory.from_db(klass, doc) }
+          records = view.map { |doc| ::Mongoid::Factory.from_db(klass, doc) }
           if records.length > 1
             Bullet::Detector::NPlusOneQuery.add_possible_objects(records)
           elsif records.size == 1
