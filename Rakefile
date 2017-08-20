@@ -34,7 +34,6 @@ RSpec::Core::RakeTask.new('spec:progress') do |spec|
   spec.pattern = 'spec/**/*_spec.rb'
 end
 
-
 begin
   require 'rdoc/task'
 
