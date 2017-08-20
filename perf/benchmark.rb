@@ -53,7 +53,7 @@ end
 
 users_size = 100
 posts_size = 1000
-comments_size = 10000
+comments_size = 10_000
 users = []
 users_size.times do |i|
   users << User.new(:name => "user#{i}")
