@@ -63,14 +63,14 @@ users = User.all
 
 posts = []
 posts_size.times do |i|
-  posts << Post.new(:title => "Title #{i}", :body => "Body #{i}", :user => users[i%100])
+  posts << Post.new(:title => "Title #{i}", :body => "Body #{i}", :user => users[i % 100])
 end
 Post.import posts
 posts = Post.all
 
 comments = []
 comments_size.times do |i|
-  comments << Comment.new(:body => "Comment #{i}", :post => posts[i%1000], :user => users[i%100])
+  comments << Comment.new(:body => "Comment #{i}", :post => posts[i % 1000], :user => users[i % 100])
 end
 Comment.import comments
 

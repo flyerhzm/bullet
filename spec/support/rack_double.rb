@@ -2,7 +2,7 @@ module Support
   class AppDouble
     def call env
       env = @env
-      [ status, headers, response ]
+      [status, headers, response]
     end
 
     def status= status
@@ -14,7 +14,7 @@ module Support
     end
 
     def headers
-      @headers ||= {'Content-Type' => 'text/html'}
+      @headers ||= { 'Content-Type' => 'text/html' }
       @headers
     end
 
