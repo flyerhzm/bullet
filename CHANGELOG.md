@@ -1,5 +1,9 @@
 # Next Release
 
+## 5.7.0 (13/11/2017)
+
+* Update `uniform_notifier` dependencyto add Sentry support
+
 ## 5.6.1 (08/01/2017)
 
 * Fix caller_path in the case of nil
