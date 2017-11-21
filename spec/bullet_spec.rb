@@ -94,6 +94,26 @@ describe Bullet, focused: true do
     end
   end
 
+  describe '#delete_whitelist' do
+    context "for 'special' class names" do
+      it 'is deleted from the whitelist successfully' do
+        Bullet.add_whitelist(:type => :n_plus_one_query, :class_name => 'Klass', :association => :department)
+        Bullet.delete_whitelist(:type => :n_plus_one_query, :class_name => 'Klass', :association => :department)
+        expect(Bullet.whitelist[:n_plus_one_query]).to eq({})
+      end
+    end
+
+    context 'when exists multiple definitions' do
+      it 'is deleted from the whitelist successfully' do
+        Bullet.add_whitelist(:type => :n_plus_one_query, :class_name => 'Klass', :association => :department)
+        Bullet.add_whitelist(:type => :n_plus_one_query, :class_name => 'Klass', :association => :team)
+        Bullet.delete_whitelist(:type => :n_plus_one_query, :class_name => 'Klass', :association => :team)
+        expect(Bullet.get_whitelist_associations(:n_plus_one_query, 'Klass')).to include :department
+        expect(Bullet.get_whitelist_associations(:n_plus_one_query, 'Klass')).to_not include :team
+      end
+    end
+  end
+
   describe '#perform_out_of_channel_notifications' do
     let(:notification) { double }
 
