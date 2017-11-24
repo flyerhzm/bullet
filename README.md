@@ -454,9 +454,3 @@ Meanwhile, there's a line appended to `log/bullet.log`
 ```
 
 Copyright (c) 2009 - 2016 Richard Huang (flyerhzm@gmail.com), released under the MIT license
-
-<a
-href="https://app.codesponsor.io/link/bbd9eCjVVe4zd2ppN5SZaf9C/flyerhzm/bullet"
-rel="nofollow" target="_blank"><img
-src="https://app.codesponsor.io/embed/bbd9eCjVVe4zd2ppN5SZaf9C/flyerhzm/bullet.svg"
-style="width: 888px; height: 68px;" alt="Sponsor" /></a>
