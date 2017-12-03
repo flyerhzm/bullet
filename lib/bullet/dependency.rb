@@ -24,7 +24,7 @@ module Bullet
                                      'active_record5'
                                    elsif active_record51?
                                      'active_record5'
-                                  elsif active_record52?
+                                   elsif active_record52?
                                      'active_record52'
                                    else
                                      raise "Bullet does not support active_record #{::ActiveRecord::VERSION} yet"
