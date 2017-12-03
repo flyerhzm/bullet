@@ -1,7 +1,9 @@
 # Next Release
 
-## 5.6.1 (08/01/2017)
+## 5.7.0 (12/03/2017)
 
+* Support rails 5.2
+* Implement Bullet.delete_whitelist to delete a specific whitelist definition
 * Fix caller_path in the case of nil
 
 ## 5.6.0 (07/16/2017)
