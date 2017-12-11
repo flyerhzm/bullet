@@ -29,13 +29,13 @@ module Bullet
   end
 
   class << self
-    attr_writer :enable, :n_plus_one_query_enable, :unused_eager_loading_enable, :counter_cache_enable, :stacktrace_includes, :stacktrace_excludes
-    attr_reader :notification_collector, :whitelist
+    attr_writer :n_plus_one_query_enable, :unused_eager_loading_enable, :counter_cache_enable, :stacktrace_includes, :stacktrace_excludes
+    attr_reader :whitelist
     attr_accessor :add_footer, :orm_pathches_applied
 
     available_notifiers = UniformNotifier::AVAILABLE_NOTIFIERS.map { |notifier| "#{notifier}=" }
     available_notifiers << { :to => UniformNotifier }
-    delegate *available_notifiers
+    delegate(*available_notifiers)
 
     def raise=(should_raise)
       UniformNotifier.raise = (should_raise ? Notification::UnoptimizedQueryError : false)
