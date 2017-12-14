@@ -433,7 +433,7 @@ if active_record?
           Comment.includes({ :post => :category }).each do |com|
             com.post.category
           end
-        }.not_to raise_error()
+        }.not_to raise_error
       end
     end
   end
