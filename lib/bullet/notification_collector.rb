@@ -21,4 +21,3 @@ module Bullet
     end
   end
 end
-
