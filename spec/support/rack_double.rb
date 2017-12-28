@@ -1,15 +1,15 @@
 module Support
   class AppDouble
-    def call env
+    def call(env)
       env = @env
       [status, headers, response]
     end
 
-    def status= status
+    def status=(status)
       @status = status
     end
 
-    def headers= headers
+    def headers=(headers)
       @headers = headers
     end
 
@@ -18,7 +18,7 @@ module Support
       @headers
     end
 
-    def response= response
+    def response=(response)
       @response = response
     end
 
@@ -34,7 +34,7 @@ module Support
   end
 
   class ResponseDouble
-    def initialize actual_body = nil
+    def initialize(actual_body = nil)
       @actual_body = actual_body
     end
 
@@ -42,7 +42,7 @@ module Support
       @body ||= '<html><head></head><body></body></html>'
     end
 
-    def body= body
+    def body=(body)
       @body = body
     end
 
