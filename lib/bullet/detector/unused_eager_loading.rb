@@ -30,7 +30,9 @@ module Bullet
           Bullet.debug('Detector::UnusedEagerLoading#add_eager_loadings', "objects: #{objects.map(&:bullet_key).join(', ')}, associations: #{associations}")
           bullet_keys = objects.map(&:bullet_key)
 
-          to_add, to_merge, to_delete = [], [], []
+          to_add = []
+          to_merge = []
+          to_delete = []
           eager_loadings.each do |k, _v|
             key_objects_overlap = k & bullet_keys
 
