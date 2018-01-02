@@ -18,7 +18,7 @@ module Bullet
   module ActiveRecord
     def self.enable
       require 'active_record'
-      ::ActiveRecord::Base.extend(Module.new {
+      ::ActiveRecord::Base.extend(Module.new do
         def find_by_sql(sql, binds = [], preparable: nil, &block)
           result = super
           if Bullet.start?
@@ -37,11 +37,11 @@ module Bullet
           end
           result
         end
-      })
+      end)
 
       ::ActiveRecord::Base.prepend(SaveWithBulletSupport)
 
-      ::ActiveRecord::Relation.prepend(Module.new {
+      ::ActiveRecord::Relation.prepend(Module.new do
         # if select a collection of objects, then these objects have possible to cause N+1 query.
         # if select only one object, then the only one object has impossible to cause N+1 query.
         def records
@@ -59,9 +59,9 @@ module Bullet
           end
           result
         end
-      })
+      end)
 
-      ::ActiveRecord::Associations::Preloader.prepend(Module.new {
+      ::ActiveRecord::Associations::Preloader.prepend(Module.new do
         def preloaders_for_one(association, records, scope)
           if Bullet.start?
             records.compact!
@@ -74,9 +74,9 @@ module Bullet
           end
           super
         end
-      })
+      end)
 
-      ::ActiveRecord::FinderMethods.prepend(Module.new {
+      ::ActiveRecord::FinderMethods.prepend(Module.new do
         # add includes in scope
         def find_with_associations
           return super { |r| yield r } if block_given?
@@ -90,9 +90,9 @@ module Bullet
           end
           records
         end
-      })
+      end)
 
-      ::ActiveRecord::Associations::JoinDependency.prepend(Module.new {
+      ::ActiveRecord::Associations::JoinDependency.prepend(Module.new do
         def instantiate(result_set, aliases)
           @bullet_eager_loadings = {}
           records = super
@@ -142,9 +142,9 @@ module Bullet
 
           result
         end
-      })
+      end)
 
-      ::ActiveRecord::Associations::CollectionAssociation.prepend(Module.new {
+      ::ActiveRecord::Associations::CollectionAssociation.prepend(Module.new do
         def load_target
           records = super
 
@@ -183,9 +183,9 @@ module Bullet
           end
           super
         end
-      })
+      end)
 
-      ::ActiveRecord::Associations::SingularAssociation.prepend(Module.new {
+      ::ActiveRecord::Associations::SingularAssociation.prepend(Module.new do
         # call has_one and belongs_to associations
         def target
           result = super()
@@ -201,9 +201,9 @@ module Bullet
           end
           result
         end
-      })
+      end)
 
-      ::ActiveRecord::Associations::HasManyAssociation.prepend(Module.new {
+      ::ActiveRecord::Associations::HasManyAssociation.prepend(Module.new do
         def empty?
           result = super
           if Bullet.start? && !reflection.has_cached_counter?
@@ -219,7 +219,7 @@ module Bullet
           end
           super
         end
-      })
+      end)
     end
   end
 end
