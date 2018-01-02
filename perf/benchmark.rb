@@ -1,4 +1,4 @@
-$: << 'lib'
+$LOAD_PATH << 'lib'
 require 'benchmark'
 require 'rails'
 require 'active_record'
