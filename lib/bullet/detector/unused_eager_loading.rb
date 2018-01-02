@@ -36,7 +36,7 @@ module Bullet
 
             next if key_objects_overlap.empty?
 
-            bullet_keys = bullet_keys - k
+            bullet_keys -= k
             if key_objects_overlap == k
               to_add << [k, associations]
             else
