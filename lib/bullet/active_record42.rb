@@ -138,14 +138,13 @@ module Bullet
               parent.children.each do |node|
                 key = aliases.column_alias(node, node.primary_key)
                 id = row[key]
-                if id.nil?
-                  associations = node.reflection.name
-                  Bullet::Detector::Association.add_object_associations(ar_parent, associations)
-                  Bullet::Detector::NPlusOneQuery.call_association(ar_parent, associations)
-                  @bullet_eager_loadings[ar_parent.class] ||= {}
-                  @bullet_eager_loadings[ar_parent.class][ar_parent] ||= Set.new
-                  @bullet_eager_loadings[ar_parent.class][ar_parent] << associations
-                end
+                next unless id.nil?
+                associations = node.reflection.name
+                Bullet::Detector::Association.add_object_associations(ar_parent, associations)
+                Bullet::Detector::NPlusOneQuery.call_association(ar_parent, associations)
+                @bullet_eager_loadings[ar_parent.class] ||= {}
+                @bullet_eager_loadings[ar_parent.class][ar_parent] ||= Set.new
+                @bullet_eager_loadings[ar_parent.class][ar_parent] << associations
               end
             end
           end
