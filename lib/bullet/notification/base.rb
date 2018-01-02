@@ -52,7 +52,7 @@ module Bullet
           :user => whoami,
           :url => url,
           :title => title,
-          :body => body_with_caller,
+          :body => body_with_caller
         }
       end
 

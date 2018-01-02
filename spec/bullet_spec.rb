@@ -127,7 +127,7 @@ describe Bullet, focused: true do
         {
           'REQUEST_METHOD' => 'GET',
           'PATH_INFO' => '/path',
-          'QUERY_STRING' => 'foo=bar',
+          'QUERY_STRING' => 'foo=bar'
         }
       }
 
