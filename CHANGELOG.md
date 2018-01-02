@@ -1,5 +1,9 @@
 # Next Release
 
+## Next Release
+
+* Update `uniform_notifier` dependencyto add Sentry support
+
 ## 5.7.0 (12/03/2017)
 
 * Support rails 5.2

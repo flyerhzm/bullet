@@ -49,6 +49,7 @@ Bullet won't do ANYTHING unless you tell it to explicitly. Append to
 ```ruby
 config.after_initialize do
   Bullet.enable = true
+  Bullet.sentry = true
   Bullet.alert = true
   Bullet.bullet_logger = true
   Bullet.console = true
@@ -83,6 +84,7 @@ The code above will enable all of the Bullet notification systems:
 * `Bullet.bugsnag`: add notifications to bugsnag
 * `Bullet.airbrake`: add notifications to airbrake
 * `Bullet.rollbar`: add notifications to rollbar
+* `Bullet.sentry`: add notifications to sentry
 * `Bullet.add_footer`: adds the details in the bottom left corner of the page. Double click the footer or use close button to hide footer.
 * `Bullet.stacktrace_includes`: include paths with any of these substrings in the stack trace, even if they are not in your main app
 * `Bullet.stacktrace_excludes`: ignore paths with any of these substrings in the stack trace, even if they are not in your main app.
