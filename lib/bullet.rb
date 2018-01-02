@@ -29,13 +29,13 @@ module Bullet
   end
 
   class << self
-    attr_writer :enable, :n_plus_one_query_enable, :unused_eager_loading_enable, :counter_cache_enable, :stacktrace_includes, :stacktrace_excludes
-    attr_reader :notification_collector, :whitelist
+    attr_writer :n_plus_one_query_enable, :unused_eager_loading_enable, :counter_cache_enable, :stacktrace_includes, :stacktrace_excludes
+    attr_reader :whitelist
     attr_accessor :add_footer, :orm_pathches_applied
 
     available_notifiers = UniformNotifier::AVAILABLE_NOTIFIERS.map { |notifier| "#{notifier}=" }
     available_notifiers << { :to => UniformNotifier }
-    delegate *available_notifiers
+    delegate(*available_notifiers)
 
     def raise=(should_raise)
       UniformNotifier.raise = (should_raise ? Notification::UnoptimizedQueryError : false)
@@ -85,6 +85,13 @@ module Bullet
       reset_whitelist
       @whitelist[options[:type]][options[:class_name]] ||= []
       @whitelist[options[:type]][options[:class_name]] << options[:association].to_sym
+    end
+
+    def delete_whitelist(options)
+      reset_whitelist
+      @whitelist[options[:type]][options[:class_name]] ||= []
+      @whitelist[options[:type]][options[:class_name]].delete(options[:association].to_sym)
+      @whitelist[options[:type]].delete_if { |key, val| val.empty? }
     end
 
     def get_whitelist_associations(type, class_name)

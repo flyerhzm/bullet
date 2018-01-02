@@ -3,6 +3,7 @@
 [![Gem Version](https://badge.fury.io/rb/bullet.png)](http://badge.fury.io/rb/bullet)
 [![Build Status](https://secure.travis-ci.org/flyerhzm/bullet.png)](http://travis-ci.org/flyerhzm/bullet)
 <a href="https://codeclimate.com/github/flyerhzm/bullet"><img src="https://codeclimate.com/github/flyerhzm/bullet.png" /></a>
+[ ![AwesomeCode Status for flyerhzm/bullet](https://awesomecode.io/projects/6755235b-e2c1-459e-bf92-b8b13d0c0472/status)](https://awesomecode.io/projects/2)
 [![Coderwall Endorse](http://api.coderwall.com/flyerhzm/endorsecount.png)](http://coderwall.com/flyerhzm)
 
 The Bullet gem is designed to help you increase your application's performance by reducing the number of queries it makes. It will watch your queries while you develop your application and notify you when you should add eager loading (N+1 queries), when you're using eager loading that isn't necessary and when you should use counter cache.
@@ -456,9 +457,3 @@ Meanwhile, there's a line appended to `log/bullet.log`
 ```
 
 Copyright (c) 2009 - 2016 Richard Huang (flyerhzm@gmail.com), released under the MIT license
-
-<a
-href="https://app.codesponsor.io/link/bbd9eCjVVe4zd2ppN5SZaf9C/flyerhzm/bullet"
-rel="nofollow" target="_blank"><img
-src="https://app.codesponsor.io/embed/bbd9eCjVVe4zd2ppN5SZaf9C/flyerhzm/bullet.svg"
-style="width: 888px; height: 68px;" alt="Sponsor" /></a>
