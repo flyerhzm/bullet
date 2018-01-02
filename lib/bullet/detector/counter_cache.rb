@@ -32,7 +32,7 @@ module Bullet
           impossible_objects.add object.bullet_key
         end
 
-        def conditions_met?(object, associations)
+        def conditions_met?(object, _associations)
           possible_objects.include?(object.bullet_key) && !impossible_objects.include?(object.bullet_key)
         end
 

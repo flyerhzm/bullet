@@ -1,6 +1,6 @@
 module Support
   class AppDouble
-    def call(env)
+    def call(_env)
       env = @env
       [status, headers, response]
     end
