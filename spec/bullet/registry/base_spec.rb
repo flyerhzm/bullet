@@ -21,12 +21,12 @@ module Bullet
       context '#add' do
         it 'should add value with string' do
           subject.add('key', 'new_value')
-          expect(subject['key']).to eq(Set.new(['value', 'new_value']))
+          expect(subject['key']).to eq(Set.new(%w[value new_value]))
         end
 
         it 'should add value with array' do
-          subject.add('key', ['value1', 'value2'])
-          expect(subject['key']).to eq(Set.new(['value', 'value1', 'value2']))
+          subject.add('key', %w[value1 value2])
+          expect(subject['key']).to eq(Set.new(%w[value value1 value2]))
         end
       end
 

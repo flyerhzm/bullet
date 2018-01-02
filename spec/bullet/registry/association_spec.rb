@@ -3,7 +3,7 @@ require 'spec_helper'
 module Bullet
   module Registry
     describe Association do
-      subject { Association.new.tap { |association| association.add(['key1', 'key2'], 'value') } }
+      subject { Association.new.tap { |association| association.add(%w[key1 key2], 'value') } }
 
       context '#merge' do
         it 'should merge key/value' do
@@ -14,7 +14,7 @@ module Bullet
 
       context '#similarly_associated' do
         it 'should return similarly associated keys' do
-          expect(subject.similarly_associated('key1', Set.new(['value']))).to eq(['key1', 'key2'])
+          expect(subject.similarly_associated('key1', Set.new(['value']))).to eq(%w[key1 key2])
         end
 
         it 'should return empty if key does not exist' do

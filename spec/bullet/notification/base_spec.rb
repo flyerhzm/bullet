@@ -3,7 +3,7 @@ require 'spec_helper'
 module Bullet
   module Notification
     describe Base do
-      subject { Base.new(Post, [:comments, :votes]) }
+      subject { Base.new(Post, %i[comments votes]) }
 
       context '#title' do
         it 'should raise NoMethodError' do

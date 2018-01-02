@@ -30,7 +30,7 @@ RSpec::Core::RakeTask.new(:spec) do |spec|
 end
 
 RSpec::Core::RakeTask.new('spec:progress') do |spec|
-  spec.rspec_opts = %w(--format progress)
+  spec.rspec_opts = %w[--format progress]
   spec.pattern = 'spec/**/*_spec.rb'
 end
 

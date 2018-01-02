@@ -190,7 +190,7 @@ if active_record?
       end
 
       it 'should detect preload with category => [posts, entries]' do
-        Category.includes([:posts, :entries]).each do |category|
+        Category.includes(%i[posts entries]).each do |category|
           category.posts.map(&:name)
           category.entries.map(&:name)
         end
@@ -201,7 +201,7 @@ if active_record?
       end
 
       it 'should detect unused preload with category => [posts, entries]' do
-        Category.includes([:posts, :entries]).map(&:name)
+        Category.includes(%i[posts entries]).map(&:name)
         Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
         expect(Bullet::Detector::Association).to be_unused_preload_associations_for(Category, :posts)
         expect(Bullet::Detector::Association).to be_unused_preload_associations_for(Category, :entries)
@@ -210,7 +210,7 @@ if active_record?
       end
 
       it 'should detect unused preload with category => entries, but not with category => posts' do
-        Category.includes([:posts, :entries]).each do |category|
+        Category.includes(%i[posts entries]).each do |category|
           category.posts.map(&:name)
         end
         Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
@@ -399,7 +399,7 @@ if active_record?
 
     context 'comment => author, post => writer' do
       it 'should detect non preloaded writer' do
-        Comment.includes([:author, :post]).where(['base_users.id = ?', BaseUser.first]).references(:base_users).each do |comment|
+        Comment.includes(%i[author post]).where(['base_users.id = ?', BaseUser.first]).references(:base_users).each do |comment|
           comment.post.writer.name
         end
         Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
