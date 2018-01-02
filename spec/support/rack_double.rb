@@ -50,7 +50,6 @@ module Support
       yield body
     end
 
-    def close
-    end
+    def close; end
   end
 end
