@@ -31,7 +31,7 @@ module Bullet
           bullet_keys = objects.map(&:bullet_key)
 
           to_add, to_merge, to_delete = [], [], []
-          eager_loadings.each do |k, v|
+          eager_loadings.each do |k, _v|
             key_objects_overlap = k & bullet_keys
 
             next if key_objects_overlap.empty?

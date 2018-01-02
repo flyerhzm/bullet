@@ -91,7 +91,7 @@ module Bullet
       reset_whitelist
       @whitelist[options[:type]][options[:class_name]] ||= []
       @whitelist[options[:type]][options[:class_name]].delete(options[:association].to_sym)
-      @whitelist[options[:type]].delete_if { |key, val| val.empty? }
+      @whitelist[options[:type]].delete_if { |_key, val| val.empty? }
     end
 
     def get_whitelist_associations(type, class_name)

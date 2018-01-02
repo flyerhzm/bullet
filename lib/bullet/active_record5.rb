@@ -98,7 +98,7 @@ module Bullet
           records = super
 
           if Bullet.start?
-            @bullet_eager_loadings.each do |klazz, eager_loadings_hash|
+            @bullet_eager_loadings.each do |_klazz, eager_loadings_hash|
               objects = eager_loadings_hash.keys
               Bullet::Detector::UnusedEagerLoading.add_eager_loadings(objects, eager_loadings_hash[objects.first].to_a)
             end
