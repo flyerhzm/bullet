@@ -3,5 +3,5 @@ class Mongoid::Comment
 
   field :name
 
-  belongs_to :post, :class_name => 'Mongoid::Post'
+  belongs_to :post, class_name: 'Mongoid::Post'
 end

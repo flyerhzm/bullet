@@ -3,10 +3,10 @@ class Mongoid::Post
 
   field :name
 
-  has_many :comments, :class_name => 'Mongoid::Comment'
-  belongs_to :category, :class_name => 'Mongoid::Category'
+  has_many :comments, class_name: 'Mongoid::Comment'
+  belongs_to :category, class_name: 'Mongoid::Category'
 
-  embeds_many :users, :class_name => 'Mongoid::User'
+  embeds_many :users, class_name: 'Mongoid::User'
 
   scope :preload_comments, -> { includes(:comments) }
 end

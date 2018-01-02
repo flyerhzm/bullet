@@ -49,10 +49,10 @@ module Bullet
 
       def notification_data
         {
-          :user => whoami,
-          :url => url,
-          :title => title,
-          :body => body_with_caller
+          user: whoami,
+          url: url,
+          title: title,
+          body: body_with_caller
         }
       end
 

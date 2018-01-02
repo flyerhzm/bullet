@@ -54,7 +54,7 @@ if !mongoid? && active_record?
 
     it 'should not need counter cache with part of cities' do
       Country.all.each do |country|
-        country.cities.where(:name => 'first').size
+        country.cities.where(name: 'first').size
       end
       expect(Bullet.collected_counter_cache_notifications).to be_empty
     end
@@ -72,7 +72,7 @@ if !mongoid? && active_record?
     end
 
     context 'whitelist' do
-      before { Bullet.add_whitelist :type => :counter_cache, :class_name => 'Country', :association => :cities }
+      before { Bullet.add_whitelist type: :counter_cache, class_name: 'Country', association: :cities }
       after { Bullet.clear_whitelist }
 
       it 'should not detect counter cache' do

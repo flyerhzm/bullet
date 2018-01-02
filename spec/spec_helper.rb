@@ -33,7 +33,7 @@ Dir[File.join(SUPPORT, '*.rb')].reject { |filename| filename =~ /_seed.rb$/ }.so
 RSpec.configure do |config|
   config.extend Bullet::Dependency
 
-  config.filter_run :focus => true
+  config.filter_run focus: true
   config.run_all_when_everything_filtered = true
 end
 

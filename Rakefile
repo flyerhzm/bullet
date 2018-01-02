@@ -12,11 +12,11 @@ task :build do
   system 'gem build bullet.gemspec'
 end
 
-task :install => :build do
+task install: :build do
   system "sudo gem install bullet-#{Bullet::VERSION}.gem"
 end
 
-task :release => :build do
+task release: :build do
   puts "Tagging #{Bullet::VERSION}..."
   system "git tag -a #{Bullet::VERSION} -m 'Tagging #{Bullet::VERSION}'"
   puts 'Pushing to Github...'
@@ -48,4 +48,4 @@ rescue LoadError
   puts 'RDocTask is not supported for this platform'
 end
 
-task :default => :spec
+task default: :spec

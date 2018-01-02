@@ -91,9 +91,9 @@ module Bullet
           after { Bullet.stacktrace_excludes = nil }
 
           it 'should not create notification when stacktrace contains paths that are in the exclude list' do
-            in_project = OpenStruct.new(:absolute_path => File.join(Dir.pwd, 'abc', 'abc.rb'))
-            included_path = OpenStruct.new(:absolute_path => '/ghi/ghi.rb')
-            excluded_path = OpenStruct.new(:absolute_path => '/def/def.rb')
+            in_project = OpenStruct.new(absolute_path: File.join(Dir.pwd, 'abc', 'abc.rb'))
+            included_path = OpenStruct.new(absolute_path: '/ghi/ghi.rb')
+            excluded_path = OpenStruct.new(absolute_path: '/def/def.rb')
 
             expect(NPlusOneQuery).to receive(:caller_locations).and_return([in_project, included_path, excluded_path])
             expect(NPlusOneQuery).to_not receive(:create_notification)
@@ -104,8 +104,8 @@ module Bullet
 
       context '.caller_in_project' do
         it 'should include only paths that are in the project' do
-          in_project = OpenStruct.new(:absolute_path => File.join(Dir.pwd, 'abc', 'abc.rb'))
-          not_in_project = OpenStruct.new(:absolute_path => '/def/def.rb')
+          in_project = OpenStruct.new(absolute_path: File.join(Dir.pwd, 'abc', 'abc.rb'))
+          not_in_project = OpenStruct.new(absolute_path: '/def/def.rb')
 
           expect(NPlusOneQuery).to receive(:caller_locations).and_return([in_project, not_in_project])
           expect(NPlusOneQuery).to receive(:conditions_met?).with(@post, :association).and_return(true)
@@ -118,9 +118,9 @@ module Bullet
           after { Bullet.stacktrace_includes = nil }
 
           it 'should include paths that are in the stacktrace_include list' do
-            in_project = OpenStruct.new(:absolute_path => File.join(Dir.pwd, 'abc', 'abc.rb'))
-            included_gems = [OpenStruct.new(:absolute_path => '/def/def.rb'), OpenStruct.new(:absolute_path => 'xyz/xyz.rb')]
-            excluded_gem = OpenStruct.new(:absolute_path => '/ghi/ghi.rb')
+            in_project = OpenStruct.new(absolute_path: File.join(Dir.pwd, 'abc', 'abc.rb'))
+            included_gems = [OpenStruct.new(absolute_path: '/def/def.rb'), OpenStruct.new(absolute_path: 'xyz/xyz.rb')]
+            excluded_gem = OpenStruct.new(absolute_path: '/ghi/ghi.rb')
 
             expect(NPlusOneQuery).to receive(:caller_locations).and_return([in_project, *included_gems, excluded_gem])
             expect(NPlusOneQuery).to receive(:conditions_met?).with(@post, :association).and_return(true)
