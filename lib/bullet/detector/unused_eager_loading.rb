@@ -57,29 +57,29 @@ module Bullet
 
         private
 
-          def create_notification(callers, klazz, associations)
-            notify_associations = Array(associations) - Bullet.get_whitelist_associations(:unused_eager_loading, klazz)
+        def create_notification(callers, klazz, associations)
+          notify_associations = Array(associations) - Bullet.get_whitelist_associations(:unused_eager_loading, klazz)
 
-            if notify_associations.present?
-              notice = Bullet::Notification::UnusedEagerLoading.new(callers, klazz, notify_associations)
-              Bullet.notification_collector.add(notice)
-            end
+          if notify_associations.present?
+            notice = Bullet::Notification::UnusedEagerLoading.new(callers, klazz, notify_associations)
+            Bullet.notification_collector.add(notice)
           end
+        end
 
-          def call_associations(bullet_key, associations)
-            all = Set.new
-            eager_loadings.similarly_associated(bullet_key, associations).each do |related_bullet_key|
-              coa = call_object_associations[related_bullet_key]
-              next if coa.nil?
-              all.merge coa
-            end
-            all.to_a
+        def call_associations(bullet_key, associations)
+          all = Set.new
+          eager_loadings.similarly_associated(bullet_key, associations).each do |related_bullet_key|
+            coa = call_object_associations[related_bullet_key]
+            next if coa.nil?
+            all.merge coa
           end
+          all.to_a
+        end
 
-          def diff_object_associations(bullet_key, associations)
-            potential_associations = associations - call_associations(bullet_key, associations)
-            potential_associations.reject { |a| a.is_a?(Hash) }
-          end
+        def diff_object_associations(bullet_key, associations)
+          potential_associations = associations - call_associations(bullet_key, associations)
+          potential_associations.reject { |a| a.is_a?(Hash) }
+        end
       end
     end
   end

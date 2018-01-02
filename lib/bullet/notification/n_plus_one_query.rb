@@ -23,9 +23,9 @@ module Bullet
 
       protected
 
-        def call_stack_messages
-          (['Call stack'] + @callers).join("\n  ")
-        end
+      def call_stack_messages
+        (['Call stack'] + @callers).join("\n  ")
+      end
     end
   end
 end

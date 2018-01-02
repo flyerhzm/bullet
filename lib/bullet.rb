@@ -219,23 +219,23 @@ module Bullet
 
     private
 
-      def for_each_active_notifier_with_notification
-        UniformNotifier.active_notifiers.each do |notifier|
-          notification_collector.collection.each do |notification|
-            notification.notifier = notifier
-            yield notification
-          end
+    def for_each_active_notifier_with_notification
+      UniformNotifier.active_notifiers.each do |notifier|
+        notification_collector.collection.each do |notification|
+          notification.notifier = notifier
+          yield notification
         end
       end
+    end
 
-      def build_request_uri(env)
-        return "#{env['REQUEST_METHOD']} #{env['REQUEST_URI']}" if env['REQUEST_URI']
+    def build_request_uri(env)
+      return "#{env['REQUEST_METHOD']} #{env['REQUEST_URI']}" if env['REQUEST_URI']
 
-        if env['QUERY_STRING'].present?
-          "#{env['REQUEST_METHOD']} #{env['PATH_INFO']}?#{env['QUERY_STRING']}"
-        else
-          "#{env['REQUEST_METHOD']} #{env['PATH_INFO']}"
-        end
+      if env['QUERY_STRING'].present?
+        "#{env['REQUEST_METHOD']} #{env['PATH_INFO']}?#{env['QUERY_STRING']}"
+      else
+        "#{env['REQUEST_METHOD']} #{env['PATH_INFO']}"
       end
+    end
   end
 end

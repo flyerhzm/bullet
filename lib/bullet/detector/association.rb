@@ -43,31 +43,31 @@ module Bullet
           # e.g. { "Post:1" => [:comments] }
           # the object_associations keep all associations that may be or may no be
           # unpreload associations or unused preload associations.
-          def object_associations
-            Thread.current[:bullet_object_associations]
-          end
+        def object_associations
+          Thread.current[:bullet_object_associations]
+        end
 
           # call_object_associations keep the object relationships
           # that object.associations is called.
           # e.g. { "Post:1" => [:comments] }
           # they are used to detect unused preload associations.
-          def call_object_associations
-            Thread.current[:bullet_call_object_associations]
-          end
+        def call_object_associations
+          Thread.current[:bullet_call_object_associations]
+        end
 
           # inversed_objects keeps object relationships
           # that association is inversed.
           # e.g. { "Comment:1" => ["post"] }
-          def inversed_objects
-            Thread.current[:bullet_inversed_objects]
-          end
+        def inversed_objects
+          Thread.current[:bullet_inversed_objects]
+        end
 
           # eager_loadings keep the object relationships
           # that the associations are preloaded by find :include.
           # e.g. { ["Post:1", "Post:2"] => [:comments, :user] }
-          def eager_loadings
-            Thread.current[:bullet_eager_loadings]
-          end
+        def eager_loadings
+          Thread.current[:bullet_eager_loadings]
+        end
       end
     end
   end

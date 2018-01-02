@@ -66,13 +66,13 @@ module Bullet
 
       protected
 
-        def klazz_associations_str
-          "  #{@base_class} => [#{@associations.map(&:inspect).join(', '.freeze)}]"
-        end
+      def klazz_associations_str
+        "  #{@base_class} => [#{@associations.map(&:inspect).join(', '.freeze)}]"
+      end
 
-        def associations_str
-          ":includes => #{@associations.map { |a| a.to_s.to_sym unless a.is_a? Hash }.inspect}"
-        end
+      def associations_str
+        ":includes => #{@associations.map { |a| a.to_s.to_sym unless a.is_a? Hash }.inspect}"
+      end
     end
   end
 end
