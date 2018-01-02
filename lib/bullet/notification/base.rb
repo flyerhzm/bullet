@@ -11,11 +11,11 @@ module Bullet
       end
 
       def title
-        raise NoMethodError.new('no method title defined')
+        raise NoMethodError, 'no method title defined'
       end
 
       def body
-        raise NoMethodError.new('no method body defined')
+        raise NoMethodError, 'no method body defined'
       end
 
       def call_stack_messages
