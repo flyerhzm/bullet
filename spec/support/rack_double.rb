@@ -5,22 +5,16 @@ module Support
       [status, headers, response]
     end
 
-    def status=(status)
-      @status = status
-    end
+    attr_writer :status
 
-    def headers=(headers)
-      @headers = headers
-    end
+    attr_writer :headers
 
     def headers
       @headers ||= { 'Content-Type' => 'text/html' }
       @headers
     end
 
-    def response=(response)
-      @response = response
-    end
+    attr_writer :response
 
     private
 
@@ -42,9 +36,7 @@ module Support
       @body ||= '<html><head></head><body></body></html>'
     end
 
-    def body=(body)
-      @body = body
-    end
+    attr_writer :body
 
     def each
       yield body
