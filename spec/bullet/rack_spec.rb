@@ -68,7 +68,7 @@ module Bullet
           expect(Bullet).to receive(:notification?).and_return(true)
           expect(Bullet).to receive(:gather_inline_notifications).and_return('<bullet></bullet>')
           expect(Bullet).to receive(:perform_out_of_channel_notifications)
-          status, headers, response = middleware.call({ 'Content-Type' => 'text/html' })
+          status, headers, response = middleware.call('Content-Type' => 'text/html')
           expect(headers['Content-Length']).to eq('56')
           expect(response).to eq(['<html><head></head><body><bullet></bullet></body></html>'])
         end
@@ -79,7 +79,7 @@ module Bullet
           app.response = response
           expect(Bullet).to receive(:notification?).and_return(true)
           expect(Bullet).to receive(:gather_inline_notifications).and_return('<bullet></bullet>')
-          status, headers, response = middleware.call({ 'Content-Type' => 'text/html' })
+          status, headers, response = middleware.call('Content-Type' => 'text/html')
           expect(headers['Content-Length']).to eq('58')
         end
       end
