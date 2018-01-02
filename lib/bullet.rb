@@ -62,15 +62,15 @@ module Bullet
     end
 
     def n_plus_one_query_enable?
-      self.enable? && !!@n_plus_one_query_enable
+      enable? && !!@n_plus_one_query_enable
     end
 
     def unused_eager_loading_enable?
-      self.enable? && !!@unused_eager_loading_enable
+      enable? && !!@unused_eager_loading_enable
     end
 
     def counter_cache_enable?
-      self.enable? && !!@counter_cache_enable
+      enable? && !!@counter_cache_enable
     end
 
     def stacktrace_includes
@@ -109,7 +109,7 @@ module Bullet
     def bullet_logger=(active)
       if active
         require 'fileutils'
-        root_path = "#{rails? ? Rails.root.to_s : Dir.pwd}"
+        root_path = (rails? ? Rails.root.to_s : Dir.pwd).to_s
         FileUtils.mkdir_p(root_path + '/log')
         bullet_log_file = File.open("#{root_path}/log/bullet.log", 'a+')
         bullet_log_file.sync = true

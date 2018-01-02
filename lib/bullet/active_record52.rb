@@ -148,9 +148,9 @@ module Bullet
           records = super
 
           if Bullet.start?
-            if self.is_a? ::ActiveRecord::Associations::ThroughAssociation
+            if is_a? ::ActiveRecord::Associations::ThroughAssociation
               Bullet::Detector::NPlusOneQuery.call_association(owner, through_reflection.name)
-              association = self.owner.association self.through_reflection.name
+              association = owner.association through_reflection.name
               Array(association.target).each do |through_record|
                 Bullet::Detector::NPlusOneQuery.call_association(through_record, source_reflection.name)
               end
@@ -213,7 +213,7 @@ module Bullet
 
         def count_records
           result = reflection.has_cached_counter?
-          if Bullet.start? && !result && !self.is_a?(::ActiveRecord::Associations::ThroughAssociation)
+          if Bullet.start? && !result && !is_a?(::ActiveRecord::Associations::ThroughAssociation)
             Bullet::Detector::CounterCache.add_counter_cache(owner, reflection.name)
           end
           super

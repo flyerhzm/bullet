@@ -36,11 +36,11 @@ module Bullet
       end
 
       def notify_inline
-        self.notifier.inline_notify(notification_data)
+        notifier.inline_notify(notification_data)
       end
 
       def notify_out_of_channel
-        self.notifier.out_of_channel_notify(notification_data)
+        notifier.out_of_channel_notify(notification_data)
       end
 
       def short_notice
