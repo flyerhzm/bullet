@@ -8,5 +8,5 @@ class Mongoid::Post
 
   embeds_many :users, :class_name => 'Mongoid::User'
 
-  scope :preload_comments, lambda { includes(:comments) }
+  scope :preload_comments, -> { includes(:comments) }
 end
