@@ -25,7 +25,7 @@ module Bullet
       def whoami
         @user ||= ENV['USER'].presence || (begin
                                              `whoami`.chomp
-                                           rescue
+                                           rescue StandardError
                                              ''
                                            end)
         if @user.present?
