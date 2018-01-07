@@ -1,5 +1,7 @@
 ## Next Release
 
+## 5.7.1 (07/01/2017)
+
 * Update `uniform_notifier` dependency to add Sentry support
 
 ## 5.7.0 (12/03/2017)
