@@ -190,11 +190,11 @@ module Bullet
     end
 
     def warnings
-      notification_collector.collection.inject({}) do |warnings, notification|
+      notification_collector.collection.each_with_object({}) do |notification, warnings|
         warning_type = notification.class.to_s.split(':').last.tableize
         warnings[warning_type] ||= []
         warnings[warning_type] << notification
-        warnings
+        
       end
     end
 
