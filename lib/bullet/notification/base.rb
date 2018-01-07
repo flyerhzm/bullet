@@ -23,7 +23,11 @@ module Bullet
       end
 
       def whoami
-        @user ||= ENV['USER'].presence || (`whoami`.chomp rescue '')
+        @user ||= ENV['USER'].presence || (begin
+                                             `whoami`.chomp
+                                           rescue
+                                             ''
+                                           end)
         if @user.present?
           "user: #{@user}"
         else
