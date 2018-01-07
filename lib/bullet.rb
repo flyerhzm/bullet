@@ -194,7 +194,6 @@ module Bullet
         warning_type = notification.class.to_s.split(':').last.tableize
         warnings[warning_type] ||= []
         warnings[warning_type] << notification
-
       end
     end
 
