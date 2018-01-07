@@ -9,13 +9,13 @@ module Bullet
         caller_path = location.absolute_path.to_s
         caller_path.include?(app_root) && !caller_path.include?(vendor_root) ||
           Bullet.stacktrace_includes.any? do |include_pattern|
-          case include_pattern
-          when String
-            caller_path.include?(include_pattern)
-          when Regexp
-            caller_path =~ include_pattern
+            case include_pattern
+            when String
+              caller_path.include?(include_pattern)
+            when Regexp
+              caller_path =~ include_pattern
+            end
           end
-        end
       end
     end
 

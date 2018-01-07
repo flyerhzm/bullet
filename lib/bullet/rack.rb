@@ -77,7 +77,7 @@ module Bullet
     private
 
     def footer_div_attributes
-<<EOF
+      <<EOF
 data-is-bullet-footer ondblclick="this.parentNode.removeChild(this);" style="position: fixed; bottom: 0pt; left: 0pt; cursor: pointer; border-style: solid; border-color: rgb(153, 153, 153);
  -moz-border-top-colors: none; -moz-border-right-colors: none; -moz-border-bottom-colors: none;
  -moz-border-left-colors: none; -moz-border-image: none; border-width: 2pt 2pt 0px 0px;
