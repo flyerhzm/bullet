@@ -21,7 +21,8 @@ module Bullet
 
     def excluded_stacktrace_path?
       Bullet.stacktrace_excludes.any? do |exclude_pattern|
-        caller_in_project.any? do |caller_path|
+        caller_in_project.any? do |location|
+          caller_path = location.absolute_path.to_s
           case exclude_pattern
           when String
             caller_path.include?(exclude_pattern)
