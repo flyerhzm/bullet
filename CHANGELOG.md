@@ -1,5 +1,9 @@
 ## Next Release
 
+## 5.7.2 (18/01/2018)
+
+* Fix `caller_path` in `excluded_stacktrace_path`
+
 ## 5.7.1 (07/01/2017)
 
 * Update `uniform_notifier` dependency to add Sentry support
