@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.authors     = ['Richard Huang']
   s.email       = ['flyerhzm@gmail.com']
-  s.homepage    = 'http://github.com/flyerhzm/bullet'
+  s.homepage    = 'https://github.com/flyerhzm/bullet'
   s.summary     = 'help to kill N+1 queries and unused eager loading.'
   s.description = 'help to kill N+1 queries and unused eager loading.'
 
