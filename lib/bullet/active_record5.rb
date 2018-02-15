@@ -93,17 +93,34 @@ module Bullet
       end)
 
       ::ActiveRecord::Associations::JoinDependency.prepend(Module.new do
-        def instantiate(result_set, aliases)
-          @bullet_eager_loadings = {}
-          records = super
+        if ::ActiveRecord::Associations::JoinDependency.instance_method(:instantiate).parameters.last[0] == :block
+          # ActiveRecord >= 5.1.5
+          def instantiate(result_set, &block)
+            @bullet_eager_loadings = {}
+            records = super
 
-          if Bullet.start?
-            @bullet_eager_loadings.each do |_klazz, eager_loadings_hash|
-              objects = eager_loadings_hash.keys
-              Bullet::Detector::UnusedEagerLoading.add_eager_loadings(objects, eager_loadings_hash[objects.first].to_a)
+            if Bullet.start?
+              @bullet_eager_loadings.each do |_klazz, eager_loadings_hash|
+                objects = eager_loadings_hash.keys
+                Bullet::Detector::UnusedEagerLoading.add_eager_loadings(objects, eager_loadings_hash[objects.first].to_a)
+              end
             end
+            records
           end
-          records
+        else
+          # ActiveRecord <= 5.1.4
+          def instantiate(result_set, aliases)
+            @bullet_eager_loadings = {}
+            records = super
+
+            if Bullet.start?
+              @bullet_eager_loadings.each do |_klazz, eager_loadings_hash|
+                objects = eager_loadings_hash.keys
+                Bullet::Detector::UnusedEagerLoading.add_eager_loadings(objects, eager_loadings_hash[objects.first].to_a)
+              end
+            end
+            records
+          end
         end
 
         def construct(ar_parent, parent, row, rs, seen, model_cache, aliases)
