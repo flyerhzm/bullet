@@ -6,8 +6,7 @@ module Bullet
       app_root = rails? ? Rails.root.to_s : Dir.pwd
       vendor_root = app_root + VENDOR_PATH
       bundler_path = Bundler.bundle_path.to_s
-      caller_locations.select do |location|
-        caller_path = location.absolute_path.to_s
+      select_caller_locations do |caller_path|
         caller_path.include?(app_root) && !caller_path.include?(vendor_root) && !caller_path.include?(bundler_path) ||
           Bullet.stacktrace_includes.any? do |include_pattern|
             case include_pattern
@@ -30,6 +29,21 @@ module Bullet
           when Regexp
             caller_path =~ exclude_pattern
           end
+        end
+      end
+    end
+
+    private
+
+    def select_caller_locations
+      if Gem::Version.new(RUBY_VERSION) < Gem::Version.new('2.0.0')
+        caller.select do |caller_path|
+          yield caller_path
+        end
+      else
+        caller_locations.select do |location|
+          caller_path = location.absolute_path.to_s
+          yield caller_path
         end
       end
     end
