@@ -1,5 +1,10 @@
 ## Next Release
 
+## 5.7.3 (17/02/2018)
+
+* Exclude configured bundler path in addition to '/vendor'
+* Support rails 5.1.5
+
 ## 5.7.2 (18/01/2018)
 
 * Fix `caller_path` in `excluded_stacktrace_path`
