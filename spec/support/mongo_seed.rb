@@ -65,6 +65,6 @@ module Support
       Mongoid::IdentityMap.clear if Mongoid.const_defined?(:IdentityMap)
     end
 
-    extend self
+    module_function
   end
 end

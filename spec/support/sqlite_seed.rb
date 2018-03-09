@@ -232,6 +232,6 @@ module Support
       end
     end
 
-    extend self
+    module_function
   end
 end
