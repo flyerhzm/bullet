@@ -1,5 +1,7 @@
 module Support
   module SqliteSeed
+    module_function
+
     def seed_db
       newspaper1 = Newspaper.create(name: 'First Newspaper')
       newspaper2 = Newspaper.create(name: 'Second Newspaper')
@@ -231,7 +233,5 @@ module Support
         end
       end
     end
-
-    module_function
   end
 end

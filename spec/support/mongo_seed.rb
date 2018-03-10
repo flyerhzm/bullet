@@ -1,5 +1,7 @@
 module Support
   module MongoSeed
+    module_function
+
     def seed_db
       category1 = Mongoid::Category.create(name: 'first')
       category2 = Mongoid::Category.create(name: 'second')
@@ -64,7 +66,5 @@ module Support
       Mongoid.purge!
       Mongoid::IdentityMap.clear if Mongoid.const_defined?(:IdentityMap)
     end
-
-    module_function
   end
 end
