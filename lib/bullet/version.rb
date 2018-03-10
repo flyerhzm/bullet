@@ -1,3 +1,3 @@
 module Bullet
-  VERSION = '5.7.3'.freeze
+  VERSION = '5.7.4'.freeze
 end

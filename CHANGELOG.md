@@ -1,5 +1,10 @@
 ## Next Release
 
+## 5.7.4 (10/03/2018)
+
+* Avoid Bullet from making extra queries in mongoid6
+* Use caller for ruby 1.9 while caller_locations for 2.0+
+
 ## 5.7.3 (17/02/2018)
 
 * Exclude configured bundler path in addition to '/vendor'
