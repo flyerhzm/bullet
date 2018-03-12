@@ -16,10 +16,10 @@ module Bullet
       response_body = nil
       if Bullet.notification?
         if !file?(headers) && !sse?(headers) && !empty?(response) &&
-           status == 200 && !response_body(response).frozen? && html_request?(headers, response)
+           status == 200 && html_request?(headers, response)
           response_body = response_body(response)
-          append_to_html_body(response_body, footer_note) if Bullet.add_footer
-          append_to_html_body(response_body, Bullet.gather_inline_notifications)
+          response_body = append_to_html_body(response_body, footer_note) if Bullet.add_footer
+          response_body = append_to_html_body(response_body, Bullet.gather_inline_notifications)
           headers['Content-Length'] = response_body.bytesize.to_s
         end
         Bullet.perform_out_of_channel_notifications(env)
@@ -44,11 +44,12 @@ module Bullet
     end
 
     def append_to_html_body(response_body, content)
-      if response_body.include?('</body>')
-        position = response_body.rindex('</body>')
-        response_body.insert(position, content)
+      body = response_body.dup
+      if body.include?('</body>')
+        position = body.rindex('</body>')
+        body.insert(position, content)
       else
-        response_body << content
+        body << content
       end
     end
 
