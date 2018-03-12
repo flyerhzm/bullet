@@ -21,13 +21,15 @@ module Bullet
         end
 
         def each(&block)
-          records = query.map { |doc| ::Mongoid::Factory.from_db(klass, doc) }
+          return to_enum unless block_given?
+          records = []
+          origin_each { |record| records << record }
           if records.length > 1
             Bullet::Detector::NPlusOneQuery.add_possible_objects(records)
           elsif records.size == 1
             Bullet::Detector::NPlusOneQuery.add_impossible_object(records.first)
           end
-          origin_each(&block)
+          records.each(&block)
         end
 
         def eager_load(docs)
