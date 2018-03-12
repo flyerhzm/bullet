@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :bullet do
   namespace :log do
     desc 'Truncates the bullet log file to zero bytes'

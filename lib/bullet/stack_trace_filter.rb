@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bullet
   module StackTraceFilter
     VENDOR_PATH = '/vendor'.freeze

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bullet
   module Notification
     autoload :Base, 'bullet/notification/base'

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Mongoid::Category
   include Mongoid::Document
 
