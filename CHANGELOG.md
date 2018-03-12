@@ -1,5 +1,10 @@
 ## Next Release
 
+## 5.7.5 (12/03/2018)
+
+* Fix duplicate logs in mongoid 4.x and 5.x version
+* Add magic comment frozen_string_literal: true
+
 ## 5.7.4 (10/03/2018)
 
 * Avoid Bullet from making extra queries in mongoid6
