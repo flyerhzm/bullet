@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bullet
   module Registry
     autoload :Base, 'bullet/registry/base'

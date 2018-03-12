@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Mongoid::Company
   include Mongoid::Document
 

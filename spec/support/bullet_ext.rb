@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bullet
   def self.collected_notifications_of_class(notification_class)
     Bullet.notification_collector.collection.select do |notification|

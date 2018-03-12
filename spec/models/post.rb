@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Post < ActiveRecord::Base
   belongs_to :category, inverse_of: :posts
   belongs_to :writer

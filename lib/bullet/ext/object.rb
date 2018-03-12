@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Object
   def bullet_key
     "#{self.class}:#{primary_key_value}"

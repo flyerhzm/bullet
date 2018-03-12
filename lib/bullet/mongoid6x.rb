@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bullet
   module Mongoid
     def self.enable
