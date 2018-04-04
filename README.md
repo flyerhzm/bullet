@@ -180,7 +180,7 @@ If you find Bullet does not work for you, *please disable your browser's cache*.
 
 ### Profile a job
 
-The Bullet gem uses rack middleware to profile requests. If you want to use Bullet without an http server, like to profile a job, you can use use profile method and fetch warnings
+The Bullet gem uses rack middleware to profile requests. If you want to use Bullet without an http server, like to profile a job, you can use the profile method and fetch warnings
 
 ```ruby
 Bullet.profile do
