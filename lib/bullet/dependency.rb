@@ -29,7 +29,7 @@ module Bullet
                                    elsif active_record52?
                                      'active_record52'
                                    else
-                                     raise "Bullet does not support active_record #{::ActiveRecord::VERSION} yet"
+                                     raise "Bullet does not support active_record #{::ActiveRecord::VERSION::STRING} yet"
                                    end
                                  end
     end
