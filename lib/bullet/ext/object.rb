@@ -11,7 +11,7 @@ class Object
     elsif self.class.respond_to?(:primary_key) && self.class.primary_key
       send self.class.primary_key
     else
-      id
+      id rescue nil
     end
   end
 end

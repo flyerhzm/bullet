@@ -23,6 +23,11 @@ describe Object do
       expect(post.primary_key_value).to eq(post.id)
     end
 
+    it 'should return nil when id field not select' do
+      post = Post.select(:name).first
+      expect(post.primary_key_value).to eq(nil)
+    end
+
     it 'should return primary key value' do
       post = Post.first
       Post.primary_key = 'name'
