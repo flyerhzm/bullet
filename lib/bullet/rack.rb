@@ -18,7 +18,7 @@ module Bullet
         if !file?(headers) && !sse?(headers) && !empty?(response) &&
            status == 200 && html_request?(headers, response)
           response_body = response_body(response)
-          response_body = append_to_html_body(response_body, footer_note) if Bullet.add_footer
+          response_body = append_to_html_body(response_body, panel_note) if Bullet.add_panel or true
           response_body = append_to_html_body(response_body, Bullet.gather_inline_notifications)
           headers['Content-Length'] = response_body.bytesize.to_s
         end
@@ -53,8 +53,8 @@ module Bullet
       end
     end
 
-    def footer_note
-      "<div #{footer_div_attributes}>" + footer_close_button + Bullet.footer_info.uniq.join('<br>') + '</div>'
+    def panel_note
+      "<div #{panel_div_attributes}>" + panel_close_button + Bullet.panel_info.uniq.join('<br>') + '</div>'
     end
 
     def file?(headers)
@@ -79,17 +79,28 @@ module Bullet
 
     private
 
-    def footer_div_attributes
+    def panel_div_attributes
+      style_position = ''
+      case Bullet.panel_position
+      when 'bottom-left'
+        style_position = 'bottom: 0pt; left: 0pt; border-radius: 0pt 10pt 0pt 0pt;border-width: 2pt 2pt 0pt 0pt;'
+      when 'bottom-right'
+        style_position = 'bottom: 0pt; right: 0pt; border-radius: 10pt 0pt 0pt 0pt;border-width: 2pt 0pt 0pt 2pt;'
+      when 'top-left'
+        style_position = 'top: 0pt; left: 0pt; border-radius: 0pt 0pt 10pt 0pt;border-width: 0pt 2pt 2pt 0pt;'
+      when 'top-right'
+        style_position = 'top: 0pt; right: 0pt; border-radius: 0pt 0pt 0pt 10pt;border-width: 0pt 0pt 2pt 2pt;'
+      end
       <<EOF
-data-is-bullet-footer ondblclick="this.parentNode.removeChild(this);" style="position: fixed; bottom: 0pt; left: 0pt; cursor: pointer; border-style: solid; border-color: rgb(153, 153, 153);
+data-is-bullet-panel ondblclick="this.parentNode.removeChild(this);" style="position: fixed; cursor: pointer; border-style: solid; border-color: rgb(153, 153, 153);
  -moz-border-top-colors: none; -moz-border-right-colors: none; -moz-border-bottom-colors: none;
- -moz-border-left-colors: none; -moz-border-image: none; border-width: 2pt 2pt 0px 0px;
- padding: 3px 5px; border-radius: 0pt 10pt 0pt 0px; background: none repeat scroll 0% 0% rgba(200, 200, 200, 0.8);
+ -moz-border-left-colors: none; -moz-border-image: none; #{style_position}
+ padding: 3px 5px; background: none repeat scroll 0% 0% rgba(200, 200, 200, 0.8);
  color: rgb(119, 119, 119); font-size: 16px; font-family: 'Arial', sans-serif; z-index:9999;"
 EOF
     end
 
-    def footer_close_button
+    def panel_close_button
       "<span onclick='this.parentNode.remove()' style='position:absolute; right: 10px; top: 0px; font-weight: bold; color: #333;'>&times;</span>"
     end
   end

@@ -19,7 +19,7 @@ Description:
     Bullet.console       = true
   # Bullet.growl         = true
     Bullet.rails_logger  = true
-    Bullet.add_footer    = true
+    Bullet.add_panel     = true
   end
           FILE
         end

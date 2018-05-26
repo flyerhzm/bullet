@@ -31,9 +31,11 @@ module Bullet
   end
 
   class << self
-    attr_writer :n_plus_one_query_enable, :unused_eager_loading_enable, :counter_cache_enable, :stacktrace_includes, :stacktrace_excludes
+    attr_writer :n_plus_one_query_enable, :unused_eager_loading_enable, :counter_cache_enable, :stacktrace_includes, :stacktrace_excludes, :panel_position
     attr_reader :whitelist
-    attr_accessor :add_footer, :orm_pathches_applied
+    attr_accessor :add_panel, :orm_pathches_applied
+    alias :add_footer :add_panel # The naming "footer" is no longer appropriate with the parameter panel_position, make him deprectated?
+    alias :add_footer= :add_panel=
 
     available_notifiers = UniformNotifier::AVAILABLE_NOTIFIERS.map { |notifier| "#{notifier}=" }
     available_notifiers << { to: UniformNotifier }
@@ -81,6 +83,10 @@ module Bullet
 
     def stacktrace_excludes
       @stacktrace_excludes || []
+    end
+
+    def panel_position
+      ['bottom-right', 'top-left', 'top-right'].include?(@panel_position) ? @panel_position : 'bottom-left'
     end
 
     def add_whitelist(options)
@@ -183,7 +189,7 @@ module Bullet
       end
     end
 
-    def footer_info
+    def panel_info
       info = []
       notification_collector.collection.each do |notification|
         info << notification.short_notice
