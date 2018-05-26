@@ -34,8 +34,8 @@ module Bullet
     attr_writer :n_plus_one_query_enable, :unused_eager_loading_enable, :counter_cache_enable, :stacktrace_includes, :stacktrace_excludes, :panel_position
     attr_reader :whitelist
     attr_accessor :add_panel, :orm_pathches_applied
-    alias :add_footer :add_panel # The naming "footer" is no longer appropriate with the parameter panel_position, make him deprectated?
-    alias :add_footer= :add_panel=
+    alias add_footer add_panel # The naming "footer" is no longer appropriate with the parameter panel_position, make him deprectated?
+    alias add_footer= add_panel=
 
     available_notifiers = UniformNotifier::AVAILABLE_NOTIFIERS.map { |notifier| "#{notifier}=" }
     available_notifiers << { to: UniformNotifier }
