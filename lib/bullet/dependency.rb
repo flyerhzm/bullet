@@ -42,6 +42,8 @@ module Bullet
                                'mongoid5x'
                              elsif mongoid6x?
                                'mongoid6x'
+                             elsif mongoid7x?
+                               'mongoid7x'
                              else
                                raise "Bullet does not support mongoid #{::Mongoid::VERSION} yet"
                              end
@@ -90,6 +92,10 @@ module Bullet
 
     def mongoid6x?
       mongoid? && ::Mongoid::VERSION =~ /\A6/
+    end
+
+    def mongoid7x?
+      mongoid? && ::Mongoid::VERSION =~ /\A7/
     end
   end
 end
