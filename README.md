@@ -64,7 +64,7 @@ config.after_initialize do
   Bullet.rollbar = true
   Bullet.add_footer = true
   Bullet.stacktrace_includes = [ 'your_gem', 'your_middleware' ]
-  Bullet.stacktrace_excludes = [ 'their_gem', 'their_middleware' ]
+  Bullet.stacktrace_excludes = [ 'their_gem', 'their_middleware', ['my_file.rb', 'my_method'], ['my_file.rb', 16..20] ]
   Bullet.slack = { webhook_url: 'http://some.slack.url', channel: '#default', username: 'notifier' }
 end
 ```
@@ -87,6 +87,8 @@ The code above will enable all of the Bullet notification systems:
 * `Bullet.add_footer`: adds the details in the bottom left corner of the page. Double click the footer or use close button to hide footer.
 * `Bullet.stacktrace_includes`: include paths with any of these substrings in the stack trace, even if they are not in your main app
 * `Bullet.stacktrace_excludes`: ignore paths with any of these substrings in the stack trace, even if they are not in your main app.
+   Each item can be a string (match substring), a regex, or an array where the first item is a path to match, and the second
+   item is a line number, a Range of line numbers, or a (bare) method name, to exclude only particular lines in a file.
 * `Bullet.slack`: add notifications to slack
 * `Bullet.raise`: raise errors, useful for making your specs fail unless they have optimized queries
 

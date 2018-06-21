@@ -101,6 +101,29 @@ module Bullet
             expect(NPlusOneQuery).to_not receive(:create_notification)
             NPlusOneQuery.call_association(@post, :association)
           end
+
+          # just a sanity spec to make sure the following spec works correctly
+          it "should create notification when stacktrace contains methods that aren't in the exclude list" do
+            method = NPlusOneQuery.method(:excluded_stacktrace_path?).source_location
+            in_project = OpenStruct.new(absolute_path: File.join(Dir.pwd, 'abc', 'abc.rb'))
+            excluded_path = OpenStruct.new(absolute_path: method.first, lineno: method.last)
+
+            expect(NPlusOneQuery).to receive(:caller_locations).at_least(1).and_return([in_project, excluded_path])
+            expect(NPlusOneQuery).to receive(:conditions_met?).and_return(true)
+            expect(NPlusOneQuery).to receive(:create_notification)
+            NPlusOneQuery.call_association(@post, :association)
+          end
+
+          it 'should not create notification when stacktrace contains methods that are in the exclude list' do
+            method = NPlusOneQuery.method(:excluded_stacktrace_path?).source_location
+            Bullet.stacktrace_excludes = [method]
+            in_project = OpenStruct.new(absolute_path: File.join(Dir.pwd, 'abc', 'abc.rb'))
+            excluded_path = OpenStruct.new(absolute_path: method.first, lineno: method.last)
+
+            expect(NPlusOneQuery).to receive(:caller_locations).and_return([in_project, excluded_path])
+            expect(NPlusOneQuery).to_not receive(:create_notification)
+            NPlusOneQuery.call_association(@post, :association)
+          end
         end
       end
 
