@@ -212,7 +212,7 @@ module Bullet
               Bullet::Detector::NPlusOneQuery.call_association(owner, reflection.name)
               if Bullet::Detector::NPlusOneQuery.impossible?(owner)
                 Bullet::Detector::NPlusOneQuery.add_impossible_object(result) if result
-              else
+              elsif Bullet::Detector::NPlusOneQuery.possible?(owner)
                 Bullet::Detector::NPlusOneQuery.add_possible_objects(result) if result
               end
             end
