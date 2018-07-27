@@ -366,6 +366,18 @@ if active_record?
 
         expect(Bullet::Detector::Association).to be_completely_preloading_associations
       end
+
+      it 'should not detect "manual" preload' do
+        comment = Comment.all.to_a.first
+        post = Post.find(comment.post_id)
+        # "manually" preload with out-of-band data
+        comment.post = post
+        # loading it should not trigger anything
+        comment.post
+
+        expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
+        expect(Bullet::Detector::Association).to be_completely_preloading_associations
+      end
     end
 
     context 'comment => post => category' do

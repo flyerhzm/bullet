@@ -238,6 +238,14 @@ module Bullet
           origin_count_records
         end
       end
+
+      ::ActiveRecord::Associations::BelongsToAssociation.class_eval do
+        def writer_with_bullet(record)
+          Bullet::Detector::Association.add_object_associations(owner, reflection.name) if Bullet.start?
+          writer_without_bullet(record)
+        end
+        alias_method_chain :writer, :bullet
+      end
     end
   end
 end
