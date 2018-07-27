@@ -356,6 +356,16 @@ if active_record?
 
         expect(Bullet::Detector::Association).to be_completely_preloading_associations
       end
+
+      it 'should not detect newly assigned object in an after_save' do
+        new_post = Post.new(category: Category.first)
+
+        new_post.trigger_after_save = true
+        new_post.save!
+        expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
+
+        expect(Bullet::Detector::Association).to be_completely_preloading_associations
+      end
     end
 
     context 'comment => post => category' do
