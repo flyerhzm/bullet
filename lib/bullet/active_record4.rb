@@ -170,7 +170,9 @@ module Bullet
           if Bullet.start?
             unless @inversed
               Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name)
-              Bullet::Detector::NPlusOneQuery.add_possible_objects(result)
+              if Bullet::Detector::NPlusOneQuery.possible?(@owner)
+                Bullet::Detector::NPlusOneQuery.add_possible_objects(result)
+              end
             end
           end
           result
