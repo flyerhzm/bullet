@@ -2,17 +2,10 @@
 
 module Bullet
   module SaveWithBulletSupport
-    def save(*args)
-      was_new_record = new_record?
-      super(*args).tap do |result|
-        Bullet::Detector::NPlusOneQuery.add_impossible_object(self) if result && was_new_record
-      end
-    end
-
-    def save!(*args)
-      was_new_record = new_record?
-      super(*args).tap do |result|
-        Bullet::Detector::NPlusOneQuery.add_impossible_object(self) if result && was_new_record
+    def _create_record(*)
+      super do
+        Bullet::Detector::NPlusOneQuery.add_impossible_object(self)
+        yield(self) if block_given?
       end
     end
   end

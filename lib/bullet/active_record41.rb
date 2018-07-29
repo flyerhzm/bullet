@@ -50,21 +50,12 @@ module Bullet
       end
 
       ::ActiveRecord::Persistence.class_eval do
-        def save_with_bullet(*args, &proc)
-          was_new_record = new_record?
-          save_without_bullet(*args, &proc).tap do |result|
-            Bullet::Detector::NPlusOneQuery.add_impossible_object(self) if result && was_new_record
+        def _create_record_with_bullet(*args)
+          _create_record_without_bullet(*args).tap do
+            Bullet::Detector::NPlusOneQuery.add_impossible_object(self)
           end
         end
-        alias_method_chain :save, :bullet
-
-        def save_with_bullet!(*args, &proc)
-          was_new_record = new_record?
-          save_without_bullet!(*args, &proc).tap do |result|
-            Bullet::Detector::NPlusOneQuery.add_impossible_object(self) if result && was_new_record
-          end
-        end
-        alias_method_chain :save!, :bullet
+        alias_method_chain :_create_record, :bullet
       end
 
       ::ActiveRecord::Associations::Preloader.class_eval do

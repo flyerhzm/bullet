@@ -14,4 +14,19 @@ class Post < ActiveRecord::Base
   def link=(*)
     comments.new
   end
+
+  # see association_spec.rb 'should not detect newly assigned object in an after_save'
+  attr_accessor :trigger_after_save
+  after_save do
+    next unless trigger_after_save
+
+    temp_comment = Comment.new(post: self)
+    # this triggers self to be "possible", even though it's
+    # not saved yet
+    temp_comment.post
+
+    # category should NOT whine about not being pre-loaded, because
+    # it's obviously attached to a new object
+    category
+  end
 end
