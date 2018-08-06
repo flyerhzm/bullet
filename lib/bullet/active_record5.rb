@@ -231,6 +231,14 @@ module Bullet
           super
         end
       end)
+
+
+      ::ActiveRecord::Associations::BelongsToAssociation.prepend(Module.new do
+        def writer(record)
+          Bullet::Detector::Association.add_object_associations(owner, reflection.name) if Bullet.start?
+          super
+        end
+      end)
     end
   end
 end
