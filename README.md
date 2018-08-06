@@ -128,10 +128,11 @@ class ApplicationController < ActionController::Base
   around_action :skip_bullet
 
   def skip_bullet
+    previous_value = Bullet.enabled?
     Bullet.enable = false
     yield
   ensure
-    Bullet.enable = true
+    Bullet.enable = previous_value
   end
 end
 ```
