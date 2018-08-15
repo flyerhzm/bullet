@@ -1,21 +1,27 @@
 ## Next Release
 
-## 5.7.5 (12/03/2018)
+## 5.7.6 (08/15/2018)
+
+* Extend stacktrace matching for sub-file precision
+* Fix false positive in after_save/_create callbacks
+* Don't triger a preload error on "manual" preloads
+
+## 5.7.5 (03/12/2018)
 
 * Fix duplicate logs in mongoid 4.x and 5.x version
 * Add magic comment frozen_string_literal: true
 
-## 5.7.4 (10/03/2018)
+## 5.7.4 (03/10/2018)
 
 * Avoid Bullet from making extra queries in mongoid6
 * Use caller for ruby 1.9 while caller_locations for 2.0+
 
-## 5.7.3 (17/02/2018)
+## 5.7.3 (02/17/2018)
 
 * Exclude configured bundler path in addition to '/vendor'
 * Support rails 5.1.5
 
-## 5.7.2 (18/01/2018)
+## 5.7.2 (01/18/2018)
 
 * Fix `caller_path` in `excluded_stacktrace_path`
 
