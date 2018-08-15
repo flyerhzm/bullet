@@ -2,6 +2,6 @@
 
 class String
   def bullet_class_name
-    sub(/:[^:]*?$/, ''.freeze)
+    sub(/:[^:]*?$/, '')
   end
 end

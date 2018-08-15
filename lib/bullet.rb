@@ -19,8 +19,8 @@ module Bullet
   autoload :Registry, 'bullet/registry'
   autoload :NotificationCollector, 'bullet/notification_collector'
 
-  BULLET_DEBUG = 'BULLET_DEBUG'.freeze
-  TRUE = 'true'.freeze
+  BULLET_DEBUG = 'BULLET_DEBUG'
+  TRUE = 'true'
 
   if defined? Rails::Railtie
     class BulletRailtie < Rails::Railtie
