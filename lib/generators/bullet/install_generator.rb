@@ -3,9 +3,9 @@
 module Bullet
   module Generators
     class InstallGenerator < ::Rails::Generators::Base
-      desc <<-DESC
-Description:
-    Enable bullet in development/test for your application.
+      desc <<~DESC
+        Description:
+            Enable bullet in development/test for your application.
       DESC
 
       def enable_in_development
