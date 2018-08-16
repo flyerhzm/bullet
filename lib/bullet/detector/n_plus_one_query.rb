@@ -73,9 +73,9 @@ module Bullet
               # associations == v comparison order is important here because
               # v variable might be a squeel node where :== method is redefined,
               # so it does not compare values at all and return unexpected results
-              result = v.is_a?(Hash) ? v.key?(associations) : associations == v
-              return true if result
-            end
+            result = v.is_a?(Hash) ? v.key?(associations) : associations == v
+            return true if result
+          end
 
           false
         end
