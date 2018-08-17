@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
     'source_code_uri' => 'https://github.com/flyerhzm/bullet'
   }
 
-  s.license     = 'MIT'
+  s.license = 'MIT'
 
   s.required_rubygems_version = '>= 1.3.6'
 
