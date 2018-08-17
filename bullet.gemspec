@@ -14,6 +14,10 @@ Gem::Specification.new do |s|
   s.homepage    = 'https://github.com/flyerhzm/bullet'
   s.summary     = 'help to kill N+1 queries and unused eager loading.'
   s.description = 'help to kill N+1 queries and unused eager loading.'
+  s.metadata    = {
+    'changelog_uri' => 'https://github.com/flyerhzm/bullet/blob/master/CHANGELOG.md',
+    'source_code_uri' => 'https://github.com/flyerhzm/bullet'
+  }
 
   s.license     = 'MIT'
 
