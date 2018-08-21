@@ -24,7 +24,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = '>= 1.3.6'
 
   s.add_runtime_dependency 'activesupport', '>= 3.0.0'
-  s.add_runtime_dependency 'uniform_notifier', '~> 1.11.0'
+  s.add_runtime_dependency 'uniform_notifier', '~> 1.11'
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
