@@ -10,14 +10,14 @@ module Bullet
         alias_method :origin_each, :each
         alias_method :origin_eager_load, :eager_load
 
-        def first
-          result = origin_first
+        def first(opt = {})
+          result = origin_first(opt)
           Bullet::Detector::NPlusOneQuery.add_impossible_object(result) if result
           result
         end
 
-        def last
-          result = origin_last
+        def last(opt = {})
+          result = origin_last(opt)
           Bullet::Detector::NPlusOneQuery.add_impossible_object(result) if result
           result
         end
