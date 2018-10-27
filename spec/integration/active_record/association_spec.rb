@@ -550,6 +550,44 @@ if active_record?
         expect(Bullet::Detector::Association).to be_completely_preloading_associations
       end
     end
+
+    context 'firm => clients => groups' do
+      it 'should detect non preload associations' do
+        Firm.all.each do |firm|
+          firm.groups.map(&:name)
+        end
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+        expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
+
+        expect(Bullet::Detector::Association).to be_detecting_unpreloaded_association_for(Firm, :groups)
+      end
+
+      it 'should detect preload associations' do
+        Firm.includes(:groups).each do |firm|
+          firm.groups.map(&:name)
+        end
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+        expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
+
+        expect(Bullet::Detector::Association).to be_completely_preloading_associations
+      end
+
+      it 'should not detect preload associations' do
+        Firm.all.map(&:name)
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+        expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
+
+        expect(Bullet::Detector::Association).to be_completely_preloading_associations
+      end
+
+      it 'should detect unused preload associations' do
+        Firm.includes(:groups).map(&:name)
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+        expect(Bullet::Detector::Association).to be_unused_preload_associations_for(Firm, :groups)
+
+        expect(Bullet::Detector::Association).to be_completely_preloading_associations
+      end
+    end
   end
 
   describe Bullet::Detector::Association, 'has_one' do
