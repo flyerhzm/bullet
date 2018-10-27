@@ -161,10 +161,19 @@ module Bullet
 
           if Bullet.start?
             if is_a? ::ActiveRecord::Associations::ThroughAssociation
-              Bullet::Detector::NPlusOneQuery.call_association(owner, through_reflection.name)
-              association = owner.association through_reflection.name
+              refl = reflection.through_reflection
+              Bullet::Detector::NPlusOneQuery.call_association(owner, refl.name)
+              association = owner.association refl.name
               Array(association.target).each do |through_record|
                 Bullet::Detector::NPlusOneQuery.call_association(through_record, source_reflection.name)
+              end
+
+              if refl.through_reflection?
+                while refl.through_reflection?
+                  refl = refl.through_reflection
+                end
+
+                Bullet::Detector::NPlusOneQuery.call_association(owner, refl.name)
               end
             end
             Bullet::Detector::NPlusOneQuery.call_association(owner, reflection.name) unless @inversed
