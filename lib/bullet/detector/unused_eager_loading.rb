@@ -75,6 +75,7 @@ module Bullet
           eager_loadings.similarly_associated(bullet_key, associations).each do |related_bullet_key|
             coa = call_object_associations[related_bullet_key]
             next if coa.nil?
+
             all.merge coa
           end
           all.to_a

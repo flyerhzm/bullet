@@ -10,6 +10,7 @@ module Bullet
 
     def call(env)
       return @app.call(env) unless Bullet.enable?
+
       Bullet.start_request
       status, headers, response = @app.call(env)
 

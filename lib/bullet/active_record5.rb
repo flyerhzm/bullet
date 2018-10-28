@@ -75,6 +75,7 @@ module Bullet
         # add includes in scope
         def find_with_associations
           return super { |r| yield r } if block_given?
+
           records = super
           if Bullet.start?
             associations = (eager_load_values + includes_values).uniq
@@ -125,6 +126,7 @@ module Bullet
                 key = aliases.column_alias(node, node.primary_key)
                 id = row[key]
                 next unless id.nil?
+
                 associations = node.reflection.name
                 Bullet::Detector::Association.add_object_associations(ar_parent, associations)
                 Bullet::Detector::NPlusOneQuery.call_association(ar_parent, associations)
