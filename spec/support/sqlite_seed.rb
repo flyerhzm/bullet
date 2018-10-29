@@ -45,8 +45,10 @@ module Support
 
       firm1 = Firm.create(name: 'first')
       firm2 = Firm.create(name: 'second')
-      client1 = Client.create(name: 'first')
-      client2 = Client.create(name: 'second')
+      group1 = Group.create(name: 'first')
+      group2 = Group.create(name: 'second')
+      client1 = Client.create(name: 'first', group: group1)
+      client2 = Client.create(name: 'second', group: group2)
       firm1.clients = [client1, client2]
       firm2.clients = [client1, client2]
       client1.firms << firm1
@@ -125,6 +127,7 @@ module Support
 
         create_table :clients do |t|
           t.column :name, :string
+          t.column :group_id, :integer
         end
 
         create_table :comments do |t|
@@ -168,6 +171,10 @@ module Support
         end
 
         create_table :firms do |t|
+          t.column :name, :string
+        end
+
+        create_table :groups do |t|
           t.column :name, :string
         end
 
