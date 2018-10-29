@@ -1,33 +1,19 @@
 ## Next Release
 
-## 5.7.6 (08/15/2018)
+## 5.8.0 (10/29/2018)
 
-* Extend stacktrace matching for sub-file precision
-* Fix false positive in after_save/_create callbacks
+* Fix through reflection for rails 5.x
+* Fix false positive in after_save/after_create callbacks
 * Don't triger a preload error on "manual" preloads
-
-## 5.7.5 (03/12/2018)
-
-* Fix duplicate logs in mongoid 4.x and 5.x version
-* Add magic comment frozen_string_literal: true
-
-## 5.7.4 (03/10/2018)
-
 * Avoid Bullet from making extra queries in mongoid6
+* Support option for #first and #last on mongoid6.x
+* Fix duplicate logs in mongoid 4.x and 5.x version
 * Use caller for ruby 1.9 while caller_locations for 2.0+
-
-## 5.7.3 (02/17/2018)
-
+* Extend stacktrace matching for sub-file precision
 * Exclude configured bundler path in addition to '/vendor'
-* Support rails 5.1.5
-
-## 5.7.2 (01/18/2018)
-
 * Fix `caller_path` in `excluded_stacktrace_path`
-
-## 5.7.1 (07/01/2017)
-
 * Update `uniform_notifier` dependency to add Sentry support
+* Integrate awesomecode.io and refactor code
 
 ## 5.7.0 (12/03/2017)
 
