@@ -65,6 +65,7 @@ module Bullet
           if Bullet.start?
             records = [records].flatten.compact.uniq
             return if records.empty?
+
             records.each do |record|
               Bullet::Detector::Association.add_object_associations(record, associations)
             end

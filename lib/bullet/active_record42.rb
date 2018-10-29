@@ -95,6 +95,7 @@ module Bullet
         alias_method :origin_find_with_associations, :find_with_associations
         def find_with_associations
           return origin_find_with_associations { |r| yield r } if block_given?
+
           records = origin_find_with_associations
           if Bullet.start?
             associations = (eager_load_values + includes_values).uniq
@@ -132,6 +133,7 @@ module Bullet
                 key = aliases.column_alias(node, node.primary_key)
                 id = row[key]
                 next unless id.nil?
+
                 associations = node.reflection.name
                 Bullet::Detector::Association.add_object_associations(ar_parent, associations)
                 Bullet::Detector::NPlusOneQuery.call_association(ar_parent, associations)

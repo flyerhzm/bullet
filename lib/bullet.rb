@@ -163,6 +163,7 @@ module Bullet
 
     def notification?
       return unless start?
+
       Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
       notification_collector.notifications_present?
     end

@@ -16,6 +16,7 @@ module Bullet
           return unless Bullet.n_plus_one_query_enable?
           return unless object.primary_key_value
           return if inversed_objects.include?(object.bullet_key, associations)
+
           add_call_object_associations(object, associations)
 
           Bullet.debug('Detector::NPlusOneQuery#call_association', "object: #{object.bullet_key}, associations: #{associations}")
@@ -28,6 +29,7 @@ module Bullet
         def add_possible_objects(object_or_objects)
           return unless Bullet.start?
           return unless Bullet.n_plus_one_query_enable?
+
           objects = Array(object_or_objects)
           return if objects.map(&:primary_key_value).compact.empty?
 
