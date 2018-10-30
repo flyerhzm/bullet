@@ -1,5 +1,9 @@
 ## Next Release
 
+## 5.8.1
+
+* Require Ruby 2.3+
+
 ## 5.8.0 (10/29/2018)
 
 * Fix through reflection for rails 5.x
