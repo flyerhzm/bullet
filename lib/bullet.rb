@@ -192,6 +192,14 @@ module Bullet
       info
     end
 
+    def text_notifications
+      info = []
+      notification_collector.collection.each do |notification|
+        info << notification.notification_data.values.compact.join("\n")
+      end
+      info
+    end
+
     def warnings
       notification_collector.collection.each_with_object({}) do |notification, warnings|
         warning_type = notification.class.to_s.split(':').last.tableize
@@ -217,6 +225,10 @@ module Bullet
       end
 
       return_value
+    end
+
+    def console_enabled?
+      UniformNotifier.active_notifiers.include?(UniformNotifier::JavascriptConsole)
     end
 
     private
