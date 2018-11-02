@@ -96,6 +96,14 @@ module Bullet
       end
     end
 
+    context '#set_header' do
+      it 'should truncate headers to under 8kb' do
+        long_header = ['a' * 1024] * 10
+        expected_res = (['a' * 1024] * 7).to_json
+        expect(middleware.set_header({}, 'Dummy-Header', long_header)).to eq(expected_res)
+      end
+    end
+
     describe '#response_body' do
       let(:response) { double }
       let(:body_string) { '<html><body>My Body</body></html>' }

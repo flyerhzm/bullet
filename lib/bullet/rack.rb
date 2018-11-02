@@ -58,8 +58,14 @@ module Bullet
       "<div #{footer_div_attributes}>" + footer_header + "<br>" + Bullet.footer_info.uniq.join('<br>') + '</div>'
     end
 
-    def set_header(headers, header_name, footer_info)
-      headers[header_name] = footer_info.to_json
+    def set_header(headers, header_name, header_array)
+      # Many proxy applications such as Nginx and AWS ELB limit
+      # the size a header to 8KB, so truncate the list of reports to
+      # be under that limit
+      while header_array.to_json.length > 8 * 1024
+        header_array.pop
+      end
+      headers[header_name] = header_array.to_json
     end
 
     def file?(headers)
