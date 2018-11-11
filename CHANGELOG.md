@@ -1,8 +1,9 @@
 ## Next Release
 
-## 5.8.1
+## 5.9.0 (11/11/2018)
 
 * Require Ruby 2.3+
+* Support Mongo 7.x
 
 ## 5.8.0 (10/29/2018)
 
