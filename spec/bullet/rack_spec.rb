@@ -45,9 +45,9 @@ module Bullet
         expect(middleware).not_to be_empty(response)
       end
 
-      it 'should be true if response is not found' do
+      it 'should be false if response is not found' do
         response = ['Not Found']
-        expect(middleware).to be_empty(response)
+        expect(middleware).not_to be_empty(response)
       end
 
       it 'should be true if response body is empty' do
@@ -68,6 +68,7 @@ module Bullet
         it 'should change response body if notification is active' do
           expect(Bullet).to receive(:notification?).and_return(true)
           expect(Bullet).to receive(:gather_inline_notifications).and_return('<bullet></bullet>')
+          expect(middleware).to receive(:xhr_script).and_return('')
           expect(Bullet).to receive(:perform_out_of_channel_notifications)
           status, headers, response = middleware.call('Content-Type' => 'text/html')
           expect(headers['Content-Length']).to eq('56')
@@ -81,7 +82,7 @@ module Bullet
           expect(Bullet).to receive(:notification?).and_return(true)
           expect(Bullet).to receive(:gather_inline_notifications).and_return('<bullet></bullet>')
           status, headers, response = middleware.call('Content-Type' => 'text/html')
-          expect(headers['Content-Length']).to eq('58')
+          expect(headers['Content-Length']).to eq((58 + middleware.send(:xhr_script).length).to_s)
         end
       end
 
@@ -92,6 +93,14 @@ module Bullet
           expect(Bullet).not_to receive(:start_request)
           middleware.call({})
         end
+      end
+    end
+
+    context '#set_header' do
+      it 'should truncate headers to under 8kb' do
+        long_header = ['a' * 1024] * 10
+        expected_res = (['a' * 1024] * 7).to_json
+        expect(middleware.set_header({}, 'Dummy-Header', long_header)).to eq(expected_res)
       end
     end
 

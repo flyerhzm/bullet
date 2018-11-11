@@ -17,11 +17,17 @@ module Bullet
       response_body = nil
       if Bullet.notification?
         if !file?(headers) && !sse?(headers) && !empty?(response) &&
-           status == 200 && html_request?(headers, response)
-          response_body = response_body(response)
-          response_body = append_to_html_body(response_body, footer_note) if Bullet.add_footer
-          response_body = append_to_html_body(response_body, Bullet.gather_inline_notifications)
-          headers['Content-Length'] = response_body.bytesize.to_s
+            status == 200
+          if html_request?(headers, response)
+            response_body = response_body(response)
+            response_body = append_to_html_body(response_body, footer_note) if Bullet.add_footer
+            response_body = append_to_html_body(response_body, Bullet.gather_inline_notifications)
+            response_body = append_to_html_body(response_body, xhr_script)
+            headers['Content-Length'] = response_body.bytesize.to_s
+          else
+            set_header(headers, "X-bullet-footer-text", Bullet.footer_info.uniq) if Bullet.add_footer
+            set_header(headers, "X-bullet-console-text", Bullet.text_notifications) if Bullet.console_enabled?
+          end
         end
         Bullet.perform_out_of_channel_notifications(env)
       end
@@ -32,16 +38,10 @@ module Bullet
 
     # fix issue if response's body is a Proc
     def empty?(response)
-      # response may be ["Not Found"], ["Move Permanently"], etc.
-      if rails?
-        (response.is_a?(Array) && response.size <= 1) ||
-          !response.respond_to?(:body) ||
-          !response_body(response).respond_to?(:empty?) ||
-          response_body(response).empty?
-      else
-        body = response_body(response)
-        body.nil? || body.empty?
-      end
+      # response may be ["Not Found"], ["Move Permanently"], etc, but
+      # those should not happen if the status is 200
+      body = response_body(response)
+      body.nil? || body.empty?
     end
 
     def append_to_html_body(response_body, content)
@@ -55,7 +55,17 @@ module Bullet
     end
 
     def footer_note
-      "<div #{footer_div_attributes}>" + footer_close_button + Bullet.footer_info.uniq.join('<br>') + '</div>'
+      "<div #{footer_div_attributes}>" + footer_header + "<br>" + Bullet.footer_info.uniq.join('<br>') + '</div>'
+    end
+
+    def set_header(headers, header_name, header_array)
+      # Many proxy applications such as Nginx and AWS ELB limit
+      # the size a header to 8KB, so truncate the list of reports to
+      # be under that limit
+      while header_array.to_json.length > 8 * 1024
+        header_array.pop
+      end
+      headers[header_name] = header_array.to_json
     end
 
     def file?(headers)
@@ -82,7 +92,7 @@ module Bullet
 
     def footer_div_attributes
       <<~EOF
-        data-is-bullet-footer ondblclick="this.parentNode.removeChild(this);" style="position: fixed; bottom: 0pt; left: 0pt; cursor: pointer; border-style: solid; border-color: rgb(153, 153, 153);
+        id="bullet-footer" data-is-bullet-footer ondblclick="this.parentNode.removeChild(this);" style="position: fixed; bottom: 0pt; left: 0pt; cursor: pointer; border-style: solid; border-color: rgb(153, 153, 153);
          -moz-border-top-colors: none; -moz-border-right-colors: none; -moz-border-bottom-colors: none;
          -moz-border-left-colors: none; -moz-border-image: none; border-width: 2pt 2pt 0px 0px;
          padding: 3px 5px; border-radius: 0pt 10pt 0pt 0px; background: none repeat scroll 0% 0% rgba(200, 200, 200, 0.8);
@@ -90,8 +100,18 @@ module Bullet
       EOF
     end
 
-    def footer_close_button
-      "<span onclick='this.parentNode.remove()' style='position:absolute; right: 10px; top: 0px; font-weight: bold; color: #333;'>&times;</span>"
+    def footer_header
+      cancel_button = "<span onclick='this.parentNode.remove()' style='position:absolute; right: 10px; top: 0px; font-weight: bold; color: #333;'>&times;</span>"
+      if Bullet.console_enabled?
+        "<span>See 'Uniform Notifier' in JS Console for Stacktrace</span>#{cancel_button}"
+      else
+        cancel_button
+      end
+    end
+
+    # Make footer work for XHR requests by appending data to the footer
+    def xhr_script
+      File.read("#{File.expand_path(File.dirname(__FILE__))}/bullet_xhr.js")
     end
   end
 end
