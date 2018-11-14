@@ -171,9 +171,7 @@ module Bullet
               end
 
               if refl.through_reflection?
-                while refl.through_reflection?
-                  refl = refl.through_reflection
-                end
+                refl = refl.through_reflection while refl.through_reflection?
 
                 Bullet::Detector::NPlusOneQuery.call_association(owner, refl.name)
               end

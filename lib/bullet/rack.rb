@@ -62,9 +62,7 @@ module Bullet
       # Many proxy applications such as Nginx and AWS ELB limit
       # the size a header to 8KB, so truncate the list of reports to
       # be under that limit
-      while header_array.to_json.length > 8 * 1024
-        header_array.pop
-      end
+      header_array.pop while header_array.to_json.length > 8 * 1024
       headers[header_name] = header_array.to_json
     end
 
