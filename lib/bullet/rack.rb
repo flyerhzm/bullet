@@ -24,8 +24,8 @@ module Bullet
             response_body = append_to_html_body(response_body, xhr_script)
             headers['Content-Length'] = response_body.bytesize.to_s
           else
-            set_header(headers, "X-bullet-footer-text", Bullet.footer_info.uniq) if Bullet.add_footer
-            set_header(headers, "X-bullet-console-text", Bullet.text_notifications) if Bullet.console_enabled?
+            set_header(headers, 'X-bullet-footer-text', Bullet.footer_info.uniq) if Bullet.add_footer
+            set_header(headers, 'X-bullet-console-text', Bullet.text_notifications) if Bullet.console_enabled?
           end
         end
         Bullet.perform_out_of_channel_notifications(env)
@@ -54,7 +54,7 @@ module Bullet
     end
 
     def footer_note
-      "<div #{footer_div_attributes}>" + footer_header + "<br>" + Bullet.footer_info.uniq.join('<br>') + '</div>'
+      "<div #{footer_div_attributes}>" + footer_header + '<br>' + Bullet.footer_info.uniq.join('<br>') + '</div>'
     end
 
     def set_header(headers, header_name, header_array)
