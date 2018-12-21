@@ -221,7 +221,7 @@ end
 Then wrap each test in Bullet api.
 
 ```ruby
-# spec/spec_helper.rb
+# spec/rails_helper.rb
 if Bullet.enable?
   config.before(:each) do
     Bullet.start_request
