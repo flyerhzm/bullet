@@ -331,7 +331,7 @@ if active_record?
         expect(Bullet::Detector::Association).to be_completely_preloading_associations
       end
 
-      it 'should dtect preload with comment => post' do
+      it 'should detect preload with comment => post' do
         Comment.includes(:post).each do |comment|
           comment.post.name
         end
@@ -362,6 +362,7 @@ if active_record?
 
         new_post.trigger_after_save = true
         new_post.save!
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
         expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
 
         expect(Bullet::Detector::Association).to be_completely_preloading_associations
@@ -374,7 +375,7 @@ if active_record?
         comment.post = post
         # loading it should not trigger anything
         comment.post
-
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
         expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
         expect(Bullet::Detector::Association).to be_completely_preloading_associations
       end
