@@ -63,6 +63,10 @@ module Bullet
       !!@enable
     end
 
+    def app_root
+      (defined?(::Rails.root) ? Rails.root.to_s : Dir.pwd).to_s
+    end
+
     def n_plus_one_query_enable?
       enable? && !!@n_plus_one_query_enable
     end
@@ -111,9 +115,8 @@ module Bullet
     def bullet_logger=(active)
       if active
         require 'fileutils'
-        root_path = (rails? ? Rails.root.to_s : Dir.pwd).to_s
-        FileUtils.mkdir_p(root_path + '/log')
-        bullet_log_file = File.open("#{root_path}/log/bullet.log", 'a+')
+        FileUtils.mkdir_p(app_root + '/log')
+        bullet_log_file = File.open("#{app_root}/log/bullet.log", 'a+')
         bullet_log_file.sync = true
         UniformNotifier.customized_logger = bullet_log_file
       end

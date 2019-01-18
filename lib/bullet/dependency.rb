@@ -10,10 +10,6 @@ module Bullet
       @active_record ||= defined? ::ActiveRecord
     end
 
-    def rails?
-      @rails ||= defined? ::Rails
-    end
-
     def active_record_version
       @active_record_version ||= begin
                                    if active_record40?
