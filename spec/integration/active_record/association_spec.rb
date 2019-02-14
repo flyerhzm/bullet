@@ -246,7 +246,7 @@ if active_record?
         category = Category.first
         category.draft_post.destroy!
         post = category.draft_post
-        post.update_attributes!(link: true)
+        post.update!(link: true)
         Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
         expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
 
