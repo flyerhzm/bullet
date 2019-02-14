@@ -108,7 +108,7 @@ module Bullet
 
     # Make footer work for XHR requests by appending data to the footer
     def xhr_script
-      File.read("#{__dir__}/bullet_xhr.js")
+      "<script type='text/javascript'>#{File.read("#{__dir__}/bullet_xhr.js")}</script>"
     end
   end
 end
