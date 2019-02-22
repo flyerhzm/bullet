@@ -7,7 +7,7 @@ module Bullet
         def add_object_associations(object, associations)
           return unless Bullet.start?
           return if !Bullet.n_plus_one_query_enable? && !Bullet.unused_eager_loading_enable?
-          return unless object.primary_key_value
+          return unless object.bullet_primary_key_value
 
           Bullet.debug('Detector::Association#add_object_associations', "object: #{object.bullet_key}, associations: #{associations}")
           object_associations.add(object.bullet_key, associations)
@@ -16,7 +16,7 @@ module Bullet
         def add_call_object_associations(object, associations)
           return unless Bullet.start?
           return if !Bullet.n_plus_one_query_enable? && !Bullet.unused_eager_loading_enable?
-          return unless object.primary_key_value
+          return unless object.bullet_primary_key_value
 
           Bullet.debug('Detector::Association#add_call_object_associations', "object: #{object.bullet_key}, associations: #{associations}")
           call_object_associations.add(object.bullet_key, associations)

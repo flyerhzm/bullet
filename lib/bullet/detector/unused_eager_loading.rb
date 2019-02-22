@@ -27,7 +27,7 @@ module Bullet
         def add_eager_loadings(objects, associations)
           return unless Bullet.start?
           return unless Bullet.unused_eager_loading_enable?
-          return if objects.map(&:primary_key_value).compact.empty?
+          return if objects.map(&:bullet_primary_key_value).compact.empty?
 
           Bullet.debug('Detector::UnusedEagerLoading#add_eager_loadings', "objects: #{objects.map(&:bullet_key).join(', ')}, associations: #{associations}")
           bullet_keys = objects.map(&:bullet_key)

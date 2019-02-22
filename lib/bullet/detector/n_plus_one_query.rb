@@ -14,7 +14,7 @@ module Bullet
         def call_association(object, associations)
           return unless Bullet.start?
           return unless Bullet.n_plus_one_query_enable?
-          return unless object.primary_key_value
+          return unless object.bullet_primary_key_value
           return if inversed_objects.include?(object.bullet_key, associations)
 
           add_call_object_associations(object, associations)
@@ -31,7 +31,7 @@ module Bullet
           return unless Bullet.n_plus_one_query_enable?
 
           objects = Array(object_or_objects)
-          return if objects.map(&:primary_key_value).compact.empty?
+          return if objects.map(&:bullet_primary_key_value).compact.empty?
 
           Bullet.debug('Detector::NPlusOneQuery#add_possible_objects', "objects: #{objects.map(&:bullet_key).join(', ')}")
           objects.each { |object| possible_objects.add object.bullet_key }
@@ -40,7 +40,7 @@ module Bullet
         def add_impossible_object(object)
           return unless Bullet.start?
           return unless Bullet.n_plus_one_query_enable?
-          return unless object.primary_key_value
+          return unless object.bullet_primary_key_value
 
           Bullet.debug('Detector::NPlusOneQuery#add_impossible_object', "object: #{object.bullet_key}")
           impossible_objects.add object.bullet_key
@@ -49,7 +49,7 @@ module Bullet
         def add_inversed_object(object, association)
           return unless Bullet.start?
           return unless Bullet.n_plus_one_query_enable?
-          return unless object.primary_key_value
+          return unless object.bullet_primary_key_value
 
           Bullet.debug('Detector::NPlusOneQuery#add_inversed_object', "object: #{object.bullet_key}, association: #{association}")
           inversed_objects.add object.bullet_key, association
