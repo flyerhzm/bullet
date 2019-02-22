@@ -5,12 +5,11 @@ module Bullet
     VENDOR_PATH = '/vendor'
 
     def caller_in_project
-      app_root = rails? ? Rails.root.to_s : Dir.pwd
-      vendor_root = app_root + VENDOR_PATH
+      vendor_root = Bullet.app_root + VENDOR_PATH
       bundler_path = Bundler.bundle_path.to_s
       select_caller_locations do |location|
         caller_path = location_as_path(location)
-        caller_path.include?(app_root) && !caller_path.include?(vendor_root) && !caller_path.include?(bundler_path) ||
+        caller_path.include?(Bullet.app_root) && !caller_path.include?(vendor_root) && !caller_path.include?(bundler_path) ||
           Bullet.stacktrace_includes.any? { |include_pattern| pattern_matches?(location, include_pattern) }
       end
     end
