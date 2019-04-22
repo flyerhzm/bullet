@@ -1,5 +1,11 @@
 ## Next Release
 
+## 6.0.0 (02/22/2019)
+
+* Add XHR support to Bullet
+* Support Rails 6.0
+* Handle case where ID is manually set on unpersisted record
+
 ## 5.9.0 (11/11/2018)
 
 * Require Ruby 2.3+
