@@ -1,6 +1,6 @@
 ## Next Release
 
-## 6.0.0 (02/22/2019)
+## 6.0.0 (04/25/2019)
 
 * Add XHR support to Bullet
 * Support Rails 6.0
