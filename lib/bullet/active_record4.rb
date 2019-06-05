@@ -188,7 +188,7 @@ module Bullet
           end
           result
         end
-        
+
       end
     end
   end
