@@ -188,7 +188,7 @@ module Bullet
           end
           result
         end
-        # rubocop:enable Style/MethodCallWithoutArgsParentheses
+        
       end
     end
   end
