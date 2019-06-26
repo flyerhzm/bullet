@@ -1,5 +1,10 @@
 ## Next Release
 
+## 6.0.1 (06/26/2019)
+
+* Add Bullet::ActiveJob
+* Prevent "Maximum call stack exceeded" errors when used with Turbolinks
+
 ## 6.0.0 (04/25/2019)
 
 * Add XHR support to Bullet
