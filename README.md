@@ -187,7 +187,7 @@ Include `Bullet::ActiveJob` in your `ApplicationJob`.
 
 ```ruby
 class ApplicationJob < ActiveJob::Base
-  include Bullet::ActiveJob
+  include Bullet::ActiveJob if Rails.env.development?
 end
 ```
 
