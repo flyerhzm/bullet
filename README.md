@@ -125,7 +125,7 @@ do like
 
 ```ruby
 class ApplicationController < ActionController::Base
-  around_action :skip_bullet
+  around_action :skip_bullet, if: -> { defined?(Bullet) }
 
   def skip_bullet
     previous_value = Bullet.enable?
