@@ -70,7 +70,8 @@ module Bullet
     end
 
     def sse?(headers)
-      headers['Content-Type'] == 'text/event-stream'
+      # Using `ActionController::Live` or `render stream: true`
+      headers['Content-Type'] == 'text/event-stream' || headers['Transfer-Encoding'] == 'chunked'
     end
 
     def html_request?(headers, response)
