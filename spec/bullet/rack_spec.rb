@@ -39,6 +39,32 @@ module Bullet
       end
     end
 
+    context '#sse?' do
+      it 'should be true if Content-Type is text/event-stream (using `ActionController::Live`)' do
+        headers = { 'Content-Type' => 'text/event-stream' }
+        response = double(body: '<html><head></head><body></body></html>')
+        expect(middleware).to be_sse(headers)
+      end
+
+      it 'should be true if Transfer-Encoding is chunked (using `render stream: true`)' do
+        headers = { 'Transfer-Encoding' => 'chunked' }
+        response = double(body: '<html><head></head><body></body></html>')
+        expect(middleware).to be_sse(headers)
+      end
+
+      it 'should be false if the headers are anything else' do
+        headers = { 'Content-Type' => 'text/html', 'Transfer-Encoding' => 'deflate' }
+        response = double(body: '<html><head></head><body></body></html>')
+        expect(middleware).not_to be_sse(headers)
+      end
+
+      it 'should be false if the headers are not present' do
+        headers = {}
+        response = double(body: '<html><head></head><body></body></html>')
+        expect(middleware).not_to be_sse(headers)
+      end
+    end
+
     context 'empty?' do
       it 'should be false if response is a string and not empty' do
         response = double(body: '<html><head></head><body></body></html>')
