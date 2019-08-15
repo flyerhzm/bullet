@@ -2,7 +2,7 @@ source "https://rubygems.org"
 
 gemspec
 
-gem 'rails', '6.0.0.rc1'
+gem 'rails', '6.0.0.rc2'
 gem 'sqlite3'
 gem 'activerecord-jdbcsqlite3-adapter', platforms: [:jruby]
 gem 'activerecord-import'
