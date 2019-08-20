@@ -1,5 +1,9 @@
 ## Next Release
 
+## 6.0.2 (08/20/2019)
+
+* Fully support Rails 6.0
+
 ## 6.0.1 (06/26/2019)
 
 * Add Bullet::ActiveJob
