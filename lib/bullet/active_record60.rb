@@ -84,6 +84,20 @@ module Bullet
         end
       end)
 
+      ::ActiveRecord::Associations::Preloader::ThroughAssociation.prepend(Module.new do
+        def preloaded_records
+          if Bullet.start? && !defined?(@preloaded_records)
+            source_preloaders.each do |source_preloader|
+              reflection_name = source_preloader.send(:reflection).name
+              source_preloader.send(:owners).each do |owner|
+                Bullet::Detector::NPlusOneQuery.call_association(owner, reflection_name)
+              end
+            end
+          end
+          super
+        end
+      end)
+
       ::ActiveRecord::FinderMethods.prepend(Module.new do
         # add includes in scope
         def find_with_associations
@@ -160,7 +174,7 @@ module Bullet
           if Bullet.start?
             if is_a? ::ActiveRecord::Associations::ThroughAssociation
               Bullet::Detector::NPlusOneQuery.call_association(owner, reflection.through_reflection.name)
-              association = owner.association reflection.through_reflection.name
+              association = owner.association(reflection.through_reflection.name)
               Array(association.target).each do |through_record|
                 Bullet::Detector::NPlusOneQuery.call_association(through_record, source_reflection.name)
               end
