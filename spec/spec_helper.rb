@@ -4,14 +4,16 @@ require 'rspec'
 begin
   require 'active_record'
 rescue LoadError
+
 end
 begin
   require 'mongoid'
 rescue LoadError
+
 end
 
 module Rails
-  class <<self
+  class << self
     def root
       File.expand_path(__FILE__).split('/')[0..-3].join('/')
     end
@@ -60,9 +62,7 @@ if active_record?
       Bullet.enable = true
     end
 
-    config.after(:example) do
-      Bullet.end_request
-    end
+    config.after(:example) { Bullet.end_request }
   end
 
   if ENV['BULLET_LOG']
@@ -87,13 +87,9 @@ if mongoid?
       Support::MongoSeed.teardown_db
     end
 
-    config.before(:each) do
-      Bullet.start_request
-    end
+    config.before(:each) { Bullet.start_request }
 
-    config.after(:each) do
-      Bullet.end_request
-    end
+    config.after(:each) { Bullet.end_request }
   end
 
   if ENV['BULLET_LOG']

@@ -12,15 +12,15 @@ module Bullet
 
       context '.add_counter_cache' do
         it 'should create notification if conditions met' do
-          expect(CounterCache).to receive(:conditions_met?).with(@post1, [:comments]).and_return(true)
-          expect(CounterCache).to receive(:create_notification).with('Post', [:comments])
-          CounterCache.add_counter_cache(@post1, [:comments])
+          expect(CounterCache).to receive(:conditions_met?).with(@post1, %i[comments]).and_return(true)
+          expect(CounterCache).to receive(:create_notification).with('Post', %i[comments])
+          CounterCache.add_counter_cache(@post1, %i[comments])
         end
 
         it 'should not create notification if conditions not met' do
-          expect(CounterCache).to receive(:conditions_met?).with(@post1, [:comments]).and_return(false)
+          expect(CounterCache).to receive(:conditions_met?).with(@post1, %i[comments]).and_return(false)
           expect(CounterCache).to receive(:create_notification).never
-          CounterCache.add_counter_cache(@post1, [:comments])
+          CounterCache.add_counter_cache(@post1, %i[comments])
         end
       end
 

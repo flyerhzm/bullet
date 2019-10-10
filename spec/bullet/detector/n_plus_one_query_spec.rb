@@ -76,8 +76,8 @@ module Bullet
       context '.call_association' do
         it 'should create notification if conditions met' do
           expect(NPlusOneQuery).to receive(:conditions_met?).with(@post, :association).and_return(true)
-          expect(NPlusOneQuery).to receive(:caller_in_project).and_return(['caller'])
-          expect(NPlusOneQuery).to receive(:create_notification).with(['caller'], 'Post', :association)
+          expect(NPlusOneQuery).to receive(:caller_in_project).and_return(%w[caller])
+          expect(NPlusOneQuery).to receive(:create_notification).with(%w[caller], 'Post', :association)
           NPlusOneQuery.call_association(@post, :association)
         end
 
@@ -149,7 +149,11 @@ module Bullet
 
             expect(NPlusOneQuery).to receive(:caller_locations).and_return([in_project, *included_gems, excluded_gem])
             expect(NPlusOneQuery).to receive(:conditions_met?).with(@post, :association).and_return(true)
-            expect(NPlusOneQuery).to receive(:create_notification).with([in_project, *included_gems], 'Post', :association)
+            expect(NPlusOneQuery).to receive(:create_notification).with(
+              [in_project, *included_gems],
+              'Post',
+              :association
+            )
             NPlusOneQuery.call_association(@post, :association)
           end
         end

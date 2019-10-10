@@ -9,7 +9,8 @@ module Bullet
       bundler_path = Bundler.bundle_path.to_s
       select_caller_locations do |location|
         caller_path = location_as_path(location)
-        caller_path.include?(Bullet.app_root) && !caller_path.include?(vendor_root) && !caller_path.include?(bundler_path) ||
+        caller_path.include?(Bullet.app_root) && !caller_path.include?(vendor_root) &&
+          !caller_path.include?(bundler_path) ||
           Bullet.stacktrace_includes.any? { |include_pattern| pattern_matches?(location, include_pattern) }
       end
     end
@@ -51,20 +52,14 @@ module Bullet
 
     def select_caller_locations
       if ruby_19?
-        caller.select do |caller_path|
-          yield caller_path
-        end
+        caller.select { |caller_path| yield caller_path }
       else
-        caller_locations.select do |location|
-          yield location
-        end
+        caller_locations.select { |location| yield location }
       end
     end
 
     def ruby_19?
-      if @ruby_19.nil?
-        @ruby_19 = Gem::Version.new(RUBY_VERSION) < Gem::Version.new('2.0.0')
-      end
+      @ruby_19 = Gem::Version.new(RUBY_VERSION) < Gem::Version.new('2.0.0') if @ruby_19.nil?
       @ruby_19
     end
   end

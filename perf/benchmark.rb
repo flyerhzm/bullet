@@ -29,11 +29,11 @@ class User < ActiveRecord::Base
 end
 
 # create database bullet_benchmark;
-ActiveRecord::Base.establish_connection(adapter: 'mysql2', database: 'bullet_benchmark', server: '/tmp/mysql.socket', username: 'root')
+ActiveRecord::Base.establish_connection(
+  adapter: 'mysql2', database: 'bullet_benchmark', server: '/tmp/mysql.socket', username: 'root'
+)
 
-ActiveRecord::Base.connection.tables.each do |table|
-  ActiveRecord::Base.connection.drop_table(table)
-end
+ActiveRecord::Base.connection.tables.each { |table| ActiveRecord::Base.connection.drop_table(table) }
 
 ActiveRecord::Schema.define(version: 1) do
   create_table :posts do |t|
@@ -54,26 +54,20 @@ ActiveRecord::Schema.define(version: 1) do
 end
 
 users_size = 100
-posts_size = 1000
+posts_size = 1_000
 comments_size = 10_000
 users = []
-users_size.times do |i|
-  users << User.new(name: "user#{i}")
-end
+users_size.times { |i| users << User.new(name: "user#{i}") }
 User.import users
 users = User.all
 
 posts = []
-posts_size.times do |i|
-  posts << Post.new(title: "Title #{i}", body: "Body #{i}", user: users[i % 100])
-end
+posts_size.times { |i| posts << Post.new(title: "Title #{i}", body: "Body #{i}", user: users[i % 100]) }
 Post.import posts
 posts = Post.all
 
 comments = []
-comments_size.times do |i|
-  comments << Comment.new(body: "Comment #{i}", post: posts[i % 1000], user: users[i % 100])
-end
+comments_size.times { |i| comments << Comment.new(body: "Comment #{i}", post: posts[i % 1_000], user: users[i % 100]) }
 Comment.import comments
 
 puts 'Start benchmarking...'

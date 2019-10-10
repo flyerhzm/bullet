@@ -3,49 +3,51 @@
 module Bullet
   module Dependency
     def mongoid?
-      @mongoid ||= defined? ::Mongoid
+      @mongoid ||= defined?(::Mongoid)
     end
 
     def active_record?
-      @active_record ||= defined? ::ActiveRecord
+      @active_record ||= defined?(::ActiveRecord)
     end
 
     def active_record_version
-      @active_record_version ||= begin
-                                   if active_record40?
-                                     'active_record4'
-                                   elsif active_record41?
-                                     'active_record41'
-                                   elsif active_record42?
-                                     'active_record42'
-                                   elsif active_record50?
-                                     'active_record5'
-                                   elsif active_record51?
-                                     'active_record5'
-                                   elsif active_record52?
-                                     'active_record52'
-                                   elsif active_record60?
-                                     'active_record60'
-                                   else
-                                     raise "Bullet does not support active_record #{::ActiveRecord::VERSION::STRING} yet"
-                                   end
-                                 end
+      @active_record_version ||=
+        begin
+          if active_record40?
+            'active_record4'
+          elsif active_record41?
+            'active_record41'
+          elsif active_record42?
+            'active_record42'
+          elsif active_record50?
+            'active_record5'
+          elsif active_record51?
+            'active_record5'
+          elsif active_record52?
+            'active_record52'
+          elsif active_record60?
+            'active_record60'
+          else
+            raise "Bullet does not support active_record #{::ActiveRecord::VERSION::STRING} yet"
+          end
+        end
     end
 
     def mongoid_version
-      @mongoid_version ||= begin
-                             if mongoid4x?
-                               'mongoid4x'
-                             elsif mongoid5x?
-                               'mongoid5x'
-                             elsif mongoid6x?
-                               'mongoid6x'
-                             elsif mongoid7x?
-                               'mongoid7x'
-                             else
-                               raise "Bullet does not support mongoid #{::Mongoid::VERSION} yet"
-                             end
-                           end
+      @mongoid_version ||=
+        begin
+          if mongoid4x?
+            'mongoid4x'
+          elsif mongoid5x?
+            'mongoid5x'
+          elsif mongoid6x?
+            'mongoid6x'
+          elsif mongoid7x?
+            'mongoid7x'
+          else
+            raise "Bullet does not support mongoid #{::Mongoid::VERSION} yet"
+          end
+        end
     end
 
     def active_record4?

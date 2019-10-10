@@ -6,7 +6,7 @@ module Bullet
       extend Dependency
       extend StackTraceFilter
 
-      class <<self
+      class << self
         # check if there are unused preload associations.
         #   get related_objects from eager_loadings associated with object and associations
         #   get call_object_association from associations of call_object_associations whose object is in related_objects
@@ -29,7 +29,10 @@ module Bullet
           return unless Bullet.unused_eager_loading_enable?
           return if objects.map(&:bullet_primary_key_value).compact.empty?
 
-          Bullet.debug('Detector::UnusedEagerLoading#add_eager_loadings', "objects: #{objects.map(&:bullet_key).join(', ')}, associations: #{associations}")
+          Bullet.debug(
+            'Detector::UnusedEagerLoading#add_eager_loadings',
+            "objects: #{objects.map(&:bullet_key).join(', ')}, associations: #{associations}"
+          )
           bullet_keys = objects.map(&:bullet_key)
 
           to_add = []

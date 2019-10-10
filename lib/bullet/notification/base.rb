@@ -8,7 +8,8 @@ module Bullet
 
       def initialize(base_class, association_or_associations, path = nil)
         @base_class = base_class
-        @associations = association_or_associations.is_a?(Array) ? association_or_associations : [association_or_associations]
+        @associations =
+          association_or_associations.is_a?(Array) ? association_or_associations : [association_or_associations]
         @path = path
       end
 
@@ -25,16 +26,16 @@ module Bullet
       end
 
       def whoami
-        @user ||= ENV['USER'].presence || (begin
-                                             `whoami`.chomp
-                                           rescue StandardError
-                                             ''
-                                           end)
-        if @user.present?
-          "user: #{@user}"
-        else
-          ''
-        end
+        @user ||=
+          ENV['USER'].presence ||
+            (
+              begin
+                `whoami`.chomp
+              rescue StandardError
+                ''
+              end
+            )
+        @user.present? ? "user: #{@user}" : ''
       end
 
       def body_with_caller
@@ -54,12 +55,7 @@ module Bullet
       end
 
       def notification_data
-        {
-          user: whoami,
-          url: url,
-          title: title,
-          body: body_with_caller
-        }
+        { user: whoami, url: url, title: title, body: body_with_caller }
       end
 
       def eql?(other)

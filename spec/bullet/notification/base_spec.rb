@@ -26,9 +26,7 @@ module Bullet
         end
 
         it 'should leverage ENV parameter' do
-          temp_env_variable('USER', 'bogus') do
-            expect(subject.whoami).to eq('user: bogus')
-          end
+          temp_env_variable('USER', 'bogus') { expect(subject.whoami).to eq('user: bogus') }
         end
 
         it 'should return blank if no user available' do

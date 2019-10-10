@@ -15,6 +15,7 @@ module Bullet
       status, headers, response = @app.call(env)
 
       response_body = nil
+
       if Bullet.notification?
         if !file?(headers) && !sse?(headers) && !empty?(response) && status == 200
           if html_request?(headers, response)
@@ -61,7 +62,7 @@ module Bullet
       # Many proxy applications such as Nginx and AWS ELB limit
       # the size a header to 8KB, so truncate the list of reports to
       # be under that limit
-      header_array.pop while header_array.to_json.length > 8 * 1024
+      header_array.pop while header_array.to_json.length > 8 * 1_024
       headers[header_name] = header_array.to_json
     end
 
@@ -98,7 +99,8 @@ module Bullet
     end
 
     def footer_header
-      cancel_button = "<span onclick='this.parentNode.remove()' style='position:absolute; right: 10px; top: 0px; font-weight: bold; color: #333;'>&times;</span>"
+      cancel_button =
+        "<span onclick='this.parentNode.remove()' style='position:absolute; right: 10px; top: 0px; font-weight: bold; color: #333;'>&times;</span>"
       if Bullet.console_enabled?
         "<span>See 'Uniform Notifier' in JS Console for Stacktrace</span>#{cancel_button}"
       else

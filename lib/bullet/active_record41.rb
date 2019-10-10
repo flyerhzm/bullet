@@ -5,7 +5,7 @@ module Bullet
     def self.enable
       require 'active_record'
       ::ActiveRecord::Base.class_eval do
-        class <<self
+        class << self
           alias_method :origin_find_by_sql, :find_by_sql
           def find_by_sql(sql, binds = [])
             result = origin_find_by_sql(sql, binds)
@@ -51,9 +51,7 @@ module Bullet
 
       ::ActiveRecord::Persistence.class_eval do
         def _create_record_with_bullet(*args)
-          _create_record_without_bullet(*args).tap do
-            Bullet::Detector::NPlusOneQuery.add_impossible_object(self)
-          end
+          _create_record_without_bullet(*args).tap { Bullet::Detector::NPlusOneQuery.add_impossible_object(self) }
         end
         alias_method_chain :_create_record, :bullet
       end
@@ -65,9 +63,7 @@ module Bullet
           if Bullet.start?
             records.compact!
             if records.first.class.name !~ /^HABTM_/
-              records.each do |record|
-                Bullet::Detector::Association.add_object_associations(record, association)
-              end
+              records.each { |record| Bullet::Detector::Association.add_object_associations(record, association) }
               Bullet::Detector::UnusedEagerLoading.add_eager_loadings(records, association)
             end
           end
@@ -84,9 +80,7 @@ module Bullet
           records = origin_find_with_associations
           if Bullet.start?
             associations = (eager_load_values + includes_values).uniq
-            records.each do |record|
-              Bullet::Detector::Association.add_object_associations(record, associations)
-            end
+            records.each { |record| Bullet::Detector::Association.add_object_associations(record, associations) }
             Bullet::Detector::UnusedEagerLoading.add_eager_loadings(records, associations)
           end
           records
@@ -131,9 +125,7 @@ module Bullet
         # call one to many associations
         alias_method :origin_load_target, :load_target
         def load_target
-          if Bullet.start?
-            Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name) unless @inversed
-          end
+          Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name) unless @inversed if Bullet.start?
           origin_load_target
         end
 
@@ -147,9 +139,7 @@ module Bullet
 
         alias_method :origin_include?, :include?
         def include?(object)
-          if Bullet.start?
-            Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name)
-          end
+          Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name) if Bullet.start?
           origin_include?(object)
         end
       end
@@ -173,9 +163,7 @@ module Bullet
         alias_method :origin_count_records, :count_records
         def count_records
           result = has_cached_counter?
-          if Bullet.start? && !result
-            Bullet::Detector::CounterCache.add_counter_cache(@owner, @reflection.name)
-          end
+          Bullet::Detector::CounterCache.add_counter_cache(@owner, @reflection.name) if Bullet.start? && !result
           origin_count_records
         end
       end

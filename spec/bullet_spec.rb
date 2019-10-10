@@ -17,9 +17,7 @@ describe Bullet, focused: true do
       end
 
       context 'disable Bullet' do
-        before do
-          Bullet.enable = false
-        end
+        before { Bullet.enable = false }
 
         it 'should be disabled' do
           expect(subject).to_not be_enable
@@ -27,8 +25,8 @@ describe Bullet, focused: true do
 
         context 'enable Bullet again without patching again the orms' do
           before do
-            expect(Bullet::Mongoid).not_to receive(:enable) if defined? Bullet::Mongoid
-            expect(Bullet::ActiveRecord).not_to receive(:enable) if defined? Bullet::ActiveRecord
+            expect(Bullet::Mongoid).not_to receive(:enable) if defined?(Bullet::Mongoid)
+            expect(Bullet::ActiveRecord).not_to receive(:enable) if defined?(Bullet::ActiveRecord)
             Bullet.enable = true
           end
 
@@ -42,9 +40,7 @@ describe Bullet, focused: true do
 
   describe '#start?' do
     context 'when bullet is disabled' do
-      before(:each) do
-        Bullet.enable = false
-      end
+      before(:each) { Bullet.enable = false }
 
       it 'should not be started' do
         expect(Bullet).not_to be_start
@@ -53,28 +49,19 @@ describe Bullet, focused: true do
   end
 
   describe '#debug' do
-    before(:each) do
-      $stdout = StringIO.new
-    end
+    before(:each) { $stdout = StringIO.new }
 
-    after(:each) do
-      $stdout = STDOUT
-    end
+    after(:each) { $stdout = STDOUT }
 
     context 'when debug is enabled' do
-      before(:each) do
-        ENV['BULLET_DEBUG'] = 'true'
-      end
+      before(:each) { ENV['BULLET_DEBUG'] = 'true' }
 
-      after(:each) do
-        ENV['BULLET_DEBUG'] = 'false'
-      end
+      after(:each) { ENV['BULLET_DEBUG'] = 'false' }
 
       it 'should output debug information' do
         Bullet.debug('debug_message', 'this is helpful information')
 
-        expect($stdout.string)
-          .to eq("[Bullet][debug_message] this is helpful information\n")
+        expect($stdout.string).to eq("[Bullet][debug_message] this is helpful information\n")
       end
     end
 
@@ -125,13 +112,7 @@ describe Bullet, focused: true do
     end
 
     context 'when called with Rack environment hash' do
-      let(:env) {
-        {
-          'REQUEST_METHOD' => 'GET',
-          'PATH_INFO' => '/path',
-          'QUERY_STRING' => 'foo=bar'
-        }
-      }
+      let(:env) { { 'REQUEST_METHOD' => 'GET', 'PATH_INFO' => '/path', 'QUERY_STRING' => 'foo=bar' } }
 
       context "when env['REQUEST_URI'] is nil" do
         before { env['REQUEST_URI'] = nil }

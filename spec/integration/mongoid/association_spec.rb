@@ -7,9 +7,7 @@ if mongoid?
     context 'embeds_many' do
       context 'posts => users' do
         it 'should detect nothing' do
-          Mongoid::Post.all.each do |post|
-            post.users.map(&:name)
-          end
+          Mongoid::Post.all.each { |post| post.users.map(&:name) }
           Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
           expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
 
@@ -21,9 +19,7 @@ if mongoid?
     context 'has_many' do
       context 'posts => comments' do
         it 'should detect non preload posts => comments' do
-          Mongoid::Post.all.each do |post|
-            post.comments.map(&:name)
-          end
+          Mongoid::Post.all.each { |post| post.comments.map(&:name) }
           Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
           expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
 
@@ -31,9 +27,7 @@ if mongoid?
         end
 
         it 'should detect preload post => comments' do
-          Mongoid::Post.includes(:comments).each do |post|
-            post.comments.map(&:name)
-          end
+          Mongoid::Post.includes(:comments).each { |post| post.comments.map(&:name) }
           Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
           expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
 
@@ -78,7 +72,10 @@ if mongoid?
           Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
           expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
 
-          expect(Bullet::Detector::Association).not_to be_detecting_unpreloaded_association_for(Mongoid::Category, :posts)
+          expect(Bullet::Detector::Association).not_to be_detecting_unpreloaded_association_for(
+                                                         Mongoid::Category,
+                                                         :posts
+                                                       )
           expect(Bullet::Detector::Association).to be_detecting_unpreloaded_association_for(Mongoid::Category, :entries)
         end
 
@@ -103,9 +100,7 @@ if mongoid?
         end
 
         it 'should detect unused preload with category => entries, but not with category => posts' do
-          Mongoid::Category.includes(:posts, :entries).each do |category|
-            category.posts.map(&:name)
-          end
+          Mongoid::Category.includes(:posts, :entries).each { |category| category.posts.map(&:name) }
           Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
           expect(Bullet::Detector::Association).not_to be_unused_preload_associations_for(Mongoid::Category, :posts)
           expect(Bullet::Detector::Association).to be_unused_preload_associations_for(Mongoid::Category, :entries)
@@ -116,9 +111,7 @@ if mongoid?
 
       context 'post => comment' do
         it 'should detect unused preload with post => comments' do
-          Mongoid::Post.includes(:comments).each do |post|
-            post.comments.first.name
-          end
+          Mongoid::Post.includes(:comments).each { |post| post.comments.first.name }
           Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
           expect(Bullet::Detector::Association).not_to be_unused_preload_associations_for(Mongoid::Post, :comments)
 
@@ -136,9 +129,7 @@ if mongoid?
 
       context 'scope preload_comments' do
         it 'should detect preload post => comments with scope' do
-          Mongoid::Post.preload_comments.each do |post|
-            post.comments.map(&:name)
-          end
+          Mongoid::Post.preload_comments.each { |post| post.comments.map(&:name) }
           Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
           expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
 
@@ -158,9 +149,7 @@ if mongoid?
     context 'belongs_to' do
       context 'comment => post' do
         it 'should detect non preload with comment => post' do
-          Mongoid::Comment.all.each do |comment|
-            comment.post.name
-          end
+          Mongoid::Comment.all.each { |comment| comment.post.name }
           Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
           expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
 
@@ -176,9 +165,7 @@ if mongoid?
         end
 
         it 'should detect preload with comment => post' do
-          Mongoid::Comment.includes(:post).each do |comment|
-            comment.post.name
-          end
+          Mongoid::Comment.includes(:post).each { |comment| comment.post.name }
           Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
           expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
 
@@ -207,20 +194,19 @@ if mongoid?
       context 'company => address' do
         if Mongoid::VERSION !~ /\A3.0/
           it 'should detect non preload association' do
-            Mongoid::Company.all.each do |company|
-              company.address.name
-            end
+            Mongoid::Company.all.each { |company| company.address.name }
             Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
             expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
 
-            expect(Bullet::Detector::Association).to be_detecting_unpreloaded_association_for(Mongoid::Company, :address)
+            expect(Bullet::Detector::Association).to be_detecting_unpreloaded_association_for(
+              Mongoid::Company,
+              :address
+            )
           end
         end
 
         it 'should detect preload association' do
-          Mongoid::Company.includes(:address).each do |company|
-            company.address.name
-          end
+          Mongoid::Company.includes(:address).each { |company| company.address.name }
           Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
           expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
 

@@ -9,7 +9,7 @@ module Bullet
 
       context '#[]' do
         it 'should get value by key' do
-          expect(subject['key']).to eq(Set.new(['value']))
+          expect(subject['key']).to eq(Set.new(%w[value]))
         end
       end
 

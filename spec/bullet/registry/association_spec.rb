@@ -16,11 +16,11 @@ module Bullet
 
       context '#similarly_associated' do
         it 'should return similarly associated keys' do
-          expect(subject.similarly_associated('key1', Set.new(['value']))).to eq(%w[key1 key2])
+          expect(subject.similarly_associated('key1', Set.new(%w[value]))).to eq(%w[key1 key2])
         end
 
         it 'should return empty if key does not exist' do
-          expect(subject.similarly_associated('key3', Set.new(['value']))).to be_empty
+          expect(subject.similarly_associated('key3', Set.new(%w[value]))).to be_empty
         end
       end
     end

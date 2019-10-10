@@ -23,7 +23,7 @@ module Bullet
   BULLET_DEBUG = 'BULLET_DEBUG'
   TRUE = 'true'
 
-  if defined? Rails::Railtie
+  if defined?(Rails::Railtie)
     class BulletRailtie < Rails::Railtie
       initializer 'bullet.configure_rails_initialization' do |app|
         app.middleware.use Bullet::Rack
@@ -32,7 +32,11 @@ module Bullet
   end
 
   class << self
-    attr_writer :n_plus_one_query_enable, :unused_eager_loading_enable, :counter_cache_enable, :stacktrace_includes, :stacktrace_excludes
+    attr_writer :n_plus_one_query_enable,
+                :unused_eager_loading_enable,
+                :counter_cache_enable,
+                :stacktrace_includes,
+                :stacktrace_excludes
     attr_reader :whitelist
     attr_accessor :add_footer, :orm_pathches_applied
 
@@ -44,12 +48,15 @@ module Bullet
       UniformNotifier.raise = (should_raise ? Notification::UnoptimizedQueryError : false)
     end
 
-    DETECTORS = [Bullet::Detector::NPlusOneQuery,
-                 Bullet::Detector::UnusedEagerLoading,
-                 Bullet::Detector::CounterCache].freeze
+    DETECTORS = [
+      Bullet::Detector::NPlusOneQuery,
+      Bullet::Detector::UnusedEagerLoading,
+      Bullet::Detector::CounterCache
+    ].freeze
 
     def enable=(enable)
       @enable = @n_plus_one_query_enable = @unused_eager_loading_enable = @counter_cache_enable = enable
+
       if enable?
         reset_whitelist
         unless orm_pathches_applied
@@ -174,9 +181,7 @@ module Bullet
 
     def gather_inline_notifications
       responses = []
-      for_each_active_notifier_with_notification do |notification|
-        responses << notification.notify_inline
-      end
+      for_each_active_notifier_with_notification { |notification| responses << notification.notify_inline }
       responses.join("\n")
     end
 
@@ -190,9 +195,7 @@ module Bullet
 
     def footer_info
       info = []
-      notification_collector.collection.each do |notification|
-        info << notification.short_notice
-      end
+      notification_collector.collection.each { |notification| info << notification.short_notice }
       info
     end
 
@@ -214,6 +217,7 @@ module Bullet
 
     def profile
       return_value = nil
+
       if Bullet.enable?
         begin
           Bullet.start_request

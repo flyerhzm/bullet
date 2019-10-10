@@ -72,7 +72,7 @@ module Bullet
           expect(Bullet).to receive(:perform_out_of_channel_notifications)
           status, headers, response = middleware.call('Content-Type' => 'text/html')
           expect(headers['Content-Length']).to eq('56')
-          expect(response).to eq(['<html><head></head><body><bullet></bullet></body></html>'])
+          expect(response).to eq(%w[<html><head></head><body><bullet></bullet></body></html>])
         end
 
         it 'should set the right Content-Length if response body contains accents' do
@@ -98,8 +98,8 @@ module Bullet
 
     context '#set_header' do
       it 'should truncate headers to under 8kb' do
-        long_header = ['a' * 1024] * 10
-        expected_res = (['a' * 1024] * 7).to_json
+        long_header = ['a' * 1_024] * 10
+        expected_res = (['a' * 1_024] * 7).to_json
         expect(middleware.set_header({}, 'Dummy-Header', long_header)).to eq(expected_res)
       end
     end

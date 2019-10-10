@@ -37,9 +37,7 @@ module Bullet
 
         def eager_load(docs)
           associations = criteria.inclusions.map(&:name)
-          docs.each do |doc|
-            Bullet::Detector::NPlusOneQuery.add_object_associations(doc, associations)
-          end
+          docs.each { |doc| Bullet::Detector::NPlusOneQuery.add_object_associations(doc, associations) }
           Bullet::Detector::UnusedEagerLoading.add_eager_loadings(docs, associations)
           origin_eager_load(docs)
         end
@@ -50,9 +48,7 @@ module Bullet
 
         def get_relation(name, metadata, object, reload = false)
           result = origin_get_relation(name, metadata, object, reload)
-          if metadata.macro !~ /embed/
-            Bullet::Detector::NPlusOneQuery.call_association(self, name)
-          end
+          Bullet::Detector::NPlusOneQuery.call_association(self, name) if metadata.macro !~ /embed/
           result
         end
       end

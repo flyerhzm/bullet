@@ -18,9 +18,7 @@ module Bullet
       end
 
       def notification_data
-        super.merge(
-          backtrace: []
-        )
+        super.merge(backtrace: [])
       end
 
       protected
