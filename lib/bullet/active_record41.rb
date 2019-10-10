@@ -125,7 +125,7 @@ module Bullet
         # call one to many associations
         alias_method :origin_load_target, :load_target
         def load_target
-          Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name) unless @inversed if Bullet.start?
+          Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name) if Bullet.start? && !@inversed
           origin_load_target
         end
 
