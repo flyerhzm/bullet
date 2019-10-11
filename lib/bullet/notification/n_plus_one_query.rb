@@ -10,7 +10,7 @@ module Bullet
       end
 
       def body
-        "#{klazz_associations_str}\n  Add to your finder: #{associations_str}"
+        "#{klazz_associations_str}\n  Add to your query: #{associations_str}"
       end
 
       def title
