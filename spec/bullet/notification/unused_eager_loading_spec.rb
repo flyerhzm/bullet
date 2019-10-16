@@ -9,7 +9,7 @@ module Bullet
 
       it do
         expect(subject.body).to eq(
-          "  Post => [:comments, :votes]\n  Remove from your finder: :includes => [:comments, :votes]"
+          "  Post => [:comments, :votes]\n  Remove from your query: .includes([:comments, :votes])"
         )
       end
       it { expect(subject.title).to eq('AVOID eager loading in path') }

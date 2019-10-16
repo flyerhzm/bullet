@@ -73,7 +73,7 @@ module Bullet
       end
 
       def associations_str
-        ":includes => #{@associations.map { |a| a.to_s.to_sym unless a.is_a? Hash }.inspect}"
+        ".includes(#{@associations.map { |a| a.to_s.to_sym }.inspect})"
       end
     end
   end
