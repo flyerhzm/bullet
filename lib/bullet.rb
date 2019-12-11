@@ -41,8 +41,8 @@ module Bullet
     attr_accessor :add_footer, :orm_pathches_applied
 
     available_notifiers = UniformNotifier::AVAILABLE_NOTIFIERS.map { |notifier| "#{notifier}=" }
-    available_notifiers << { to: UniformNotifier }
-    delegate(*available_notifiers)
+    available_notifiers_options = { to: UniformNotifier }
+    delegate(*available_notifiers, **available_notifiers_options)
 
     def raise=(should_raise)
       UniformNotifier.raise = (should_raise ? Notification::UnoptimizedQueryError : false)
