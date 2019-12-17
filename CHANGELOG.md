@@ -1,5 +1,7 @@
 ## Next Release
 
+* Add skip_html_injection flag
+
 ## 6.0.2 (08/20/2019)
 
 * Fully support Rails 6.0

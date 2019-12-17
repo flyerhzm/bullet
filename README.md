@@ -63,6 +63,7 @@ config.after_initialize do
   Bullet.airbrake = true
   Bullet.rollbar = true
   Bullet.add_footer = true
+  Bullet.skip_html_injection = false
   Bullet.stacktrace_includes = [ 'your_gem', 'your_middleware' ]
   Bullet.stacktrace_excludes = [ 'their_gem', 'their_middleware', ['my_file.rb', 'my_method'], ['my_file.rb', 16..20] ]
   Bullet.slack = { webhook_url: 'http://some.slack.url', channel: '#default', username: 'notifier' }
@@ -85,6 +86,7 @@ The code above will enable all of the Bullet notification systems:
 * `Bullet.rollbar`: add notifications to rollbar
 * `Bullet.sentry`: add notifications to sentry
 * `Bullet.add_footer`: adds the details in the bottom left corner of the page. Double click the footer or use close button to hide footer.
+* `Bullet.skip_html_injection`: prevents Bullet from injecting XHR into the returned HTML. This must be false for receiving alerts or console logging.
 * `Bullet.stacktrace_includes`: include paths with any of these substrings in the stack trace, even if they are not in your main app
 * `Bullet.stacktrace_excludes`: ignore paths with any of these substrings in the stack trace, even if they are not in your main app.
    Each item can be a string (match substring), a regex, or an array where the first item is a path to match, and the second
