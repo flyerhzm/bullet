@@ -38,7 +38,7 @@ module Bullet
                 :stacktrace_includes,
                 :stacktrace_excludes
     attr_reader :whitelist
-    attr_accessor :add_footer, :orm_pathches_applied
+    attr_accessor :add_footer, :orm_patches_applied
 
     available_notifiers = UniformNotifier::AVAILABLE_NOTIFIERS.map { |notifier| "#{notifier}=" }
     available_notifiers_options = { to: UniformNotifier }
@@ -59,8 +59,8 @@ module Bullet
 
       if enable?
         reset_whitelist
-        unless orm_pathches_applied
-          self.orm_pathches_applied = true
+        unless orm_patches_applied
+          self.orm_patches_applied = true
           Bullet::Mongoid.enable if mongoid?
           Bullet::ActiveRecord.enable if active_record?
         end
