@@ -67,10 +67,11 @@ module Bullet
 
         it 'should change response body if notification is active' do
           expect(Bullet).to receive(:notification?).and_return(true)
+          allow(Bullet).to receive(:skip_html_injection?).and_return(false)
           expect(Bullet).to receive(:gather_inline_notifications).and_return('<bullet></bullet>')
           expect(middleware).to receive(:xhr_script).and_return('')
           expect(Bullet).to receive(:perform_out_of_channel_notifications)
-          status, headers, response = middleware.call('Content-Type' => 'text/html')
+          _, headers, response = middleware.call('Content-Type' => 'text/html')
           expect(headers['Content-Length']).to eq('56')
           expect(response).to eq(%w[<html><head></head><body><bullet></bullet></body></html>])
         end
@@ -81,8 +82,22 @@ module Bullet
           app.response = response
           expect(Bullet).to receive(:notification?).and_return(true)
           expect(Bullet).to receive(:gather_inline_notifications).and_return('<bullet></bullet>')
-          status, headers, response = middleware.call('Content-Type' => 'text/html')
+          _, headers, response = middleware.call('Content-Type' => 'text/html')
           expect(headers['Content-Length']).to eq((58 + middleware.send(:xhr_script).length).to_s)
+        end
+
+        context 'when skip_html_injection is enabled' do
+          it 'should not try to inject html' do
+            expected_response = Support::ResponseDouble.new 'Actual body'
+            app.response = expected_response
+            allow(Bullet).to receive(:notification?).and_return(true)
+            allow(Bullet).to receive(:skip_html_injection?).and_return(true)
+            expect(Bullet).to receive(:gather_inline_notifications).never
+            expect(middleware).to receive(:xhr_script).never
+            expect(Bullet).to receive(:perform_out_of_channel_notifications)
+            _, _, response = middleware.call('Content-Type' => 'text/html')
+            expect(response).to eq(expected_response)
+          end
         end
       end
 

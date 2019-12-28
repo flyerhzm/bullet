@@ -36,7 +36,8 @@ module Bullet
                 :unused_eager_loading_enable,
                 :counter_cache_enable,
                 :stacktrace_includes,
-                :stacktrace_excludes
+                :stacktrace_excludes,
+                :skip_html_injection
     attr_reader :whitelist
     attr_accessor :add_footer, :orm_patches_applied
 
@@ -237,6 +238,10 @@ module Bullet
 
     def console_enabled?
       UniformNotifier.active_notifiers.include?(UniformNotifier::JavascriptConsole)
+    end
+
+    def skip_html_injection?
+      @skip_html_injection || false
     end
 
     private
