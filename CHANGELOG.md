@@ -1,6 +1,11 @@
 ## Next Release
 
+## 6.1.0 (12/28/2019)
+
 * Add skip_html_injection flag
+* Remove writer hack in active_record6
+* Use modern includes syntax in warnings
+* Fix warning: The last argument is used as the keyword parameter
 
 ## 6.0.2 (08/20/2019)
 
