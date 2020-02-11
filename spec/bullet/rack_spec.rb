@@ -67,7 +67,7 @@ module Bullet
 
         it 'should change response body if notification is active' do
           expect(Bullet).to receive(:notification?).and_return(true)
-          allow(Bullet).to receive(:skip_html_injection?).and_return(false)
+          expect(Bullet).to receive(:console_enabled?).and_return(true)
           expect(Bullet).to receive(:gather_inline_notifications).and_return('<bullet></bullet>')
           expect(middleware).to receive(:xhr_script).and_return('')
           expect(Bullet).to receive(:perform_out_of_channel_notifications)
@@ -81,9 +81,43 @@ module Bullet
           response.body = '<html><head></head><body>é</body></html>'
           app.response = response
           expect(Bullet).to receive(:notification?).and_return(true)
+          allow(Bullet).to receive(:console_enabled?).and_return(true)
           expect(Bullet).to receive(:gather_inline_notifications).and_return('<bullet></bullet>')
           _, headers, response = middleware.call('Content-Type' => 'text/html')
           expect(headers['Content-Length']).to eq((58 + middleware.send(:xhr_script).length).to_s)
+        end
+
+        context "with injection notifiers" do
+          before do
+            expect(Bullet).to receive(:notification?).and_return(true)
+            allow(Bullet).to receive(:gather_inline_notifications).and_return('<bullet></bullet>')
+            allow(middleware).to receive(:xhr_script).and_return('')
+            allow(middleware).to receive(:footer_note).and_return('footer')
+            expect(Bullet).to receive(:perform_out_of_channel_notifications)
+          end
+
+          it 'should change response body if add_footer is true' do
+            expect(Bullet).to receive(:add_footer).twice.and_return(true)
+            _, headers, response = middleware.call('Content-Type' => 'text/html')
+
+            expect(headers['Content-Length']).to eq((56 + middleware.send(:footer_note).length).to_s)
+            expect(response.first).to start_with(%[<html><head></head><body>])
+            expect(response.first).to include(%[<bullet></bullet><])
+          end
+
+          it 'should change response body if console_enabled is true' do
+            expect(Bullet).to receive(:console_enabled?).and_return(true)
+            _, headers, response = middleware.call('Content-Type' => 'text/html')
+            expect(headers['Content-Length']).to eq('56')
+            expect(response).to eq(%w[<html><head></head><body><bullet></bullet></body></html>])
+          end
+
+          it "shouldn't change response body unnecessarily" do
+            expected_response = Support::ResponseDouble.new 'Actual body'
+            app.response = expected_response
+            _, _, response = middleware.call({})
+            expect(response).to eq(expected_response)
+          end
         end
 
         context 'when skip_html_injection is enabled' do
