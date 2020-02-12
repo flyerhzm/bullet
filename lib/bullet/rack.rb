@@ -17,7 +17,7 @@ module Bullet
       response_body = nil
 
       if Bullet.notification?
-        if !Bullet.skip_html_injection? && !file?(headers) && !sse?(headers) && !empty?(response) && status == 200
+        if Bullet.inject_into_page? && !file?(headers) && !sse?(headers) && !empty?(response) && status == 200
           if html_request?(headers, response)
             response_body = response_body(response)
             response_body = append_to_html_body(response_body, footer_note) if Bullet.add_footer

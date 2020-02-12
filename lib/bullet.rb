@@ -240,8 +240,8 @@ module Bullet
       UniformNotifier.active_notifiers.include?(UniformNotifier::JavascriptConsole)
     end
 
-    def skip_html_injection?
-      @skip_html_injection || false
+    def inject_into_page?
+      !@skip_html_injection && (console_enabled? || add_footer)
     end
 
     private
