@@ -28,20 +28,20 @@ module Bullet
       end
 
       def enable_in_test
-        if yes?('Would you like to enable bullet in test environment? (y/n)')
-          environment(nil, env: 'test') do
-            <<~FILE
-              config.after_initialize do
-                Bullet.enable        = true
-                Bullet.bullet_logger = true
-                Bullet.raise         = true # raise an error if n+1 query occurs
-              end
+        return unless yes?('Would you like to enable bullet in test environment? (y/n)')
 
-            FILE
-          end
+        environment(nil, env: 'test') do
+          <<~FILE
+            config.after_initialize do
+              Bullet.enable        = true
+              Bullet.bullet_logger = true
+              Bullet.raise         = true # raise an error if n+1 query occurs
+            end
 
-          say 'Enabled bullet in config/environments/test.rb'
+          FILE
         end
+
+        say 'Enabled bullet in config/environments/test.rb'
       end
     end
   end
