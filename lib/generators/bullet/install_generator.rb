@@ -10,19 +10,18 @@ module Bullet
 
       def enable_in_development
         environment(nil, env: 'development') do
-          <<-"FILE"
+          <<~FILE
+            config.after_initialize do
+              Bullet.enable        = true
+              Bullet.alert         = true
+              Bullet.bullet_logger = true
+              Bullet.console       = true
+            # Bullet.growl         = true
+              Bullet.rails_logger  = true
+              Bullet.add_footer    = true
+            end
 
-  config.after_initialize do
-    Bullet.enable        = true
-    Bullet.alert         = true
-    Bullet.bullet_logger = true
-    Bullet.console       = true
-  # Bullet.growl         = true
-    Bullet.rails_logger  = true
-    Bullet.add_footer    = true
-  end
           FILE
-            .strip
         end
 
         say 'Enabled bullet in config/environments/development.rb'
@@ -31,15 +30,14 @@ module Bullet
       def enable_in_test
         if yes?('Would you like to enable bullet in test environment? (y/n)')
           environment(nil, env: 'test') do
-            <<-"FILE"
+            <<~FILE
+              config.after_initialize do
+                Bullet.enable        = true
+                Bullet.bullet_logger = true
+                Bullet.raise         = true # raise an error if n+1 query occurs
+              end
 
-  config.after_initialize do
-    Bullet.enable        = true
-    Bullet.bullet_logger = true
-    Bullet.raise         = true # raise an error if n+1 query occurs
-  end
             FILE
-              .strip
           end
 
           say 'Enabled bullet in config/environments/test.rb'
