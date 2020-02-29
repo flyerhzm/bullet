@@ -38,7 +38,6 @@ module Bullet
                 :stacktrace_includes,
                 :stacktrace_excludes,
                 :skip_html_injection
-    attr_reader :whitelist
     attr_accessor :add_footer, :orm_patches_applied
 
     available_notifiers = UniformNotifier::AVAILABLE_NOTIFIERS.map { |notifier| "#{notifier}=" }
@@ -98,27 +97,27 @@ module Bullet
 
     def add_whitelist(options)
       reset_whitelist
-      @whitelist[options[:type]][options[:class_name]] ||= []
-      @whitelist[options[:type]][options[:class_name]] << options[:association].to_sym
+      Thread.current[:whitelist][options[:type]][options[:class_name]] ||= []
+      Thread.current[:whitelist][options[:type]][options[:class_name]] << options[:association].to_sym
     end
 
     def delete_whitelist(options)
       reset_whitelist
-      @whitelist[options[:type]][options[:class_name]] ||= []
-      @whitelist[options[:type]][options[:class_name]].delete(options[:association].to_sym)
-      @whitelist[options[:type]].delete_if { |_key, val| val.empty? }
+      Thread.current[:whitelist][options[:type]][options[:class_name]] ||= []
+      Thread.current[:whitelist][options[:type]][options[:class_name]].delete(options[:association].to_sym)
+      Thread.current[:whitelist][options[:type]].delete_if { |_key, val| val.empty? }
     end
 
     def get_whitelist_associations(type, class_name)
-      Array(@whitelist[type][class_name])
+      Array(Thread.current[:whitelist][type][class_name])
     end
 
     def reset_whitelist
-      @whitelist ||= { n_plus_one_query: {}, unused_eager_loading: {}, counter_cache: {} }
+      Thread.current[:whitelist] ||= { n_plus_one_query: {}, unused_eager_loading: {}, counter_cache: {} }
     end
 
     def clear_whitelist
-      @whitelist = nil
+      Thread.current[:whitelist] = nil
     end
 
     def bullet_logger=(active)
