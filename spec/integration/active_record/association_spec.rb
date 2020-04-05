@@ -377,8 +377,7 @@ if active_record?
       it 'should detect unused preload with comment => author' do
         Comment.includes([:author, { post: :writer }]).where(['base_users.id = ?', BaseUser.first]).references(
           :base_users
-        )
-          .each { |comment| comment.post.writer.name }
+        ).each { |comment| comment.post.writer.name }
         Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
         expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
 

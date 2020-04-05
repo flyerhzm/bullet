@@ -21,9 +21,7 @@ module Bullet
         )
       end
       it do
-        expect(subject.body).to eq(
-          "  Post => [:comments, :votes]\n  Add to your query: .includes([:comments, :votes])"
-        )
+        expect(subject.body).to eq("  Post => [:comments, :votes]\n  Add to your query: .includes([:comments, :votes])")
       end
       it { expect(subject.title).to eq('USE eager loading in path') }
     end

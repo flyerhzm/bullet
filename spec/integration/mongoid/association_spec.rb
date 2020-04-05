@@ -73,9 +73,9 @@ if mongoid?
           expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
 
           expect(Bullet::Detector::Association).not_to be_detecting_unpreloaded_association_for(
-                                                         Mongoid::Category,
-                                                         :posts
-                                                       )
+            Mongoid::Category,
+            :posts
+          )
           expect(Bullet::Detector::Association).to be_detecting_unpreloaded_association_for(Mongoid::Category, :entries)
         end
 

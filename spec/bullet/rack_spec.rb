@@ -87,7 +87,7 @@ module Bullet
           expect(headers['Content-Length']).to eq((58 + middleware.send(:xhr_script).length).to_s)
         end
 
-        context "with injection notifiers" do
+        context 'with injection notifiers' do
           before do
             expect(Bullet).to receive(:notification?).and_return(true)
             allow(Bullet).to receive(:gather_inline_notifications).and_return('<bullet></bullet>')
@@ -101,8 +101,8 @@ module Bullet
             _, headers, response = middleware.call('Content-Type' => 'text/html')
 
             expect(headers['Content-Length']).to eq((56 + middleware.send(:footer_note).length).to_s)
-            expect(response.first).to start_with(%(<html><head></head><body>))
-            expect(response.first).to include(%(<bullet></bullet><))
+            expect(response.first).to start_with('<html><head></head><body>')
+            expect(response.first).to include('<bullet></bullet><')
           end
 
           it 'should change response body if console_enabled is true' do
