@@ -37,7 +37,7 @@ module Support
     end
 
     def setup_db
-      if Mongoid::VERSION =~ /\A4/
+      if Mongoid::VERSION.match?(/\A4/)
         Mongoid.configure do |config|
           config.load_configuration(sessions: { default: { database: 'bullet', hosts: %w[localhost:27017] } })
         end

@@ -48,7 +48,7 @@ module Bullet
 
         def get_relation(name, metadata, object, reload = false)
           result = origin_get_relation(name, metadata, object, reload)
-          Bullet::Detector::NPlusOneQuery.call_association(self, name) if metadata.macro !~ /embed/
+          Bullet::Detector::NPlusOneQuery.call_association(self, name) if !/embed/.match?(metadata.macro)
           result
         end
       end

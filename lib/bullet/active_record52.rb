@@ -45,7 +45,7 @@ module Bullet
           def records
             result = super
             if Bullet.start?
-              if result.first.class.name !~ /^HABTM_/
+              if !/^HABTM_/.match?(result.first.class.name)
                 if result.size > 1
                   Bullet::Detector::NPlusOneQuery.add_possible_objects(result)
                   Bullet::Detector::CounterCache.add_possible_objects(result)
@@ -65,7 +65,7 @@ module Bullet
           def preloaders_for_one(association, records, scope)
             if Bullet.start?
               records.compact!
-              if records.first.class.name !~ /^HABTM_/
+              if !/^HABTM_/.match?(records.first.class.name)
                 records.each { |record| Bullet::Detector::Association.add_object_associations(record, association) }
                 Bullet::Detector::UnusedEagerLoading.add_eager_loadings(records, association)
               end
@@ -167,7 +167,7 @@ module Bullet
                 end
               end
               Bullet::Detector::NPlusOneQuery.call_association(owner, reflection.name) unless @inversed
-              if records.first.class.name !~ /^HABTM_/
+              if !/^HABTM_/.match?(records.first.class.name)
                 if records.size > 1
                   Bullet::Detector::NPlusOneQuery.add_possible_objects(records)
                   Bullet::Detector::CounterCache.add_possible_objects(records)

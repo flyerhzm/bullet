@@ -192,7 +192,7 @@ if mongoid?
 
     context 'has_one' do
       context 'company => address' do
-        if Mongoid::VERSION !~ /\A3.0/
+        if !Mongoid::VERSION.match?(/\A3.0/)
           it 'should detect non preload association' do
             Mongoid::Company.all.each { |company| company.address.name }
             Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
