@@ -3,7 +3,11 @@
 module Bullet
   module ActiveJob
     def self.included(base)
-      base.class_eval { around_perform { |_job, block| Bullet.profile { block.call } } }
+      base.class_eval do
+        around_perform do |_job, block|
+          Bullet.profile { block.call }
+        end
+      end
     end
   end
 end
