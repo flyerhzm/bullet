@@ -19,9 +19,9 @@ module Bullet
         it 'should get call associations if object and association are both in eager_loadings and call_object_associations' do
           UnusedEagerLoading.add_eager_loadings([@post], :association)
           UnusedEagerLoading.add_call_object_associations(@post, :association)
-          expect(UnusedEagerLoading.send(:call_associations, @post.bullet_key, Set.new(%i[association]))).to eq(
-            %i[association]
-          )
+          expect(UnusedEagerLoading.send(:call_associations, @post.bullet_key, Set.new(%i[association]))).to eq(%i[
+              association
+            ])
         end
 
         it 'should not get call associations if not exist in call_object_associations' do
@@ -32,9 +32,9 @@ module Bullet
 
       context '.diff_object_associations' do
         it 'should return associations not exist in call_association' do
-          expect(UnusedEagerLoading.send(:diff_object_associations, @post.bullet_key, Set.new(%i[association]))).to eq(
-            %i[association]
-          )
+          expect(
+            UnusedEagerLoading.send(:diff_object_associations, @post.bullet_key, Set.new(%i[association]))
+          ).to eq(%i[association])
         end
 
         it 'should return empty if associations exist in call_association' do
