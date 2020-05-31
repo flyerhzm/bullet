@@ -13,35 +13,31 @@ module Bullet
 
       context '.call_associations' do
         it 'should get empty array if eager_loadings' do
-          expect(UnusedEagerLoading.send(:call_associations, @post.bullet_key, Set.new(%i[association]))).to be_empty
+          expect(UnusedEagerLoading.send(:call_associations, @post.bullet_key, Set.new([:association]))).to be_empty
         end
 
         it 'should get call associations if object and association are both in eager_loadings and call_object_associations' do
           UnusedEagerLoading.add_eager_loadings([@post], :association)
           UnusedEagerLoading.add_call_object_associations(@post, :association)
-          expect(UnusedEagerLoading.send(:call_associations, @post.bullet_key, Set.new(%i[association]))).to eq(
-            %i[association]
-          )
+          expect(UnusedEagerLoading.send(:call_associations, @post.bullet_key, Set.new([:association]))).to eq([:association])
         end
 
         it 'should not get call associations if not exist in call_object_associations' do
           UnusedEagerLoading.add_eager_loadings([@post], :association)
-          expect(UnusedEagerLoading.send(:call_associations, @post.bullet_key, Set.new(%i[association]))).to be_empty
+          expect(UnusedEagerLoading.send(:call_associations, @post.bullet_key, Set.new([:association]))).to be_empty
         end
       end
 
       context '.diff_object_associations' do
         it 'should return associations not exist in call_association' do
-          expect(UnusedEagerLoading.send(:diff_object_associations, @post.bullet_key, Set.new(%i[association]))).to eq(
-            %i[association]
-          )
+          expect(UnusedEagerLoading.send(:diff_object_associations, @post.bullet_key, Set.new([:association]))).to eq([:association])
         end
 
         it 'should return empty if associations exist in call_association' do
           UnusedEagerLoading.add_eager_loadings([@post], :association)
           UnusedEagerLoading.add_call_object_associations(@post, :association)
           expect(
-            UnusedEagerLoading.send(:diff_object_associations, @post.bullet_key, Set.new(%i[association]))
+            UnusedEagerLoading.send(:diff_object_associations, @post.bullet_key, Set.new([:association]))
           ).to be_empty
         end
       end
@@ -51,7 +47,7 @@ module Bullet
         it 'should create notification if object_association_diff is not empty' do
           UnusedEagerLoading.add_object_associations(@post, :association)
           allow(UnusedEagerLoading).to receive(:caller_in_project).and_return(paths)
-          expect(UnusedEagerLoading).to receive(:create_notification).with(paths, 'Post', %i[association])
+          expect(UnusedEagerLoading).to receive(:create_notification).with(paths, 'Post', [:association])
           UnusedEagerLoading.check_unused_preload_associations
         end
 
@@ -60,9 +56,9 @@ module Bullet
           UnusedEagerLoading.add_eager_loadings([@post], :association)
           UnusedEagerLoading.add_call_object_associations(@post, :association)
           expect(
-            UnusedEagerLoading.send(:diff_object_associations, @post.bullet_key, Set.new(%i[association]))
+            UnusedEagerLoading.send(:diff_object_associations, @post.bullet_key, Set.new([:association]))
           ).to be_empty
-          expect(UnusedEagerLoading).not_to receive(:create_notification).with('Post', %i[association])
+          expect(UnusedEagerLoading).not_to receive(:create_notification).with('Post', [:association])
           UnusedEagerLoading.check_unused_preload_associations
         end
       end
