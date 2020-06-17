@@ -693,9 +693,9 @@ if active_record?
       end
     end
 
-    context 'whitelist n plus one query' do
-      before { Bullet.add_whitelist type: :n_plus_one_query, class_name: 'Post', association: :comments }
-      after { Bullet.clear_whitelist }
+    context 'add n plus one query to safelist' do
+      before { Bullet.add_safelist type: :n_plus_one_query, class_name: 'Post', association: :comments }
+      after { Bullet.clear_safelist }
 
       it 'should not detect n plus one query' do
         Post.all.each { |post| post.comments.map(&:name) }
@@ -714,9 +714,9 @@ if active_record?
       end
     end
 
-    context 'whitelist unused eager loading' do
-      before { Bullet.add_whitelist type: :unused_eager_loading, class_name: 'Post', association: :comments }
-      after { Bullet.clear_whitelist }
+    context 'add unused eager loading to safelist' do
+      before { Bullet.add_safelist type: :unused_eager_loading, class_name: 'Post', association: :comments }
+      after { Bullet.clear_safelist }
 
       it 'should not detect unused eager loading' do
         Post.includes(:comments).map(&:name)

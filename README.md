@@ -111,15 +111,15 @@ Bullet.unused_eager_loading_enable = false
 Bullet.counter_cache_enable        = false
 ```
 
-## Whitelist
+## Safe list
 
 Sometimes Bullet may notify you of query problems you don't care to fix, or
-which come from outside your code. You can whitelist these to ignore them:
+which come from outside your code. You can add them to a safe list to ignore them:
 
 ```ruby
-Bullet.add_whitelist :type => :n_plus_one_query, :class_name => "Post", :association => :comments
-Bullet.add_whitelist :type => :unused_eager_loading, :class_name => "Post", :association => :comments
-Bullet.add_whitelist :type => :counter_cache, :class_name => "Country", :association => :cities
+Bullet.add_safelist :type => :n_plus_one_query, :class_name => "Post", :association => :comments
+Bullet.add_safelist :type => :unused_eager_loading, :class_name => "Post", :association => :comments
+Bullet.add_safelist :type => :counter_cache, :class_name => "Country", :association => :cities
 ```
 
 If you want to skip bullet in some specific controller actions, you can
