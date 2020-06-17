@@ -135,7 +135,7 @@ module Bullet
         WARN
       )
 
-      delete_safelist
+      delete_safelist(options)
     end
 
     def get_whitelist_associations(type, class_name)
