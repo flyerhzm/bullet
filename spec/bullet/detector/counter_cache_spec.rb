@@ -47,7 +47,7 @@ module Bullet
           expect(CounterCache.conditions_met?(@post1, :associations)).to eq false
         end
 
-        it 'should be true when object is possible, and impossible' do
+        it 'should be false when object is possible, and impossible' do
           CounterCache.add_possible_objects(@post1)
           CounterCache.add_impossible_object(@post1)
           expect(CounterCache.conditions_met?(@post1, :associations)).to eq false
