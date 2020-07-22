@@ -7,16 +7,16 @@ module Support
       [status, headers, response]
     end
 
-    attr_writer :status
+    attr_writer :status, :headers, :response
 
-    attr_writer :headers
+    
 
     def headers
       @headers ||= { 'Content-Type' => 'text/html' }
       @headers
     end
 
-    attr_writer :response
+    
 
     private
 
