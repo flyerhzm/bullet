@@ -18,7 +18,8 @@ module Bullet
           def find_by_sql(sql, binds = [], preparable: nil, &block)
             result = super
             if Bullet.start?
-              if result.is_a? Array
+              case result
+              when Array
                 if result.size > 1
                   Bullet::Detector::NPlusOneQuery.add_possible_objects(result)
                   Bullet::Detector::CounterCache.add_possible_objects(result)
@@ -26,7 +27,7 @@ module Bullet
                   Bullet::Detector::NPlusOneQuery.add_impossible_object(result.first)
                   Bullet::Detector::CounterCache.add_impossible_object(result.first)
                 end
-              elsif result.is_a? ::ActiveRecord::Base
+              when ::ActiveRecord::Base
                 Bullet::Detector::NPlusOneQuery.add_impossible_object(result)
                 Bullet::Detector::CounterCache.add_impossible_object(result)
               end
