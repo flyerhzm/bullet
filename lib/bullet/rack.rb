@@ -55,14 +55,14 @@ module Bullet
     end
 
     def footer_note
-      "<div #{footer_div_attributes}>" + footer_header + '<br>' + Bullet.footer_info.uniq.join('<br>') + '</div>'
+      "<details #{details_attributes}><summary #{summary_attributes}>Bullet Warnings</summary><div #{footer_content_attributes}>#{Bullet.footer_info.uniq.join('<br>')}#{footer_console_message}</div></details>"
     end
 
     def set_header(headers, header_name, header_array)
       # Many proxy applications such as Nginx and AWS ELB limit
       # the size a header to 8KB, so truncate the list of reports to
       # be under that limit
-      header_array.pop while header_array.to_json.length > 8 * 1_024
+      header_array.pop while header_array.to_json.length > 8 * 1024
       headers[header_name] = header_array.to_json
     end
 
@@ -88,23 +88,28 @@ module Bullet
 
     private
 
-    def footer_div_attributes
+    def details_attributes
       <<~EOF
-        id="bullet-footer" data-is-bullet-footer ondblclick="this.parentNode.removeChild(this);" style="position: fixed; bottom: 0pt; left: 0pt; cursor: pointer; border-style: solid; border-color: rgb(153, 153, 153);
-         -moz-border-top-colors: none; -moz-border-right-colors: none; -moz-border-bottom-colors: none;
-         -moz-border-left-colors: none; -moz-border-image: none; border-width: 2pt 2pt 0px 0px;
-         padding: 3px 5px; border-radius: 0pt 10pt 0pt 0px; background: none repeat scroll 0% 0% rgba(200, 200, 200, 0.8);
-         color: rgb(119, 119, 119); font-size: 16px; font-family: 'Arial', sans-serif; z-index:9999;"
+        id="bullet-footer" data-is-bullet-footer
+        style="cursor: pointer; position: fixed; left: 0px; bottom: 0px; z-index: 9999; background: #fdf2f2; color: #9b1c1c; font-size: 12px; border-radius: 0px 8px 0px 0px; border: 1px solid #9b1c1c;"
       EOF
     end
 
-    def footer_header
-      cancel_button =
-        "<span onclick='this.parentNode.remove()' style='position:absolute; right: 10px; top: 0px; font-weight: bold; color: #333;'>&times;</span>"
+    def summary_attributes
+      <<~EOF
+        style="font-weight: 600; padding: 2px 8px"
+      EOF
+    end
+
+    def footer_content_attributes
+      <<~EOF
+        style="padding: 8px; border-top: 1px solid #9b1c1c;"
+      EOF
+    end
+
+    def footer_console_message
       if Bullet.console_enabled?
-        "<span>See 'Uniform Notifier' in JS Console for Stacktrace</span>#{cancel_button}"
-      else
-        cancel_button
+        "<br/><span style='font-style: italic;'>See 'Uniform Notifier' in JS Console for Stacktrace</span>"
       end
     end
 
