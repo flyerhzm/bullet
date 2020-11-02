@@ -105,8 +105,30 @@ module Bullet
             expect(response.first).to include('<bullet></bullet><')
           end
 
+          it 'should change response body for html safe string if add_footer is true' do
+            expect(Bullet).to receive(:add_footer).twice.and_return(true)
+            app.response = Support::ResponseDouble.new.tap do |response|
+              response.body = ActiveSupport::SafeBuffer.new('<html><head></head><body></body></html>')
+            end
+            _, headers, response = middleware.call('Content-Type' => 'text/html')
+
+            expect(headers['Content-Length']).to eq((56 + middleware.send(:footer_note).length).to_s)
+            expect(response.first).to start_with('<html><head></head><body>')
+            expect(response.first).to include('<bullet></bullet><')
+          end
+
           it 'should change response body if console_enabled is true' do
             expect(Bullet).to receive(:console_enabled?).and_return(true)
+            _, headers, response = middleware.call('Content-Type' => 'text/html')
+            expect(headers['Content-Length']).to eq('56')
+            expect(response).to eq(%w[<html><head></head><body><bullet></bullet></body></html>])
+          end
+
+          it 'should change response body for html safe string if console_enabled is true' do
+            expect(Bullet).to receive(:console_enabled?).and_return(true)
+            app.response = Support::ResponseDouble.new.tap do |response|
+              response.body = ActiveSupport::SafeBuffer.new('<html><head></head><body></body></html>')
+            end
             _, headers, response = middleware.call('Content-Type' => 'text/html')
             expect(headers['Content-Length']).to eq('56')
             expect(response).to eq(%w[<html><head></head><body><bullet></bullet></body></html>])
