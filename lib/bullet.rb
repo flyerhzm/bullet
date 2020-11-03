@@ -109,6 +109,7 @@ module Bullet
     end
 
     def get_whitelist_associations(type, class_name)
+      reset_whitelist
       Array(Thread.current[:whitelist][type][class_name])
     end
 
