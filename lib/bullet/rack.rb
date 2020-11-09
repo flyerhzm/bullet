@@ -46,6 +46,7 @@ module Bullet
 
     def append_to_html_body(response_body, content)
       body = response_body.dup
+      content = content.html_safe if content.respond_to?(:html_safe)
       if body.include?('</body>')
         position = body.rindex('</body>')
         body.insert(position, content)
