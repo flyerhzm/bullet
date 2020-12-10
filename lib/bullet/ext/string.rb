@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
-class String
-  def bullet_class_name
-    sub(/:[^:]*?$/, '')
+module Bullet
+  module Ext
+    refine String do
+      def bullet_class_name
+        sub(/:[^:]*?$/, '')
+      end
+    end
   end
 end
