@@ -2,6 +2,8 @@
 
 require 'spec_helper'
 
+using Bullet::Ext
+
 module Bullet
   module Detector
     describe NPlusOneQuery do

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+using Bullet::Ext
+
 module Bullet
   module Detector
     class UnusedEagerLoading < Association

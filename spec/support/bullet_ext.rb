@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+using Bullet::Ext
+
 module Bullet
   def self.collected_notifications_of_class(notification_class)
     Bullet.notification_collector.collection.select { |notification| notification.is_a? notification_class }
