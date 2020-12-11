@@ -37,6 +37,13 @@ or add it into a Gemfile (Bundler):
 gem 'bullet', group: 'development'
 ```
 
+enable the Bullet gem with generate command
+
+```ruby
+bundle exec rails g bullet:install
+```
+The generate command will auto generate the default configuration and may ask to include in the test environment as well. See below for custom configuration.
+
 **Note**: make sure `bullet` gem is added after activerecord (rails) and
 mongoid.
 
