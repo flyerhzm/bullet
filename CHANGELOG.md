@@ -1,5 +1,9 @@
 ## Next Release
 
+## 6.1.2 (12/12/2020)
+
+* Revert "Make whitelist thread safe"
+
 ## 6.1.1 (12/12/2020)
 
 * Add support Rails 6.1
