@@ -4,6 +4,8 @@ module Bullet
   class Rack
     include Dependency
 
+    NONCE_MATCHER = /script-src .*'nonce-(?<nonce>[A-Za-z0-9+\/]+={0,2})'/
+
     def initialize(app)
       @app = app
     end
@@ -21,8 +23,12 @@ module Bullet
           if html_request?(headers, response)
             response_body = response_body(response)
             response_body = append_to_html_body(response_body, footer_note) if Bullet.add_footer
-            response_body = append_to_html_body(response_body, Bullet.gather_inline_notifications)
-            response_body = append_to_html_body(response_body, xhr_script)
+
+            with_security_policy_nonce(headers) do |nonce|
+              response_body = append_to_html_body(response_body, Bullet.gather_inline_notifications)
+              response_body = append_to_html_body(response_body, xhr_script(nonce))
+            end
+
             headers['Content-Length'] = response_body.bytesize.to_s
           else
             set_header(headers, 'X-bullet-footer-text', Bullet.footer_info.uniq) if Bullet.add_footer
@@ -115,8 +121,32 @@ module Bullet
     end
 
     # Make footer work for XHR requests by appending data to the footer
-    def xhr_script
-      "<script type='text/javascript'>#{File.read("#{__dir__}/bullet_xhr.js")}</script>"
+    def xhr_script(nonce = nil)
+      script = File.read("#{__dir__}/bullet_xhr.js")
+
+      if nonce
+        "<script type='text/javascript' nonce='#{nonce}'>#{script}</script>"
+      else
+        "<script type='text/javascript'>#{script}</script>"
+      end
+    end
+
+    def with_security_policy_nonce(headers)
+      matched = (headers['Content-Security-Policy'] || '').match(NONCE_MATCHER)
+      nonce = matched[:nonce] if matched
+
+      yield and return unless nonce
+
+      console_enabled = UniformNotifier.console
+      alert_enabled = UniformNotifier.alert
+
+      UniformNotifier.console = { attributes: { nonce: nonce } } if console_enabled
+      UniformNotifier.alert = { attributes: { nonce: nonce } } if alert_enabled
+
+      yield nonce
+
+      UniformNotifier.console = console_enabled
+      UniformNotifier.alert = alert_enabled
     end
   end
 end

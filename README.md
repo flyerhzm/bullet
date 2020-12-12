@@ -216,7 +216,7 @@ end
 
 ### Work with sinatra
 
-Configure and use `Bullet::Rack`
+Configure and use `Bullet::Rack`.
 
 ```ruby
 configure :development do
@@ -225,6 +225,8 @@ configure :development do
   use Bullet::Rack
 end
 ```
+
+If your application generates a Content-Security-Policy via a separate middleware, ensure that `Bullet::Rack` is loaded _before_ that middleware.
 
 ### Run in tests
 

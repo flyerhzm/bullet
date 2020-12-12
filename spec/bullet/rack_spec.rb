@@ -124,6 +124,21 @@ module Bullet
             expect(response).to eq(%w[<html><head></head><body><bullet></bullet></body></html>])
           end
 
+          it 'should include CSP nonce in inline script if console_enabled and a CSP is applied' do
+            expect(Bullet).to receive(:console_enabled?).and_return(true)
+            allow(middleware).to receive(:xhr_script).and_call_original
+
+            nonce = "+t9/wTlgG6xbHxXYUaDNzQ=="
+            app.headers = {
+              'Content-Type' => 'text/html',
+              'Content-Security-Policy' => "default-src 'self' https:; script-src 'self' https: 'nonce-#{nonce}'",
+            }
+
+            _, headers, response = middleware.call('Content-Type' => 'text/html')
+
+            expect(headers['Content-Length']).to eq((56 + middleware.send(:xhr_script, nonce).length).to_s)
+          end
+
           it 'should change response body for html safe string if console_enabled is true' do
             expect(Bullet).to receive(:console_enabled?).and_return(true)
             app.response = Support::ResponseDouble.new.tap do |response|
