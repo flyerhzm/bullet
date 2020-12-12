@@ -1,5 +1,10 @@
 ## Next Release
 
+## 6.1.1 (12/12/2020)
+
+* Add support Rails 6.1
+* Make whitelist thread safe
+
 ## 6.1.0 (12/28/2019)
 
 * Add skip_html_injection flag
