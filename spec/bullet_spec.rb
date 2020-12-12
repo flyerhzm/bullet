@@ -88,7 +88,7 @@ describe Bullet, focused: true do
       it 'is deleted from the whitelist successfully' do
         Bullet.add_whitelist(type: :n_plus_one_query, class_name: 'Klass', association: :department)
         Bullet.delete_whitelist(type: :n_plus_one_query, class_name: 'Klass', association: :department)
-        expect(Thread.current[:whitelist][:n_plus_one_query]).to eq({})
+        expect(Bullet.whitelist[:n_plus_one_query]).to eq({})
       end
     end
 
