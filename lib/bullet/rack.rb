@@ -22,7 +22,7 @@ module Bullet
             response_body = response_body(response)
             response_body = append_to_html_body(response_body, footer_note) if Bullet.add_footer
             response_body = append_to_html_body(response_body, Bullet.gather_inline_notifications)
-            response_body = append_to_html_body(response_body, xhr_script)
+            response_body = append_to_html_body(response_body, xhr_script) if Bullet.add_footer
             headers['Content-Length'] = response_body.bytesize.to_s
           else
             set_header(headers, 'X-bullet-footer-text', Bullet.footer_info.uniq) if Bullet.add_footer
