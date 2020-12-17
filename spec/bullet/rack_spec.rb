@@ -69,7 +69,6 @@ module Bullet
           expect(Bullet).to receive(:notification?).and_return(true)
           expect(Bullet).to receive(:console_enabled?).and_return(true)
           expect(Bullet).to receive(:gather_inline_notifications).and_return('<bullet></bullet>')
-          expect(middleware).to receive(:xhr_script).and_return('')
           expect(Bullet).to receive(:perform_out_of_channel_notifications)
           _, headers, response = middleware.call('Content-Type' => 'text/html')
           expect(headers['Content-Length']).to eq('56')
@@ -84,7 +83,7 @@ module Bullet
           allow(Bullet).to receive(:console_enabled?).and_return(true)
           expect(Bullet).to receive(:gather_inline_notifications).and_return('<bullet></bullet>')
           _, headers, response = middleware.call('Content-Type' => 'text/html')
-          expect(headers['Content-Length']).to eq((58 + middleware.send(:xhr_script).length).to_s)
+          expect(headers['Content-Length']).to eq('58')
         end
 
         context 'with injection notifiers' do
@@ -97,7 +96,7 @@ module Bullet
           end
 
           it 'should change response body if add_footer is true' do
-            expect(Bullet).to receive(:add_footer).twice.and_return(true)
+            expect(Bullet).to receive(:add_footer).exactly(3).times.and_return(true)
             _, headers, response = middleware.call('Content-Type' => 'text/html')
 
             expect(headers['Content-Length']).to eq((56 + middleware.send(:footer_note).length).to_s)
@@ -106,7 +105,7 @@ module Bullet
           end
 
           it 'should change response body for html safe string if add_footer is true' do
-            expect(Bullet).to receive(:add_footer).twice.and_return(true)
+            expect(Bullet).to receive(:add_footer).exactly(3).times.and_return(true)
             app.response = Support::ResponseDouble.new.tap do |response|
               response.body = ActiveSupport::SafeBuffer.new('<html><head></head><body></body></html>')
             end
