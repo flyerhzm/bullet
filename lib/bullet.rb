@@ -41,7 +41,7 @@ module Bullet
     attr_reader :whitelist
     attr_accessor :add_footer, :orm_patches_applied
 
-    available_notifiers = UniformNotifier::AVAILABLE_NOTIFIERS.filter { |notifier| notifier != :raise }.map { |notifier| "#{notifier}=" }
+    available_notifiers = UniformNotifier::AVAILABLE_NOTIFIERS.select { |notifier| notifier != :raise }.map { |notifier| "#{notifier}=" }
     available_notifiers_options = { to: UniformNotifier }
     delegate(*available_notifiers, **available_notifiers_options)
 
