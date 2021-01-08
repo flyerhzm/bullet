@@ -23,7 +23,7 @@ module Bullet
         end
 
         def each(&block)
-          return to_enum unless block_given?
+          return to_enum unless block
 
           records = []
           origin_each { |record| records << record }
