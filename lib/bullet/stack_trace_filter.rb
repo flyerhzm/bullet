@@ -59,8 +59,7 @@ module Bullet
     end
 
     def ruby_19?
-      @ruby_19 = Gem::Version.new(RUBY_VERSION) < Gem::Version.new('2.0.0') if @ruby_19.nil?
-      @ruby_19
+      @ruby_19 ||= Gem::Version.new(RUBY_VERSION) < Gem::Version.new('2.0.0') 
     end
   end
 end

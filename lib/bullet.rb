@@ -41,7 +41,7 @@ module Bullet
     attr_reader :whitelist
     attr_accessor :add_footer, :orm_patches_applied
 
-    available_notifiers = UniformNotifier::AVAILABLE_NOTIFIERS.map { |notifier| "#{notifier}=" }
+    available_notifiers = UniformNotifier::AVAILABLE_NOTIFIERS.filter { |notifier| notifier != :raise }.map { |notifier| "#{notifier}=" }
     available_notifiers_options = { to: UniformNotifier }
     delegate(*available_notifiers, **available_notifiers_options)
 
@@ -89,11 +89,11 @@ module Bullet
     end
 
     def stacktrace_includes
-      @stacktrace_includes || []
+      @stacktrace_includes ||= []
     end
 
     def stacktrace_excludes
-      @stacktrace_excludes || []
+      @stacktrace_excludes ||= []
     end
 
     def add_whitelist(options)
@@ -241,7 +241,9 @@ module Bullet
     end
 
     def inject_into_page?
-      !@skip_html_injection && (console_enabled? || add_footer)
+      return false if defined?(@skip_html_injection) && @skip_html_injection
+
+      console_enabled? || add_footer
     end
 
     private
