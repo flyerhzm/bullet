@@ -562,7 +562,7 @@ if active_record?
   end
 
   describe Bullet::Detector::Association, 'has_one :through' do
-    context 'user => submission => attachment' do
+    context 'user => attachment' do
       it 'should detect non preload associations' do
         User.all.each { |user| user.submission_attachment.file_name }
         Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
