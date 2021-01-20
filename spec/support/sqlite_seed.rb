@@ -95,6 +95,9 @@ module Support
       submission1.replies.create(name: 'reply2')
       submission2.replies.create(name: 'reply3')
       submission2.replies.create(name: 'reply4')
+
+      submission1.create_attachment(file_name: 'submission1 file')
+      submission2.create_attachment(file_name: 'submission2 file')
     end
 
     def setup_db
@@ -239,6 +242,11 @@ module Support
         create_table :users do |t|
           t.column :name, :string
           t.column :category_id, :integer
+        end
+
+        create_table :attachments do |t|
+          t.column :file_name, :string
+          t.column :submission_id, :integer
         end
       end
     end
