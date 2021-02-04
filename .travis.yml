@@ -2,6 +2,7 @@ language: ruby
 rvm:
   - 2.3.0
   - 2.6.0
+  - truffleruby-head
 gemfile:
   - Gemfile.rails-6.0
   - Gemfile.rails-5.2
