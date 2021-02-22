@@ -92,9 +92,11 @@ module Bullet
             if Bullet.start? && !defined?(@preloaded_records)
               source_preloaders.each do |source_preloader|
                 reflection_name = source_preloader.send(:reflection).name
-                source_preloader.send(:owners).each do |owner|
-                  Bullet::Detector::NPlusOneQuery.call_association(owner, reflection_name)
-                end
+                source_preloader
+                  .send(:owners)
+                  .each do |owner|
+                    Bullet::Detector::NPlusOneQuery.call_association(owner, reflection_name)
+                  end
               end
             end
             super
