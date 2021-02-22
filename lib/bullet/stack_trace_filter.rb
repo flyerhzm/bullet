@@ -3,6 +3,7 @@
 module Bullet
   module StackTraceFilter
     VENDOR_PATH = '/vendor'
+    IS_RUBY_19 = Gem::Version.new(RUBY_VERSION) < Gem::Version.new('2.0.0')
 
     def caller_in_project
       vendor_root = Bullet.app_root + VENDOR_PATH
@@ -47,19 +48,15 @@ module Bullet
     end
 
     def location_as_path(location)
-      ruby_19? ? location : location.absolute_path.to_s
+      IS_RUBY_19 ? location : location.absolute_path.to_s
     end
 
     def select_caller_locations
-      if ruby_19?
+      if IS_RUBY_19
         caller.select { |caller_path| yield caller_path }
       else
         caller_locations.select { |location| yield location }
       end
-    end
-
-    def ruby_19?
-      @ruby_19 ||= Gem::Version.new(RUBY_VERSION) < Gem::Version.new('2.0.0') 
     end
   end
 end

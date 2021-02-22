@@ -73,7 +73,7 @@ module Bullet
     end
 
     def app_root
-      (defined?(::Rails.root) ? Rails.root.to_s : Dir.pwd).to_s
+      @app_root ||= (defined?(::Rails.root) ? Rails.root.to_s : Dir.pwd).to_s
     end
 
     def n_plus_one_query_enable?
