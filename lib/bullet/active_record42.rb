@@ -56,8 +56,7 @@ module Bullet
         # if select only one object, then the only one object has impossible to cause N+1 query.
         def to_a
           records = origin_to_a
-          if Bullet.start?
-            if records.first.class.name !~ /^HABTM_/
+          if Bullet.start? && (records.first.class.name !~ /^HABTM_/)
               if records.size > 1
                 Bullet::Detector::NPlusOneQuery.add_possible_objects(records)
                 Bullet::Detector::CounterCache.add_possible_objects(records)
@@ -66,7 +65,6 @@ module Bullet
                 Bullet::Detector::CounterCache.add_impossible_object(records.first)
               end
             end
-          end
           records
         end
       end
@@ -121,8 +119,7 @@ module Bullet
         end
 
         def construct(ar_parent, parent, row, rs, seen, model_cache, aliases)
-          if Bullet.start?
-            unless ar_parent.nil?
+          if Bullet.start? && !ar_parent.nil?
               parent.children.each do |node|
                 key = aliases.column_alias(node, node.primary_key)
                 id = row[key]
@@ -136,7 +133,6 @@ module Bullet
                 @bullet_eager_loadings[ar_parent.class][ar_parent] << associations
               end
             end
-          end
 
           origin_construct(ar_parent, parent, row, rs, seen, model_cache, aliases)
         end
@@ -200,8 +196,7 @@ module Bullet
         def reader(force_reload = false)
           result = origin_reader(force_reload)
 
-          if Bullet.start?
-            if @owner.class.name !~ /^HABTM_/ && !@inversed
+          if Bullet.start? && (@owner.class.name !~ /^HABTM_/ && !@inversed)
               Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name)
 
               if Bullet::Detector::NPlusOneQuery.impossible?(@owner)
@@ -210,7 +205,6 @@ module Bullet
                 Bullet::Detector::NPlusOneQuery.add_possible_objects(result) if result
               end
             end
-          end
           result
         end
       end
