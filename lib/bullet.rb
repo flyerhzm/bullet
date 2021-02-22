@@ -132,7 +132,7 @@ module Bullet
     end
 
     def debug(title, message)
-      puts "[Bullet][#{title}] #{message}" if ENV[BULLET_DEBUG] == TRUE
+      puts "[Bullet][#{title}] #{message}" if ENV[BULLET_DEBUG] == true
     end
 
     def start_request
