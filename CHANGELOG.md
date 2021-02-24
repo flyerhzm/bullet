@@ -1,5 +1,7 @@
 ## Next Release
 
+* Added an option to stop adding HTTP headers to API requests
+
 ## 6.1.3 (01/21/2021)
 
 * Consider ThroughAssociation at SingularAssociation like CollectionAssociation

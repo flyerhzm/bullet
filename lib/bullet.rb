@@ -39,7 +39,7 @@ module Bullet
                 :stacktrace_excludes,
                 :skip_html_injection
     attr_reader :whitelist
-    attr_accessor :add_footer, :orm_patches_applied
+    attr_accessor :add_footer, :orm_patches_applied, :skip_http_headers
 
     available_notifiers = UniformNotifier::AVAILABLE_NOTIFIERS.select { |notifier| notifier != :raise }.map { |notifier| "#{notifier}=" }
     available_notifiers_options = { to: UniformNotifier }
