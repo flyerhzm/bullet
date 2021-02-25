@@ -41,7 +41,8 @@ module Bullet
     attr_reader :whitelist
     attr_accessor :add_footer, :orm_patches_applied, :skip_http_headers
 
-    available_notifiers = UniformNotifier::AVAILABLE_NOTIFIERS.select { |notifier| notifier != :raise }.map { |notifier| "#{notifier}=" }
+    available_notifiers =
+      UniformNotifier::AVAILABLE_NOTIFIERS.select { |notifier| notifier != :raise }.map { |notifier| "#{notifier}=" }
     available_notifiers_options = { to: UniformNotifier }
     delegate(*available_notifiers, **available_notifiers_options)
 
@@ -209,11 +210,13 @@ module Bullet
     end
 
     def warnings
-      notification_collector.collection.each_with_object({}) do |notification, warnings|
-        warning_type = notification.class.to_s.split(':').last.tableize
-        warnings[warning_type] ||= []
-        warnings[warning_type] << notification
-      end
+      notification_collector
+        .collection
+        .each_with_object({}) do |notification, warnings|
+          warning_type = notification.class.to_s.split(':').last.tableize
+          warnings[warning_type] ||= []
+          warnings[warning_type] << notification
+        end
     end
 
     def profile
