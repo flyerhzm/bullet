@@ -90,7 +90,7 @@ module Bullet
           before do
             expect(Bullet).to receive(:notification?).and_return(true)
             allow(Bullet).to receive(:gather_inline_notifications).and_return('<bullet></bullet>')
-            allow(middleware).to receive(:xhr_script).and_return('')
+            allow(middleware).to receive(:xhr_script).and_return('<script></script>')
             allow(middleware).to receive(:footer_note).and_return('footer')
             expect(Bullet).to receive(:perform_out_of_channel_notifications)
           end
@@ -99,9 +99,8 @@ module Bullet
             expect(Bullet).to receive(:add_footer).exactly(3).times.and_return(true)
             _, headers, response = middleware.call('Content-Type' => 'text/html')
 
-            expect(headers['Content-Length']).to eq((56 + middleware.send(:footer_note).length).to_s)
-            expect(response.first).to start_with('<html><head></head><body>')
-            expect(response.first).to include('<bullet></bullet><')
+            expect(headers['Content-Length']).to eq((73 + middleware.send(:footer_note).length).to_s)
+            expect(response).to eq(%w[<html><head></head><body>footer<bullet></bullet><script></script></body></html>])
           end
 
           it 'should change response body for html safe string if add_footer is true' do
@@ -111,9 +110,16 @@ module Bullet
             end
             _, headers, response = middleware.call('Content-Type' => 'text/html')
 
-            expect(headers['Content-Length']).to eq((56 + middleware.send(:footer_note).length).to_s)
-            expect(response.first).to start_with('<html><head></head><body>')
-            expect(response.first).to include('<bullet></bullet><')
+            expect(headers['Content-Length']).to eq((73 + middleware.send(:footer_note).length).to_s)
+            expect(response).to eq(%w[<html><head></head><body>footer<bullet></bullet><script></script></body></html>])
+          end
+
+          it 'should add the footer-text header for non-html requests when add_footer is true' do
+            allow(Bullet).to receive(:add_footer).at_least(:once).and_return(true)
+            allow(Bullet).to receive(:footer_info).and_return(['footer text'])
+            app.headers = {'Content-Type' => 'application/json'}
+            _, headers, _response = middleware.call({})
+            expect(headers).to include('X-bullet-footer-text' => '["footer text"]')
           end
 
           it 'should change response body if console_enabled is true' do
@@ -133,11 +139,61 @@ module Bullet
             expect(response).to eq(%w[<html><head></head><body><bullet></bullet></body></html>])
           end
 
+          it 'should add headers for non-html requests when console_enabled is true' do
+            allow(Bullet).to receive(:console_enabled?).at_least(:once).and_return(true)
+            allow(Bullet).to receive(:text_notifications).and_return(['text notifications'])
+            app.headers = {'Content-Type' => 'application/json'}
+            _, headers, _response = middleware.call({})
+            expect(headers).to include('X-bullet-console-text' => '["text notifications"]')
+          end
+
           it "shouldn't change response body unnecessarily" do
             expected_response = Support::ResponseDouble.new 'Actual body'
             app.response = expected_response
             _, _, response = middleware.call({})
             expect(response).to eq(expected_response)
+          end
+
+          it "shouldn't add headers unnecessarily" do
+            app.headers = {'Content-Type' => 'application/json'}
+            _, headers, _response = middleware.call({})
+            expect(headers).not_to include('X-bullet-footer-text')
+            expect(headers).not_to include('X-bullet-console-text')
+          end
+
+          context "when skip_http_headers is enabled" do
+            before do
+              allow(Bullet).to receive(:skip_http_headers).and_return(true)
+            end
+
+            it 'should include the footer but not the xhr script tag if add_footer is true' do
+              expect(Bullet).to receive(:add_footer).at_least(:once).and_return(true)
+              _, headers, response = middleware.call({})
+
+              expect(headers['Content-Length']).to eq((56 + middleware.send(:footer_note).length).to_s)
+              expect(response).to eq(%w[<html><head></head><body>footer<bullet></bullet></body></html>])
+            end
+
+            it 'should not include the xhr script tag if console_enabled is true' do
+              expect(Bullet).to receive(:console_enabled?).and_return(true)
+              _, headers, response = middleware.call({})
+              expect(headers['Content-Length']).to eq('56')
+              expect(response).to eq(%w[<html><head></head><body><bullet></bullet></body></html>])
+            end
+
+            it 'should not add the footer-text header for non-html requests when add_footer is true' do
+              allow(Bullet).to receive(:add_footer).at_least(:once).and_return(true)
+              app.headers = {'Content-Type' => 'application/json'}
+              _, headers, _response = middleware.call({})
+              expect(headers).not_to include('X-bullet-footer-text')
+            end
+
+            it 'should not add headers for non-html requests when console_enabled is true' do
+              allow(Bullet).to receive(:console_enabled?).at_least(:once).and_return(true)
+              app.headers = {'Content-Type' => 'application/json'}
+              _, headers, _response = middleware.call({})
+              expect(headers).not_to include('X-bullet-console-text')
+            end
           end
         end
 

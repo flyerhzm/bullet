@@ -94,6 +94,7 @@ The code above will enable all of the Bullet notification systems:
 * `Bullet.sentry`: add notifications to sentry
 * `Bullet.add_footer`: adds the details in the bottom left corner of the page. Double click the footer or use close button to hide footer.
 * `Bullet.skip_html_injection`: prevents Bullet from injecting code into the returned HTML. This must be false for receiving alerts, showing the footer or console logging.
+* `Bullet.skip_http_headers`: don't add headers to API requests, and remove the javascript that relies on them. Note that this prevents bullet from logging warnings to the browser console or updating the footer.
 * `Bullet.stacktrace_includes`: include paths with any of these substrings in the stack trace, even if they are not in your main app
 * `Bullet.stacktrace_excludes`: ignore paths with any of these substrings in the stack trace, even if they are not in your main app.
    Each item can be a string (match substring), a regex, or an array where the first item is a path to match, and the second
