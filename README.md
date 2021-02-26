@@ -67,6 +67,7 @@ config.after_initialize do
   Bullet.rails_logger = true
   Bullet.honeybadger = true
   Bullet.bugsnag = true
+  Bullet.appsignal = true
   Bullet.airbrake = true
   Bullet.rollbar = true
   Bullet.add_footer = true
@@ -90,6 +91,7 @@ The code above will enable all of the Bullet notification systems:
 * `Bullet.honeybadger`: add notifications to Honeybadger
 * `Bullet.bugsnag`: add notifications to bugsnag
 * `Bullet.airbrake`: add notifications to airbrake
+* `Bullet.appsignal`: add notifications to AppSignal
 * `Bullet.rollbar`: add notifications to rollbar
 * `Bullet.sentry`: add notifications to sentry
 * `Bullet.add_footer`: adds the details in the bottom left corner of the page. Double click the footer or use close button to hide footer.
