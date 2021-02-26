@@ -1,5 +1,7 @@
 ## Next Release
 
+## 6.1.4 (02/26/2021)
+
 * Added an option to stop adding HTTP headers to API requests
 
 ## 6.1.3 (01/21/2021)
