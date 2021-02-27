@@ -21,6 +21,7 @@ class Post < ActiveRecord::Base
     next unless trigger_after_save
 
     temp_comment = Comment.new(post: self)
+
     # this triggers self to be "possible", even though it's
     # not saved yet
     temp_comment.post
