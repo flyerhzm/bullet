@@ -30,6 +30,7 @@ module Bullet
 
       ::ActiveRecord::Relation.class_eval do
         alias_method :origin_to_a, :to_a
+
         # if select a collection of objects, then these objects have possible to cause N+1 query.
         # if select only one object, then the only one object has impossible to cause N+1 query.
         def to_a
@@ -170,7 +171,7 @@ module Bullet
       ::ActiveRecord::Associations::HasManyAssociation.class_eval do
         alias_method :origin_has_cached_counter?, :has_cached_counter?
 
-        def has_cached_counter?(reflection = reflection())
+        def has_cached_counter?(reflection = reflection)
           result = origin_has_cached_counter?(reflection)
           Bullet::Detector::CounterCache.add_counter_cache(owner, reflection.name) if Bullet.start? && !result
           result
