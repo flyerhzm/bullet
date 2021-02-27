@@ -52,11 +52,11 @@ module Bullet
       IS_RUBY_19 ? location : location.absolute_path.to_s
     end
 
-    def select_caller_locations
+    def select_caller_locations(&block)
       if IS_RUBY_19
-        caller.select { |caller_path| yield caller_path }
+        caller.select(&block)
       else
-        caller_locations.select { |location| yield location }
+        caller_locations.select(&block)
       end
     end
   end
