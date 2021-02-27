@@ -65,10 +65,12 @@ if mongoid?
         end
 
         it 'should detect preload with category => posts, but not with category => entries' do
-          Mongoid::Category.includes(:posts).each do |category|
-            category.posts.map(&:name)
-            category.entries.map(&:name)
-          end
+          Mongoid::Category
+            .includes(:posts)
+            .each do |category|
+              category.posts.map(&:name)
+              category.entries.map(&:name)
+            end
           Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
           expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
 
@@ -80,10 +82,12 @@ if mongoid?
         end
 
         it 'should detect preload with category => [posts, entries]' do
-          Mongoid::Category.includes(:posts, :entries).each do |category|
-            category.posts.map(&:name)
-            category.entries.map(&:name)
-          end
+          Mongoid::Category
+            .includes(:posts, :entries)
+            .each do |category|
+              category.posts.map(&:name)
+              category.entries.map(&:name)
+            end
           Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
           expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
 

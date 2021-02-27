@@ -19,7 +19,9 @@ module Bullet
         it 'should get call associations if object and association are both in eager_loadings and call_object_associations' do
           UnusedEagerLoading.add_eager_loadings([@post], :association)
           UnusedEagerLoading.add_call_object_associations(@post, :association)
-          expect(UnusedEagerLoading.send(:call_associations, @post.bullet_key, Set.new([:association]))).to eq([:association])
+          expect(UnusedEagerLoading.send(:call_associations, @post.bullet_key, Set.new([:association]))).to eq(
+            [:association]
+          )
         end
 
         it 'should not get call associations if not exist in call_object_associations' do
@@ -30,7 +32,9 @@ module Bullet
 
       context '.diff_object_associations' do
         it 'should return associations not exist in call_association' do
-          expect(UnusedEagerLoading.send(:diff_object_associations, @post.bullet_key, Set.new([:association]))).to eq([:association])
+          expect(UnusedEagerLoading.send(:diff_object_associations, @post.bullet_key, Set.new([:association]))).to eq(
+            [:association]
+          )
         end
 
         it 'should return empty if associations exist in call_association' do
@@ -43,7 +47,9 @@ module Bullet
       end
 
       context '.check_unused_preload_associations' do
-        let(:paths) { %w[/dir1 /dir1/subdir] }
+        let(:paths) {
+          %w[/dir1 /dir1/subdir]
+        }
         it 'should create notification if object_association_diff is not empty' do
           UnusedEagerLoading.add_object_associations(@post, :association)
           allow(UnusedEagerLoading).to receive(:caller_in_project).and_return(paths)

@@ -5,7 +5,9 @@ require 'spec_helper'
 module Bullet
   module Registry
     describe Base do
-      subject { Base.new.tap { |base| base.add('key', 'value') } }
+      subject {
+        Base.new.tap { |base| base.add('key', 'value') }
+      }
 
       context '#[]' do
         it 'should get value by key' do

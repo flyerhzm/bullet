@@ -89,8 +89,12 @@ module Bullet
         end
 
         context 'stacktrace_excludes' do
-          before { Bullet.stacktrace_excludes = [/def/] }
-          after { Bullet.stacktrace_excludes = nil }
+          before {
+            Bullet.stacktrace_excludes = [/def/]
+          }
+          after {
+            Bullet.stacktrace_excludes = nil
+          }
 
           it 'should not create notification when stacktrace contains paths that are in the exclude list' do
             in_project = OpenStruct.new(absolute_path: File.join(Dir.pwd, 'abc', 'abc.rb'))
@@ -139,8 +143,12 @@ module Bullet
         end
 
         context 'stacktrace_includes' do
-          before { Bullet.stacktrace_includes = ['def', /xyz/] }
-          after { Bullet.stacktrace_includes = nil }
+          before {
+            Bullet.stacktrace_includes = ['def', /xyz/]
+          }
+          after {
+            Bullet.stacktrace_includes = nil
+          }
 
           it 'should include paths that are in the stacktrace_include list' do
             in_project = OpenStruct.new(absolute_path: File.join(Dir.pwd, 'abc', 'abc.rb'))
@@ -167,7 +175,9 @@ module Bullet
         end
 
         it 'should not raise error if object is nil' do
-          expect { NPlusOneQuery.add_possible_objects(nil) }.not_to raise_error
+          expect {
+            NPlusOneQuery.add_possible_objects(nil)
+          }.not_to raise_error
         end
       end
 

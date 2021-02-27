@@ -4,12 +4,10 @@ require 'rspec'
 begin
   require 'active_record'
 rescue LoadError
-
 end
 begin
   require 'mongoid'
 rescue LoadError
-
 end
 
 module Rails
@@ -62,7 +60,9 @@ if active_record?
       Bullet.enable = true
     end
 
-    config.after(:example) { Bullet.end_request }
+    config.after(:example) {
+      Bullet.end_request
+    }
   end
 
   if ENV['BULLET_LOG']
@@ -87,9 +87,13 @@ if mongoid?
       Support::MongoSeed.teardown_db
     end
 
-    config.before(:each) { Bullet.start_request }
+    config.before(:each) {
+      Bullet.start_request
+    }
 
-    config.after(:each) { Bullet.end_request }
+    config.after(:each) {
+      Bullet.end_request
+    }
   end
 
   if ENV['BULLET_LOG']

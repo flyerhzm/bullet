@@ -4,7 +4,9 @@ require 'spec_helper'
 
 module Bullet
   describe NotificationCollector do
-    subject { NotificationCollector.new.tap { |collector| collector.add('value') } }
+    subject {
+      NotificationCollector.new.tap { |collector| collector.add('value') }
+    }
 
     context '#add' do
       it 'should add a value' do

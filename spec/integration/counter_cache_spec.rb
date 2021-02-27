@@ -4,9 +4,13 @@ require 'spec_helper'
 
 if !mongoid? && active_record?
   describe Bullet::Detector::CounterCache do
-    before(:each) { Bullet.start_request }
+    before(:each) {
+      Bullet.start_request
+    }
 
-    after(:each) { Bullet.end_request }
+    after(:each) {
+      Bullet.end_request
+    }
 
     it 'should need counter cache with all cities' do
       Country.all.each { |country| country.cities.size }
@@ -46,8 +50,12 @@ if !mongoid? && active_record?
     end
 
     context 'disable' do
-      before { Bullet.counter_cache_enable = false }
-      after { Bullet.counter_cache_enable = true }
+      before {
+        Bullet.counter_cache_enable = false
+      }
+      after {
+        Bullet.counter_cache_enable = true
+      }
 
       it 'should not detect counter cache' do
         Country.all.each { |country| country.cities.size }
@@ -56,8 +64,12 @@ if !mongoid? && active_record?
     end
 
     context 'whitelist' do
-      before { Bullet.add_whitelist type: :counter_cache, class_name: 'Country', association: :cities }
-      after { Bullet.clear_whitelist }
+      before {
+        Bullet.add_whitelist type: :counter_cache, class_name: 'Country', association: :cities
+      }
+      after {
+        Bullet.clear_whitelist
+      }
 
       it 'should not detect counter cache' do
         Country.all.each { |country| country.cities.size }

@@ -5,7 +5,9 @@ require 'spec_helper'
 module Bullet
   module Registry
     describe Association do
-      subject { Association.new.tap { |association| association.add(%w[key1 key2], 'value') } }
+      subject {
+        Association.new.tap { |association| association.add(%w[key1 key2], 'value') }
+      }
 
       context '#merge' do
         it 'should merge key/value' do

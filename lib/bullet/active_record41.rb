@@ -30,6 +30,7 @@ module Bullet
 
       ::ActiveRecord::Relation.class_eval do
         alias_method :origin_to_a, :to_a
+
         # if select a collection of objects, then these objects have possible to cause N+1 query.
         # if select only one object, then the only one object has impossible to cause N+1 query.
         def to_a
@@ -75,7 +76,13 @@ module Bullet
         # add includes in scope
         alias_method :origin_find_with_associations, :find_with_associations
         def find_with_associations
-          return origin_find_with_associations { |r| yield r } if block_given?
+          if block_given?
+            return(
+              origin_find_with_associations { |r|
+                yield r
+              }
+            )
+          end
 
           records = origin_find_with_associations
           if Bullet.start?

@@ -26,7 +26,9 @@ module Bullet
           return to_enum unless block
 
           records = []
-          origin_each { |record| records << record }
+          origin_each { |record|
+            records << record
+          }
           if records.length > 1
             Bullet::Detector::NPlusOneQuery.add_possible_objects(records)
           elsif records.size == 1

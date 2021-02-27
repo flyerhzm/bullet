@@ -5,9 +5,15 @@ require 'spec_helper'
 module Bullet
   module Registry
     describe Object do
-      let(:post) { Post.first }
-      let(:another_post) { Post.last }
-      subject { Object.new.tap { |object| object.add(post.bullet_key) } }
+      let(:post) {
+        Post.first
+      }
+      let(:another_post) {
+        Post.last
+      }
+      subject {
+        Object.new.tap { |object| object.add(post.bullet_key) }
+      }
 
       context '#include?' do
         it 'should include the object' do

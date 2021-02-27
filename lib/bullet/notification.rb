@@ -7,6 +7,7 @@ module Bullet
     autoload :NPlusOneQuery, 'bullet/notification/n_plus_one_query'
     autoload :CounterCache, 'bullet/notification/counter_cache'
 
-    class UnoptimizedQueryError < StandardError; end
+    class UnoptimizedQueryError < StandardError
+    end
   end
 end

@@ -3,7 +3,9 @@
 require 'spec_helper'
 
 describe Bullet, focused: true do
-  subject { Bullet }
+  subject {
+    Bullet
+  }
 
   describe '#enable' do
     context 'enable Bullet' do
@@ -17,7 +19,9 @@ describe Bullet, focused: true do
       end
 
       context 'disable Bullet' do
-        before { Bullet.enable = false }
+        before {
+          Bullet.enable = false
+        }
 
         it 'should be disabled' do
           expect(subject).to_not be_enable
@@ -40,7 +44,9 @@ describe Bullet, focused: true do
 
   describe '#start?' do
     context 'when bullet is disabled' do
-      before(:each) { Bullet.enable = false }
+      before(:each) {
+        Bullet.enable = false
+      }
 
       it 'should not be started' do
         expect(Bullet).not_to be_start
@@ -49,14 +55,22 @@ describe Bullet, focused: true do
   end
 
   describe '#debug' do
-    before(:each) { $stdout = StringIO.new }
+    before(:each) {
+      $stdout = StringIO.new
+    }
 
-    after(:each) { $stdout = STDOUT }
+    after(:each) {
+      $stdout = STDOUT
+    }
 
     context 'when debug is enabled' do
-      before(:each) { ENV['BULLET_DEBUG'] = 'true' }
+      before(:each) {
+        ENV['BULLET_DEBUG'] = 'true'
+      }
 
-      after(:each) { ENV['BULLET_DEBUG'] = 'false' }
+      after(:each) {
+        ENV['BULLET_DEBUG'] = 'false'
+      }
 
       it 'should output debug information' do
         Bullet.debug('debug_message', 'this is helpful information')
@@ -104,7 +118,9 @@ describe Bullet, focused: true do
   end
 
   describe '#perform_out_of_channel_notifications' do
-    let(:notification) { double }
+    let(:notification) {
+      double
+    }
 
     before do
       allow(Bullet).to receive(:for_each_active_notifier_with_notification).and_yield(notification)
@@ -112,10 +128,14 @@ describe Bullet, focused: true do
     end
 
     context 'when called with Rack environment hash' do
-      let(:env) { { 'REQUEST_METHOD' => 'GET', 'PATH_INFO' => '/path', 'QUERY_STRING' => 'foo=bar' } }
+      let(:env) {
+        { 'REQUEST_METHOD' => 'GET', 'PATH_INFO' => '/path', 'QUERY_STRING' => 'foo=bar' }
+      }
 
       context "when env['REQUEST_URI'] is nil" do
-        before { env['REQUEST_URI'] = nil }
+        before {
+          env['REQUEST_URI'] = nil
+        }
 
         it 'should notification.url is built' do
           expect(notification).to receive(:url=).with('GET /path?foo=bar')
@@ -124,7 +144,9 @@ describe Bullet, focused: true do
       end
 
       context "when env['REQUEST_URI'] is present" do
-        before { env['REQUEST_URI'] = 'http://example.com/path' }
+        before {
+          env['REQUEST_URI'] = 'http://example.com/path'
+        }
 
         it "should notification.url is env['REQUEST_URI']" do
           expect(notification).to receive(:url=).with('GET http://example.com/path')

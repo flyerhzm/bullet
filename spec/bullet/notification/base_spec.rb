@@ -5,17 +5,23 @@ require 'spec_helper'
 module Bullet
   module Notification
     describe Base do
-      subject { Base.new(Post, %i[comments votes]) }
+      subject {
+        Base.new(Post, %i[comments votes])
+      }
 
       context '#title' do
         it 'should raise NoMethodError' do
-          expect { subject.title }.to raise_error(NoMethodError)
+          expect {
+            subject.title
+          }.to raise_error(NoMethodError)
         end
       end
 
       context '#body' do
         it 'should raise NoMethodError' do
-          expect { subject.body }.to raise_error(NoMethodError)
+          expect {
+            subject.body
+          }.to raise_error(NoMethodError)
         end
       end
 
@@ -26,7 +32,9 @@ module Bullet
         end
 
         it 'should leverage ENV parameter' do
-          temp_env_variable('USER', 'bogus') { expect(subject.whoami).to eq('user: bogus') }
+          temp_env_variable('USER', 'bogus') {
+            expect(subject.whoami).to eq('user: bogus')
+          }
         end
 
         it 'should return blank if no user available' do
