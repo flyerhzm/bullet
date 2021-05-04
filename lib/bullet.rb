@@ -70,8 +70,9 @@ module Bullet
       !!@enable
     end
 
+    # Rails.root might be nil if `railties` is a dependency on a project that does not use Rails
     def app_root
-      @app_root ||= (defined?(::Rails.root) ? Rails.root.to_s : Dir.pwd).to_s
+      @app_root ||= (defined?(::Rails.root) && !::Rails.root.nil? ? Rails.root.to_s : Dir.pwd).to_s
     end
 
     def n_plus_one_query_enable?
