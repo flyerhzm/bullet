@@ -26,11 +26,13 @@ module Bullet
 
             with_security_policy_nonce(headers) do |nonce|
               response_body = append_to_html_body(response_body, Bullet.gather_inline_notifications)
-              response_body = append_to_html_body(response_body, xhr_script(nonce))
+              if Bullet.add_footer && !Bullet.skip_http_headers
+                response_body = append_to_html_body(response_body, xhr_script(nonce))
+              end
             end
 
             headers['Content-Length'] = response_body.bytesize.to_s
-          else
+          elsif !Bullet.skip_http_headers
             set_header(headers, 'X-bullet-footer-text', Bullet.footer_info.uniq) if Bullet.add_footer
             set_header(headers, 'X-bullet-console-text', Bullet.text_notifications) if Bullet.console_enabled?
           end

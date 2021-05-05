@@ -45,6 +45,7 @@ module Support
         Mongoid.configure do |config|
           config.load_configuration(clients: { default: { database: 'bullet', hosts: %w[localhost:27017] } })
         end
+
         # Increase the level from DEBUG in order to avoid excessive logging to the screen
         Mongo::Logger.logger.level = Logger::WARN
       end

@@ -561,6 +561,42 @@ if active_record?
     end
   end
 
+  describe Bullet::Detector::Association, 'has_one :through' do
+    context 'user => attachment' do
+      it 'should detect non preload associations' do
+        User.all.each { |user| user.submission_attachment.file_name }
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+        expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
+
+        expect(Bullet::Detector::Association).to be_detecting_unpreloaded_association_for(User, :submission_attachment)
+      end
+
+      it 'should detect preload associations' do
+        User.includes(:submission_attachment).each { |user| user.submission_attachment.file_name }
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+        expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
+
+        expect(Bullet::Detector::Association).to be_completely_preloading_associations
+      end
+
+      it 'should not detect preload associations' do
+        User.all.map(&:name)
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+        expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
+
+        expect(Bullet::Detector::Association).to be_completely_preloading_associations
+      end
+
+      it 'should detect unused preload associations' do
+        User.includes(:submission_attachment).map(&:name)
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+        expect(Bullet::Detector::Association).to be_unused_preload_associations_for(User, :submission_attachment)
+
+        expect(Bullet::Detector::Association).to be_completely_preloading_associations
+      end
+    end
+  end
+
   describe Bullet::Detector::Association, 'call one association that in possible objects' do
     it 'should not detect preload association' do
       Post.all

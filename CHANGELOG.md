@@ -1,5 +1,14 @@
 ## Next Release
 
+## 6.1.4 (02/26/2021)
+
+* Added an option to stop adding HTTP headers to API requests
+
+## 6.1.3 (01/21/2021)
+
+* Consider ThroughAssociation at SingularAssociation like CollectionAssociation
+* Add xhr_script only when add_footer is enabled
+
 ## 6.1.2 (12/12/2020)
 
 * Revert "Make whitelist thread safe"

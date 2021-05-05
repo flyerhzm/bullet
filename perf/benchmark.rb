@@ -30,7 +30,10 @@ end
 
 # create database bullet_benchmark;
 ActiveRecord::Base.establish_connection(
-  adapter: 'mysql2', database: 'bullet_benchmark', server: '/tmp/mysql.socket', username: 'root'
+  adapter: 'mysql2',
+  database: 'bullet_benchmark',
+  server: '/tmp/mysql.socket',
+  username: 'root'
 )
 
 ActiveRecord::Base.connection.tables.each { |table| ActiveRecord::Base.connection.drop_table(table) }

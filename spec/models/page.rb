@@ -1,3 +1,4 @@
 # frozen_string_literal: true
 
-class Page < Document; end
+class Page < Document
+end
