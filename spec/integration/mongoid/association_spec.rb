@@ -118,7 +118,7 @@ if mongoid?
           expect(Bullet::Detector::Association).to be_completely_preloading_associations
         end
 
-        it 'should detect preload with post => commnets' do
+        it 'should detect preload with post => comments' do
           Mongoid::Post.first.comments.map(&:name)
           Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
           expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations

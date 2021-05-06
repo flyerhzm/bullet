@@ -129,7 +129,7 @@ if active_record?
         expect(Bullet::Detector::Association).to be_completely_preloading_associations
       end
 
-      it 'should detect unused preload with post => commnets, no category => posts' do
+      it 'should detect unused preload with post => comments, no category => posts' do
         Category.includes(posts: :comments).each { |category| category.posts.map(&:name) }
         Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
         expect(Bullet::Detector::Association).to be_unused_preload_associations_for(Post, :comments)
@@ -202,7 +202,7 @@ if active_record?
         expect(Bullet::Detector::Association).to be_completely_preloading_associations
       end
 
-      it 'should detect preload with post => commnets' do
+      it 'should detect preload with post => comments' do
         Post.first.comments.map(&:name)
         Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
         expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
