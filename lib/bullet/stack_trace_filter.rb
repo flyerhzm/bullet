@@ -9,9 +9,8 @@ module Bullet
       vendor_root = Bullet.app_root + VENDOR_PATH
       bundler_path = Bundler.bundle_path.to_s
       select_caller_locations do |location|
-        caller_path = location_as_path(location)
-        caller_path.include?(Bullet.app_root) && !caller_path.include?(vendor_root) &&
-          !caller_path.include?(bundler_path) || Bullet.stacktrace_includes.any? { |include_pattern|
+        location.include?(Bullet.app_root) && !location.include?(vendor_root) &&
+          !location.include?(bundler_path) || Bullet.stacktrace_includes.any? { |include_pattern|
           pattern_matches?(location, include_pattern)
         }
       end
@@ -48,15 +47,12 @@ module Bullet
       end
     end
 
-    def location_as_path(location)
-      IS_RUBY_19 ? location : location.absolute_path.to_s
-    end
-
-    def select_caller_locations
+    def select_caller_locations(&blk)
+      callback = Bullet.stacktrace_filter || blk
       if IS_RUBY_19
-        caller.select { |caller_path| yield caller_path }
+        caller.select { |caller_path| callback.call caller_path }
       else
-        caller_locations.select { |location| yield location }
+        caller_locations.select { |location| callback.call location.absolute_path.to_s }
       end
     end
   end

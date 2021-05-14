@@ -133,4 +133,25 @@ describe Bullet, focused: true do
       end
     end
   end
+
+  describe "#stacktrace_filter=" do
+    context "when set" do
+      it "can filter the stack trace according to custom logic" do
+        Bullet.stacktrace_filter = ->(location) { location.match? /spec/ }
+        Post.all.each { |post| post.comments.map &:name }
+        first_notification = Bullet.collected_n_plus_one_query_notifications.first
+        expect(first_notification.instance_variable_get(:@callers).map(&:to_s)).to all match /spec/
+      end
+    end
+
+    context "when not set" do
+      before { Bullet.stacktrace_filter = nil }
+
+      it "only shows items from within the app" do
+        Post.all.each { |post| post.comments.map &:name }
+        first_notification = Bullet.collected_n_plus_one_query_notifications.first
+        expect(first_notification.instance_variable_get(:@callers).map(&:to_s)).to all match /bullet/
+      end
+    end
+  end
 end
