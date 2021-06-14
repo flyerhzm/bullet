@@ -4,6 +4,7 @@ class Post < ActiveRecord::Base
   belongs_to :category, inverse_of: :posts
   belongs_to :writer
   has_many :comments, inverse_of: :post
+  has_and_belongs_to_many :deals
 
   validates :category, presence: true
 
