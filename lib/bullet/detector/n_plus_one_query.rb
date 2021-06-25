@@ -35,6 +35,7 @@ module Bullet
 
           objects = Array(object_or_objects)
           return if objects.map(&:bullet_primary_key_value).compact.empty?
+          return if objects.all? { |obj| obj.class.name =~ /^HABTM_/ }
 
           Bullet.debug(
             'Detector::NPlusOneQuery#add_possible_objects',

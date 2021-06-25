@@ -401,6 +401,15 @@ if active_record?
   end
 
   describe Bullet::Detector::Association, 'has_and_belongs_to_many' do
+    context 'posts <=> deals' do
+      it 'should detect preload associations with join tables that have identifier' do
+        Post.includes(:deals).each { |post| post.deals.map(&:name) }
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+        expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
+
+        expect(Bullet::Detector::Association).to be_completely_preloading_associations
+      end
+    end
     context 'students <=> teachers' do
       it 'should detect non preload associations' do
         Student.all.each { |student| student.teachers.map(&:name) }
