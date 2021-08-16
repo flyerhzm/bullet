@@ -2,8 +2,6 @@
 
 require 'spec_helper'
 
-require 'rack/files'
-
 module Bullet
   describe Rack do
     let(:middleware) { Bullet::Rack.new app }
@@ -264,13 +262,18 @@ module Bullet
         end
       end
 
-      context 'when `response` is a Rack::Files::Iterator' do
-        let(:response) { instance_double(::Rack::Files::Iterator) }
-        before { allow(response).to receive(:is_a?).with(::Rack::Files::Iterator) { true } }
+      begin
+        require 'rack/files'
 
-        it 'should return nil' do
-          expect(middleware.response_body(response)).to be_nil
+        context 'when `response` is a Rack::Files::Iterator' do
+          let(:response) { instance_double(::Rack::Files::Iterator) }
+          before { allow(response).to receive(:is_a?).with(::Rack::Files::Iterator) { true } }
+
+          it 'should return nil' do
+            expect(middleware.response_body(response)).to be_nil
+          end
         end
+      rescue LoadError
       end
     end
   end
