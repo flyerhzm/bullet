@@ -10,7 +10,7 @@ describe Object do
     end
 
     if mongoid?
-      it 'should return class with namesapce and id composition' do
+      it 'should return class with namespace and id composition' do
         post = Mongoid::Post.first
         expect(post.bullet_key).to eq("Mongoid::Post:#{post.id}")
       end

@@ -35,6 +35,7 @@ module Bullet
 
           objects = Array(object_or_objects)
           return if objects.map(&:bullet_primary_key_value).compact.empty?
+          return if objects.all? { |obj| obj.class.name =~ /^HABTM_/ }
 
           Bullet.debug(
             'Detector::NPlusOneQuery#add_possible_objects',
@@ -84,8 +85,7 @@ module Bullet
             # associations == v comparison order is important here because
             # v variable might be a squeel node where :== method is redefined,
             # so it does not compare values at all and return unexpected results
-            result =
-              v.is_a?(Hash) ? v.key?(associations) : associations == v
+            result = v.is_a?(Hash) ? v.key?(associations) : associations == v
             return true if result
           end
 

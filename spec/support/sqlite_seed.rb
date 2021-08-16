@@ -21,6 +21,13 @@ module Support
       post2 = category2.posts.create(name: 'second', writer: writer2)
       post3 = category2.posts.create(name: 'third', writer: writer2)
 
+      deal1 = Deal.new(name: 'Deal 1')
+      deal1.posts << post1
+      deal1.posts << post2
+      deal2 = Deal.new(name: 'Deal 2')
+      post1.deals << deal1
+      post1.deals << deal2
+
       comment1 = post1.comments.create(name: 'first', author: writer1)
       comment2 = post1.comments.create(name: 'first2', author: writer1)
       comment3 = post1.comments.create(name: 'first3', author: writer1)
@@ -95,6 +102,9 @@ module Support
       submission1.replies.create(name: 'reply2')
       submission2.replies.create(name: 'reply3')
       submission2.replies.create(name: 'reply4')
+
+      submission1.create_attachment(file_name: 'submission1 file')
+      submission2.create_attachment(file_name: 'submission2 file')
     end
 
     def setup_db
@@ -151,6 +161,11 @@ module Support
         create_table :deals do |t|
           t.column :name, :string
           t.column :hotel_id, :integer
+        end
+
+        create_table :deals_posts do |t|
+          t.column :deal_id, :integer
+          t.column :post_id, :integer
         end
 
         create_table :documents do |t|
@@ -239,6 +254,11 @@ module Support
         create_table :users do |t|
           t.column :name, :string
           t.column :category_id, :integer
+        end
+
+        create_table :attachments do |t|
+          t.column :file_name, :string
+          t.column :submission_id, :integer
         end
       end
     end

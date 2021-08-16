@@ -22,9 +22,11 @@ module Bullet
             response_body = response_body(response)
             response_body = append_to_html_body(response_body, footer_note) if Bullet.add_footer
             response_body = append_to_html_body(response_body, Bullet.gather_inline_notifications)
-            response_body = append_to_html_body(response_body, xhr_script)
+            if Bullet.add_footer && !Bullet.skip_http_headers
+              response_body = append_to_html_body(response_body, xhr_script)
+            end
             headers['Content-Length'] = response_body.bytesize.to_s
-          else
+          elsif !Bullet.skip_http_headers
             set_header(headers, 'X-bullet-footer-text', Bullet.footer_info.uniq) if Bullet.add_footer
             set_header(headers, 'X-bullet-console-text', Bullet.text_notifications) if Bullet.console_enabled?
           end
@@ -46,6 +48,7 @@ module Bullet
 
     def append_to_html_body(response_body, content)
       body = response_body.dup
+      content = content.html_safe if content.respond_to?(:html_safe)
       if body.include?('</body>')
         position = body.rindex('</body>')
         body.insert(position, content)
@@ -55,14 +58,14 @@ module Bullet
     end
 
     def footer_note
-      "<div #{footer_div_attributes}>" + footer_header + '<br>' + Bullet.footer_info.uniq.join('<br>') + '</div>'
+      "<details #{details_attributes}><summary #{summary_attributes}>Bullet Warnings</summary><div #{footer_content_attributes}>#{Bullet.footer_info.uniq.join('<br>')}#{footer_console_message}</div></details>"
     end
 
     def set_header(headers, header_name, header_array)
       # Many proxy applications such as Nginx and AWS ELB limit
       # the size a header to 8KB, so truncate the list of reports to
       # be under that limit
-      header_array.pop while header_array.to_json.length > 8 * 1_024
+      header_array.pop while header_array.to_json.length > 8 * 1024
       headers[header_name] = header_array.to_json
     end
 
@@ -81,30 +84,35 @@ module Bullet
     def response_body(response)
       if response.respond_to?(:body)
         Array === response.body ? response.body.first : response.body
-      else
+      elsif response.respond_to?(:first)
         response.first
       end
     end
 
     private
 
-    def footer_div_attributes
+    def details_attributes
       <<~EOF
-        id="bullet-footer" data-is-bullet-footer ondblclick="this.parentNode.removeChild(this);" style="position: fixed; bottom: 0pt; left: 0pt; cursor: pointer; border-style: solid; border-color: rgb(153, 153, 153);
-         -moz-border-top-colors: none; -moz-border-right-colors: none; -moz-border-bottom-colors: none;
-         -moz-border-left-colors: none; -moz-border-image: none; border-width: 2pt 2pt 0px 0px;
-         padding: 3px 5px; border-radius: 0pt 10pt 0pt 0px; background: none repeat scroll 0% 0% rgba(200, 200, 200, 0.8);
-         color: rgb(119, 119, 119); font-size: 16px; font-family: 'Arial', sans-serif; z-index:9999;"
+        id="bullet-footer" data-is-bullet-footer
+        style="cursor: pointer; position: fixed; left: 0px; bottom: 0px; z-index: 9999; background: #fdf2f2; color: #9b1c1c; font-size: 12px; border-radius: 0px 8px 0px 0px; border: 1px solid #9b1c1c;"
       EOF
     end
 
-    def footer_header
-      cancel_button =
-        "<span onclick='this.parentNode.remove()' style='position:absolute; right: 10px; top: 0px; font-weight: bold; color: #333;'>&times;</span>"
+    def summary_attributes
+      <<~EOF
+        style="font-weight: 600; padding: 2px 8px"
+      EOF
+    end
+
+    def footer_content_attributes
+      <<~EOF
+        style="padding: 8px; border-top: 1px solid #9b1c1c;"
+      EOF
+    end
+
+    def footer_console_message
       if Bullet.console_enabled?
-        "<span>See 'Uniform Notifier' in JS Console for Stacktrace</span>#{cancel_button}"
-      else
-        cancel_button
+        "<br/><span style='font-style: italic;'>See 'Uniform Notifier' in JS Console for Stacktrace</span>"
       end
     end
 

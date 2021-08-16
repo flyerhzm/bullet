@@ -1,8 +1,10 @@
 # frozen_string_literal: true
+require "bundler"
 
 module Bullet
   module StackTraceFilter
     VENDOR_PATH = '/vendor'
+    IS_RUBY_19 = Gem::Version.new(RUBY_VERSION) < Gem::Version.new('2.0.0')
 
     def caller_in_project
       vendor_root = Bullet.app_root + VENDOR_PATH
@@ -10,8 +12,9 @@ module Bullet
       select_caller_locations do |location|
         caller_path = location_as_path(location)
         caller_path.include?(Bullet.app_root) && !caller_path.include?(vendor_root) &&
-          !caller_path.include?(bundler_path) ||
-          Bullet.stacktrace_includes.any? { |include_pattern| pattern_matches?(location, include_pattern) }
+          !caller_path.include?(bundler_path) || Bullet.stacktrace_includes.any? { |include_pattern|
+          pattern_matches?(location, include_pattern)
+        }
       end
     end
 
@@ -47,20 +50,15 @@ module Bullet
     end
 
     def location_as_path(location)
-      ruby_19? ? location : location.absolute_path.to_s
+      IS_RUBY_19 ? location : location.absolute_path.to_s
     end
 
     def select_caller_locations
-      if ruby_19?
+      if IS_RUBY_19
         caller.select { |caller_path| yield caller_path }
       else
         caller_locations.select { |location| yield location }
       end
-    end
-
-    def ruby_19?
-      @ruby_19 = Gem::Version.new(RUBY_VERSION) < Gem::Version.new('2.0.0') if @ruby_19.nil?
-      @ruby_19
     end
   end
 end

@@ -4,6 +4,7 @@ class Post < ActiveRecord::Base
   belongs_to :category, inverse_of: :posts
   belongs_to :writer
   has_many :comments, inverse_of: :post
+  has_and_belongs_to_many :deals
 
   validates :category, presence: true
 
@@ -21,6 +22,7 @@ class Post < ActiveRecord::Base
     next unless trigger_after_save
 
     temp_comment = Comment.new(post: self)
+
     # this triggers self to be "possible", even though it's
     # not saved yet
     temp_comment.post

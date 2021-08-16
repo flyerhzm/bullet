@@ -129,7 +129,7 @@ if active_record?
         expect(Bullet::Detector::Association).to be_completely_preloading_associations
       end
 
-      it 'should detect unused preload with post => commnets, no category => posts' do
+      it 'should detect unused preload with post => comments, no category => posts' do
         Category.includes(posts: :comments).each { |category| category.posts.map(&:name) }
         Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
         expect(Bullet::Detector::Association).to be_unused_preload_associations_for(Post, :comments)
@@ -202,7 +202,7 @@ if active_record?
         expect(Bullet::Detector::Association).to be_completely_preloading_associations
       end
 
-      it 'should detect preload with post => commnets' do
+      it 'should detect preload with post => comments' do
         Post.first.comments.map(&:name)
         Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
         expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
@@ -401,6 +401,15 @@ if active_record?
   end
 
   describe Bullet::Detector::Association, 'has_and_belongs_to_many' do
+    context 'posts <=> deals' do
+      it 'should detect preload associations with join tables that have identifier' do
+        Post.includes(:deals).each { |post| post.deals.map(&:name) }
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+        expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
+
+        expect(Bullet::Detector::Association).to be_completely_preloading_associations
+      end
+    end
     context 'students <=> teachers' do
       it 'should detect non preload associations' do
         Student.all.each { |student| student.teachers.map(&:name) }
@@ -558,6 +567,42 @@ if active_record?
       expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
 
       expect(Bullet::Detector::Association).to be_completely_preloading_associations
+    end
+  end
+
+  describe Bullet::Detector::Association, 'has_one :through' do
+    context 'user => attachment' do
+      it 'should detect non preload associations' do
+        User.all.each { |user| user.submission_attachment.file_name }
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+        expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
+
+        expect(Bullet::Detector::Association).to be_detecting_unpreloaded_association_for(User, :submission_attachment)
+      end
+
+      it 'should detect preload associations' do
+        User.includes(:submission_attachment).each { |user| user.submission_attachment.file_name }
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+        expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
+
+        expect(Bullet::Detector::Association).to be_completely_preloading_associations
+      end
+
+      it 'should not detect preload associations' do
+        User.all.map(&:name)
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+        expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
+
+        expect(Bullet::Detector::Association).to be_completely_preloading_associations
+      end
+
+      it 'should detect unused preload associations' do
+        User.includes(:submission_attachment).map(&:name)
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+        expect(Bullet::Detector::Association).to be_unused_preload_associations_for(User, :submission_attachment)
+
+        expect(Bullet::Detector::Association).to be_completely_preloading_associations
+      end
     end
   end
 

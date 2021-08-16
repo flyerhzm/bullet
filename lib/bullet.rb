@@ -20,9 +20,6 @@ module Bullet
   autoload :Registry, 'bullet/registry'
   autoload :NotificationCollector, 'bullet/notification_collector'
 
-  BULLET_DEBUG = 'BULLET_DEBUG'
-  TRUE = 'true'
-
   if defined?(Rails::Railtie)
     class BulletRailtie < Rails::Railtie
       initializer 'bullet.configure_rails_initialization' do |app|
@@ -38,9 +35,11 @@ module Bullet
                 :stacktrace_includes,
                 :stacktrace_excludes,
                 :skip_html_injection
-    attr_accessor :add_footer, :orm_patches_applied
+    attr_reader :safelist
+    attr_accessor :add_footer, :orm_patches_applied, :skip_http_headers
 
-    available_notifiers = UniformNotifier::AVAILABLE_NOTIFIERS.map { |notifier| "#{notifier}=" }
+    available_notifiers =
+      UniformNotifier::AVAILABLE_NOTIFIERS.select { |notifier| notifier != :raise }.map { |notifier| "#{notifier}=" }
     available_notifiers_options = { to: UniformNotifier }
     delegate(*available_notifiers, **available_notifiers_options)
 
@@ -71,8 +70,9 @@ module Bullet
       !!@enable
     end
 
+    # Rails.root might be nil if `railties` is a dependency on a project that does not use Rails
     def app_root
-      (defined?(::Rails.root) ? Rails.root.to_s : Dir.pwd).to_s
+      @app_root ||= (defined?(::Rails.root) && !::Rails.root.nil? ? Rails.root.to_s : Dir.pwd).to_s
     end
 
     def n_plus_one_query_enable?
@@ -88,36 +88,36 @@ module Bullet
     end
 
     def stacktrace_includes
-      @stacktrace_includes || []
+      @stacktrace_includes ||= []
     end
 
     def stacktrace_excludes
-      @stacktrace_excludes || []
+      @stacktrace_excludes ||= []
     end
 
     def add_safelist(options)
       reset_safelist
-      Thread.current[:safelist][options[:type]][options[:class_name]] ||= []
-      Thread.current[:safelist][options[:type]][options[:class_name]] << options[:association].to_sym
+      @safelist[options[:type]][options[:class_name]] ||= []
+      @safelist[options[:type]][options[:class_name]] << options[:association].to_sym
     end
 
     def delete_safelist(options)
       reset_safelist
-      Thread.current[:safelist][options[:type]][options[:class_name]] ||= []
-      Thread.current[:safelist][options[:type]][options[:class_name]].delete(options[:association].to_sym)
-      Thread.current[:safelist][options[:type]].delete_if { |_key, val| val.empty? }
+      @safelist[options[:type]][options[:class_name]] ||= []
+      @safelist[options[:type]][options[:class_name]].delete(options[:association].to_sym)
+      @safelist[options[:type]].delete_if { |_key, val| val.empty? }
     end
 
     def get_safelist_associations(type, class_name)
-      Array(Thread.current[:safelist][type][class_name])
+      Array(@safelist[type][class_name])
     end
 
     def reset_safelist
-      Thread.current[:safelist] ||= { n_plus_one_query: {}, unused_eager_loading: {}, counter_cache: {} }
+      @safelist ||= { n_plus_one_query: {}, unused_eager_loading: {}, counter_cache: {} }
     end
 
     def clear_safelist
-      Thread.current[:safelist] = nil
+      @safelist = nil
     end
 
     def add_whitelist(options)
@@ -176,7 +176,7 @@ module Bullet
     end
 
     def debug(title, message)
-      puts "[Bullet][#{title}] #{message}" if ENV[BULLET_DEBUG] == TRUE
+      puts "[Bullet][#{title}] #{message}" if ENV['BULLET_DEBUG'] == 'true'
     end
 
     def start_request
@@ -285,7 +285,9 @@ module Bullet
     end
 
     def inject_into_page?
-      !@skip_html_injection && (console_enabled? || add_footer)
+      return false if defined?(@skip_html_injection) && @skip_html_injection
+
+      console_enabled? || add_footer
     end
 
     private

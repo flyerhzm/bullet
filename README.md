@@ -37,6 +37,13 @@ or add it into a Gemfile (Bundler):
 gem 'bullet', group: 'development'
 ```
 
+enable the Bullet gem with generate command
+
+```ruby
+bundle exec rails g bullet:install
+```
+The generate command will auto generate the default configuration and may ask to include in the test environment as well. See below for custom configuration.
+
 **Note**: make sure `bullet` gem is added after activerecord (rails) and
 mongoid.
 
@@ -60,6 +67,7 @@ config.after_initialize do
   Bullet.rails_logger = true
   Bullet.honeybadger = true
   Bullet.bugsnag = true
+  Bullet.appsignal = true
   Bullet.airbrake = true
   Bullet.rollbar = true
   Bullet.add_footer = true
@@ -83,10 +91,12 @@ The code above will enable all of the Bullet notification systems:
 * `Bullet.honeybadger`: add notifications to Honeybadger
 * `Bullet.bugsnag`: add notifications to bugsnag
 * `Bullet.airbrake`: add notifications to airbrake
+* `Bullet.appsignal`: add notifications to AppSignal
 * `Bullet.rollbar`: add notifications to rollbar
 * `Bullet.sentry`: add notifications to sentry
 * `Bullet.add_footer`: adds the details in the bottom left corner of the page. Double click the footer or use close button to hide footer.
-* `Bullet.skip_html_injection`: prevents Bullet from injecting XHR into the returned HTML. This must be false for receiving alerts or console logging.
+* `Bullet.skip_html_injection`: prevents Bullet from injecting code into the returned HTML. This must be false for receiving alerts, showing the footer or console logging.
+* `Bullet.skip_http_headers`: don't add headers to API requests, and remove the javascript that relies on them. Note that this prevents bullet from logging warnings to the browser console or updating the footer.
 * `Bullet.stacktrace_includes`: include paths with any of these substrings in the stack trace, even if they are not in your main app
 * `Bullet.stacktrace_excludes`: ignore paths with any of these substrings in the stack trace, even if they are not in your main app.
    Each item can be a string (match substring), a regex, or an array where the first item is a path to match, and the second
