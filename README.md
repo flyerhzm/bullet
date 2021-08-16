@@ -1,7 +1,7 @@
 # Bullet
 
+![Main workflow](https://github.com/flyerhzm/bullet/actions/workflows/main.yml/badge.svg)
 [![Gem Version](https://badge.fury.io/rb/bullet.svg)](http://badge.fury.io/rb/bullet)
-[![Build Status](https://secure.travis-ci.org/flyerhzm/bullet.svg)](http://travis-ci.org/flyerhzm/bullet)
 [![AwesomeCode Status for flyerhzm/bullet](https://awesomecode.io/projects/6755235b-e2c1-459e-bf92-b8b13d0c0472/status)](https://awesomecode.io/repos/flyerhzm/bullet)
 [![Coderwall Endorse](http://api.coderwall.com/flyerhzm/endorsecount.png)](http://coderwall.com/flyerhzm)
 
