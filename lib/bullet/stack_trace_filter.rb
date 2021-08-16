@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require "bundler"
+require 'bundler'
 
 module Bullet
   module StackTraceFilter
