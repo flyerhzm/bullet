@@ -1,5 +1,12 @@
 ## Next Release
 
+## 6.1.5 (08/16/2021)
+
+* Rename whitelist to safelist
+* Fix onload called twice
+* Support Rack::Files::Iterator responses
+* Ensure HABTM associations are not incorrectly labeled n+1
+
 ## 6.1.4 (02/26/2021)
 
 * Added an option to stop adding HTTP headers to API requests
