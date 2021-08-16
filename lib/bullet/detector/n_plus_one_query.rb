@@ -95,7 +95,7 @@ module Bullet
         private
 
         def create_notification(callers, klazz, associations)
-          notify_associations = Array(associations) - Bullet.get_whitelist_associations(:n_plus_one_query, klazz)
+          notify_associations = Array(associations) - Bullet.get_safelist_associations(:n_plus_one_query, klazz)
 
           if notify_associations.present?
             notice = Bullet::Notification::NPlusOneQuery.new(callers, klazz, notify_associations)

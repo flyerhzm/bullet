@@ -35,7 +35,7 @@ module Bullet
                 :stacktrace_includes,
                 :stacktrace_excludes,
                 :skip_html_injection
-    attr_reader :whitelist
+    attr_reader :safelist
     attr_accessor :add_footer, :orm_patches_applied, :skip_http_headers
 
     available_notifiers =
@@ -57,7 +57,7 @@ module Bullet
       @enable = @n_plus_one_query_enable = @unused_eager_loading_enable = @counter_cache_enable = enable
 
       if enable?
-        reset_whitelist
+        reset_safelist
         unless orm_patches_applied
           self.orm_patches_applied = true
           Bullet::Mongoid.enable if mongoid?
@@ -95,29 +95,74 @@ module Bullet
       @stacktrace_excludes ||= []
     end
 
+    def add_safelist(options)
+      reset_safelist
+      @safelist[options[:type]][options[:class_name]] ||= []
+      @safelist[options[:type]][options[:class_name]] << options[:association].to_sym
+    end
+
+    def delete_safelist(options)
+      reset_safelist
+      @safelist[options[:type]][options[:class_name]] ||= []
+      @safelist[options[:type]][options[:class_name]].delete(options[:association].to_sym)
+      @safelist[options[:type]].delete_if { |_key, val| val.empty? }
+    end
+
+    def get_safelist_associations(type, class_name)
+      Array(@safelist[type][class_name])
+    end
+
+    def reset_safelist
+      @safelist ||= { n_plus_one_query: {}, unused_eager_loading: {}, counter_cache: {} }
+    end
+
+    def clear_safelist
+      @safelist = nil
+    end
+
     def add_whitelist(options)
-      reset_whitelist
-      @whitelist[options[:type]][options[:class_name]] ||= []
-      @whitelist[options[:type]][options[:class_name]] << options[:association].to_sym
+      ActiveSupport::Deprecation.warn(<<~WARN.strip
+        add_whitelist is deprecated in favor of add_safelist. It will be removed from the next major release.
+        WARN
+      )
+
+      add_safelist(options)
     end
 
     def delete_whitelist(options)
-      reset_whitelist
-      @whitelist[options[:type]][options[:class_name]] ||= []
-      @whitelist[options[:type]][options[:class_name]].delete(options[:association].to_sym)
-      @whitelist[options[:type]].delete_if { |_key, val| val.empty? }
+      ActiveSupport::Deprecation.warn(<<~WARN.strip
+        delete_whitelist is deprecated in favor of delete_safelist. It will be removed from the next major release.
+        WARN
+      )
+
+      delete_safelist(options)
     end
 
     def get_whitelist_associations(type, class_name)
-      Array(@whitelist[type][class_name])
+      ActiveSupport::Deprecation.warn(<<~WARN.strip
+        get_whitelist_associations is deprecated in favor of get_safelist_associations. It will be removed from the next major release.
+        WARN
+      )
+
+      get_safelist_associations(type, class_name)
     end
 
     def reset_whitelist
-      @whitelist ||= { n_plus_one_query: {}, unused_eager_loading: {}, counter_cache: {} }
+      ActiveSupport::Deprecation.warn(<<~WARN.strip
+        reset_whitelist is deprecated in favor of reset_safelist. It will be removed from the next major release.
+        WARN
+      )
+
+      reset_safelist
     end
 
     def clear_whitelist
-      @whitelist = nil
+      ActiveSupport::Deprecation.warn(<<~WARN.strip
+        clear_whitelist is deprecated in favor of clear_safelist. It will be removed from the next major release.
+        WARN
+      )
+
+      clear_safelist
     end
 
     def bullet_logger=(active)

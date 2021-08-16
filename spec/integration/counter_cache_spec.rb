@@ -55,9 +55,9 @@ if !mongoid? && active_record?
       end
     end
 
-    context 'whitelist' do
-      before { Bullet.add_whitelist type: :counter_cache, class_name: 'Country', association: :cities }
-      after { Bullet.clear_whitelist }
+    context 'safelist' do
+      before { Bullet.add_safelist type: :counter_cache, class_name: 'Country', association: :cities }
+      after { Bullet.clear_safelist }
 
       it 'should not detect counter cache' do
         Country.all.each { |country| country.cities.size }
