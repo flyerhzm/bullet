@@ -65,6 +65,10 @@ module Bullet
     def active_record6?
       active_record? && ::ActiveRecord::VERSION::MAJOR == 6
     end
+    
+    def active_record7?
+      active_record? && ::ActiveRecord::VERSION::MAJOR == 7
+    end
 
     def active_record40?
       active_record4? && ::ActiveRecord::VERSION::MINOR == 0
