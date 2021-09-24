@@ -105,8 +105,8 @@ module Bullet
       ::ActiveRecord::FinderMethods.prepend(
         Module.new do
           # add includes in scope
-          def find_with_associations
-            return super { |r| yield r } if block_given?
+          def find_with_associations(&block)
+            return super(&block) if block_given?
 
             records = super
             if Bullet.start?
