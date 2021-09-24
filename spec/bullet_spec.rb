@@ -7,10 +7,6 @@ describe Bullet, focused: true do
 
   describe '#enable' do
     context 'enable Bullet' do
-      before do
-        # Bullet.enable
-        # Do nothing. Bullet has already been enabled for the whole test suite.
-      end
 
       it 'should be enabled' do
         expect(subject).to be_enable
