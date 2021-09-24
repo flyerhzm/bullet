@@ -121,46 +121,41 @@ module Bullet
     end
 
     def add_whitelist(options)
-      ActiveSupport::Deprecation.warn(<<~WARN.strip
+      ActiveSupport::Deprecation.warn(<<~WARN.strip)
         add_whitelist is deprecated in favor of add_safelist. It will be removed from the next major release.
         WARN
-      )
 
       add_safelist(options)
     end
 
     def delete_whitelist(options)
-      ActiveSupport::Deprecation.warn(<<~WARN.strip
+      ActiveSupport::Deprecation.warn(<<~WARN.strip)
         delete_whitelist is deprecated in favor of delete_safelist. It will be removed from the next major release.
         WARN
-      )
 
       delete_safelist(options)
     end
 
     def get_whitelist_associations(type, class_name)
-      ActiveSupport::Deprecation.warn(<<~WARN.strip
+      ActiveSupport::Deprecation.warn(<<~WARN.strip)
         get_whitelist_associations is deprecated in favor of get_safelist_associations. It will be removed from the next major release.
         WARN
-      )
 
       get_safelist_associations(type, class_name)
     end
 
     def reset_whitelist
-      ActiveSupport::Deprecation.warn(<<~WARN.strip
+      ActiveSupport::Deprecation.warn(<<~WARN.strip)
         reset_whitelist is deprecated in favor of reset_safelist. It will be removed from the next major release.
         WARN
-      )
 
       reset_safelist
     end
 
     def clear_whitelist
-      ActiveSupport::Deprecation.warn(<<~WARN.strip
+      ActiveSupport::Deprecation.warn(<<~WARN.strip)
         clear_whitelist is deprecated in favor of clear_safelist. It will be removed from the next major release.
         WARN
-      )
 
       clear_safelist
     end
