@@ -23,16 +23,31 @@ module Bullet
         end
 
         def each(&block)
-          return to_enum unless block
+          return to_enum unless block_given?
 
-          records = []
-          origin_each { |record| records << record }
-          if records.length > 1
-            Bullet::Detector::NPlusOneQuery.add_possible_objects(records)
-          elsif records.size == 1
-            Bullet::Detector::NPlusOneQuery.add_impossible_object(records.first)
+          first_document = nil
+          document_count = 0
+
+          origin_each do |document|
+            document_count += 1
+
+            if document_count == 1
+              first_document = document
+            elsif document_count == 2
+              Bullet::Detector::NPlusOneQuery.add_possible_objects([first_document, document])
+              yield(first_document)
+              first_document = nil
+              yield(document)
+            else
+              Bullet::Detector::NPlusOneQuery.add_possible_objects(document)
+              yield(document)
+            end
           end
-          records.each(&block)
+
+          if document_count == 1
+            Bullet::Detector::NPlusOneQuery.add_impossible_object(first_document)
+            yield(first_document)
+          end
         end
 
         def eager_load(docs)
