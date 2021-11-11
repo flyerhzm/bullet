@@ -48,6 +48,8 @@ module Bullet
             Bullet::Detector::NPlusOneQuery.add_impossible_object(first_document)
             yield(first_document)
           end
+
+          self
         end
 
         def eager_load(docs)
