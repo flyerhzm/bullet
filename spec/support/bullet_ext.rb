@@ -39,16 +39,22 @@ module Bullet
 
         # returns true if a given class includes the specific unpreloaded association
         def detecting_unpreloaded_association_for?(klass, association)
-          Bullet.collected_n_plus_one_query_notifications.select do |notification|
-            notification.base_class == klass.to_s && notification.associations.include?(association)
-          end.present?
+          Bullet
+            .collected_n_plus_one_query_notifications
+            .select do |notification|
+              notification.base_class == klass.to_s && notification.associations.include?(association)
+            end
+            .present?
         end
 
         # returns true if the given class includes the specific unused preloaded association
         def unused_preload_associations_for?(klass, association)
-          Bullet.collected_unused_eager_association_notifications.select do |notification|
-            notification.base_class == klass.to_s && notification.associations.include?(association)
-          end.present?
+          Bullet
+            .collected_unused_eager_association_notifications
+            .select do |notification|
+              notification.base_class == klass.to_s && notification.associations.include?(association)
+            end
+            .present?
         end
       end
     end

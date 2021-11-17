@@ -164,9 +164,7 @@ module Bullet
           end
 
           context 'when skip_http_headers is enabled' do
-            before do
-              allow(Bullet).to receive(:skip_http_headers).and_return(true)
-            end
+            before { allow(Bullet).to receive(:skip_http_headers).and_return(true) }
 
             it 'should include the footer but not the xhr script tag if add_footer is true' do
               expect(Bullet).to receive(:add_footer).at_least(:once).and_return(true)

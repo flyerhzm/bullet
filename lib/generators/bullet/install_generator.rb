@@ -9,8 +9,7 @@ module Bullet
       DESC
 
       def enable_in_development
-        environment(nil, env: 'development') do
-          <<~FILE
+        environment(nil, env: 'development') { <<~FILE }
             config.after_initialize do
               Bullet.enable        = true
               Bullet.alert         = true
@@ -22,7 +21,6 @@ module Bullet
             end
 
           FILE
-        end
 
         say 'Enabled bullet in config/environments/development.rb'
       end
@@ -30,8 +28,7 @@ module Bullet
       def enable_in_test
         return unless yes?('Would you like to enable bullet in test environment? (y/n)')
 
-        environment(nil, env: 'test') do
-          <<~FILE
+        environment(nil, env: 'test') { <<~FILE }
             config.after_initialize do
               Bullet.enable        = true
               Bullet.bullet_logger = true
@@ -39,7 +36,6 @@ module Bullet
             end
 
           FILE
-        end
 
         say 'Enabled bullet in config/environments/test.rb'
       end

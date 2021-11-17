@@ -81,14 +81,17 @@ Benchmark.bm(70) do |bm|
   bm.report("Querying & Iterating #{posts_size} Posts with #{comments_size} Comments and #{users_size} Users") do
     10.times do
       Bullet.start_request
-      Post.select('SQL_NO_CACHE *').includes(:user, comments: :user).each do |p|
-        p.title
-        p.user.name
-        p.comments.each do |c|
-          c.body
-          c.user.name
+      Post
+        .select('SQL_NO_CACHE *')
+        .includes(:user, comments: :user)
+        .each do |p|
+          p.title
+          p.user.name
+          p.comments.each do |c|
+            c.body
+            c.user.name
+          end
         end
-      end
       Bullet.end_request
     end
   end
