@@ -63,13 +63,6 @@ module Bullet
           Thread.current[:bullet_call_object_associations]
         end
 
-        # inversed_objects keeps object relationships
-        # that association is inversed.
-        # e.g. { "Comment:1" => ["post"] }
-        def inversed_objects
-          Thread.current[:bullet_inversed_objects]
-        end
-
         # eager_loadings keep the object relationships
         # that the associations are preloaded by find :include.
         # e.g. { ["Post:1", "Post:2"] => [:comments, :user] }
