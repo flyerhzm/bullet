@@ -28,7 +28,7 @@ if !mongoid? && active_record?
       expect(Bullet.collected_counter_cache_notifications).to be_empty
     end
 
-    if active_record5? || active_record6?
+    if ActiveRecord::VERSION::MAJOR > 4
       it 'should not need counter cache for has_many through' do
         Client.all.each { |client| client.firms.size }
         expect(Bullet.collected_counter_cache_notifications).to be_empty
