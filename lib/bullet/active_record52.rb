@@ -132,6 +132,17 @@ module Bullet
         end
       )
 
+      ::ActiveRecord::Associations::Association.prepend(
+        Module.new do
+          def inversed_from(record)
+            if Bullet.start?
+              Bullet::Detector::NPlusOneQuery.add_inversed_object(owner, reflection.name)
+            end
+            super
+          end
+        end
+      )
+
       ::ActiveRecord::Associations::CollectionAssociation.prepend(
         Module.new do
           def load_target
