@@ -102,23 +102,6 @@ module Bullet
         end
       )
 
-      ::ActiveRecord::FinderMethods.prepend(
-        Module.new do
-          # add includes in scope
-          def find_with_associations
-            return super { |r| yield r } if block_given?
-
-            records = super
-            if Bullet.start?
-              associations = (eager_load_values + includes_values).uniq
-              records.each { |record| Bullet::Detector::Association.add_object_associations(record, associations) }
-              Bullet::Detector::UnusedEagerLoading.add_eager_loadings(records, associations)
-            end
-            records
-          end
-        end
-      )
-
       ::ActiveRecord::Associations::JoinDependency.prepend(
         Module.new do
           def instantiate(result_set, &block)
