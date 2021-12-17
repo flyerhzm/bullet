@@ -15,6 +15,7 @@ module Bullet
           return unless Bullet.start?
           return unless Bullet.n_plus_one_query_enable?
           return unless object.bullet_primary_key_value
+          return if inversed_objects.include?(object.bullet_key, associations)
 
           add_call_object_associations(object, associations)
 
@@ -50,6 +51,18 @@ module Bullet
 
           Bullet.debug('Detector::NPlusOneQuery#add_impossible_object', "object: #{object.bullet_key}")
           impossible_objects.add object.bullet_key
+        end
+
+        def add_inversed_object(object, association)
+          return unless Bullet.start?
+          return unless Bullet.n_plus_one_query_enable?
+          return unless object.bullet_primary_key_value
+
+          Bullet.debug(
+            'Detector::NPlusOneQuery#add_inversed_object',
+            "object: #{object.bullet_key}, association: #{association}"
+          )
+          inversed_objects.add object.bullet_key, association
         end
 
         # decide whether the object.associations is unpreloaded or not.
