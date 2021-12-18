@@ -270,8 +270,7 @@ Bullet outputs some details info, to enable debug mode, set
 ## Demo
 
 Bullet is designed to function as you browse through your application in development. To see it in action,
-you can visit [https://github.com/flyerhzm/bullet_test](https://github.com/flyerhzm/bullet_test) or
-follow these steps to create, detect, and fix example query problems.
+you can follow these steps to create, detect, and fix example query problems.
 
 1\. Create an example application
 
