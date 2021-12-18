@@ -1,5 +1,11 @@
 ## Next Release
 
+## 7.0.0 (12/18/2021)
+
+* Support rails 7
+* Fix Mongoid 7 view iteration
+* Move CI from Travis to Github Actions
+
 ## 6.1.5 (08/16/2021)
 
 * Rename whitelist to safelist
