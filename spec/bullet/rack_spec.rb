@@ -54,6 +54,11 @@ module Bullet
         response = double(body: '')
         expect(middleware).to be_empty(response)
       end
+
+      it 'should be true if no response body' do
+        response = double()
+        expect(middleware).to be_empty(response)
+      end
     end
 
     context '#call' do
