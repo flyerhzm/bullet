@@ -43,6 +43,7 @@ module Bullet
       # response may be ["Not Found"], ["Move Permanently"], etc, but
       # those should not happen if the status is 200
       return true if !response.respond_to?(:body) && !response.respond_to?(:first)
+
       body = response_body(response)
       body.nil? || body.empty?
     end
