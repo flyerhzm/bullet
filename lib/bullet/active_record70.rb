@@ -43,8 +43,7 @@ module Bullet
           # if select only one object, then the only one object has impossible to cause N+1 query.
           def records
             result = super
-            if Bullet.start?
-              if result.first.class.name !~ /^HABTM_/
+            if Bullet.start? && (result.first.class.name !~ /^HABTM_/)
                 if result.size > 1
                   Bullet::Detector::NPlusOneQuery.add_possible_objects(result)
                   Bullet::Detector::CounterCache.add_possible_objects(result)
@@ -53,7 +52,6 @@ module Bullet
                   Bullet::Detector::CounterCache.add_impossible_object(result.first)
                 end
               end
-            end
             result
           end
         end
@@ -109,8 +107,7 @@ module Bullet
           end
 
           def construct(ar_parent, parent, row, seen, model_cache, strict_loading_value)
-            if Bullet.start?
-              unless ar_parent.nil?
+            if Bullet.start? && !ar_parent.nil?
                 parent.children.each do |node|
                   key = aliases.column_alias(node, node.primary_key)
                   id = row[key]
@@ -124,7 +121,6 @@ module Bullet
                   @bullet_eager_loadings[ar_parent.class][ar_parent] << associations
                 end
               end
-            end
 
             super
           end
@@ -209,8 +205,7 @@ module Bullet
           def reader
             result = super
 
-            if Bullet.start?
-              if owner.class.name !~ /^HABTM_/
+            if Bullet.start? && (owner.class.name !~ /^HABTM_/)
                 if is_a? ::ActiveRecord::Associations::ThroughAssociation
                   Bullet::Detector::NPlusOneQuery.call_association(owner, reflection.through_reflection.name)
                   association = owner.association(reflection.through_reflection.name)
@@ -230,7 +225,6 @@ module Bullet
                   Bullet::Detector::NPlusOneQuery.add_possible_objects(result) if result
                 end
               end
-            end
             result
           end
         end
