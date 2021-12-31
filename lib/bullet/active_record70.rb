@@ -12,7 +12,6 @@ module Bullet
 
   module ActiveRecord
     def self.enable
-      require 'active_record'
       ::ActiveRecord::Base.extend(
         Module.new do
           def find_by_sql(sql, binds = [], preparable: nil, &block)
