@@ -1,5 +1,10 @@
 ## Next Release
 
+## 7.0.1 (01/15/2022)
+
+* Get rid of *_whitelist methods
+* Hack ActiveRecord::Associations::Preloader::Batch in rails 7
+
 ## 7.0.0 (12/18/2021)
 
 * Support rails 7
