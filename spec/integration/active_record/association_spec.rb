@@ -451,6 +451,16 @@ if active_record?
         expect(Bullet::Detector::Association).to be_detecting_unpreloaded_association_for(Student, :teachers)
       end
     end
+
+    context 'user => roles' do
+      it 'should detect preload associations' do
+        User.first.roles.includes(:resource).each { |role| role.resource }
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+        expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
+
+        expect(Bullet::Detector::Association).to be_completely_preloading_associations
+      end
+    end
   end
 
   describe Bullet::Detector::Association, 'has_many :through' do

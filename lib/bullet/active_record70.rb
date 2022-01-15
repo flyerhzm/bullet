@@ -60,6 +60,20 @@ module Bullet
         end
       )
 
+      ::ActiveRecord::Associations::Preloader::Batch.prepend(
+        Module.new do
+          def call
+            if Bullet.start?
+              @preloaders.each do |preloader|
+                preloader.records.each { |record| Bullet::Detector::Association.add_object_associations(record, preloader.associations) }
+                Bullet::Detector::UnusedEagerLoading.add_eager_loadings(preloader.records, preloader.associations)
+              end
+            end
+            super
+          end
+        end
+      )
+
       ::ActiveRecord::Associations::Preloader::Branch.prepend(
         Module.new do
           def preloaders_for_reflection(reflection, reflection_records)

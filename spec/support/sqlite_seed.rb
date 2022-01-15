@@ -92,8 +92,15 @@ module Support
       page3 = Page.create(name: 'page3', parent_id: folder2.id, author_id: author2.id)
       page4 = Page.create(name: 'page4', parent_id: folder2.id, author_id: author2.id)
 
+      role1 = Role.create(name: 'Amdin')
+      role2 = Role.create(name: 'User')
+
       user1 = User.create(name: 'user1', category: category1)
       user2 = User.create(name: 'user2', category: category1)
+
+      user1.roles << role1
+      user1.roles << role2
+      user2.roles << role2
 
       submission1 = user1.create_submission(name: 'submission1')
       submission2 = user2.create_submission(name: 'submission2')
@@ -244,6 +251,17 @@ module Support
         create_table :replies do |t|
           t.column :name, :string
           t.column :submission_id, :integer
+        end
+
+        create_table :roles do |t|
+          t.column :name, :string
+          t.column :resource_id, :integer
+          t.column :resource_type, :string
+        end
+
+        create_table :roles_users do |t|
+          t.column :role_id, :integer
+          t.column :user_id, :integer
         end
 
         create_table :submissions do |t|
