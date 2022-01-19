@@ -49,7 +49,7 @@ mongoid.
 
 ## Configuration
 
-Bullet won't do ANYTHING unless you tell it to explicitly. Append to
+Bullet won't enable any notification systems unless you tell it to explicitly. Append to
 `config/environments/development.rb` initializer with the following code:
 
 ```ruby
@@ -156,25 +156,26 @@ The Bullet log `log/bullet.log` will look something like this:
 * N+1 Query:
 
 ```
-2009-08-25 20:40:17[INFO] N+1 Query: PATH_INFO: /posts;    model: Post => associations: [comments]·
-Add to your finder: :include => [:comments]
-2009-08-25 20:40:17[INFO] N+1 Query: method call stack:·
-/Users/richard/Downloads/test/app/views/posts/index.html.erb:11:in `_run_erb_app47views47posts47index46html46erb'
-/Users/richard/Downloads/test/app/views/posts/index.html.erb:8:in `each'
-/Users/richard/Downloads/test/app/views/posts/index.html.erb:8:in `_run_erb_app47views47posts47index46html46erb'
-/Users/richard/Downloads/test/app/controllers/posts_controller.rb:7:in `index'
+2009-08-25 20:40:17[INFO] USE eager loading detected:
+  Post => [:comments]·
+  Add to your query: .includes([:comments])
+2009-08-25 20:40:17[INFO] Call stack
+  /Users/richard/Downloads/test/app/views/posts/index.html.erb:8:in `each'
+  /Users/richard/Downloads/test/app/controllers/posts_controller.rb:7:in `index'
 ```
 
-The first two lines are notifications that N+1 queries have been encountered. The remaining lines are stack traces so you can find exactly where the queries were invoked in your code, and fix them.
+The first log entry is a notification that N+1 queries have been encountered. The remaining entry is a stack trace so you can find exactly where the queries were invoked in your code, and fix them.
 
 * Unused eager loading:
 
 ```
-2009-08-25 20:53:56[INFO] Unused eager loadings: PATH_INFO: /posts;    model: Post => associations: [comments]·
-Remove from your finder: :include => [:comments]
+2009-08-25 20:53:56[INFO] AVOID eager loading detected
+  Post => [:comments]·
+  Remove from your query: .includes([:comments])
+2009-08-25 20:53:56[INFO] Call stack
 ```
 
-These two lines are notifications that unused eager loadings have been encountered.
+These lines are notifications that unused eager loadings have been encountered.
 
 * Need counter cache:
 
