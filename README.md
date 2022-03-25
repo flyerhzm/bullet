@@ -186,6 +186,10 @@ These lines are notifications that unused eager loadings have been encountered.
 
 see [https://github.com/flyerhzm/uniform_notifier](https://github.com/flyerhzm/uniform_notifier)
 
+## Growl Support
+
+Growl support is dropped from uniform_notifier 1.16.0, if you still want it, please use uniform_notifier 1.15.0.
+
 ## Important
 
 If you find Bullet does not work for you, *please disable your browser's cache*.
