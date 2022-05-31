@@ -79,7 +79,7 @@ module Bullet
     end
 
     def html_request?(headers, response)
-      headers['Content-Type']&.include?('text/html') && response_body(response).include?('<html')
+      headers['Content-Type']&.include?('text/html')
     end
 
     def response_body(response)

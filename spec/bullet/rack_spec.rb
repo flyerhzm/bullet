@@ -31,12 +31,6 @@ module Bullet
         response = double(body: '<html><head></head><body></body></html>')
         expect(middleware).not_to be_html_request(headers, response)
       end
-
-      it "should be false if response body doesn't contain html tag" do
-        headers = { 'Content-Type' => 'text/html' }
-        response = double(body: '<div>Partial</div>')
-        expect(middleware).not_to be_html_request(headers, response)
-      end
     end
 
     context 'empty?' do
