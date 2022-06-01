@@ -1,5 +1,10 @@
 ## Next Release
 
+## 7.0.2 (05/31/2022)
+
+* Drop growl support
+* Do not check html tag in Bullet::Rack anymore
+
 ## 7.0.1 (01/15/2022)
 
 * Get rid of *_whitelist methods
