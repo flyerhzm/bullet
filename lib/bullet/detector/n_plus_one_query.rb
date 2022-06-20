@@ -7,7 +7,7 @@ module Bullet
       extend StackTraceFilter
 
       class << self
-        # executed when object.assocations is called.
+        # executed when object.associations is called.
         # first, it keeps this method call for object.association.
         # then, it checks if this associations call is unpreload.
         #   if it is, keeps this unpreload associations and caller.
