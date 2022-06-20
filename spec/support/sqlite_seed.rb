@@ -92,7 +92,7 @@ module Support
       page3 = Page.create(name: 'page3', parent_id: folder2.id, author_id: author2.id)
       page4 = Page.create(name: 'page4', parent_id: folder2.id, author_id: author2.id)
 
-      role1 = Role.create(name: 'Amdin')
+      role1 = Role.create(name: 'Admin')
       role2 = Role.create(name: 'User')
 
       user1 = User.create(name: 'user1', category: category1)
