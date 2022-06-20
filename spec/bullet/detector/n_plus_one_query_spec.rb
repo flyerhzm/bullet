@@ -39,7 +39,7 @@ module Bullet
 
         it 'should be false if object, association pair is not existed' do
           NPlusOneQuery.add_object_associations(@post, :association1)
-          expect(NPlusOneQuery.association?(@post, :associatio2)).to eq false
+          expect(NPlusOneQuery.association?(@post, :association2)).to eq false
         end
       end
 
