@@ -33,7 +33,7 @@ module Bullet
           return unless Bullet.start?
           return unless Bullet.n_plus_one_query_enable?
 
-          objects = Array(object_or_objects)
+          objects = Array.wrap(object_or_objects)
           return if objects.map(&:bullet_primary_key_value).compact.empty?
           return if objects.all? { |obj| obj.class.name =~ /^HABTM_/ }
 
@@ -95,7 +95,7 @@ module Bullet
         private
 
         def create_notification(callers, klazz, associations)
-          notify_associations = Array(associations) - Bullet.get_safelist_associations(:n_plus_one_query, klazz)
+          notify_associations = Array.wrap(associations) - Bullet.get_safelist_associations(:n_plus_one_query, klazz)
 
           if notify_associations.present?
             notice = Bullet::Notification::NPlusOneQuery.new(callers, klazz, notify_associations)

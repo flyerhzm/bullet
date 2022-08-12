@@ -109,7 +109,7 @@ module Bullet
     end
 
     def get_safelist_associations(type, class_name)
-      Array(@safelist[type][class_name])
+      Array.wrap(@safelist[type][class_name])
     end
 
     def reset_safelist
