@@ -1,5 +1,9 @@
 ## Next Release
 
+## 7.0.3 (08/13/2022)
+
+* Replace `Array()` with `Array.wrap()`
+
 ## 7.0.2 (05/31/2022)
 
 * Drop growl support
