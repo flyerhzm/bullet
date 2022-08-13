@@ -20,7 +20,7 @@ module Bullet
           return unless Bullet.start?
           return unless Bullet.counter_cache_enable?
 
-          objects = Array(object_or_objects)
+          objects = Array.wrap(object_or_objects)
           return if objects.map(&:bullet_primary_key_value).compact.empty?
 
           Bullet.debug(
@@ -54,7 +54,7 @@ module Bullet
         private
 
         def create_notification(klazz, associations)
-          notify_associations = Array(associations) - Bullet.get_safelist_associations(:counter_cache, klazz)
+          notify_associations = Array.wrap(associations) - Bullet.get_safelist_associations(:counter_cache, klazz)
 
           if notify_associations.present?
             notice = Bullet::Notification::CounterCache.new klazz, notify_associations

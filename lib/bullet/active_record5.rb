@@ -179,7 +179,7 @@ module Bullet
                 refl = reflection.through_reflection
                 Bullet::Detector::NPlusOneQuery.call_association(owner, refl.name)
                 association = owner.association refl.name
-                Array(association.target).each do |through_record|
+                Array.wrap(association.target).each do |through_record|
                   Bullet::Detector::NPlusOneQuery.call_association(through_record, source_reflection.name)
                 end
 
