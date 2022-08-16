@@ -285,7 +285,7 @@ $ rails g scaffold comment name:string post_id:integer
 $ bundle exec rake db:migrate
 ```
 
-2\. Change `app/model/post.rb` and `app/model/comment.rb`
+2\. Change `app/models/post.rb` and `app/models/comment.rb`
 
 ```ruby
 class Post < ActiveRecord::Base
