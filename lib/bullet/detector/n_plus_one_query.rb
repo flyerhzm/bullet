@@ -34,14 +34,25 @@ module Bullet
           return unless Bullet.n_plus_one_query_enable?
 
           objects = Array.wrap(object_or_objects)
-          return if objects.map(&:bullet_primary_key_value).compact.empty?
-          return if objects.all? { |obj| obj.class.name =~ /^HABTM_/ }
-
-          Bullet.debug(
-            'Detector::NPlusOneQuery#add_possible_objects',
-            "objects: #{objects.map(&:bullet_key).join(', ')}"
-          )
-          objects.each { |object| possible_objects.add object.bullet_key }
+          class_names_match_regex = true
+          primary_key_values_are_empty = true
+          keys_joined = ""
+          objects.each do |obj|
+            unless obj.class.name =~ /^HABTM_/.freeze
+              class_names_match_regex = false
+            end
+            unless obj.bullet_primary_key_value.nil?
+              primary_key_values_are_empty = false
+            end
+            keys_joined += "#{(keys_joined.empty?? ''.freeze : ', '.freeze)}#{obj.bullet_key}"
+          end
+          unless class_names_match_regex || primary_key_values_are_empty
+            Bullet.debug(
+              'Detector::NPlusOneQuery#add_possible_objects'.freeze,
+              "objects: #{keys_joined}"
+            )
+            objects.each { |object| possible_objects.add object.bullet_key }
+          end
         end
 
         def add_impossible_object(object)
