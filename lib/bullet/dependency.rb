@@ -32,7 +32,12 @@ module Bullet
           elsif active_record70?
             'active_record70'
           else
-            raise "Bullet does not support active_record #{::ActiveRecord::VERSION::STRING} yet"
+            logger = Logger.new(STDOUT)
+            if Bullet.allow_untested_rails?
+              UniformNotifier.warn("Bullet does not yet confirmed to support your version of Rails (active_record #{::ActiveRecord::VERSION::STRING}). Using Bullet with the unsupported version Rails is EXPERIMENTAL and may not work correctly. Please report bugs to https://github.com/flyerhzm/bullet")
+            else
+              raise "Bullet does not yet confirmed to support your version of Rails (active_record #{::ActiveRecord::VERSION::STRING}). To use anyway, set allow_untested_rails = true"
+            end
           end
         end
     end

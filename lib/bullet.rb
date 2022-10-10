@@ -9,6 +9,15 @@ require 'bullet/dependency'
 require 'bullet/stack_trace_filter'
 
 module Bullet
+
+  def self.allow_untested_rails=(setting)
+    @allow_untested_rails = setting
+  end
+
+  def self.allow_untested_rails?
+    !!@allow_untested_rails
+  end
+
   extend Dependency
 
   autoload :ActiveRecord, "bullet/#{active_record_version}" if active_record?
