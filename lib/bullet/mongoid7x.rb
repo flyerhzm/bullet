@@ -4,22 +4,20 @@ module Bullet
   module Mongoid
     def self.enable
       require 'mongoid'
+      require 'rubygems'
       ::Mongoid::Contextual::Mongo.class_eval do
         alias_method :origin_first, :first
         alias_method :origin_last, :last
         alias_method :origin_each, :each
         alias_method :origin_eager_load, :eager_load
 
-        def first(opts = {})
-          result = origin_first(opts)
-          Bullet::Detector::NPlusOneQuery.add_impossible_object(result) if result
-          result
-        end
-
-        def last(opts = {})
-          result = origin_last(opts)
-          Bullet::Detector::NPlusOneQuery.add_impossible_object(result) if result
-          result
+        %i[first last].each do |context|
+          default = Gem::Version.new(::Mongoid::VERSION) >= Gem::Version.new('7.5') ? nil : {}
+          define_method(context) do |opts = default|
+            result = send(:"origin_#{context}", opts)
+            Bullet::Detector::NPlusOneQuery.add_impossible_object(result) if result
+            result
+          end
         end
 
         def each(&block)
