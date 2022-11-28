@@ -474,7 +474,15 @@ if active_record?
       end
 
       it 'should detect preload associations' do
-        Firm.includes(:clients).each { |firm| firm.clients.map(&:name) }
+        Firm.preload(:clients).each { |firm| firm.clients.map(&:name) }
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+        expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
+
+        expect(Bullet::Detector::Association).to be_completely_preloading_associations
+      end
+
+      it 'should detect eager load association' do
+        Firm.eager_load(:clients).each { |firm| firm.clients.map(&:name) }
         Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
         expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
 
