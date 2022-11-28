@@ -1,5 +1,10 @@
 ## Next Release
 
+## 7.0.4 (11/28/2022)
+
+* Fix `eager_load` `has_many :through` false positives
+* mongoid7x: add dynamic methods
+
 ## 7.0.3 (08/13/2022)
 
 * Replace `Array()` with `Array.wrap()`
