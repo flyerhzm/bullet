@@ -58,6 +58,19 @@ if active_record?
         expect(Bullet::Detector::Association).to be_completely_preloading_associations
       end
 
+      it 'should detect non preload comment => post with inverse_of from a query' do
+        Post.first.comments.find_each do |comment|
+          comment.name
+          comment.post.name
+        end
+
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+        expect(Post.first.comments.count).not_to eq(0)
+        expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
+
+        expect(Bullet::Detector::Association).to be_completely_preloading_associations
+      end
+
       it 'should detect non preload post => comments with empty?' do
         Post.all.each { |post| post.comments.empty? }
         Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations

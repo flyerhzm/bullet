@@ -170,6 +170,13 @@ module Bullet
             end
             super
           end
+
+          def inversed_from_queries(record)
+            if Bullet.start? && inversable?(record)
+              Bullet::Detector::NPlusOneQuery.add_inversed_object(owner, reflection.name)
+            end
+            super
+          end
         end
       )
 
