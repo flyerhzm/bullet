@@ -65,6 +65,11 @@ module Bullet
           expect(UnusedEagerLoading).not_to receive(:create_notification).with('Post', [:association])
           UnusedEagerLoading.check_unused_preload_associations
         end
+
+        it 'should create call stack for notification' do
+          UnusedEagerLoading.add_object_associations(@post, :association)
+          expect(UnusedEagerLoading.send(:call_stacks).registry).not_to be_empty
+        end
       end
 
       context '.add_eager_loadings' do

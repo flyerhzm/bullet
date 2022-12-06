@@ -6,10 +6,11 @@ module Bullet
     VENDOR_PATH = '/vendor'
     IS_RUBY_19 = Gem::Version.new(RUBY_VERSION) < Gem::Version.new('2.0.0')
 
-    def caller_in_project
+    # @param bullet_key[String] - use this to get stored call stack from call_stacks object.
+    def caller_in_project(bullet_key = nil)
       vendor_root = Bullet.app_root + VENDOR_PATH
       bundler_path = Bundler.bundle_path.to_s
-      select_caller_locations do |location|
+      select_caller_locations(bullet_key) do |location|
         caller_path = location_as_path(location)
         caller_path.include?(Bullet.app_root) && !caller_path.include?(vendor_root) &&
           !caller_path.include?(bundler_path) || Bullet.stacktrace_includes.any? { |include_pattern|
@@ -50,15 +51,16 @@ module Bullet
     end
 
     def location_as_path(location)
+      return location if location.is_a?(String)
+
       IS_RUBY_19 ? location : location.absolute_path.to_s
     end
 
-    def select_caller_locations
-      if IS_RUBY_19
-        caller.select { |caller_path| yield caller_path }
-      else
-        caller_locations.select { |location| yield location }
-      end
+    def select_caller_locations(bullet_key = nil)
+      return caller.select { |caller_path| yield caller_path } if IS_RUBY_19
+
+      call_stack = bullet_key ? call_stacks[bullet_key] : caller_locations
+      call_stack.select { |location| yield location }
     end
   end
 end

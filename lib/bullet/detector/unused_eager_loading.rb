@@ -20,7 +20,7 @@ module Bullet
             next if object_association_diff.empty?
 
             Bullet.debug('detect unused preload', "object: #{bullet_key}, associations: #{object_association_diff}")
-            create_notification(caller_in_project, bullet_key.bullet_class_name, object_association_diff)
+            create_notification(caller_in_project(bullet_key), bullet_key.bullet_class_name, object_association_diff)
           end
         end
 

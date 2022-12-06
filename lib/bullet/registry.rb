@@ -5,5 +5,6 @@ module Bullet
     autoload :Base, 'bullet/registry/base'
     autoload :Object, 'bullet/registry/object'
     autoload :Association, 'bullet/registry/association'
+    autoload :CallStack, 'bullet/registry/call_stack'
   end
 end

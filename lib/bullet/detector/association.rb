@@ -13,6 +13,7 @@ module Bullet
             'Detector::Association#add_object_associations',
             "object: #{object.bullet_key}, associations: #{associations}"
           )
+          call_stacks.add(object.bullet_key)
           object_associations.add(object.bullet_key, associations)
         end
 
@@ -25,6 +26,7 @@ module Bullet
             'Detector::Association#add_call_object_associations',
             "object: #{object.bullet_key}, associations: #{associations}"
           )
+          call_stacks.add(object.bullet_key)
           call_object_associations.add(object.bullet_key, associations)
         end
 
@@ -75,6 +77,12 @@ module Bullet
         # e.g. { ["Post:1", "Post:2"] => [:comments, :user] }
         def eager_loadings
           Thread.current[:bullet_eager_loadings]
+        end
+
+        # cal_stacks keeps stacktraces where querie-objects were called from.
+        # e.g. { 'Object:111' => [SomeProject/app/controllers/...] }
+        def call_stacks
+          Thread.current[:bullet_call_stacks]
         end
       end
     end
