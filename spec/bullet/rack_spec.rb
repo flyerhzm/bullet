@@ -31,12 +31,6 @@ module Bullet
         response = double(body: '<html><head></head><body></body></html>')
         expect(middleware).not_to be_html_request(headers, response)
       end
-
-      it "should be false if response body doesn't contain html tag" do
-        headers = { 'Content-Type' => 'text/html' }
-        response = double(body: '<div>Partial</div>')
-        expect(middleware).not_to be_html_request(headers, response)
-      end
     end
 
     context 'empty?' do
@@ -52,6 +46,11 @@ module Bullet
 
       it 'should be true if response body is empty' do
         response = double(body: '')
+        expect(middleware).to be_empty(response)
+      end
+
+      it 'should be true if no response body' do
+        response = double()
         expect(middleware).to be_empty(response)
       end
     end
@@ -275,6 +274,20 @@ module Bullet
         it 'should return the plain body string' do
           expect(middleware.response_body(response)).to eq body_string
         end
+      end
+
+      begin
+        require 'rack/files'
+
+        context 'when `response` is a Rack::Files::Iterator' do
+          let(:response) { instance_double(::Rack::Files::Iterator) }
+          before { allow(response).to receive(:is_a?).with(::Rack::Files::Iterator) { true } }
+
+          it 'should return nil' do
+            expect(middleware.response_body(response)).to be_nil
+          end
+        end
+      rescue LoadError
       end
     end
   end

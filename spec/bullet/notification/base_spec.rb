@@ -74,8 +74,8 @@ module Bullet
         it 'should send full_notice to notifier' do
           notifier = double
           allow(subject).to receive(:notifier).and_return(notifier)
-          allow(subject).to receive(:notification_data).and_return(foo: :bar)
-          expect(notifier).to receive(:inline_notify).with(foo: :bar)
+          allow(subject).to receive(:notification_data).and_return({ foo: :bar })
+          expect(notifier).to receive(:inline_notify).with({ foo: :bar })
           subject.notify_inline
         end
       end
@@ -84,8 +84,8 @@ module Bullet
         it 'should send full_out_of_channel to notifier' do
           notifier = double
           allow(subject).to receive(:notifier).and_return(notifier)
-          allow(subject).to receive(:notification_data).and_return(foo: :bar)
-          expect(notifier).to receive(:out_of_channel_notify).with(foo: :bar)
+          allow(subject).to receive(:notification_data).and_return({ foo: :bar })
+          expect(notifier).to receive(:out_of_channel_notify).with({ foo: :bar })
           subject.notify_out_of_channel
         end
       end

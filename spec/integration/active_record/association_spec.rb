@@ -58,6 +58,19 @@ if active_record?
         expect(Bullet::Detector::Association).to be_completely_preloading_associations
       end
 
+      it 'should detect non preload comment => post with inverse_of from a query' do
+        Post.first.comments.find_each do |comment|
+          comment.name
+          comment.post.name
+        end
+
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+        expect(Post.first.comments.count).not_to eq(0)
+        expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
+
+        expect(Bullet::Detector::Association).to be_completely_preloading_associations
+      end
+
       it 'should detect non preload post => comments with empty?' do
         Post.all.each { |post| post.comments.empty? }
         Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
@@ -129,7 +142,7 @@ if active_record?
         expect(Bullet::Detector::Association).to be_completely_preloading_associations
       end
 
-      it 'should detect unused preload with post => commnets, no category => posts' do
+      it 'should detect unused preload with post => comments, no category => posts' do
         Category.includes(posts: :comments).each { |category| category.posts.map(&:name) }
         Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
         expect(Bullet::Detector::Association).to be_unused_preload_associations_for(Post, :comments)
@@ -202,7 +215,7 @@ if active_record?
         expect(Bullet::Detector::Association).to be_completely_preloading_associations
       end
 
-      it 'should detect preload with post => commnets' do
+      it 'should detect preload with post => comments' do
         Post.first.comments.map(&:name)
         Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
         expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
@@ -401,6 +414,15 @@ if active_record?
   end
 
   describe Bullet::Detector::Association, 'has_and_belongs_to_many' do
+    context 'posts <=> deals' do
+      it 'should detect preload associations with join tables that have identifier' do
+        Post.includes(:deals).each { |post| post.deals.map(&:name) }
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+        expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
+
+        expect(Bullet::Detector::Association).to be_completely_preloading_associations
+      end
+    end
     context 'students <=> teachers' do
       it 'should detect non preload associations' do
         Student.all.each { |student| student.teachers.map(&:name) }
@@ -442,6 +464,16 @@ if active_record?
         expect(Bullet::Detector::Association).to be_detecting_unpreloaded_association_for(Student, :teachers)
       end
     end
+
+    context 'user => roles' do
+      it 'should detect preload associations' do
+        User.first.roles.includes(:resource).each { |role| role.resource }
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+        expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
+
+        expect(Bullet::Detector::Association).to be_completely_preloading_associations
+      end
+    end
   end
 
   describe Bullet::Detector::Association, 'has_many :through' do
@@ -455,7 +487,15 @@ if active_record?
       end
 
       it 'should detect preload associations' do
-        Firm.includes(:clients).each { |firm| firm.clients.map(&:name) }
+        Firm.preload(:clients).each { |firm| firm.clients.map(&:name) }
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+        expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
+
+        expect(Bullet::Detector::Association).to be_completely_preloading_associations
+      end
+
+      it 'should detect eager load association' do
+        Firm.eager_load(:clients).each { |firm| firm.clients.map(&:name) }
         Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
         expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
 
@@ -729,9 +769,9 @@ if active_record?
       end
     end
 
-    context 'whitelist n plus one query' do
-      before { Bullet.add_whitelist type: :n_plus_one_query, class_name: 'Post', association: :comments }
-      after { Bullet.clear_whitelist }
+    context 'add n plus one query to safelist' do
+      before { Bullet.add_safelist type: :n_plus_one_query, class_name: 'Post', association: :comments }
+      after { Bullet.clear_safelist }
 
       it 'should not detect n plus one query' do
         Post.all.each { |post| post.comments.map(&:name) }
@@ -750,9 +790,9 @@ if active_record?
       end
     end
 
-    context 'whitelist unused eager loading' do
-      before { Bullet.add_whitelist type: :unused_eager_loading, class_name: 'Post', association: :comments }
-      after { Bullet.clear_whitelist }
+    context 'add unused eager loading to safelist' do
+      before { Bullet.add_safelist type: :unused_eager_loading, class_name: 'Post', association: :comments }
+      after { Bullet.clear_safelist }
 
       it 'should not detect unused eager loading' do
         Post.includes(:comments).map(&:name)

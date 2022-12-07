@@ -102,23 +102,6 @@ module Bullet
         end
       )
 
-      ::ActiveRecord::FinderMethods.prepend(
-        Module.new do
-          # add includes in scope
-          def find_with_associations
-            return super { |r| yield r } if block_given?
-
-            records = super
-            if Bullet.start?
-              associations = (eager_load_values + includes_values).uniq
-              records.each { |record| Bullet::Detector::Association.add_object_associations(record, associations) }
-              Bullet::Detector::UnusedEagerLoading.add_eager_loadings(records, associations)
-            end
-            records
-          end
-        end
-      )
-
       ::ActiveRecord::Associations::JoinDependency.prepend(
         Module.new do
           def instantiate(result_set, strict_loading_value, &block)
@@ -176,6 +159,17 @@ module Bullet
         end
       )
 
+      ::ActiveRecord::Associations::Association.prepend(
+        Module.new do
+          def inversed_from(record)
+            if Bullet.start?
+              Bullet::Detector::NPlusOneQuery.add_inversed_object(owner, reflection.name)
+            end
+            super
+          end
+        end
+      )
+
       ::ActiveRecord::Associations::CollectionAssociation.prepend(
         Module.new do
           def load_target
@@ -183,10 +177,12 @@ module Bullet
 
             if Bullet.start?
               if is_a? ::ActiveRecord::Associations::ThroughAssociation
-                Bullet::Detector::NPlusOneQuery.call_association(owner, reflection.through_reflection.name)
                 association = owner.association(reflection.through_reflection.name)
-                Array(association.target).each do |through_record|
-                  Bullet::Detector::NPlusOneQuery.call_association(through_record, source_reflection.name)
+                if association.loaded?
+                  Bullet::Detector::NPlusOneQuery.call_association(owner, reflection.through_reflection.name)
+                  Array.wrap(association.target).each do |through_record|
+                    Bullet::Detector::NPlusOneQuery.call_association(through_record, source_reflection.name)
+                  end
                 end
 
                 if reflection.through_reflection != through_reflection
@@ -232,7 +228,7 @@ module Bullet
                 if is_a? ::ActiveRecord::Associations::ThroughAssociation
                   Bullet::Detector::NPlusOneQuery.call_association(owner, reflection.through_reflection.name)
                   association = owner.association(reflection.through_reflection.name)
-                  Array(association.target).each do |through_record|
+                  Array.wrap(association.target).each do |through_record|
                     Bullet::Detector::NPlusOneQuery.call_association(through_record, source_reflection.name)
                   end
 

@@ -10,7 +10,7 @@ module Bullet
         # check if there are unused preload associations.
         #   get related_objects from eager_loadings associated with object and associations
         #   get call_object_association from associations of call_object_associations whose object is in related_objects
-        #   if association not in call_object_association, then the object => association - call_object_association is ununsed preload assocations
+        #   if association not in call_object_association, then the object => association - call_object_association is ununsed preload associations
         def check_unused_preload_associations
           return unless Bullet.start?
           return unless Bullet.unused_eager_loading_enable?
@@ -65,7 +65,7 @@ module Bullet
         private
 
         def create_notification(callers, klazz, associations)
-          notify_associations = Array(associations) - Bullet.get_whitelist_associations(:unused_eager_loading, klazz)
+          notify_associations = Array.wrap(associations) - Bullet.get_safelist_associations(:unused_eager_loading, klazz)
 
           if notify_associations.present?
             notice = Bullet::Notification::UnusedEagerLoading.new(callers, klazz, notify_associations)

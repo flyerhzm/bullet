@@ -1,7 +1,7 @@
 # Bullet
 
+![Main workflow](https://github.com/flyerhzm/bullet/actions/workflows/main.yml/badge.svg)
 [![Gem Version](https://badge.fury.io/rb/bullet.svg)](http://badge.fury.io/rb/bullet)
-[![Build Status](https://secure.travis-ci.org/flyerhzm/bullet.svg)](http://travis-ci.org/flyerhzm/bullet)
 [![AwesomeCode Status for flyerhzm/bullet](https://awesomecode.io/projects/6755235b-e2c1-459e-bf92-b8b13d0c0472/status)](https://awesomecode.io/repos/flyerhzm/bullet)
 [![Coderwall Endorse](http://api.coderwall.com/flyerhzm/endorsecount.png)](http://coderwall.com/flyerhzm)
 
@@ -49,7 +49,7 @@ mongoid.
 
 ## Configuration
 
-Bullet won't do ANYTHING unless you tell it to explicitly. Append to
+Bullet won't enable any notification systems unless you tell it to explicitly. Append to
 `config/environments/development.rb` initializer with the following code:
 
 ```ruby
@@ -59,7 +59,6 @@ config.after_initialize do
   Bullet.alert = true
   Bullet.bullet_logger = true
   Bullet.console = true
-  Bullet.growl = true
   Bullet.xmpp = { :account  => 'bullets_account@jabber.org',
                   :password => 'bullets_password_for_jabber',
                   :receiver => 'your_account@jabber.org',
@@ -85,7 +84,6 @@ The code above will enable all of the Bullet notification systems:
 * `Bullet.alert`: pop up a JavaScript alert in the browser
 * `Bullet.bullet_logger`: log to the Bullet log file (Rails.root/log/bullet.log)
 * `Bullet.console`: log warnings to your browser's console.log (Safari/Webkit browsers or Firefox w/Firebug installed)
-* `Bullet.growl`: pop up Growl warnings if your system has Growl installed. Requires a little bit of configuration
 * `Bullet.xmpp`: send XMPP/Jabber notifications to the receiver indicated. Note that the code will currently not handle the adding of contacts, so you will need to make both accounts indicated know each other manually before you will receive any notifications. If you restart the development server frequently, the 'coming online' sound for the Bullet account may start to annoy - in this case set :show_online_status to false; you will still get notifications, but the Bullet account won't announce it's online status anymore.
 * `Bullet.rails_logger`: add warnings directly to the Rails log
 * `Bullet.honeybadger`: add notifications to Honeybadger
@@ -121,15 +119,15 @@ Bullet.unused_eager_loading_enable = false
 Bullet.counter_cache_enable        = false
 ```
 
-## Whitelist
+## Safe list
 
 Sometimes Bullet may notify you of query problems you don't care to fix, or
-which come from outside your code. You can whitelist these to ignore them:
+which come from outside your code. You can add them to a safe list to ignore them:
 
 ```ruby
-Bullet.add_whitelist :type => :n_plus_one_query, :class_name => "Post", :association => :comments
-Bullet.add_whitelist :type => :unused_eager_loading, :class_name => "Post", :association => :comments
-Bullet.add_whitelist :type => :counter_cache, :class_name => "Country", :association => :cities
+Bullet.add_safelist :type => :n_plus_one_query, :class_name => "Post", :association => :comments
+Bullet.add_safelist :type => :unused_eager_loading, :class_name => "Post", :association => :comments
+Bullet.add_safelist :type => :counter_cache, :class_name => "Country", :association => :cities
 ```
 
 If you want to skip bullet in some specific controller actions, you can
@@ -156,25 +154,26 @@ The Bullet log `log/bullet.log` will look something like this:
 * N+1 Query:
 
 ```
-2009-08-25 20:40:17[INFO] N+1 Query: PATH_INFO: /posts;    model: Post => associations: [comments]·
-Add to your finder: :include => [:comments]
-2009-08-25 20:40:17[INFO] N+1 Query: method call stack:·
-/Users/richard/Downloads/test/app/views/posts/index.html.erb:11:in `_run_erb_app47views47posts47index46html46erb'
-/Users/richard/Downloads/test/app/views/posts/index.html.erb:8:in `each'
-/Users/richard/Downloads/test/app/views/posts/index.html.erb:8:in `_run_erb_app47views47posts47index46html46erb'
-/Users/richard/Downloads/test/app/controllers/posts_controller.rb:7:in `index'
+2009-08-25 20:40:17[INFO] USE eager loading detected:
+  Post => [:comments]·
+  Add to your query: .includes([:comments])
+2009-08-25 20:40:17[INFO] Call stack
+  /Users/richard/Downloads/test/app/views/posts/index.html.erb:8:in `each'
+  /Users/richard/Downloads/test/app/controllers/posts_controller.rb:7:in `index'
 ```
 
-The first two lines are notifications that N+1 queries have been encountered. The remaining lines are stack traces so you can find exactly where the queries were invoked in your code, and fix them.
+The first log entry is a notification that N+1 queries have been encountered. The remaining entry is a stack trace so you can find exactly where the queries were invoked in your code, and fix them.
 
 * Unused eager loading:
 
 ```
-2009-08-25 20:53:56[INFO] Unused eager loadings: PATH_INFO: /posts;    model: Post => associations: [comments]·
-Remove from your finder: :include => [:comments]
+2009-08-25 20:53:56[INFO] AVOID eager loading detected
+  Post => [:comments]·
+  Remove from your query: .includes([:comments])
+2009-08-25 20:53:56[INFO] Call stack
 ```
 
-These two lines are notifications that unused eager loadings have been encountered.
+These lines are notifications that unused eager loadings have been encountered.
 
 * Need counter cache:
 
@@ -183,9 +182,13 @@ These two lines are notifications that unused eager loadings have been encounter
   Post => [:comments]
 ```
 
-## Growl, XMPP/Jabber and Airbrake Support
+## XMPP/Jabber and Airbrake Support
 
 see [https://github.com/flyerhzm/uniform_notifier](https://github.com/flyerhzm/uniform_notifier)
+
+## Growl Support
+
+Growl support is dropped from uniform_notifier 1.16.0, if you still want it, please use uniform_notifier 1.15.0.
 
 ## Important
 
@@ -272,8 +275,7 @@ Bullet outputs some details info, to enable debug mode, set
 ## Demo
 
 Bullet is designed to function as you browse through your application in development. To see it in action,
-you can visit [https://github.com/flyerhzm/bullet_test](https://github.com/flyerhzm/bullet_test) or
-follow these steps to create, detect, and fix example query problems.
+you can follow these steps to create, detect, and fix example query problems.
 
 1\. Create an example application
 
@@ -285,7 +287,7 @@ $ rails g scaffold comment name:string post_id:integer
 $ bundle exec rake db:migrate
 ```
 
-2\. Change `app/model/post.rb` and `app/model/comment.rb`
+2\. Change `app/models/post.rb` and `app/models/comment.rb`
 
 ```ruby
 class Post < ActiveRecord::Base
@@ -484,4 +486,4 @@ Meanwhile, there's a line appended to `log/bullet.log`
   Post => [:comments]
 ```
 
-Copyright (c) 2009 - 2019 Richard Huang (flyerhzm@gmail.com), released under the MIT license
+Copyright (c) 2009 - 2022 Richard Huang (flyerhzm@gmail.com), released under the MIT license

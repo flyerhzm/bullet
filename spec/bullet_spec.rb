@@ -74,31 +74,31 @@ describe Bullet, focused: true do
     end
   end
 
-  describe '#add_whitelist' do
+  describe '#add_safelist' do
     context "for 'special' class names" do
-      it 'is added to the whitelist successfully' do
-        Bullet.add_whitelist(type: :n_plus_one_query, class_name: 'Klass', association: :department)
-        expect(Bullet.get_whitelist_associations(:n_plus_one_query, 'Klass')).to include :department
+      it 'is added to the safelist successfully' do
+        Bullet.add_safelist(type: :n_plus_one_query, class_name: 'Klass', association: :department)
+        expect(Bullet.get_safelist_associations(:n_plus_one_query, 'Klass')).to include :department
       end
     end
   end
 
-  describe '#delete_whitelist' do
+  describe '#delete_safelist' do
     context "for 'special' class names" do
-      it 'is deleted from the whitelist successfully' do
-        Bullet.add_whitelist(type: :n_plus_one_query, class_name: 'Klass', association: :department)
-        Bullet.delete_whitelist(type: :n_plus_one_query, class_name: 'Klass', association: :department)
-        expect(Bullet.whitelist[:n_plus_one_query]).to eq({})
+      it 'is deleted from the safelist successfully' do
+        Bullet.add_safelist(type: :n_plus_one_query, class_name: 'Klass', association: :department)
+        Bullet.delete_safelist(type: :n_plus_one_query, class_name: 'Klass', association: :department)
+        expect(Bullet.safelist[:n_plus_one_query]).to eq({})
       end
     end
 
     context 'when exists multiple definitions' do
-      it 'is deleted from the whitelist successfully' do
-        Bullet.add_whitelist(type: :n_plus_one_query, class_name: 'Klass', association: :department)
-        Bullet.add_whitelist(type: :n_plus_one_query, class_name: 'Klass', association: :team)
-        Bullet.delete_whitelist(type: :n_plus_one_query, class_name: 'Klass', association: :team)
-        expect(Bullet.get_whitelist_associations(:n_plus_one_query, 'Klass')).to include :department
-        expect(Bullet.get_whitelist_associations(:n_plus_one_query, 'Klass')).to_not include :team
+      it 'is deleted from the safelist successfully' do
+        Bullet.add_safelist(type: :n_plus_one_query, class_name: 'Klass', association: :department)
+        Bullet.add_safelist(type: :n_plus_one_query, class_name: 'Klass', association: :team)
+        Bullet.delete_safelist(type: :n_plus_one_query, class_name: 'Klass', association: :team)
+        expect(Bullet.get_safelist_associations(:n_plus_one_query, 'Klass')).to include :department
+        expect(Bullet.get_safelist_associations(:n_plus_one_query, 'Klass')).to_not include :team
       end
     end
   end

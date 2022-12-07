@@ -28,7 +28,7 @@ if !mongoid? && active_record?
       expect(Bullet.collected_counter_cache_notifications).to be_empty
     end
 
-    if active_record5? || active_record6?
+    if ActiveRecord::VERSION::MAJOR > 4
       it 'should not need counter cache for has_many through' do
         Client.all.each { |client| client.firms.size }
         expect(Bullet.collected_counter_cache_notifications).to be_empty
@@ -55,9 +55,9 @@ if !mongoid? && active_record?
       end
     end
 
-    context 'whitelist' do
-      before { Bullet.add_whitelist type: :counter_cache, class_name: 'Country', association: :cities }
-      after { Bullet.clear_whitelist }
+    context 'safelist' do
+      before { Bullet.add_safelist type: :counter_cache, class_name: 'Country', association: :cities }
+      after { Bullet.clear_safelist }
 
       it 'should not detect counter cache' do
         Country.all.each { |country| country.cities.size }

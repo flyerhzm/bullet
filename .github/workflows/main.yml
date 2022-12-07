@@ -1,0 +1,82 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will download a prebuilt Ruby version, install dependencies and run tests with Rake
+# For more information see: https://github.com/marketplace/actions/setup-ruby-jruby-and-truffleruby
+
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  test_rails_4:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        gemfile: ['Gemfile.rails-4.0', 'Gemfile.rails-4.1', 'Gemfile.rails-4.2']
+    env: # $BUNDLE_GEMFILE must be set at the job level, so it is set for all steps
+      BUNDLE_GEMFILE: ${{ github.workspace }}/${{ matrix.gemfile }}
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 2.3
+        bundler: 1
+        bundler-cache: true
+    - name: Run tests
+      run: bundle exec rake
+  test_rails_5:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        gemfile: ['Gemfile.rails-5.0', 'Gemfile.rails-5.1', 'Gemfile.rails-5.2']
+    env: # $BUNDLE_GEMFILE must be set at the job level, so it is set for all steps
+      BUNDLE_GEMFILE: ${{ github.workspace }}/${{ matrix.gemfile }}
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 2.5
+        bundler: 1
+        bundler-cache: true
+    - name: Run tests
+      run: bundle exec rake
+  test_rails_6:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        gemfile: ['Gemfile.rails-6.0', 'Gemfile.rails-6.1']
+    env: # $BUNDLE_GEMFILE must be set at the job level, so it is set for all steps
+      BUNDLE_GEMFILE: ${{ github.workspace }}/${{ matrix.gemfile }}
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 2.7
+        bundler-cache: true
+    - name: Run tests
+      run: bundle exec rake
+  test_rails_7:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        gemfile: ['Gemfile.rails-7.0']
+    env: # $BUNDLE_GEMFILE must be set at the job level, so it is set for all steps
+      BUNDLE_GEMFILE: ${{ github.workspace }}/${{ matrix.gemfile }}
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 3.1
+        bundler-cache: true
+    - name: Run tests
+      run: bundle exec rake

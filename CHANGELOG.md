@@ -1,5 +1,37 @@
 ## Next Release
 
+## 7.0.4 (11/28/2022)
+
+* Fix `eager_load` `has_many :through` false positives
+* mongoid7x: add dynamic methods
+
+## 7.0.3 (08/13/2022)
+
+* Replace `Array()` with `Array.wrap()`
+
+## 7.0.2 (05/31/2022)
+
+* Drop growl support
+* Do not check html tag in Bullet::Rack anymore
+
+## 7.0.1 (01/15/2022)
+
+* Get rid of *_whitelist methods
+* Hack ActiveRecord::Associations::Preloader::Batch in rails 7
+
+## 7.0.0 (12/18/2021)
+
+* Support rails 7
+* Fix Mongoid 7 view iteration
+* Move CI from Travis to Github Actions
+
+## 6.1.5 (08/16/2021)
+
+* Rename whitelist to safelist
+* Fix onload called twice
+* Support Rack::Files::Iterator responses
+* Ensure HABTM associations are not incorrectly labeled n+1
+
 ## 6.1.4 (02/26/2021)
 
 * Added an option to stop adding HTTP headers to API requests

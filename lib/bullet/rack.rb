@@ -48,6 +48,7 @@ module Bullet
     def empty?(response)
       # response may be ["Not Found"], ["Move Permanently"], etc, but
       # those should not happen if the status is 200
+      return true if !response.respond_to?(:body) && !response.respond_to?(:first)
       body = response_body(response)
       body.nil? || body.empty?
     end
@@ -84,13 +85,13 @@ module Bullet
     end
 
     def html_request?(headers, response)
-      headers['Content-Type']&.include?('text/html') && response_body(response).include?('<html')
+      headers['Content-Type']&.include?('text/html')
     end
 
     def response_body(response)
       if response.respond_to?(:body)
         Array === response.body ? response.body.first : response.body
-      else
+      elsif response.respond_to?(:first)
         response.first
       end
     end

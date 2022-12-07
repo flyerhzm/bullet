@@ -39,7 +39,7 @@ module Bullet
                 :stacktrace_includes,
                 :stacktrace_excludes,
                 :skip_html_injection
-    attr_reader :whitelist
+    attr_reader :safelist
     attr_accessor :add_footer, :orm_patches_applied, :skip_http_headers
 
     available_notifiers =
@@ -61,7 +61,7 @@ module Bullet
       @enable = @n_plus_one_query_enable = @unused_eager_loading_enable = @counter_cache_enable = enable
 
       if enable?
-        reset_whitelist
+        reset_safelist
         unless orm_patches_applied
           self.orm_patches_applied = true
           Bullet::Mongoid.enable if mongoid?
@@ -99,29 +99,29 @@ module Bullet
       @stacktrace_excludes ||= []
     end
 
-    def add_whitelist(options)
-      reset_whitelist
-      @whitelist[options[:type]][options[:class_name]] ||= []
-      @whitelist[options[:type]][options[:class_name]] << options[:association].to_sym
+    def add_safelist(options)
+      reset_safelist
+      @safelist[options[:type]][options[:class_name]] ||= []
+      @safelist[options[:type]][options[:class_name]] << options[:association].to_sym
     end
 
-    def delete_whitelist(options)
-      reset_whitelist
-      @whitelist[options[:type]][options[:class_name]] ||= []
-      @whitelist[options[:type]][options[:class_name]].delete(options[:association].to_sym)
-      @whitelist[options[:type]].delete_if { |_key, val| val.empty? }
+    def delete_safelist(options)
+      reset_safelist
+      @safelist[options[:type]][options[:class_name]] ||= []
+      @safelist[options[:type]][options[:class_name]].delete(options[:association].to_sym)
+      @safelist[options[:type]].delete_if { |_key, val| val.empty? }
     end
 
-    def get_whitelist_associations(type, class_name)
-      Array(@whitelist[type][class_name])
+    def get_safelist_associations(type, class_name)
+      Array.wrap(@safelist[type][class_name])
     end
 
-    def reset_whitelist
-      @whitelist ||= { n_plus_one_query: {}, unused_eager_loading: {}, counter_cache: {} }
+    def reset_safelist
+      @safelist ||= { n_plus_one_query: {}, unused_eager_loading: {}, counter_cache: {} }
     end
 
-    def clear_whitelist
-      @whitelist = nil
+    def clear_safelist
+      @safelist = nil
     end
 
     def bullet_logger=(active)
