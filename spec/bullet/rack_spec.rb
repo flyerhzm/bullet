@@ -50,7 +50,7 @@ module Bullet
       end
 
       it 'should be true if no response body' do
-        response = double()
+        response = double
         expect(middleware).to be_empty(response)
       end
     end
@@ -130,18 +130,20 @@ module Bullet
           end
 
           it 'should include CSP nonce in inline script if console_enabled and a CSP is applied' do
+            allow(Bullet).to receive(:add_footer).at_least(:once).and_return(true)
             expect(Bullet).to receive(:console_enabled?).and_return(true)
             allow(middleware).to receive(:xhr_script).and_call_original
 
-            nonce = "+t9/wTlgG6xbHxXYUaDNzQ=="
+            nonce = '+t9/wTlgG6xbHxXYUaDNzQ=='
             app.headers = {
               'Content-Type' => 'text/html',
-              'Content-Security-Policy' => "default-src 'self' https:; script-src 'self' https: 'nonce-#{nonce}'",
+              'Content-Security-Policy' => "default-src 'self' https:; script-src 'self' https: 'nonce-#{nonce}'"
             }
 
             _, headers, response = middleware.call('Content-Type' => 'text/html')
 
-            expect(headers['Content-Length']).to eq((56 + middleware.send(:xhr_script, nonce).length).to_s)
+            size = 56 + middleware.send(:footer_note).length + middleware.send(:xhr_script, nonce).length
+            expect(headers['Content-Length']).to eq(size.to_s)
           end
 
           it 'should change response body for html safe string if console_enabled is true' do
