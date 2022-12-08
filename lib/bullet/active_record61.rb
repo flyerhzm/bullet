@@ -183,10 +183,10 @@ module Bullet
                   Array.wrap(association.target).each do |through_record|
                     Bullet::Detector::NPlusOneQuery.call_association(through_record, source_reflection.name)
                   end
-                end
 
-                if reflection.through_reflection != through_reflection
-                  Bullet::Detector::NPlusOneQuery.call_association(owner, through_reflection.name)
+                  if reflection.through_reflection != through_reflection
+                    Bullet::Detector::NPlusOneQuery.call_association(owner, through_reflection.name)
+                  end
                 end
               end
               Bullet::Detector::NPlusOneQuery.call_association(owner, reflection.name) unless @inversed
