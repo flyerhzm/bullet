@@ -529,7 +529,15 @@ if active_record?
       end
 
       it 'should detect preload associations' do
-        Firm.includes(:groups).each { |firm| firm.groups.map(&:name) }
+        Firm.preload(:groups).each { |firm| firm.groups.map(&:name) }
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+        expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
+
+        expect(Bullet::Detector::Association).to be_completely_preloading_associations
+      end
+
+      it 'should detect eager load associations' do
+        Firm.eager_load(:groups).each { |firm| firm.groups.map(&:name) }
         Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
         expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
 
