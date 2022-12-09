@@ -148,6 +148,7 @@ module Bullet
       Thread.current[:bullet_impossible_objects] = Bullet::Registry::Object.new
       Thread.current[:bullet_inversed_objects] = Bullet::Registry::Base.new
       Thread.current[:bullet_eager_loadings] = Bullet::Registry::Association.new
+      Thread.current[:bullet_call_stacks] = Bullet::Registry::CallStack.new
 
       Thread.current[:bullet_counter_possible_objects] ||= Bullet::Registry::Object.new
       Thread.current[:bullet_counter_impossible_objects] ||= Bullet::Registry::Object.new

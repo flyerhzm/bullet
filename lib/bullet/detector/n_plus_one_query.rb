@@ -25,7 +25,7 @@ module Bullet
           )
           if !excluded_stacktrace_path? && conditions_met?(object, associations)
             Bullet.debug('detect n + 1 query', "object: #{object.bullet_key}, associations: #{associations}")
-            create_notification caller_in_project, object.class.to_s, associations
+            create_notification caller_in_project(object.bullet_key), object.class.to_s, associations
           end
         end
 
