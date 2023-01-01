@@ -1,5 +1,13 @@
 ## Next Release
 
+## 7.0.5 (01/01/2023)
+
+* Fix n+1 false positives in AR 7.0
+* Fix eager_load nested has_many :through false positives
+* Respect Content-Security-Policy nonces
+* Added CallStacks support for avoid eager loading
+* Iterate fewer times over objects
+
 ## 7.0.4 (11/28/2022)
 
 * Fix `eager_load` `has_many :through` false positives
