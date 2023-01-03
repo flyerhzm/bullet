@@ -1,5 +1,9 @@
 ## Next Release
 
+## 7.0.6 (03/01/2023)
+
+* Better way to check if `ActionDispatch::ContentSecurityPolicy::Middleware` exists
+
 ## 7.0.5 (01/01/2023)
 
 * Fix n+1 false positives in AR 7.0
