@@ -1,5 +1,9 @@
 ## Next Release
 
+## 7.0.7 (03/01/2023)
+
+* Check `Rails.application.config.content_security_policy` before insert `Bullet::Rack`
+
 ## 7.0.6 (03/01/2023)
 
 * Better way to check if `ActionDispatch::ContentSecurityPolicy::Middleware` exists
