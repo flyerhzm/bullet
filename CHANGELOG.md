@@ -97,7 +97,7 @@
 
 * Fix through reflection for rails 5.x
 * Fix false positive in after_save/after_create callbacks
-* Don't triger a preload error on "manual" preloads
+* Don't trigger a preload error on "manual" preloads
 * Avoid Bullet from making extra queries in mongoid6
 * Support option for #first and #last on mongoid6.x
 * Fix duplicate logs in mongoid 4.x and 5.x version
