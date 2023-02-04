@@ -27,7 +27,11 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'activesupport', '>= 3.0.0'
   s.add_runtime_dependency 'uniform_notifier', '~> 1.11'
 
-  s.files         = `git ls-files`.split("\n")
-  s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
+  s.files = Dir.chdir(__dir__) do
+    `git ls-files -z`.split("\x0").reject do |file|
+      file.start_with?(*%w[.git .rspec Gemfile Guardfile Hacking Rakefile
+                           bullet.gemspec perf rails spec test.sh update.sh])
+    end
+  end
   s.require_paths = ['lib']
 end
