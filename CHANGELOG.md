@@ -1,5 +1,7 @@
 ## Next Release
 
+* Added `always_append_html_body` option, so the html snippet is always included even if there are no notifications
+
 ## 7.0.7 (03/01/2023)
 
 * Check `Rails.application.config.content_security_policy` before insert `Bullet::Rack`
