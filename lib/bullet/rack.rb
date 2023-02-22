@@ -18,7 +18,7 @@ module Bullet
 
       response_body = nil
 
-      if Bullet.notification?
+      if Bullet.notification? || Bullet.always_append_html_body
         if Bullet.inject_into_page? && !file?(headers) && !sse?(headers) && !empty?(response) && status == 200
           if html_request?(headers, response)
             response_body = response_body(response)

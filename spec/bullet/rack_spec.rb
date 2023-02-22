@@ -74,6 +74,16 @@ module Bullet
           expect(response).to eq(%w[<html><head></head><body><bullet></bullet></body></html>])
         end
 
+        it 'should change response body if always_append_html_body is true' do
+          expect(Bullet).to receive(:always_append_html_body).and_return(true)
+          expect(Bullet).to receive(:console_enabled?).and_return(true)
+          expect(Bullet).to receive(:gather_inline_notifications).and_return('<bullet></bullet>')
+          expect(Bullet).to receive(:perform_out_of_channel_notifications)
+          _, headers, response = middleware.call('Content-Type' => 'text/html')
+          expect(headers['Content-Length']).to eq('56')
+          expect(response).to eq(%w[<html><head></head><body><bullet></bullet></body></html>])
+        end
+
         it 'should set the right Content-Length if response body contains accents' do
           response = Support::ResponseDouble.new
           response.body = '<html><head></head><body>é</body></html>'
@@ -85,9 +95,8 @@ module Bullet
           expect(headers['Content-Length']).to eq('58')
         end
 
-        context 'with injection notifiers' do
+        shared_examples 'inject notifiers' do
           before do
-            expect(Bullet).to receive(:notification?).and_return(true)
             allow(Bullet).to receive(:gather_inline_notifications).and_return('<bullet></bullet>')
             allow(middleware).to receive(:xhr_script).and_return('<script></script>')
             allow(middleware).to receive(:footer_note).and_return('footer')
@@ -213,6 +222,22 @@ module Bullet
               expect(headers).not_to include('X-bullet-console-text')
             end
           end
+        end
+
+        context 'with notifications present' do
+          before do
+            expect(Bullet).to receive(:notification?).and_return(true)
+          end
+
+          include_examples 'inject notifiers'
+        end
+
+        context 'with always_append_html_body true' do
+          before do
+            expect(Bullet).to receive(:always_append_html_body).and_return(true)
+          end
+
+          include_examples 'inject notifiers'
         end
 
         context 'when skip_html_injection is enabled' do
