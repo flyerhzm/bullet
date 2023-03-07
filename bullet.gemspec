@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   s.summary     = 'help to kill N+1 queries and unused eager loading.'
   s.description = 'help to kill N+1 queries and unused eager loading.'
   s.metadata    = {
-    'changelog_uri' => 'https://github.com/flyerhzm/bullet/blob/master/CHANGELOG.md',
+    'changelog_uri' => 'https://github.com/flyerhzm/bullet/blob/main/CHANGELOG.md',
     'source_code_uri' => 'https://github.com/flyerhzm/bullet'
   }
 
