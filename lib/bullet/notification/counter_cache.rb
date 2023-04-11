@@ -8,7 +8,7 @@ module Bullet
       end
 
       def title
-        'Need Counter Cache'
+        'Need Counter Cache with Active Record size'
       end
     end
   end
