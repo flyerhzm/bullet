@@ -1,6 +1,7 @@
 ## Next Release
 
 * Added `always_append_html_body` option, so the html snippet is always included even if there are no notifications
+* Added detection of n+1 count queries from `count` method
 
 ## 7.0.7 (03/01/2023)
 
