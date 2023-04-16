@@ -44,13 +44,10 @@ module Bullet
             unless obj.bullet_primary_key_value.nil?
               primary_key_values_are_empty = false
             end
-            keys_joined += "#{(keys_joined.empty?? '' : ', ')}#{obj.bullet_key}"
+            keys_joined += "#{(keys_joined.empty? ? '' : ', ')}#{obj.bullet_key}"
           end
           unless class_names_match_regex || primary_key_values_are_empty
-            Bullet.debug(
-              'Detector::NPlusOneQuery#add_possible_objects',
-              "objects: #{keys_joined}"
-            )
+            Bullet.debug('Detector::NPlusOneQuery#add_possible_objects', "objects: #{keys_joined}")
             objects.each { |object| possible_objects.add object.bullet_key }
           end
         end
