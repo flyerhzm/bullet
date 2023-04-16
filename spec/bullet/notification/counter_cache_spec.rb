@@ -8,7 +8,7 @@ module Bullet
       subject { CounterCache.new(Post, %i[comments votes]) }
 
       it { expect(subject.body).to eq('  Post => [:comments, :votes]') }
-      it { expect(subject.title).to eq('Need Counter Cache') }
+      it { expect(subject.title).to eq('Need Counter Cache with Active Record size') }
     end
   end
 end

@@ -64,5 +64,29 @@ if !mongoid? && active_record?
         expect(Bullet.collected_counter_cache_notifications).to be_empty
       end
     end
+
+    describe 'with count' do
+      it 'should need counter cache' do
+        Country.all.each { |country| country.cities.count }
+        expect(Bullet.collected_counter_cache_notifications).not_to be_empty
+      end
+
+      it 'should notify even with counter cache' do
+        Person.all.each { |person| person.pets.count }
+        expect(Bullet.collected_counter_cache_notifications).not_to be_empty
+      end
+
+      if ActiveRecord::VERSION::MAJOR > 4
+        it 'should not need counter cache for has_many through' do
+          Client.all.each { |client| client.firms.count }
+          expect(Bullet.collected_counter_cache_notifications).to be_empty
+        end
+      else
+        it 'should need counter cache for has_many through' do
+          Client.all.each { |client| client.firms.count }
+          expect(Bullet.collected_counter_cache_notifications).not_to be_empty
+        end
+      end
+    end
   end
 end

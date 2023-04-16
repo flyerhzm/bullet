@@ -176,6 +176,15 @@ module Bullet
           result
         end
       end
+
+      ::ActiveRecord::Associations::CollectionProxy.class_eval do
+        def count
+          if Bullet.start?
+            Bullet::Detector::CounterCache.add_counter_cache(proxy_association.owner, proxy_association.reflection.name)
+          end
+          super
+        end
+      end
     end
   end
 end
