@@ -120,6 +120,8 @@ Bullet.unused_eager_loading_enable = false
 Bullet.counter_cache_enable        = false
 ```
 
+Note: When calling `Bullet.enable`, all other detectors are reset to their defaults (`true`) and need reconfiguring.
+
 ## Safe list
 
 Sometimes Bullet may notify you of query problems you don't care to fix, or
