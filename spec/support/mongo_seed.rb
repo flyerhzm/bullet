@@ -42,6 +42,12 @@ module Support
           config.load_configuration(sessions: { default: { database: 'bullet', hosts: %w[localhost:27017] } })
         end
       else
+        if Mongoid::VERSION =~ /\A7.1/ || Mongoid::VERSION =~ /\A8/
+          Mongoid.logger = Logger.new(STDERR).tap do |logger|
+            logger.level = Logger::WARN
+          end
+        end
+
         Mongoid.configure do |config|
           config.load_configuration(clients: { default: { database: 'bullet', hosts: %w[localhost:27017] } })
         end
