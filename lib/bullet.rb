@@ -66,9 +66,13 @@ module Bullet
       end
     end
 
+    alias enabled= enable=
+
     def enable?
       !!@enable
     end
+
+    alias enabled? enable?
 
     # Rails.root might be nil if `railties` is a dependency on a project that does not use Rails
     def app_root
