@@ -42,7 +42,7 @@ module Support
           config.load_configuration(sessions: { default: { database: 'bullet', hosts: %w[localhost:27017] } })
         end
       else
-        if Mongoid::VERSION =~ /\A7.1/ || Mongoid::VERSION =~ /\A8/
+        if %w[7.1 7.2 7.3 7.4 7.5 8 8.1].any? {|version| Mongoid::VERSION =~ /\A#{Regexp.quote(version)}/ }
           Mongoid.logger = Logger.new(STDERR).tap do |logger|
             logger.level = Logger::WARN
           end
