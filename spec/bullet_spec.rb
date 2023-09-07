@@ -38,6 +38,40 @@ describe Bullet, focused: true do
     end
   end
 
+  # Testing the aliases.
+  describe '#enabled' do
+    context 'enable Bullet' do
+      before do
+        # Bullet.enable
+        # Do nothing. Bullet has already been enabled for the whole test suite.
+      end
+
+      it 'should be enabled' do
+        expect(subject).to be_enabled
+      end
+
+      context 'disable Bullet' do
+        before { Bullet.enabled = false }
+
+        it 'should be disabled' do
+          expect(subject).to_not be_enabled
+        end
+
+        context 'enable Bullet again without patching again the orms' do
+          before do
+            expect(Bullet::Mongoid).not_to receive(:enabled) if defined?(Bullet::Mongoid)
+            expect(Bullet::ActiveRecord).not_to receive(:enabled) if defined?(Bullet::ActiveRecord)
+            Bullet.enabled = true
+          end
+
+          it 'should be enabled again' do
+            expect(subject).to be_enabled
+          end
+        end
+      end
+    end
+  end
+
   describe '#start?' do
     context 'when bullet is disabled' do
       before(:each) { Bullet.enable = false }
