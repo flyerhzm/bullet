@@ -135,7 +135,8 @@ module Bullet
         end
 
         it 'should not raise error if object is nil' do
-          expect { NPlusOneQuery.add_possible_objects(nil) }.not_to raise_error
+          expect { NPlusOneQuery.add_possible_objects(nil) }
+            .not_to raise_error
         end
       end
 

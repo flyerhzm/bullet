@@ -380,7 +380,7 @@ if active_record?
     context 'comment => author, post => writer' do
       it 'should detect non preloaded writer' do
         Comment.includes(%i[author post]).where(['base_users.id = ?', BaseUser.first]).references(:base_users)
-          .each { |comment| comment.post.writer.name }
+               .each { |comment| comment.post.writer.name }
         Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
         expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
 
@@ -408,7 +408,8 @@ if active_record?
       end
 
       it 'should not raise a stack error from posts to category' do
-        expect { Comment.includes(post: :category).each { |com| com.post.category } }.not_to raise_error
+        expect { Comment.includes(post: :category).each { |com| com.post.category } }
+          .not_to raise_error
       end
     end
   end
