@@ -28,13 +28,13 @@ module Bullet
       def whoami
         @user ||=
           ENV['USER'].presence ||
-            (
-              begin
-                `whoami`.chomp
-              rescue StandardError
-                ''
-              end
-            )
+          (
+            begin
+              `whoami`.chomp
+            rescue StandardError
+              ''
+            end
+          )
         @user.present? ? "user: #{@user}" : ''
       end
 
@@ -73,7 +73,8 @@ module Bullet
       end
 
       def associations_str
-        ".includes(#{@associations.map { |a| a.to_s.to_sym }.inspect})"
+        ".includes(#{@associations.map { |a| a.to_s.to_sym }
+.inspect})"
       end
     end
   end

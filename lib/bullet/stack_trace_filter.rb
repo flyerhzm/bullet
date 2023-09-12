@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "bundler"
 
 module Bullet
@@ -14,8 +15,8 @@ module Bullet
         caller_path = location_as_path(location)
         caller_path.include?(Bullet.app_root) && !caller_path.include?(vendor_root) &&
           !caller_path.include?(bundler_path) || Bullet.stacktrace_includes.any? { |include_pattern|
-          pattern_matches?(location, include_pattern)
-        }
+                                                   pattern_matches?(location, include_pattern)
+                                                 }
       end
     end
 
