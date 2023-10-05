@@ -9,13 +9,15 @@ module Bullet
 
       context '#title' do
         it 'should raise NoMethodError' do
-          expect { subject.title }.to raise_error(NoMethodError)
+          expect { subject.title }
+            .to raise_error(NoMethodError)
         end
       end
 
       context '#body' do
         it 'should raise NoMethodError' do
-          expect { subject.body }.to raise_error(NoMethodError)
+          expect { subject.body }
+            .to raise_error(NoMethodError)
         end
       end
 

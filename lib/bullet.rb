@@ -43,7 +43,8 @@ module Bullet
     attr_accessor :add_footer, :orm_patches_applied, :skip_http_headers, :always_append_html_body
 
     available_notifiers =
-      UniformNotifier::AVAILABLE_NOTIFIERS.select { |notifier| notifier != :raise }.map { |notifier| "#{notifier}=" }
+      UniformNotifier::AVAILABLE_NOTIFIERS.select { |notifier| notifier != :raise }
+                                          .map { |notifier| "#{notifier}=" }
     available_notifiers_options = { to: UniformNotifier }
     delegate(*available_notifiers, **available_notifiers_options)
 

@@ -247,7 +247,10 @@ module Bullet
         Module.new do
           def count
             if Bullet.start? && !proxy_association.is_a?(::ActiveRecord::Associations::ThroughAssociation)
-              Bullet::Detector::CounterCache.add_counter_cache(proxy_association.owner, proxy_association.reflection.name)
+              Bullet::Detector::CounterCache.add_counter_cache(
+                proxy_association.owner,
+                proxy_association.reflection.name
+              )
             end
             super
           end

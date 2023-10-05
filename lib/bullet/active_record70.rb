@@ -65,7 +65,9 @@ module Bullet
           def call
             if Bullet.start?
               @preloaders.each do |preloader|
-                preloader.records.each { |record| Bullet::Detector::Association.add_object_associations(record, preloader.associations) }
+                preloader.records.each { |record|
+                  Bullet::Detector::Association.add_object_associations(record, preloader.associations)
+                }
                 Bullet::Detector::UnusedEagerLoading.add_eager_loadings(preloader.records, preloader.associations)
               end
             end
@@ -80,7 +82,9 @@ module Bullet
             if Bullet.start?
               reflection_records.compact!
               if reflection_records.first.class.name !~ /^HABTM_/
-                reflection_records.each { |record| Bullet::Detector::Association.add_object_associations(record, reflection.name) }
+                reflection_records.each { |record|
+                  Bullet::Detector::Association.add_object_associations(record, reflection.name)
+                }
                 Bullet::Detector::UnusedEagerLoading.add_eager_loadings(reflection_records, reflection.name)
               end
             end
@@ -284,7 +288,10 @@ module Bullet
         Module.new do
           def count
             if Bullet.start? && !proxy_association.is_a?(::ActiveRecord::Associations::ThroughAssociation)
-              Bullet::Detector::CounterCache.add_counter_cache(proxy_association.owner, proxy_association.reflection.name)
+              Bullet::Detector::CounterCache.add_counter_cache(
+                proxy_association.owner,
+                proxy_association.reflection.name
+              )
             end
             super
           end
