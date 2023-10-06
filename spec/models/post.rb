@@ -18,6 +18,7 @@ class Post < ActiveRecord::Base
 
   # see association_spec.rb 'should not detect newly assigned object in an after_save'
   attr_accessor :trigger_after_save
+
   after_save do
     next unless trigger_after_save
 

@@ -8,7 +8,8 @@ module Bullet
       end
 
       def similarly_associated(base, associations)
-        @registry.select { |key, value| key.include?(base) && value == associations }.collect(&:first).flatten
+        @registry.select { |key, value| key.include?(base) && value == associations }
+                 .collect(&:first).flatten
       end
     end
   end
