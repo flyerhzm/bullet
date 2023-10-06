@@ -170,11 +170,11 @@ module Bullet
       end
 
       ::ActiveRecord::Associations::CollectionProxy.class_eval do
-        def count
+        def count(column_name = nil, options = {})
           if Bullet.start?
             Bullet::Detector::CounterCache.add_counter_cache(proxy_association.owner, proxy_association.reflection.name)
           end
-          super
+          super(column_name, options)
         end
       end
     end
