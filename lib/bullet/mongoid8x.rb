@@ -1,4 +1,3 @@
-
 module Bullet
   module Mongoid
     def self.enable
@@ -23,6 +22,7 @@ module Bullet
 
         def each(&block)
           return to_enum unless block_given?
+
           records = []
           origin_each { |record| records << record }
           if records.length > 1

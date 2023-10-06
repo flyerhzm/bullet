@@ -65,7 +65,10 @@ module Bullet
         private
 
         def create_notification(callers, klazz, associations)
-          notify_associations = Array.wrap(associations) - Bullet.get_safelist_associations(:unused_eager_loading, klazz)
+          notify_associations = Array.wrap(associations) - Bullet.get_safelist_associations(
+            :unused_eager_loading,
+            klazz
+          )
 
           if notify_associations.present?
             notice = Bullet::Notification::UnusedEagerLoading.new(callers, klazz, notify_associations)
