@@ -91,16 +91,18 @@ module Bullet
 
       ::ActiveRecord::Associations::Preloader::ThroughAssociation.prepend(
         Module.new do
-          def preloaded_records
-            if Bullet.start? && !defined?(@preloaded_records)
-              source_preloaders.each do |source_preloader|
-                reflection_name = source_preloader.send(:reflection).name
-                source_preloader.send(:owners).each do |owner|
+          def source_preloaders
+            if Bullet.start? && !defined?(@source_preloaders)
+              preloaders = super
+              preloaders.each do |preloader|
+                reflection_name = preloader.send(:reflection).name
+                preloader.send(:owners).each do |owner|
                   Bullet::Detector::NPlusOneQuery.call_association(owner, reflection_name)
                 end
               end
+            else
+              super
             end
-            super
           end
         end
       )
