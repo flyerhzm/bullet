@@ -85,7 +85,7 @@ module Bullet
       headers['Content-Type'] == 'text/event-stream'
     end
 
-    def html_request?(headers, response)
+    def html_request?(headers, _response)
       headers['Content-Type']&.include?('text/html')
     end
 
