@@ -135,7 +135,8 @@ module Bullet
     end
 
     def with_security_policy_nonce(headers)
-      matched = (headers['Content-Security-Policy'] || '').match(NONCE_MATCHER)
+      csp = headers['Content-Security-Policy'] || headers['Content-Security-Policy-Report-Only'] || ''
+      matched = csp.match(NONCE_MATCHER)
       nonce = matched[:nonce] if matched
 
       if nonce
