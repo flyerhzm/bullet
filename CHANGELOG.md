@@ -1,5 +1,9 @@
 ## Next Release
 
+## 7.1.0 (10/06/2023)
+
+* Support rails 7.1
+* Alias `Bullet.enable?` to `enabled?`, and `Bullet.enable=` to `enabled=`
 * Added `always_append_html_body` option, so the html snippet is always included even if there are no notifications
 * Added detection of n+1 count queries from `count` method
 * Changed the counter cache notification title to recommend using `size`

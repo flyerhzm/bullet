@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
 module Bullet
-  VERSION = '7.0.7'
+  VERSION = '7.1.0'
 end
