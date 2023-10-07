@@ -1,5 +1,10 @@
 ## Next Release
 
+## 7.1.1 (10/07/2023)
+
+* Add support for `Content-Security-Policy-Report-Only` nonces
+* Fix count method signature
+
 ## 7.1.0 (10/06/2023)
 
 * Support rails 7.1
