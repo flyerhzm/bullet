@@ -1,5 +1,9 @@
 ## Next Release
 
+## 7.1.2 (10/13/2023)
+
+* Handle Rails 7.1 composite primary keys
+
 ## 7.1.1 (10/07/2023)
 
 * Add support for `Content-Security-Policy-Report-Only` nonces
