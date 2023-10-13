@@ -30,9 +30,15 @@ describe Object do
       Post.primary_key = 'id'
     end
 
-    it 'should return value for multiple primary keys' do
+    it 'should return value for multiple primary keys from the composite_primary_key gem' do
       post = Post.first
       allow(Post).to receive(:primary_keys).and_return(%i[category_id writer_id])
+      expect(post.bullet_primary_key_value).to eq("#{post.category_id},#{post.writer_id}")
+    end
+
+    it 'should return value for multiple primary keys from ActiveRecord 7.1' do
+      post = Post.first
+      allow(Post).to receive(:primary_key).and_return(%i[category_id writer_id])
       expect(post.bullet_primary_key_value).to eq("#{post.category_id},#{post.writer_id}")
     end
 
