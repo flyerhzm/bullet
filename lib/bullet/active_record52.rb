@@ -251,7 +251,10 @@ module Bullet
                 proxy_association.owner,
                 proxy_association.reflection.name
               )
-              Bullet::Detector::NPlusOneQuery.call_association(proxy_association.owner, proxy_association.reflection.name)
+              Bullet::Detector::NPlusOneQuery.call_association(
+                proxy_association.owner,
+                proxy_association.reflection.name
+              )
             end
             super(column_name)
           end
