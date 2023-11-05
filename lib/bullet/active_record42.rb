@@ -238,6 +238,7 @@ module Bullet
         def count(column_name = nil, options = {})
           if Bullet.start?
             Bullet::Detector::CounterCache.add_counter_cache(proxy_association.owner, proxy_association.reflection.name)
+            Bullet::Detector::NPlusOneQuery.call_association(proxy_association.owner, proxy_association.reflection.name)
           end
           super(column_name, options)
         end
