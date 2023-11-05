@@ -287,17 +287,17 @@ $ rails new test_bullet
 $ cd test_bullet
 $ rails g scaffold post name:string
 $ rails g scaffold comment name:string post_id:integer
-$ bundle exec rake db:migrate
+$ bundle exec rails db:migrate
 ```
 
 2\. Change `app/models/post.rb` and `app/models/comment.rb`
 
 ```ruby
-class Post < ActiveRecord::Base
+class Post < ApplicationRecord
   has_many :comments
 end
 
-class Comment < ActiveRecord::Base
+class Comment < ApplicationRecord
   belongs_to :post
 end
 ```
