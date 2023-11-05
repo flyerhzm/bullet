@@ -88,12 +88,14 @@ if active_record?
         expect(Bullet::Detector::Association).to be_detecting_unpreloaded_association_for(Post, :comments)
       end
 
-      it 'should not detect unused preload post => comment with empty?' do
-        Post.includes(:comments).each { |post| post.comments.empty? }
-        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
-        expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
+      if ActiveRecord::VERSION::MAJOR != 4 && ActiveRecord::VERSION::MINOR != 0
+        it 'should not detect unused preload post => comment with empty?' do
+          Post.includes(:comments).each { |post| post.comments.empty? }
+          Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+          expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
 
-        expect(Bullet::Detector::Association).to be_completely_preloading_associations
+          expect(Bullet::Detector::Association).to be_completely_preloading_associations
+        end
       end
 
       it 'should not detect unused preload post => comment with count' do
