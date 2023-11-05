@@ -24,6 +24,7 @@ class Object
   def bullet_join_potential_composite_primary_key(primary_keys)
     return send(primary_keys) unless primary_keys.is_a?(Enumerable)
 
-    primary_keys.map { |primary_key| send primary_key }.join(',')
+    primary_keys.map { |primary_key| send primary_key }
+                .join(',')
   end
 end
