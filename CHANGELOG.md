@@ -1,5 +1,9 @@
 ## Next Release
 
+## 7.1.3 (11/05/2023)
+
+* Call NPlusOneQuery's call_association when calling count on collectino assocation
+
 ## 7.1.2 (10/13/2023)
 
 * Handle Rails 7.1 composite primary keys
