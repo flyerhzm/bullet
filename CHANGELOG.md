@@ -2,7 +2,7 @@
 
 ## 7.1.3 (11/05/2023)
 
-* Call NPlusOneQuery's call_association when calling count on collectino assocation
+* Call NPlusOneQuery's call_association when calling count on collection assocation
 
 ## 7.1.2 (10/13/2023)
 
