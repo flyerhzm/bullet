@@ -1,5 +1,9 @@
 ## Next Release
 
+## 7.1.4 (11/17/2023)
+
+* Call association also on through reflection
+
 ## 7.1.3 (11/05/2023)
 
 * Call NPlusOneQuery's call_association when calling count on collection assocation
