@@ -138,12 +138,17 @@ module Bullet
                   id = row[key]
                   next unless id.nil?
 
-                  associations = node.reflection.name
-                  Bullet::Detector::Association.add_object_associations(ar_parent, associations)
-                  Bullet::Detector::NPlusOneQuery.call_association(ar_parent, associations)
-                  @bullet_eager_loadings[ar_parent.class] ||= {}
-                  @bullet_eager_loadings[ar_parent.class][ar_parent] ||= Set.new
-                  @bullet_eager_loadings[ar_parent.class][ar_parent] << associations
+                  associations = [node.reflection.name]
+                  if node.reflection.through_reflection?
+                    associations << node.reflection.through_reflection.name
+                  end
+                  associations.each do |association|
+                    Bullet::Detector::Association.add_object_associations(ar_parent, association)
+                    Bullet::Detector::NPlusOneQuery.call_association(ar_parent, association)
+                    @bullet_eager_loadings[ar_parent.class] ||= {}
+                    @bullet_eager_loadings[ar_parent.class][ar_parent] ||= Set.new
+                    @bullet_eager_loadings[ar_parent.class][ar_parent] << association
+                  end
                 end
               end
             end
@@ -156,12 +161,17 @@ module Bullet
             result = super
 
             if Bullet.start?
-              associations = node.reflection.name
-              Bullet::Detector::Association.add_object_associations(record, associations)
-              Bullet::Detector::NPlusOneQuery.call_association(record, associations)
-              @bullet_eager_loadings[record.class] ||= {}
-              @bullet_eager_loadings[record.class][record] ||= Set.new
-              @bullet_eager_loadings[record.class][record] << associations
+              associations = [node.reflection.name]
+              if node.reflection.through_reflection?
+                associations << node.reflection.through_reflection.name
+              end
+              associations.each do |association|
+                Bullet::Detector::Association.add_object_associations(record, association)
+                Bullet::Detector::NPlusOneQuery.call_association(record, association)
+                @bullet_eager_loadings[record.class] ||= {}
+                @bullet_eager_loadings[record.class][record] ||= Set.new
+                @bullet_eager_loadings[record.class][record] << association
+              end
             end
 
             result

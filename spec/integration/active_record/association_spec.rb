@@ -638,8 +638,16 @@ if active_record?
         expect(Bullet::Detector::Association).to be_detecting_unpreloaded_association_for(User, :submission_attachment)
       end
 
-      it 'should detect preload associations' do
+      it 'should not detect preload associations with includes' do
         User.includes(:submission_attachment).each { |user| user.submission_attachment.file_name }
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+        expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
+
+        expect(Bullet::Detector::Association).to be_completely_preloading_associations
+      end
+
+      it 'should detect preload associations with eager_load' do
+        User.eager_load(:submission_attachment).each { |user| user.submission_attachment.file_name }
         Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
         expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
 

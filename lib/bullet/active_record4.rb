@@ -107,12 +107,17 @@ module Bullet
           result = origin_construct_association(record, join, row)
 
           if Bullet.start?
-            associations = join.reflection.name
-            Bullet::Detector::Association.add_object_associations(record, associations)
-            Bullet::Detector::NPlusOneQuery.call_association(record, associations)
-            @bullet_eager_loadings[record.class] ||= {}
-            @bullet_eager_loadings[record.class][record] ||= Set.new
-            @bullet_eager_loadings[record.class][record] << associations
+            associations = [join.reflection.name]
+            if join.reflection.nested?
+              associations << join.reflection.through_reflection.name
+            end
+            associations.each do |association|
+              Bullet::Detector::Association.add_object_associations(record, association)
+              Bullet::Detector::NPlusOneQuery.call_association(record, association)
+              @bullet_eager_loadings[record.class] ||= {}
+              @bullet_eager_loadings[record.class][record] ||= Set.new
+              @bullet_eager_loadings[record.class][record] << association
+            end
           end
 
           result
