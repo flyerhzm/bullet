@@ -70,6 +70,18 @@ module Bullet
           allow(subject).to receive(:body_with_caller).and_return('body_with_caller')
           expect(subject.notification_data).to eq(user: 'whoami', url: 'url', title: 'title', body: 'body_with_caller')
         end
+
+        context 'when skip_user_in_notification is true' do
+          before { allow(Bullet).to receive(:skip_user_in_notification).and_return(true) }
+
+          it 'should return notification data without user' do
+            allow(subject).to receive(:url).and_return('url')
+            allow(subject).to receive(:title).and_return('title')
+            allow(subject).to receive(:body_with_caller).and_return('body_with_caller')
+
+            expect(subject.notification_data).to eq(url: 'url', title: 'title', body: 'body_with_caller')
+          end
+        end
       end
 
       context '#notify_inline' do

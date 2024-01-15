@@ -51,11 +51,22 @@ module Bullet
       end
 
       def short_notice
-        [whoami.presence, url, title, body].compact.join('  ')
+        parts = []
+        parts << whoami.presence unless Bullet.skip_user_in_notification
+        parts << url
+        parts << title
+        parts << body
+
+        parts.compact.join('  ')
       end
 
       def notification_data
-        { user: whoami, url: url, title: title, body: body_with_caller }
+        hash = {}
+        hash[:user] = whoami unless Bullet.skip_user_in_notification
+        hash[:url] = url
+        hash[:title] = title
+        hash[:body] = body_with_caller
+        hash
       end
 
       def eql?(other)

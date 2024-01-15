@@ -102,6 +102,7 @@ The code above will enable all of the Bullet notification systems:
 * `Bullet.slack`: add notifications to slack
 * `Bullet.raise`: raise errors, useful for making your specs fail unless they have optimized queries
 * `Bullet.always_append_html_body`: always append the html body even if no notifications are present. Note: `console` or `add_footer` must also be true. Useful for Single Page Applications where the initial page load might not have any notifications present.
+* `Bullet.skip_user_in_notification`: exclude the OS user (`whoami`) from notifications.
 
 
 Bullet also allows you to disable any of its detectors.
