@@ -13,3 +13,4 @@ coverage/
 .coveralls.yml
 Gemfile*.lock
 .idea/
+.vscode/
