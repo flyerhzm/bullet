@@ -1,5 +1,9 @@
 ## Next Release
 
+## 7.1.6 (01/16/2024)
+
+* Allow apps to not include the user in a notification
+
 ## 7.1.5 (01/05/2024)
 
 * Fix mongoid8
@@ -10,7 +14,7 @@
 
 ## 7.1.3 (11/05/2023)
 
-* Call NPlusOneQuery's call_association when calling count on collection assocation
+* Call NPlusOneQuery's call_association when calling count on collection association
 
 ## 7.1.2 (10/13/2023)
 
@@ -268,7 +272,7 @@
 
 ## 4.5.0 (03/24/2013)
 
-* Add api way to access captured associatioin
+* Add api way to access captured association
 * Allow disable n_plus_one_query, unused_eager_loading and counter_cache respectively
 * Add whitelist
 
