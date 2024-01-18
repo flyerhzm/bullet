@@ -273,7 +273,7 @@ module Bullet
 
       ::ActiveRecord::Associations::CollectionProxy.prepend(
         Module.new do
-          def count
+          def count(column_name = nil)
             if Bullet.start? && !proxy_association.is_a?(::ActiveRecord::Associations::ThroughAssociation)
               Bullet::Detector::CounterCache.add_counter_cache(
                 proxy_association.owner,
@@ -284,7 +284,7 @@ module Bullet
                 proxy_association.reflection.name
               )
             end
-            super
+            super(column_name)
           end
         end
       )
