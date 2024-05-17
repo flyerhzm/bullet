@@ -15,7 +15,7 @@ module Bullet
       require 'active_record'
       ::ActiveRecord::Base.extend(
         Module.new do
-          def find_by_sql(sql, binds = [], preparable: nil, &block)
+          def find_by_sql(sql, binds = [], preparable: nil, allow_retry: false, &block)
             result = super
             if Bullet.start?
               if result.is_a? Array
