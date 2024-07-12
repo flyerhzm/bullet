@@ -1,5 +1,10 @@
 ## Next Release
 
+## 7.2.0 (07/12/2024)
+
+* Support rails 7.2
+* Fix count method signature for active_record5 and active_record60
+
 ## 7.1.6 (01/16/2024)
 
 * Allow apps to not include the user in a notification
