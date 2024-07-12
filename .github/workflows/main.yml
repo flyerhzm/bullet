@@ -68,7 +68,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        gemfile: ['Gemfile.rails-7.0', 'Gemfile.rails-7.1']
+        gemfile: ['Gemfile.rails-7.0', 'Gemfile.rails-7.1', 'Gemfile.rails-7.2']
     env: # $BUNDLE_GEMFILE must be set at the job level, so it is set for all steps
       BUNDLE_GEMFILE: ${{ github.workspace }}/${{ matrix.gemfile }}
     steps:
