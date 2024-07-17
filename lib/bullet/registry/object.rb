@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+using Bullet::Ext::String
+
 module Bullet
   module Registry
     class Object < Base
