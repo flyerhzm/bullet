@@ -2,6 +2,8 @@
 
 require "bundler"
 
+using Bullet::Ext::Object
+
 module Bullet
   module StackTraceFilter
     VENDOR_PATH = '/vendor'
