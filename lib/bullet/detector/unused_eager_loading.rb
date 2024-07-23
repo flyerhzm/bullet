@@ -30,13 +30,13 @@ module Bullet
         def add_eager_loadings(objects, associations)
           return unless Bullet.start?
           return unless Bullet.unused_eager_loading_enable?
-          return if objects.map(&:bullet_primary_key_value).compact.empty?
+          return if objects.map { |object| object.bullet_primary_key_value }.compact.empty?
 
           Bullet.debug(
             'Detector::UnusedEagerLoading#add_eager_loadings',
-            "objects: #{objects.map(&:bullet_key).join(', ')}, associations: #{associations}"
+            "objects: #{objects.map { |object| object.bullet_key }.join(', ')}, associations: #{associations}"
           )
-          bullet_keys = objects.map(&:bullet_key)
+          bullet_keys = objects.map { |object| object.bullet_key }
 
           to_add = []
           to_merge = []
