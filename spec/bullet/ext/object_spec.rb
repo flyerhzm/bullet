@@ -2,6 +2,8 @@
 
 require 'spec_helper'
 
+using Bullet::Ext::Object
+
 describe Object do
   context 'bullet_key' do
     it 'should return class and id composition' do

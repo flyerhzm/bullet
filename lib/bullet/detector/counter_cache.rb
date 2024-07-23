@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+using Bullet::Ext::Object
+
 module Bullet
   module Detector
     class CounterCache < Base
@@ -21,11 +23,11 @@ module Bullet
           return unless Bullet.counter_cache_enable?
 
           objects = Array.wrap(object_or_objects)
-          return if objects.map(&:bullet_primary_key_value).compact.empty?
+          return if objects.map { |object| object.bullet_primary_key_value }.compact.empty?
 
           Bullet.debug(
             'Detector::CounterCache#add_possible_objects',
-            "objects: #{objects.map(&:bullet_key).join(', ')}"
+            "objects: #{objects.map{ |object| object.bullet_key }.join(', ')}"
           )
           objects.each { |object| possible_objects.add object.bullet_key }
         end

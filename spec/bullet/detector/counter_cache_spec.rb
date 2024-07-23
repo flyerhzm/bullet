@@ -2,6 +2,8 @@
 
 require 'spec_helper'
 
+using Bullet::Ext::Object
+
 module Bullet
   module Detector
     describe CounterCache do
