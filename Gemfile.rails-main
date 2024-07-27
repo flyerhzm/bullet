@@ -1,0 +1,10 @@
+source "https://rubygems.org"
+
+gemspec
+
+gem "rails", github: "rails/rails", branch: "main"
+gem 'sqlite3'
+gem 'activerecord-jdbcsqlite3-adapter', platforms: [:jruby]
+gem 'activerecord-import'
+
+gem "rspec"
