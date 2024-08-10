@@ -694,7 +694,7 @@ if active_record?
   describe Bullet::Detector::Association, 'query immediately after creation' do
     context 'with save' do
       context 'document => children' do
-        it 'should not detect non preload associations' do
+        around do |example|
           document1 = Document.new
           document1.children.build
           document1.save
@@ -705,7 +705,15 @@ if active_record?
 
           document1.children.each.first
 
+          example.run
+
+          document1.children.destroy_all
+          document1.destroy
+        end
+
+        it 'should not detect non preload associations' do
           Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+
           expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
 
           expect(Bullet::Detector::Association).to be_completely_preloading_associations
@@ -715,7 +723,7 @@ if active_record?
 
     context 'with save!' do
       context 'document => children' do
-        it 'should not detect non preload associations' do
+        around do |example|
           document1 = Document.new
           document1.children.build
           document1.save!
@@ -726,6 +734,13 @@ if active_record?
 
           document1.children.each.first
 
+          example.run
+
+          document1.children.destroy_all
+          document1.destroy
+        end
+
+        it 'should not detect non preload associations' do
           Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
           expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
 
