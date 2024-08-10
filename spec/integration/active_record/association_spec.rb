@@ -348,15 +348,23 @@ if active_record?
         expect(Bullet::Detector::Association).to be_completely_preloading_associations
       end
 
-      it 'should not detect newly assigned object in an after_save' do
-        new_post = Post.new(category: Category.first)
+      context 'in an after_save' do
+        around do |example|
+          new_post = Post.new(category: Category.first)
+          new_post.trigger_after_save = true
+          new_post.save!
 
-        new_post.trigger_after_save = true
-        new_post.save!
-        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
-        expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
+          example.run
 
-        expect(Bullet::Detector::Association).to be_completely_preloading_associations
+          new_post.destroy
+        end
+
+        it 'should not detect newly assigned object' do
+          Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+          expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
+
+          expect(Bullet::Detector::Association).to be_completely_preloading_associations
+        end
       end
     end
 
