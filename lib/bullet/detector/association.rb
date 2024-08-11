@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+using Bullet::Ext::Object
+
 module Bullet
   module Detector
     class Association < Base

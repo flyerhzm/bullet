@@ -2,6 +2,8 @@
 
 require 'spec_helper'
 
+using Bullet::Ext::String
+
 describe String do
   context 'bullet_class_name' do
     it 'should only return class name' do
