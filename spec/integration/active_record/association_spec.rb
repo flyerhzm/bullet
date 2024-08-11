@@ -113,6 +113,20 @@ if active_record?
 
         expect(Bullet::Detector::Association).to be_detecting_unpreloaded_association_for(Post, :comments)
       end
+
+      context 'inside Fiber' do
+        it 'should detect non preload post => comments' do
+          fiber = Fiber.new do
+            Post.all.each { |post| post.comments.map(&:name) }
+          end
+          fiber.resume
+
+          Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+          expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
+
+          expect(Bullet::Detector::Association).to be_detecting_unpreloaded_association_for(Post, :comments)
+        end
+      end
     end
 
     context 'category => posts => comments' do
