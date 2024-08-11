@@ -116,9 +116,10 @@ if active_record?
 
       context 'inside Fiber' do
         it 'should detect non preload post => comments' do
-          fiber = Fiber.new do
-            Post.all.each { |post| post.comments.map(&:name) }
-          end
+          fiber =
+            Fiber.new do
+              Post.all.each { |post| post.comments.map(&:name) }
+            end
           fiber.resume
 
           Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
