@@ -20,7 +20,7 @@ If you use activerecord 3.x, please use bullet < 5.5.0
 * [http://railscasts.com/episodes/372-bullet](http://railscasts.com/episodes/372-bullet)
 * [http://ruby5.envylabs.com/episodes/9-episode-8-september-8-2009](http://ruby5.envylabs.com/episodes/9-episode-8-september-8-2009)
 * [http://railslab.newrelic.com/2009/10/23/episode-19-on-the-edge-part-1](http://railslab.newrelic.com/2009/10/23/episode-19-on-the-edge-part-1)
-* [http://weblog.rubyonrails.org/2009/10/22/community-highlights](http://weblog.rubyonrails.org/2009/10/22/community-highlights)
+* [https://rubyonrails.org/2009/10/22/community-highlights](https://rubyonrails.org/2009/10/22/community-highlights)
 
 ## Install
 
