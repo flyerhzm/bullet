@@ -5,7 +5,7 @@ module Bullet
     class CallStack < Base
       # remembers found association backtrace
       def add(key)
-        @registry[key] = Thread.current.backtrace
+        @registry[key] ||= Thread.current.backtrace
       end
     end
   end
