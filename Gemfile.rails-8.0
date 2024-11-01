@@ -2,7 +2,7 @@ source "https://rubygems.org"
 
 gemspec
 
-gem "rails", ">= 8.0.0.beta2", "< 8.1"
+gem "rails", ">= 8.0.0.beta1", "< 8.1"
 gem 'sqlite3'
 gem 'activerecord-jdbcsqlite3-adapter', platforms: [:jruby]
 gem 'activerecord-import'
