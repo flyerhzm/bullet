@@ -335,5 +335,53 @@ module Bullet
       rescue LoadError
       end
     end
+
+    context '#turbo_stream_response?' do
+      it 'should be true if Content-Type is text/vnd.turbo-stream.html' do
+        headers = { 'Content-Type' => 'text/vnd.turbo-stream.html' }
+        expect(middleware).to be_turbo_stream_response(headers, nil)
+      end
+
+      it 'should be false if Content-Type is text/html' do
+        headers = { 'Content-Type' => 'text/html' }
+        expect(middleware).not_to be_turbo_stream_response(headers, nil)
+      end
+    end
+
+    context '#turbo_frame_request?' do
+      it 'should be true if request is a turbo-frame request' do
+        request = double(env: { 'HTTP_TURBO_FRAME' => 'frame-id' })
+        expect(middleware).to be_turbo_frame_request(request)
+      end
+
+      it 'should be false if request is not a turbo-frame request' do
+        request = double(env: {})
+        expect(middleware).not_to be_turbo_frame_request(request)
+      end
+    end
+
+    context '#append_to_turbo_frame_body' do
+      it 'should append content to turbo frame body' do
+        request = double(env: { 'HTTP_TURBO_FRAME' => 'frame-id' })
+        response_body = '<turbo-frame id="frame-id">test</turbo-frame>'
+        content = '<div>content</div>'
+        expect(middleware.append_to_turbo_frame_body(request, response_body, content)).to eq('<turbo-frame id="frame-id">test<div>content</div></turbo-frame>')
+      end
+
+      it 'should append content to turbo frame body with single quotes' do
+        request = double(env: { 'HTTP_TURBO_FRAME' => 'frame-id' })
+        response_body = "<turbo-frame id='frame-id'>test</turbo-frame>"
+        content = '<div>content</div>'
+        expect(middleware.append_to_turbo_frame_body(request, response_body, content)).to eq("<turbo-frame id='frame-id'>test<div>content</div></turbo-frame>")
+      end
+    end
+
+    context '#append_to_turbo_stream_body' do
+      it 'should append content to turbo stream body' do
+        response_body = '<turbo-stream action="update"><template>test</template></turbo-stream>'
+        content = '<div>content</div>'
+        expect(middleware.append_to_turbo_stream_body(response_body, content)).to eq('<turbo-stream action="update"><template>test<div>content</div></template></turbo-stream>')
+      end
+    end
   end
 end
