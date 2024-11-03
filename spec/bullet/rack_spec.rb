@@ -7,29 +7,29 @@ module Bullet
     let(:middleware) { Bullet::Rack.new app }
     let(:app) { Support::AppDouble.new }
 
-    context '#html_request?' do
+    context '#html_response?' do
       it 'should be true if Content-Type is text/html and http body contains html tag' do
         headers = { 'Content-Type' => 'text/html' }
         response = double(body: '<html><head></head><body></body></html>')
-        expect(middleware).to be_html_request(headers, response)
+        expect(middleware).to be_html_response(headers, response)
       end
 
       it 'should be true if Content-Type is text/html and http body contains html tag with attributes' do
         headers = { 'Content-Type' => 'text/html' }
         response = double(body: "<html attr='hello'><head></head><body></body></html>")
-        expect(middleware).to be_html_request(headers, response)
+        expect(middleware).to be_html_response(headers, response)
       end
 
       it 'should be false if there is no Content-Type header' do
         headers = {}
         response = double(body: '<html><head></head><body></body></html>')
-        expect(middleware).not_to be_html_request(headers, response)
+        expect(middleware).not_to be_html_response(headers, response)
       end
 
       it 'should be false if Content-Type is javascript' do
         headers = { 'Content-Type' => 'text/javascript' }
         response = double(body: '<html><head></head><body></body></html>')
-        expect(middleware).not_to be_html_request(headers, response)
+        expect(middleware).not_to be_html_response(headers, response)
       end
     end
 
