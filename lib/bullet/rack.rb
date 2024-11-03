@@ -21,9 +21,16 @@ module Bullet
 
       if Bullet.notification? || Bullet.always_append_html_body
         if Bullet.inject_into_page? && !file?(headers) && !sse?(headers) && !empty?(response) && status == 200
-          if turbo_frame_request?(request)
+          if turbo_stream_response?(headers, response)
+            response_body = response_body(response)
+            response_body = append_to_turbo_stream_body(response_body, footer_note) if Bullet.add_footer
+            headers['Content-Length'] = response_body.bytesize.to_s
+
+          elsif turbo_frame_request?(request)
             response_body = response_body(response)
             response_body = append_to_turbo_frame_body(request, response_body, footer_note) if Bullet.add_footer
+            headers['Content-Length'] = response_body.bytesize.to_s
+
           elsif html_response?(headers, response)
             response_body = response_body(response)
 
@@ -36,10 +43,6 @@ module Bullet
             end
 
             headers['Content-Length'] = response_body.bytesize.to_s
-          elsif turbo_stream_response?(headers, response)
-            response_body = response_body(response)
-            response_body = append_to_turbo_stream_body(response_body, footer_note) if Bullet.add_footer
-
           elsif !Bullet.skip_http_headers
             set_header(headers, 'X-bullet-footer-text', Bullet.footer_info.uniq) if Bullet.add_footer
             set_header(headers, 'X-bullet-console-text', Bullet.text_notifications) if Bullet.console_enabled?
