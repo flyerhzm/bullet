@@ -32,6 +32,10 @@ module Bullet
             end
 
             headers['Content-Length'] = response_body.bytesize.to_s
+          elsif turbo_stream_request?(headers, response)
+            response_body = response_body(response)
+            response_body = append_to_turbo_stream_body(response_body, footer_note) if Bullet.add_footer
+
           elsif !Bullet.skip_http_headers
             set_header(headers, 'X-bullet-footer-text', Bullet.footer_info.uniq) if Bullet.add_footer
             set_header(headers, 'X-bullet-console-text', Bullet.text_notifications) if Bullet.console_enabled?
@@ -65,6 +69,15 @@ module Bullet
       end
     end
 
+    def append_to_turbo_stream_body(response_body, content)
+      body = response_body.dup
+      content = content.html_safe if content.respond_to?(:html_safe)
+      if body.include?('</template>')
+        position = body.rindex('</template>')
+        body.insert(position, content)
+      end
+    end
+
     def footer_note
       "<details #{details_attributes}><summary #{summary_attributes}>Bullet Warnings</summary><div #{footer_content_attributes}>#{Bullet.footer_info.uniq.join('<br>')}#{footer_console_message}</div></details>"
     end
@@ -87,6 +100,10 @@ module Bullet
 
     def html_request?(headers, response)
       headers['Content-Type']&.include?('text/html')
+    end
+
+    def turbo_stream_request?(headers, response)
+      headers['Content-Type']&.include?('text/vnd.turbo-stream.html')
     end
 
     def response_body(response)
