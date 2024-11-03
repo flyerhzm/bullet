@@ -15,12 +15,16 @@ module Bullet
 
       Bullet.start_request
       status, headers, response = @app.call(env)
+      request = ::Rack::Request.new(env)
 
       response_body = nil
 
       if Bullet.notification? || Bullet.always_append_html_body
         if Bullet.inject_into_page? && !file?(headers) && !sse?(headers) && !empty?(response) && status == 200
-          if html_request?(headers, response)
+          if turbo_frame_request?(request)
+            response_body = response_body(response)
+            response_body = append_to_turbo_frame_body(request, response_body, footer_note) if Bullet.add_footer
+          elsif html_response?(headers, response)
             response_body = response_body(response)
 
             with_security_policy_nonce(headers) do |nonce|
@@ -32,7 +36,7 @@ module Bullet
             end
 
             headers['Content-Length'] = response_body.bytesize.to_s
-          elsif turbo_stream_request?(headers, response)
+          elsif turbo_stream_response?(headers, response)
             response_body = response_body(response)
             response_body = append_to_turbo_stream_body(response_body, footer_note) if Bullet.add_footer
 
@@ -56,6 +60,18 @@ module Bullet
 
       body = response_body(response)
       body.nil? || body.empty?
+    end
+
+    def append_to_turbo_frame_body(request, response_body, content)
+      turbo_frame_id = request.env['HTTP_TURBO_FRAME']
+      body = response_body.dup
+      content = content.html_safe if content.respond_to?(:html_safe)
+      frame_position = body.index("<turbo-frame id=\"#{turbo_frame_id}\"") || body.index("<turbo-frame id='#{turbo_frame_id}'")
+
+      if frame_position
+        position = body.index('</turbo-frame>', frame_position)
+        body.insert(position, content)
+      end      
     end
 
     def append_to_html_body(response_body, content)
@@ -98,11 +114,15 @@ module Bullet
       headers['Content-Type'] == 'text/event-stream'
     end
 
-    def html_request?(headers, response)
+    def html_response?(headers, response)
       headers['Content-Type']&.include?('text/html')
     end
 
-    def turbo_stream_request?(headers, response)
+    def turbo_frame_request?(request)
+      request.env.key?('HTTP_TURBO_FRAME')
+    end
+
+    def turbo_stream_response?(headers, response)
       headers['Content-Type']&.include?('text/vnd.turbo-stream.html')
     end
 
