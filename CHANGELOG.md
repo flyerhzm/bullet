@@ -1,8 +1,16 @@
 ## Next Release
 
+## 8.0.0 (11/10/2024)
+
+* Support Rails 8
+* Drop Rails 4.0 and 4.1 support
+* Require Ruby at least 2.7.0
+* Store global objects into thread-local variables
+* Avoid globally polluting `::String` and `::Object` classes
+
 ## 7.2.0 (07/12/2024)
 
-* Support rails 7.2
+* Support Rails 7.2
 * Fix count method signature for active_record5 and active_record60
 
 ## 7.1.6 (01/16/2024)
