@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
+require 'ostruct'
 
 using Bullet::Ext::Object
 
