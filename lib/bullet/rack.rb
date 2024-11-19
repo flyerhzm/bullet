@@ -69,7 +69,7 @@ module Bullet
       turbo_frame_id = request.env['HTTP_TURBO_FRAME']
       body = response_body.dup
       content = content.html_safe if content.respond_to?(:html_safe)
-      frame_position = body.index("<turbo-frame id=\"#{turbo_frame_id}\"") || body.index("<turbo-frame id='#{turbo_frame_id}'")
+      frame_position = body =~ /<turbo-frame\b[^>]*\bid=['"]#{Regexp.escape(turbo_frame_id)}['"]/
 
       return body unless frame_position
 

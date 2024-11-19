@@ -375,6 +375,20 @@ module Bullet
         expect(middleware.append_to_turbo_frame_body(request, response_body, content)).to eq("<turbo-frame id='frame-id'>test<div>content</div></turbo-frame>")
       end
 
+      it 'should append content to turbo frame body with other attributes' do
+        request = double(env: { 'HTTP_TURBO_FRAME' => 'frame-id' })
+        response_body = '<turbo-frame class="my-class" style="my-style" id="frame-id" whatever="duh">test</turbo-frame>'
+        content = '<div>content</div>'
+        expect(middleware.append_to_turbo_frame_body(request, response_body, content)).to eq('<turbo-frame class="my-class" style="my-style" id="frame-id" whatever="duh">test<div>content</div></turbo-frame>')
+      end
+
+      it 'should append content to turbo frame body with other attributes and single quotes' do
+        request = double(env: { 'HTTP_TURBO_FRAME' => 'frame-id' })
+        response_body = "<turbo-frame class='my-class' style='my-style' id='frame-id' whatever='duh'>test</turbo-frame>"
+        content = '<div>content</div>'
+        expect(middleware.append_to_turbo_frame_body(request, response_body, content)).to eq("<turbo-frame class='my-class' style='my-style' id='frame-id' whatever='duh'>test<div>content</div></turbo-frame>")
+      end
+
       it 'should not append content if turbo frame is not found' do
         request = double(env: { 'HTTP_TURBO_FRAME' => 'frame-id' })
         response_body = "<turbo-frame id='some-other-frame-id'>test</turbo-frame>"
