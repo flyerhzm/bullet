@@ -374,6 +374,13 @@ module Bullet
         content = '<div>content</div>'
         expect(middleware.append_to_turbo_frame_body(request, response_body, content)).to eq("<turbo-frame id='frame-id'>test<div>content</div></turbo-frame>")
       end
+
+      it 'should not append content if turbo frame is not found' do
+        request = double(env: { 'HTTP_TURBO_FRAME' => 'frame-id' })
+        response_body = "<turbo-frame id='some-other-frame-id'>test</turbo-frame>"
+        content = '<div>content</div>'
+        expect(middleware.append_to_turbo_frame_body(request, response_body, content)).to eq("<turbo-frame id='some-other-frame-id'>test</turbo-frame>")
+      end
     end
 
     context '#append_to_turbo_stream_body' do

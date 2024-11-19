@@ -71,10 +71,10 @@ module Bullet
       content = content.html_safe if content.respond_to?(:html_safe)
       frame_position = body.index("<turbo-frame id=\"#{turbo_frame_id}\"") || body.index("<turbo-frame id='#{turbo_frame_id}'")
 
-      if frame_position
-        position = body.index('</turbo-frame>', frame_position)
-        body.insert(position, content)
-      end      
+      return body unless frame_position
+
+      position = body.index('</turbo-frame>', frame_position)
+      body.insert(position, content)
     end
 
     def append_to_html_body(response_body, content)
