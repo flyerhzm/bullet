@@ -36,6 +36,7 @@ module Bullet
     attr_writer :n_plus_one_query_enable,
                 :unused_eager_loading_enable,
                 :counter_cache_enable,
+                :disable_orms,
                 :stacktrace_includes,
                 :stacktrace_excludes,
                 :skip_html_injection
@@ -69,8 +70,8 @@ module Bullet
         reset_safelist
         unless orm_patches_applied
           self.orm_patches_applied = true
-          Bullet::Mongoid.enable if mongoid?
-          Bullet::ActiveRecord.enable if active_record?
+          Bullet::Mongoid.enable if mongoid? && !orm_disabled?(:mongoid)
+          Bullet::ActiveRecord.enable if active_record? && !orm_disabled?(:active_record)
         end
       end
     end
@@ -98,6 +99,10 @@ module Bullet
 
     def counter_cache_enable?
       enable? && !!@counter_cache_enable
+    end
+
+    def disable_orms
+      @disable_orms ||= []
     end
 
     def stacktrace_includes
@@ -266,6 +271,10 @@ module Bullet
 
     private
 
+    def orm_disabled?(orm)
+      @disabled_orms&.include?(orm)
+    end
+    
     def for_each_active_notifier_with_notification
       UniformNotifier.active_notifiers.each do |notifier|
         notification_collector.collection.each do |notification|
