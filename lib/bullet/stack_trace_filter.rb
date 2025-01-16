@@ -7,7 +7,6 @@ using Bullet::Ext::Object
 module Bullet
   module StackTraceFilter
     VENDOR_PATH = '/vendor'
-    IS_RUBY_19 = Gem::Version.new(RUBY_VERSION) < Gem::Version.new('2.0.0')
 
     # @param bullet_key[String] - use this to get stored call stack from call_stacks object.
     def caller_in_project(bullet_key = nil)
@@ -56,13 +55,12 @@ module Bullet
     def location_as_path(location)
       return location if location.is_a?(String)
 
-      IS_RUBY_19 ? location : location.absolute_path.to_s
+      location.absolute_path.to_s
     end
 
     def select_caller_locations(bullet_key = nil)
-      return caller.select { |caller_path| yield caller_path } if IS_RUBY_19
-
       call_stack = bullet_key ? call_stacks[bullet_key] : caller_locations
+
       call_stack.select { |location| yield location }
     end
   end
