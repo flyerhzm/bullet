@@ -81,7 +81,7 @@ module Bullet
           Thread.current.thread_variable_get(:bullet_eager_loadings)
         end
 
-        # cal_stacks keeps stacktraces where querie-objects were called from.
+        # call_stacks keeps stacktraces where querie-objects were called from.
         # e.g. { 'Object:111' => [SomeProject/app/controllers/...] }
         def call_stacks
           Thread.current.thread_variable_get(:bullet_call_stacks)

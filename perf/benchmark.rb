@@ -30,10 +30,8 @@ end
 
 # create database bullet_benchmark;
 ActiveRecord::Base.establish_connection(
-  adapter: 'mysql2',
-  database: 'bullet_benchmark',
-  server: '/tmp/mysql.socket',
-  username: 'root'
+  adapter: 'sqlite3',
+  database: 'bullet_benchmark'
 )
 
 ActiveRecord::Base.connection.tables.each { |table| ActiveRecord::Base.connection.drop_table(table) }
@@ -81,7 +79,7 @@ Benchmark.bm(70) do |bm|
   bm.report("Querying & Iterating #{posts_size} Posts with #{comments_size} Comments and #{users_size} Users") do
     10.times do
       Bullet.start_request
-      Post.select('SQL_NO_CACHE *').includes(:user, comments: :user).each do |p|
+      Post.includes(:user, comments: :user).each do |p|
         p.title
         p.user.name
         p.comments.each do |c|
