@@ -48,6 +48,7 @@ module Bullet
             end
             obj.bullet_key
           end.join(", ")
+
           unless class_names_match_regex || primary_key_values_are_empty
             Bullet.debug('Detector::NPlusOneQuery#add_possible_objects', "objects: #{keys_joined}")
             objects.each { |object| possible_objects.add object.bullet_key }
