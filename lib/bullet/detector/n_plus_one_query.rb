@@ -27,7 +27,7 @@ module Bullet
           )
           if !excluded_stacktrace_path? && conditions_met?(object, associations)
             Bullet.debug('detect n + 1 query', "object: #{object.bullet_key}, associations: #{associations}")
-            create_notification caller_in_project(object.bullet_key), object.class.to_s, associations
+            create_notification(caller_in_project(object.bullet_key), object.class.to_s, associations)
           end
         end
 
@@ -38,16 +38,17 @@ module Bullet
           objects = Array.wrap(object_or_objects)
           class_names_match_regex = true
           primary_key_values_are_empty = true
-          keys_joined = ""
-          objects.each do |obj|
+
+          keys_joined = objects.map do |obj|
             unless obj.class.name =~ /^HABTM_/
               class_names_match_regex = false
             end
             unless obj.bullet_primary_key_value.nil?
               primary_key_values_are_empty = false
             end
-            keys_joined += "#{(keys_joined.empty? ? '' : ', ')}#{obj.bullet_key}"
-          end
+            obj.bullet_key
+          end.join(", ")
+
           unless class_names_match_regex || primary_key_values_are_empty
             Bullet.debug('Detector::NPlusOneQuery#add_possible_objects', "objects: #{keys_joined}")
             objects.each { |object| possible_objects.add object.bullet_key }
