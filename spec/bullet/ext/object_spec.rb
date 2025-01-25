@@ -38,13 +38,16 @@ describe Object do
       expect(post.bullet_primary_key_value).to eq("#{post.category_id},#{post.writer_id}")
     end
 
-    it 'should return value for multiple primary keys from ActiveRecord 7.1' do
-      allow(Post).to receive(:primary_key).and_return(%i[category_id writer_id])
-      post = Post.first
-      expect(post.bullet_primary_key_value).to eq("#{post.category_id},#{post.writer_id}")
+    if Gem::Version.new(ActiveRecord::VERSION::STRING) >= Gem::Version.new('7.1')
+      it 'should return value for multiple primary keys from ActiveRecord 7.1' do
+        allow(Post).to receive(:primary_key).and_return(%i[category_id writer_id])
+        post = Post.first
+
+        expect(post.bullet_primary_key_value).to eq("#{post.category_id},#{post.writer_id}")
+      end
     end
 
-    it 'it should return nil for unpersisted records' do
+    it 'should return nil for unpersisted records' do
       post = Post.new(id: 123)
       expect(post.bullet_primary_key_value).to be_nil
     end
