@@ -29,10 +29,7 @@ class User < ActiveRecord::Base
 end
 
 # create database bullet_benchmark;
-ActiveRecord::Base.establish_connection(
-  adapter: 'sqlite3',
-  database: 'bullet_benchmark'
-)
+ActiveRecord::Base.establish_connection(adapter: 'sqlite3', database: 'bullet_benchmark')
 
 ActiveRecord::Base.connection.tables.each { |table| ActiveRecord::Base.connection.drop_table(table) }
 

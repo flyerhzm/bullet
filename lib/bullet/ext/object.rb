@@ -11,13 +11,14 @@ module Bullet
         end
 
         def bullet_primary_key_value
-          @bullet_primary_key_value ||= begin
-            return if respond_to?(:persisted?) && !persisted?
+          @bullet_primary_key_value ||=
+            begin
+              return if respond_to?(:persisted?) && !persisted?
 
-            primary_key = self.class.try(:primary_keys) || self.class.try(:primary_key) || :id
+              primary_key = self.class.try(:primary_keys) || self.class.try(:primary_key) || :id
 
-            bullet_join_potential_composite_primary_key(primary_key)
-          end
+              bullet_join_potential_composite_primary_key(primary_key)
+            end
         end
 
         private
