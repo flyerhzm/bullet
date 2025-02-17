@@ -240,7 +240,7 @@ If your application generates a Content-Security-Policy via a separate middlewar
 
 ### Run in tests
 
-First you need to enable Bullet in test environment.
+First you need to enable Bullet in the test environment.
 
 ```ruby
 # config/environments/test.rb
@@ -251,11 +251,13 @@ config.after_initialize do
 end
 ```
 
-Then wrap each test in Bullet api.
+Then wrap each test in the Bullet api.
+
+With RSpec:
 
 ```ruby
 # spec/rails_helper.rb
-if Bullet.enable?
+RSpec.configure do |config|
   config.before(:each) do
     Bullet.start_request
   end
@@ -263,6 +265,26 @@ if Bullet.enable?
   config.after(:each) do
     Bullet.perform_out_of_channel_notifications if Bullet.notification?
     Bullet.end_request
+  end
+end
+```
+
+With Minitest:
+
+```ruby
+# test/test_helper.rb
+module ActiveSupport
+  class TestCase
+    def before_setup
+      Bullet.start_request
+      super
+    end
+
+    def after_teardown
+      super
+      Bullet.perform_out_of_channel_notifications if Bullet.notification?
+      Bullet.end_request
+    end
   end
 end
 ```
