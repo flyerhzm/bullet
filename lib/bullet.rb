@@ -64,7 +64,7 @@ module Bullet
     ].freeze
 
     def enable=(enable)
-      @enable = @n_plus_one_query_enable = @unused_eager_loading_enable = @counter_cache_enable = enable
+      @enable = enable
 
       if enable?
         reset_safelist
@@ -90,15 +90,15 @@ module Bullet
     end
 
     def n_plus_one_query_enable?
-      enable? && !!@n_plus_one_query_enable
+      enable? && (@n_plus_one_query_enable.nil? ? true : @n_plus_one_query_enable)
     end
 
     def unused_eager_loading_enable?
-      enable? && !!@unused_eager_loading_enable
+      enable? && (@unused_eager_loading_enable.nil? ? true : @unused_eager_loading_enable)
     end
 
     def counter_cache_enable?
-      enable? && !!@counter_cache_enable
+      enable? && (@counter_cache_enable.nil? ? true : @counter_cache_enable)
     end
 
     def stacktrace_includes
