@@ -1,5 +1,11 @@
 ## Next Release
 
+## 8.0.1 (02/10/2025)
+
+* Update benchmark to use sqlite
+* Reduce mem allocations
+* Require active_support's inflections module before requiring the delegation module
+
 ## 8.0.0 (11/10/2024)
 
 * Support Rails 8

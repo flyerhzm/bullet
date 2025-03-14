@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'rspec'
+require 'logger'
 begin
   require 'active_record'
 rescue LoadError
