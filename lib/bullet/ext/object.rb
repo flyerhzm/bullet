@@ -7,14 +7,16 @@ module Bullet
         attr_writer :bullet_key, :bullet_primary_key_value
 
         def bullet_key
+          return "#{self.class}:" if respond_to?(:persisted?) && !persisted?
+
           @bullet_key ||= "#{self.class}:#{bullet_primary_key_value}"
         end
 
         def bullet_primary_key_value
+          return if respond_to?(:persisted?) && !persisted?
+
           @bullet_primary_key_value ||=
             begin
-              return if respond_to?(:persisted?) && !persisted?
-
               primary_key = self.class.try(:primary_keys) || self.class.try(:primary_key) || :id
 
               bullet_join_potential_composite_primary_key(primary_key)
