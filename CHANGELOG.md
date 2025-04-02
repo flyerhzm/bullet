@@ -1,5 +1,9 @@
 ## Next Release
 
+## 8.0.2 (04/02/2025)
+
+* Do not cache `bullet_key` if object is not persisted
+
 ## 8.0.1 (02/10/2025)
 
 * Update benchmark to use sqlite
