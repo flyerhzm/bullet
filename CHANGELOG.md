@@ -1,5 +1,9 @@
 ## Next Release
 
+## 8.0.3 (04/04/2025)
+
+* Update non persisted `inversed_objects`
+
 ## 8.0.2 (04/02/2025)
 
 * Do not cache `bullet_key` if object is not persisted
