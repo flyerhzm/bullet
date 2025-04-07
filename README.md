@@ -192,6 +192,11 @@ see [https://github.com/flyerhzm/uniform_notifier](https://github.com/flyerhzm/u
 
 Growl support is dropped from uniform_notifier 1.16.0, if you still want it, please use uniform_notifier 1.15.0.
 
+## URL query control
+
+You can add the URL query parameter `skip_html_injection` to make the current HTML request behave as if `Bullet.skip_html_injection` is enabled,
+e.g. `http://localhost:3000/posts?skip_html_injection=true`
+
 ## Important
 
 If you find Bullet does not work for you, *please disable your browser's cache*.

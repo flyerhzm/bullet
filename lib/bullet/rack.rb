@@ -19,7 +19,8 @@ module Bullet
       response_body = nil
 
       if Bullet.notification? || Bullet.always_append_html_body
-        if Bullet.inject_into_page? && !file?(headers) && !sse?(headers) && !empty?(response) && status == 200
+        request = ::Rack::Request.new(env)
+        if Bullet.inject_into_page? && !skip_html_injection?(request) && !file?(headers) && !sse?(headers) && !empty?(response) && status == 200
           if html_request?(headers, response)
             response_body = response_body(response)
 
@@ -75,6 +76,10 @@ module Bullet
       # be under that limit
       header_array.pop while header_array.to_json.length > 8 * 1024
       headers[header_name] = header_array.to_json
+    end
+
+    def skip_html_injection?(request)
+      request.params['skip_html_injection'] == 'true'
     end
 
     def file?(headers)
