@@ -20,7 +20,8 @@ module Bullet
       response_body = nil
 
       if Bullet.notification? || Bullet.always_append_html_body
-        if Bullet.inject_into_page? && !file?(headers) && !sse?(headers) && !empty?(response) && status == 200
+        request = ::Rack::Request.new(env)
+        if Bullet.inject_into_page? && !skip_html_injection?(request) && !file?(headers) && !sse?(headers) && !empty?(response) && status == 200
           if turbo_stream_response?(headers, response)
             response_body = response_body(response)
             response_body = append_to_turbo_stream_body(response_body, footer_note) if Bullet.add_footer
@@ -107,6 +108,10 @@ module Bullet
       # be under that limit
       header_array.pop while header_array.to_json.length > 8 * 1024
       headers[header_name] = header_array.to_json
+    end
+
+    def skip_html_injection?(request)
+      request.params['skip_html_injection'] == 'true'
     end
 
     def file?(headers)
