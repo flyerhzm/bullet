@@ -24,7 +24,7 @@ module Bullet
   if defined?(Rails::Railtie)
     class BulletRailtie < Rails::Railtie
       initializer 'bullet.configure_rails_initialization' do |app|
-        if defined?(ActionDispatch::ContentSecurityPolicy::Middleware) && Rails.application.config.content_security_policy
+        if defined?(ActionDispatch::ContentSecurityPolicy::Middleware)
           app.middleware.insert_before ActionDispatch::ContentSecurityPolicy::Middleware, Bullet::Rack
         else
           app.middleware.use Bullet::Rack
