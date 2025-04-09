@@ -72,6 +72,36 @@ describe Bullet, focused: true do
     end
   end
 
+  describe '#disable_orms' do
+    it 'should return empty array by default' do
+      expect(subject.disable_orms).to eq([])
+    end
+
+    it 'should not enable disabled orm' do
+      subject.disable_orms << :mongoid
+      expect(Bullet::Mongoid).not_to receive(:enable) if defined?(Bullet::Mongoid)
+      subject.enable = true
+    end
+
+    it 'should enable non-disabled orm' do
+      subject.disable_orms << :mongoid
+      expect(Bullet::ActiveRecord).to receive(:enable) if defined?(Bullet::ActiveRecord)
+      subject.enable = true
+    end
+  end
+
+  describe '#orm_disabled?' do
+    before { subject.disable_orms << :mongoid }
+
+    it 'should return true for disabled orm' do
+      expect(subject.send(:orm_disabled?, :mongoid)).to be true
+    end
+
+    it 'should return false for non-disabled orm' do
+      expect(subject.send(:orm_disabled?, :active_record)).to be false
+    end
+  end
+
   describe '#start?' do
     context 'when bullet is disabled' do
       before(:each) { Bullet.enable = false }
