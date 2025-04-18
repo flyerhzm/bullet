@@ -49,7 +49,10 @@ module Bullet
 
       ::ActiveRecord::Persistence.class_eval do
         def _create_record_with_bullet(*args)
-          _create_record_without_bullet(*args).tap { Bullet::Detector::NPlusOneQuery.update_inversed_object(self) }
+          _create_record_without_bullet(*args).tap do
+            Bullet::Detector::NPlusOneQuery.update_inversed_object(self)
+            Bullet::Detector::NPlusOneQuery.add_impossible_object(self)
+          end
         end
         alias_method_chain :_create_record, :bullet
       end
