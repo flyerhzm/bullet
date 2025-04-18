@@ -5,6 +5,7 @@ module Bullet
     def _create_record(*)
       super do
         Bullet::Detector::NPlusOneQuery.update_inversed_object(self)
+        Bullet::Detector::NPlusOneQuery.add_impossible_object(self)
         yield(self) if block_given?
       end
     end
