@@ -1,5 +1,11 @@
 ## Next Release
 
+## 8.0.4 (04/18/2024)
+
+* Insert bullet middleware before `ContentSecurityPolicy`
+* Support url query `skip_html_injection=true`
+* Mark object as impossible after updating inversed
+
 ## 8.0.3 (04/04/2025)
 
 * Update non persisted `inversed_objects`
