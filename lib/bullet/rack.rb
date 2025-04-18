@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+require 'rack/request'
+require 'rack/query_parser'
+require 'json'
+
 module Bullet
   class Rack
     include Dependency
@@ -106,12 +110,17 @@ module Bullet
       # Many proxy applications such as Nginx and AWS ELB limit
       # the size a header to 8KB, so truncate the list of reports to
       # be under that limit
-      header_array.pop while header_array.to_json.length > 8 * 1024
-      headers[header_name] = header_array.to_json
+      header_array.pop while JSON.generate(header_array).length > 8 * 1024
+      headers[header_name] = JSON.generate(header_array)
     end
 
     def skip_html_injection?(request)
-      request.params['skip_html_injection'] == 'true'
+      query_string = request.env['QUERY_STRING']
+      return false if query_string.nil? || query_string.empty?
+
+      parser = Rack::QueryParser.new
+      params = parser.parse_nested_query(query_string)
+      params['skip_html_injection'] == 'true'
     end
 
     def file?(headers)
