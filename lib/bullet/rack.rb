@@ -85,13 +85,13 @@ module Bullet
       query_string = request.env['QUERY_STRING']
       return false if query_string.nil? || query_string.empty?
 
-      if defined?(Rack::QueryParser)
-        parser = Rack::QueryParser.new
+      if defined?(::Rack::QueryParser)
+        parser = ::Rack::QueryParser.new
         params = parser.parse_nested_query(query_string)
       else
         # compatible with rack 1.x,
         # remove it after dropping rails 4.2 suppport
-        params = Rack::Utils.parse_nested_query(query_string)
+        params = ::Rack::Utils.parse_nested_query(query_string)
       end
       params['skip_html_injection'] == 'true'
     end
