@@ -2,6 +2,7 @@
 
 require 'rack/request'
 require 'json'
+require 'cgi'
 
 module Bullet
   class Rack
@@ -85,15 +86,18 @@ module Bullet
       query_string = request.env['QUERY_STRING']
       return false if query_string.nil? || query_string.empty?
 
-      if defined?(::Rack::QueryParser)
-        parser = ::Rack::QueryParser.new
-        params = parser.parse_nested_query(query_string)
-      else
-        # compatible with rack 1.x,
-        # remove it after dropping rails 4.2 suppport
-        params = ::Rack::Utils.parse_nested_query(query_string)
-      end
+      params = simple_parse_query_string(query_string)
       params['skip_html_injection'] == 'true'
+    end
+
+    # Simple query string parser
+    def simple_parse_query_string(query_string)
+      params = {}
+      query_string.split('&').each do |pair|
+        key, value = pair.split('=', 2).map { |s| CGI.unescape(s) }
+        params[key] = value if key && !key.empty?
+      end
+      params
     end
 
     def file?(headers)
