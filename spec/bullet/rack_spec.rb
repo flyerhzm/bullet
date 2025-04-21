@@ -33,6 +33,40 @@ module Bullet
       end
     end
 
+    context '#skip_html_injection?' do
+      let(:request) { double('request') }
+
+      it 'should return false if query_string is nil' do
+        allow(request).to receive(:env).and_return({ 'QUERY_STRING' => nil })
+        expect(middleware.skip_html_injection?(request)).to be_falsey
+      end
+
+      it 'should return false if query_string is empty' do
+        allow(request).to receive(:env).and_return({ 'QUERY_STRING' => '' })
+        expect(middleware.skip_html_injection?(request)).to be_falsey
+      end
+
+      it 'should return true if skip_html_injection parameter is true' do
+        allow(request).to receive(:env).and_return({ 'QUERY_STRING' => 'skip_html_injection=true' })
+        expect(middleware.skip_html_injection?(request)).to be_truthy
+      end
+
+      it 'should return false if skip_html_injection parameter is not true' do
+        allow(request).to receive(:env).and_return({ 'QUERY_STRING' => 'skip_html_injection=false' })
+        expect(middleware.skip_html_injection?(request)).to be_falsey
+      end
+
+      it 'should return false if skip_html_injection parameter is not present' do
+        allow(request).to receive(:env).and_return({ 'QUERY_STRING' => 'other_param=value' })
+        expect(middleware.skip_html_injection?(request)).to be_falsey
+      end
+
+      it 'should handle complex query strings' do
+        allow(request).to receive(:env).and_return({ 'QUERY_STRING' => 'param1=value1&skip_html_injection=true&param2=value2' })
+        expect(middleware.skip_html_injection?(request)).to be_truthy
+      end
+    end
+
     context 'empty?' do
       it 'should be false if response is a string and not empty' do
         response = double(body: '<html><head></head><body></body></html>')
