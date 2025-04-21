@@ -1,6 +1,11 @@
 ## Next Release
 
-## 8.0.4 (04/18/2024)
+## 8.0.5 (04/21/2025)
+
+* Properly insert ContentSecurityPolicy middleware
+* Properly parse query string
+
+## 8.0.4 (04/18/2025)
 
 * Insert bullet middleware before `ContentSecurityPolicy`
 * Support url query `skip_html_injection=true`
