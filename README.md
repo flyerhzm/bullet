@@ -74,6 +74,7 @@ config.after_initialize do
   Bullet.stacktrace_includes = [ 'your_gem', 'your_middleware' ]
   Bullet.stacktrace_excludes = [ 'their_gem', 'their_middleware', ['my_file.rb', 'my_method'], ['my_file.rb', 16..20] ]
   Bullet.slack = { webhook_url: 'http://some.slack.url', channel: '#default', username: 'notifier' }
+  Bullet.opentelemetry = true
 end
 ```
 
@@ -100,6 +101,7 @@ The code above will enable all of the Bullet notification systems:
    Each item can be a string (match substring), a regex, or an array where the first item is a path to match, and the second
    item is a line number, a Range of line numbers, or a (bare) method name, to exclude only particular lines in a file.
 * `Bullet.slack`: add notifications to slack
+* `Bullet.opentelemetry`: add notifications to OpenTelemetry
 * `Bullet.raise`: raise errors, useful for making your specs fail unless they have optimized queries
 * `Bullet.always_append_html_body`: always append the html body even if no notifications are present. Note: `console` or `add_footer` must also be true. Useful for Single Page Applications where the initial page load might not have any notifications present.
 * `Bullet.skip_user_in_notification`: exclude the OS user (`whoami`) from notifications.
