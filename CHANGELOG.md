@@ -1,5 +1,7 @@
 ## Next Release
 
+* Add support for OpenTelemetry reporting
+
 ## 8.0.5 (04/21/2025)
 
 * Properly insert ContentSecurityPolicy middleware
