@@ -185,7 +185,7 @@ module Bullet
 
             _, headers, response = middleware.call('Content-Type' => 'text/html')
 
-            size = 56 + middleware.send(:footer_note).length + middleware.send(:xhr_script, nonce).length
+            size = 56 + middleware.send(:footer_note, nonce).length + middleware.send(:xhr_script, nonce).length
             expect(headers['Content-Length']).to eq(size.to_s)
           end
 
@@ -203,7 +203,42 @@ module Bullet
 
             _, headers, response = middleware.call('Content-Type' => 'text/html')
 
-            size = 56 + middleware.send(:footer_note).length + middleware.send(:xhr_script, nonce).length
+            size = 56 + middleware.send(:footer_note, nonce).length + middleware.send(:xhr_script, nonce).length
+            expect(headers['Content-Length']).to eq(size.to_s)
+          end
+
+          it 'should include CSP nonce in inline style if console_enabled and a CSP is applied' do
+            allow(Bullet).to receive(:add_footer).at_least(:once).and_return(true)
+            expect(Bullet).to receive(:console_enabled?).and_return(true)
+            allow(middleware).to receive(:xhr_script).and_call_original
+
+            nonce = '+t9/wTlgG6xbHxXYUaDNzQ=='
+            app.headers = {
+              'Content-Type' => 'text/html',
+              'Content-Security-Policy' => "default-src 'self' https:; style-src 'self' https: 'nonce-#{nonce}'"
+            }
+
+            _, headers, response = middleware.call('Content-Type' => 'text/html')
+
+            size = 56 + middleware.send(:footer_note, nonce).length + middleware.send(:xhr_script, nonce).length
+            expect(headers['Content-Length']).to eq(size.to_s)
+          end
+
+          it 'should include CSP nonce in inline style if console_enabled and a CSP (report only) is applied' do
+            allow(Bullet).to receive(:add_footer).at_least(:once).and_return(true)
+            expect(Bullet).to receive(:console_enabled?).and_return(true)
+            allow(middleware).to receive(:xhr_script).and_call_original
+
+            nonce = '+t9/wTlgG6xbHxXYUaDNzQ=='
+            app.headers = {
+              'Content-Type' => 'text/html',
+              'Content-Security-Policy-Report-Only' =>
+                "default-src 'self' https:; style-src 'self' https: 'nonce-#{nonce}'"
+            }
+
+            _, headers, response = middleware.call('Content-Type' => 'text/html')
+
+            size = 56 + middleware.send(:footer_note, nonce).length + middleware.send(:xhr_script, nonce).length
             expect(headers['Content-Length']).to eq(size.to_s)
           end
 
