@@ -180,11 +180,12 @@ module Bullet
       if Bullet.console_enabled?
         footer = %(<br/><span id="console-message">See 'Uniform Notifier' in JS Console for Stacktrace</span>)
         css = "details#bullet-footer #console-message {font-style: italic;}"
-        style = if nonce
-          %(<style type="text/css" nonce="#{nonce}">#{css}</style>)
-        else
-          %(<style type="text/css">#{css}</style>)
-        end
+        style =
+          if nonce
+            %(<style type="text/css" nonce="#{nonce}">#{css}</style>)
+          else
+            %(<style type="text/css">#{css}</style>)
+          end
 
         footer + style
       end
