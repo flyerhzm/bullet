@@ -20,7 +20,7 @@ module Bullet
           end
         end
 
-        def each(&block)
+        def each()
           return to_enum unless block_given?
 
           first_document = nil
