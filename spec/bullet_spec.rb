@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-describe Bullet, focused: true do
+describe Bullet do
   subject { Bullet }
 
   describe '#enable' do
