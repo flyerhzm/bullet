@@ -1,5 +1,8 @@
 ## Next Release
 
+## 8.0.6 (05/07/2025)
+
+* Add CSP nonce for footer styles as well
 * Add support for OpenTelemetry reporting
 
 ## 8.0.5 (04/21/2025)
