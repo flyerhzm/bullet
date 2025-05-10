@@ -507,5 +507,44 @@ module Bullet
         expect(middleware.append_to_turbo_stream_body(response_body, content)).to eq('<turbo-stream action="update"><template>test<div>content</div></template></turbo-stream>')
       end
     end
+
+    context 'injecting into page' do
+      before do
+        allow(Bullet).to receive(:notification?).and_return(true)
+        allow(Bullet).to receive(:inject_into_page?).and_return(true)
+        allow(Bullet).to receive(:skip_html_injection?).and_return(false)
+      end
+
+      context 'turbo disabled' do
+        before { Bullet.support_turbo = false }
+        after { Bullet.support_turbo = true }
+  
+        it 'should not check for turbo frame' do
+          expect(middleware).not_to receive(:turbo_frame_request?)
+          middleware.call('Content-Type' => 'text/html')
+        end
+  
+        it 'should not check for turbo stream' do
+          expect(middleware).not_to receive(:turbo_stream_response?)
+          middleware.call('Content-Type' => 'text/html')
+        end
+      end
+  
+      context 'turbo enabled' do
+        before { Bullet.support_turbo = true }
+        after { Bullet.support_turbo = false }
+  
+        it 'should check for turbo frame' do
+          expect(middleware).to receive(:turbo_frame_request?)
+          middleware.call('Content-Type' => 'text/html')
+        end
+  
+        it 'should check for turbo stream' do
+          expect(middleware).to receive(:turbo_stream_response?)
+          middleware.call('Content-Type' => 'text/html')
+        end
+      end
+    end
+
   end
 end

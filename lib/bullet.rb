@@ -42,13 +42,15 @@ module Bullet
                 :counter_cache_enable,
                 :stacktrace_includes,
                 :stacktrace_excludes,
-                :skip_html_injection
+                :skip_html_injection,
+                :support_turbo
     attr_reader :safelist
     attr_accessor :add_footer,
                   :orm_patches_applied,
                   :skip_http_headers,
                   :always_append_html_body,
-                  :skip_user_in_notification
+                  :skip_user_in_notification,
+                  :support_turbo
 
     available_notifiers =
       UniformNotifier::AVAILABLE_NOTIFIERS.select { |notifier| notifier != :raise }

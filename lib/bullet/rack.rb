@@ -26,31 +26,13 @@ module Bullet
       if Bullet.notification? || Bullet.always_append_html_body
         request = ::Rack::Request.new(env)
         if Bullet.inject_into_page? && !skip_html_injection?(request) && !file?(headers) && !sse?(headers) && !empty?(response) && status == 200
-          if turbo_stream_response?(headers, response)
-            response_body = response_body(response)
-            response_body = append_to_turbo_stream_body(response_body, footer_note) if Bullet.add_footer
-            headers['Content-Length'] = response_body.bytesize.to_s
-
-          elsif turbo_frame_request?(request)
-            response_body = response_body(response)
-            response_body = append_to_turbo_frame_body(request, response_body, footer_note) if Bullet.add_footer
-            headers['Content-Length'] = response_body.bytesize.to_s
-
-          elsif html_response?(headers, response)
-            response_body = response_body(response)
-
-            with_security_policy_nonce(headers) do |nonce|
-              response_body = append_to_html_body(response_body, footer_note(nonce)) if Bullet.add_footer
-              response_body = append_to_html_body(response_body, Bullet.gather_inline_notifications)
-              if Bullet.add_footer && !Bullet.skip_http_headers
-                response_body = append_to_html_body(response_body, xhr_script(nonce))
-              end
+          if Bullet.support_turbo
+            response_body = respond_to_turbo_stream?(headers, request, response)
+            if response_body.nil?
+              response_body = respond_to_html(headers, response)
             end
-
-            headers['Content-Length'] = response_body.bytesize.to_s
-          elsif !Bullet.skip_http_headers
-            set_header(headers, 'X-bullet-footer-text', Bullet.footer_info.uniq) if Bullet.add_footer
-            set_header(headers, 'X-bullet-console-text', Bullet.text_notifications) if Bullet.console_enabled?
+          else
+            response_body = respond_to_html(headers, response)
           end
         end
         Bullet.perform_out_of_channel_notifications(env)
@@ -58,6 +40,41 @@ module Bullet
       [status, headers, response_body ? [response_body] : response]
     ensure
       Bullet.end_request
+    end
+
+    def respond_to_html(headers, response)
+      if html_response?(headers, response)
+        response_body = response_body(response)
+
+        with_security_policy_nonce(headers) do |nonce|
+          response_body = append_to_html_body(response_body, footer_note(nonce)) if Bullet.add_footer
+          response_body = append_to_html_body(response_body, Bullet.gather_inline_notifications)
+          if Bullet.add_footer && !Bullet.skip_http_headers
+            response_body = append_to_html_body(response_body, xhr_script(nonce))
+          end
+        end
+
+        headers['Content-Length'] = response_body.bytesize.to_s
+      elsif !Bullet.skip_http_headers
+        set_header(headers, 'X-bullet-footer-text', Bullet.footer_info.uniq) if Bullet.add_footer
+        set_header(headers, 'X-bullet-console-text', Bullet.text_notifications) if Bullet.console_enabled?
+      end
+      response_body
+    end
+
+    def respond_to_turbo_stream?(headers, request, response)
+      if turbo_stream_response?(headers, response)
+        response_body = response_body(response)
+        response_body = append_to_turbo_stream_body(response_body, footer_note) if Bullet.add_footer
+        headers['Content-Length'] = response_body.bytesize.to_s
+        response_body
+      elsif turbo_frame_request?(request)
+        response_body = response_body(response)
+        response_body = append_to_turbo_frame_body(request, response_body, footer_note) if Bullet.add_footer
+        headers['Content-Length'] = response_body.bytesize.to_s
+        response_body
+      end
+      nil
     end
 
     # fix issue if response's body is a Proc
