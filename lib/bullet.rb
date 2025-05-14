@@ -24,13 +24,10 @@ module Bullet
   if defined?(Rails::Railtie)
     class BulletRailtie < Rails::Railtie
       initializer 'bullet.add_middleware' do |app|
-        # I don't find a way to detect if the middleware is already in the stack,
-        # so I'm using the api_only flag.
-        # If it is true, ActionDispatch::ContentSecurityPolicy::Middleware is not in the stack.
-        if app.config.api_only || !defined?(ActionDispatch::ContentSecurityPolicy::Middleware)
-          app.middleware.use Bullet::Rack
-        else
+        if defined?(ActionDispatch::ContentSecurityPolicy::Middleware) && Rails.application.config.content_security_policy && !app.config.api_only
           app.middleware.insert_before ActionDispatch::ContentSecurityPolicy::Middleware, Bullet::Rack
+        else
+          app.middleware.use Bullet::Rack
         end
       end
     end
