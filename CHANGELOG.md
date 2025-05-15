@@ -1,5 +1,9 @@
 ## Next Release
 
+## 8.0.7 (05/15/2025)
+
+* Try to insert `Bullet::Rack` properly
+
 ## 8.0.6 (05/07/2025)
 
 * Add CSP nonce for footer styles as well
