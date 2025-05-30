@@ -1,5 +1,10 @@
 ## Next Release
 
+## 8.0.8 (05/30/2025)
+
+* Add middleware after initializers
+* Fix bullet composite primary key retrieval
+
 ## 8.0.7 (05/15/2025)
 
 * Try to insert `Bullet::Rack` properly
