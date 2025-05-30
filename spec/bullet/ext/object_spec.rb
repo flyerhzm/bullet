@@ -38,6 +38,12 @@ describe Object do
       expect(post.bullet_primary_key_value).to eq("#{post.category_id},#{post.writer_id}")
     end
 
+    it 'should return empty value for multiple primary keys without values' do
+      allow(Post).to receive(:primary_keys).and_return(%i[category_id writer_id])
+      post = Post.select('1 as myfield').first
+      expect(post.bullet_primary_key_value).to eq("")
+    end
+
     if Gem::Version.new(ActiveRecord::VERSION::STRING) >= Gem::Version.new('7.1')
       it 'should return value for multiple primary keys from ActiveRecord 7.1' do
         allow(Post).to receive(:primary_key).and_return(%i[category_id writer_id])
