@@ -75,6 +75,7 @@ config.after_initialize do
   Bullet.stacktrace_excludes = [ 'their_gem', 'their_middleware', ['my_file.rb', 'my_method'], ['my_file.rb', 16..20] ]
   Bullet.slack = { webhook_url: 'http://some.slack.url', channel: '#default', username: 'notifier' }
   Bullet.opentelemetry = true
+  Bullet.support_turbo = true
 end
 ```
 
@@ -105,6 +106,7 @@ The code above will enable all of the Bullet notification systems:
 * `Bullet.raise`: raise errors, useful for making your specs fail unless they have optimized queries
 * `Bullet.always_append_html_body`: always append the html body even if no notifications are present. Note: `console` or `add_footer` must also be true. Useful for Single Page Applications where the initial page load might not have any notifications present.
 * `Bullet.skip_user_in_notification`: exclude the OS user (`whoami`) from notifications.
+* `Bullet.support_turbo`: enable Turbo support for real-time notifications in Turbo applications
 
 
 Bullet also allows you to disable any of its detectors.

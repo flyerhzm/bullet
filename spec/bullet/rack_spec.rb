@@ -7,29 +7,63 @@ module Bullet
     let(:middleware) { Bullet::Rack.new app }
     let(:app) { Support::AppDouble.new }
 
-    context '#html_request?' do
+    context '#html_response?' do
       it 'should be true if Content-Type is text/html and http body contains html tag' do
         headers = { 'Content-Type' => 'text/html' }
         response = double(body: '<html><head></head><body></body></html>')
-        expect(middleware).to be_html_request(headers, response)
+        expect(middleware).to be_html_response(headers, response)
       end
 
       it 'should be true if Content-Type is text/html and http body contains html tag with attributes' do
         headers = { 'Content-Type' => 'text/html' }
         response = double(body: "<html attr='hello'><head></head><body></body></html>")
-        expect(middleware).to be_html_request(headers, response)
+        expect(middleware).to be_html_response(headers, response)
       end
 
       it 'should be false if there is no Content-Type header' do
         headers = {}
         response = double(body: '<html><head></head><body></body></html>')
-        expect(middleware).not_to be_html_request(headers, response)
+        expect(middleware).not_to be_html_response(headers, response)
       end
 
       it 'should be false if Content-Type is javascript' do
         headers = { 'Content-Type' => 'text/javascript' }
         response = double(body: '<html><head></head><body></body></html>')
-        expect(middleware).not_to be_html_request(headers, response)
+        expect(middleware).not_to be_html_response(headers, response)
+      end
+    end
+
+    context '#skip_html_injection?' do
+      let(:request) { double('request') }
+
+      it 'should return false if query_string is nil' do
+        allow(request).to receive(:env).and_return({ 'QUERY_STRING' => nil })
+        expect(middleware.skip_html_injection?(request)).to be_falsey
+      end
+
+      it 'should return false if query_string is empty' do
+        allow(request).to receive(:env).and_return({ 'QUERY_STRING' => '' })
+        expect(middleware.skip_html_injection?(request)).to be_falsey
+      end
+
+      it 'should return true if skip_html_injection parameter is true' do
+        allow(request).to receive(:env).and_return({ 'QUERY_STRING' => 'skip_html_injection=true' })
+        expect(middleware.skip_html_injection?(request)).to be_truthy
+      end
+
+      it 'should return false if skip_html_injection parameter is not true' do
+        allow(request).to receive(:env).and_return({ 'QUERY_STRING' => 'skip_html_injection=false' })
+        expect(middleware.skip_html_injection?(request)).to be_falsey
+      end
+
+      it 'should return false if skip_html_injection parameter is not present' do
+        allow(request).to receive(:env).and_return({ 'QUERY_STRING' => 'other_param=value' })
+        expect(middleware.skip_html_injection?(request)).to be_falsey
+      end
+
+      it 'should handle complex query strings' do
+        allow(request).to receive(:env).and_return({ 'QUERY_STRING' => 'param1=value1&skip_html_injection=true&param2=value2' })
+        expect(middleware.skip_html_injection?(request)).to be_truthy
       end
     end
 
@@ -404,5 +438,113 @@ module Bullet
       rescue LoadError
       end
     end
+
+    context '#turbo_stream_response?' do
+      it 'should be true if Content-Type is text/vnd.turbo-stream.html' do
+        headers = { 'Content-Type' => 'text/vnd.turbo-stream.html' }
+        expect(middleware).to be_turbo_stream_response(headers, nil)
+      end
+
+      it 'should be false if Content-Type is text/html' do
+        headers = { 'Content-Type' => 'text/html' }
+        expect(middleware).not_to be_turbo_stream_response(headers, nil)
+      end
+    end
+
+    context '#turbo_frame_request?' do
+      it 'should be true if request is a turbo-frame request' do
+        request = double(env: { 'HTTP_TURBO_FRAME' => 'frame-id' })
+        expect(middleware).to be_turbo_frame_request(request)
+      end
+
+      it 'should be false if request is not a turbo-frame request' do
+        request = double(env: {})
+        expect(middleware).not_to be_turbo_frame_request(request)
+      end
+    end
+
+    context '#append_to_turbo_frame_body' do
+      it 'should append content to turbo frame body' do
+        request = double(env: { 'HTTP_TURBO_FRAME' => 'frame-id' })
+        response_body = '<turbo-frame id="frame-id">test</turbo-frame>'
+        content = '<div>content</div>'
+        expect(middleware.append_to_turbo_frame_body(request, response_body, content)).to eq('<turbo-frame id="frame-id">test<div>content</div></turbo-frame>')
+      end
+
+      it 'should append content to turbo frame body with single quotes' do
+        request = double(env: { 'HTTP_TURBO_FRAME' => 'frame-id' })
+        response_body = "<turbo-frame id='frame-id'>test</turbo-frame>"
+        content = '<div>content</div>'
+        expect(middleware.append_to_turbo_frame_body(request, response_body, content)).to eq("<turbo-frame id='frame-id'>test<div>content</div></turbo-frame>")
+      end
+
+      it 'should append content to turbo frame body with other attributes' do
+        request = double(env: { 'HTTP_TURBO_FRAME' => 'frame-id' })
+        response_body = '<turbo-frame class="my-class" style="my-style" id="frame-id" whatever="duh">test</turbo-frame>'
+        content = '<div>content</div>'
+        expect(middleware.append_to_turbo_frame_body(request, response_body, content)).to eq('<turbo-frame class="my-class" style="my-style" id="frame-id" whatever="duh">test<div>content</div></turbo-frame>')
+      end
+
+      it 'should append content to turbo frame body with other attributes and single quotes' do
+        request = double(env: { 'HTTP_TURBO_FRAME' => 'frame-id' })
+        response_body = "<turbo-frame class='my-class' style='my-style' id='frame-id' whatever='duh'>test</turbo-frame>"
+        content = '<div>content</div>'
+        expect(middleware.append_to_turbo_frame_body(request, response_body, content)).to eq("<turbo-frame class='my-class' style='my-style' id='frame-id' whatever='duh'>test<div>content</div></turbo-frame>")
+      end
+
+      it 'should not append content if turbo frame is not found' do
+        request = double(env: { 'HTTP_TURBO_FRAME' => 'frame-id' })
+        response_body = "<turbo-frame id='some-other-frame-id'>test</turbo-frame>"
+        content = '<div>content</div>'
+        expect(middleware.append_to_turbo_frame_body(request, response_body, content)).to eq("<turbo-frame id='some-other-frame-id'>test</turbo-frame>")
+      end
+    end
+
+    context '#append_to_turbo_stream_body' do
+      it 'should append content to turbo stream body' do
+        response_body = '<turbo-stream action="update"><template>test</template></turbo-stream>'
+        content = '<div>content</div>'
+        expect(middleware.append_to_turbo_stream_body(response_body, content)).to eq('<turbo-stream action="update"><template>test<div>content</div></template></turbo-stream>')
+      end
+    end
+
+    context 'injecting into page' do
+      before do
+        allow(Bullet).to receive(:notification?).and_return(true)
+        allow(Bullet).to receive(:inject_into_page?).and_return(true)
+        allow(Bullet).to receive(:skip_html_injection?).and_return(false)
+      end
+
+      context 'turbo disabled' do
+        before { Bullet.support_turbo = false }
+        after { Bullet.support_turbo = true }
+  
+        it 'should not check for turbo frame' do
+          expect(middleware).not_to receive(:turbo_frame_request?)
+          middleware.call('Content-Type' => 'text/html')
+        end
+  
+        it 'should not check for turbo stream' do
+          expect(middleware).not_to receive(:turbo_stream_response?)
+          middleware.call('Content-Type' => 'text/html')
+        end
+      end
+  
+      context 'turbo enabled' do
+        before { Bullet.support_turbo = true }
+        after { Bullet.support_turbo = false }
+  
+        it 'should check for turbo frame' do
+          expect(middleware).to receive(:turbo_frame_request?)
+          middleware.call('Content-Type' => 'text/html')
+        end
+  
+        it 'should check for turbo stream' do
+          expect(middleware).to receive(:turbo_stream_response?)
+          middleware.call('Content-Type' => 'text/html')
+        end
+      end
+    end
+
   end
 end
