@@ -71,10 +71,14 @@ config.after_initialize do
   Bullet.rollbar = true
   Bullet.add_footer = true
   Bullet.skip_html_injection = false
+  Bullet.skip_http_headers = false
   Bullet.stacktrace_includes = [ 'your_gem', 'your_middleware' ]
   Bullet.stacktrace_excludes = [ 'their_gem', 'their_middleware', ['my_file.rb', 'my_method'], ['my_file.rb', 16..20] ]
   Bullet.slack = { webhook_url: 'http://some.slack.url', channel: '#default', username: 'notifier' }
   Bullet.opentelemetry = true
+  Bullet.raise = false
+  Bullet.always_append_html_body = false
+  Bullet.skip_user_in_notification = false
 end
 ```
 
@@ -82,6 +86,7 @@ The notifier of Bullet is a wrap of [uniform_notifier](https://github.com/flyerh
 
 The code above will enable all of the Bullet notification systems:
 * `Bullet.enable`: enable Bullet gem, otherwise do nothing
+* `Bullet.sentry`: add notifications to sentry
 * `Bullet.alert`: pop up a JavaScript alert in the browser
 * `Bullet.bullet_logger`: log to the Bullet log file (Rails.root/log/bullet.log)
 * `Bullet.console`: log warnings to your browser's console.log (Safari/Webkit browsers or Firefox w/Firebug installed)
@@ -89,10 +94,9 @@ The code above will enable all of the Bullet notification systems:
 * `Bullet.rails_logger`: add warnings directly to the Rails log
 * `Bullet.honeybadger`: add notifications to Honeybadger
 * `Bullet.bugsnag`: add notifications to bugsnag
-* `Bullet.airbrake`: add notifications to airbrake
 * `Bullet.appsignal`: add notifications to AppSignal
+* `Bullet.airbrake`: add notifications to airbrake
 * `Bullet.rollbar`: add notifications to rollbar
-* `Bullet.sentry`: add notifications to sentry
 * `Bullet.add_footer`: adds the details in the bottom left corner of the page. Double click the footer or use close button to hide footer.
 * `Bullet.skip_html_injection`: prevents Bullet from injecting code into the returned HTML. This must be false for receiving alerts, showing the footer or console logging.
 * `Bullet.skip_http_headers`: don't add headers to API requests, and remove the javascript that relies on them. Note that this prevents bullet from logging warnings to the browser console or updating the footer.
