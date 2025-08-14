@@ -2,7 +2,6 @@
 
 ![Main workflow](https://github.com/flyerhzm/bullet/actions/workflows/main.yml/badge.svg)
 [![Gem Version](https://badge.fury.io/rb/bullet.svg)](http://badge.fury.io/rb/bullet)
-[![AwesomeCode Status for flyerhzm/bullet](https://awesomecode.io/projects/6755235b-e2c1-459e-bf92-b8b13d0c0472/status)](https://awesomecode.io/repos/flyerhzm/bullet)
 [![Coderwall Endorse](https://coderwall.com/flyerhzm/endorsecount.png)](https://coderwall.com/flyerhzm)
 
 The Bullet gem is designed to help you increase your application's performance by reducing the number of queries it makes. It will watch your queries while you develop your application and notify you when you should add eager loading (N+1 queries), when you're using eager loading that isn't necessary and when you should use counter cache.
