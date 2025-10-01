@@ -46,6 +46,8 @@ module Bullet
       ::Mongoid::Relations::Accessors.class_eval do
         alias_method :origin_get_relation, :get_relation
 
+        private
+
         def get_relation(name, metadata, object, reload = false)
           result = origin_get_relation(name, metadata, object, reload)
           Bullet::Detector::NPlusOneQuery.call_association(self, name) if metadata.macro !~ /embed/
