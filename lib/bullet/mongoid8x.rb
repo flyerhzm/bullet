@@ -46,6 +46,8 @@ module Bullet
       ::Mongoid::Association::Accessors.class_eval do
         alias_method :origin_get_relation, :get_relation
 
+        private
+
         def get_relation(name, association, object, reload = false)
           result = origin_get_relation(name, association, object, reload)
           unless association.embedded?
