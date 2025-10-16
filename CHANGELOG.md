@@ -1,5 +1,10 @@
 ## Next Release
 
+## 8.1.0.beta1 (10/16/2025)
+
+* Make `get_relation` private
+* Add support for ActiveRecord 8.1.0.beta1
+
 ## 8.0.8 (05/30/2025)
 
 * Add middleware after initializers
