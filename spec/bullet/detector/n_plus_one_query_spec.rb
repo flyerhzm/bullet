@@ -91,6 +91,26 @@ module Bullet
           NPlusOneQuery.call_association(@post, :association)
         end
 
+        it 'stores provided caller stack in call_stacks for use by caller_in_project' do
+          root_path = Dir.pwd
+          bundler_path = Bundler.bundle_path.to_s
+
+          in_project = File.join(root_path, 'app/models/post.rb')
+          vendored = File.join(root_path, 'vendor/some_gem.rb')
+          from_bundle = File.join(bundler_path, 'rack.rb')
+
+          call_stacks = NPlusOneQuery.send(:call_stacks)
+          bullet_key = @post.bullet_key
+          call_stacks.delete(bullet_key)
+
+          custom_stack = [in_project, vendored, from_bundle]
+
+          NPlusOneQuery.call_association(@post, :association, custom_stack)
+
+          expect(call_stacks[bullet_key]).to eq(custom_stack)
+          expect(NPlusOneQuery.caller_in_project(bullet_key)).to eq([in_project])
+        end
+
         context 'stacktrace_excludes' do
           before { Bullet.stacktrace_excludes = [/def/] }
           after { Bullet.stacktrace_excludes = nil }

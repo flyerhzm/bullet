@@ -255,11 +255,10 @@ module Bullet
       ::ActiveRecord::Associations::HasManyAssociation.prepend(
         Module.new do
           def empty?
-            result = super
             if Bullet.start? && !reflection.has_cached_counter?
-              Bullet::Detector::NPlusOneQuery.call_association(owner, reflection.name)
+              Bullet::Detector::NPlusOneQuery.call_association(owner, reflection.name, caller_locations)
             end
-            result
+            super
           end
 
           def count_records

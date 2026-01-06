@@ -216,13 +216,13 @@ module Bullet
 
           def empty?
             if Bullet.start? && !reflection.has_cached_counter?
-              Bullet::Detector::NPlusOneQuery.call_association(owner, reflection.name)
+              Bullet::Detector::NPlusOneQuery.call_association(owner, reflection.name, caller_locations)
             end
             super
           end
 
           def include?(object)
-            Bullet::Detector::NPlusOneQuery.call_association(owner, reflection.name) if Bullet.start?
+            Bullet::Detector::NPlusOneQuery.call_association(owner, reflection.name, caller_locations) if Bullet.start?
             super
           end
         end
@@ -264,11 +264,10 @@ module Bullet
       ::ActiveRecord::Associations::HasManyAssociation.prepend(
         Module.new do
           def empty?
-            result = super
             if Bullet.start? && !reflection.has_cached_counter?
-              Bullet::Detector::NPlusOneQuery.call_association(owner, reflection.name)
+              Bullet::Detector::NPlusOneQuery.call_association(owner, reflection.name, caller_locations)
             end
-            result
+            super
           end
 
           def count_records
@@ -291,7 +290,8 @@ module Bullet
               )
               Bullet::Detector::NPlusOneQuery.call_association(
                 proxy_association.owner,
-                proxy_association.reflection.name
+                proxy_association.reflection.name,
+                caller_locations
               )
             end
             super(column_name)
