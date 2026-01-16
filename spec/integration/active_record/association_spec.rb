@@ -3,6 +3,10 @@
 require 'spec_helper'
 
 if active_record?
+  def post_comments_empty_call_site(post)
+    post.comments.empty?
+  end
+
   describe Bullet::Detector::Association, 'has_many' do
     context 'post => comments' do
       it 'should detect non preload post => comments' do
@@ -112,6 +116,23 @@ if active_record?
         expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
 
         expect(Bullet::Detector::Association).to be_detecting_unpreloaded_association_for(Post, :comments)
+      end
+
+      if defined?(ActiveRecord) && ActiveRecord::VERSION::MAJOR >= 5
+        it 'includes the association call site at the top of the n+1 call stack for empty?' do
+          Post.all.each { |post| post_comments_empty_call_site(post) }
+          Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+
+          notifications = Bullet.collected_n_plus_one_query_notifications
+          expect(notifications).not_to be_empty
+
+          body_with_caller = notifications.first.body_with_caller
+          lines = body_with_caller.split("\n")
+          call_stack_lines = lines.drop_while { |line| line != 'Call stack' }[1..]
+          first_location_line = call_stack_lines.first
+
+          expect(first_location_line).to match(/post_comments_empty_call_site/)
+        end
       end
 
       context 'inside Fiber' do
