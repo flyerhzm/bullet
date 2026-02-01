@@ -17,10 +17,9 @@ If you use activerecord 3.x, please use bullet < 5.5.0
 
 ## External Introduction
 
-* [http://railscasts.com/episodes/372-bullet](http://railscasts.com/episodes/372-bullet)
-* [http://ruby5.envylabs.com/episodes/9-episode-8-september-8-2009](http://ruby5.envylabs.com/episodes/9-episode-8-september-8-2009)
-* [http://railslab.newrelic.com/2009/10/23/episode-19-on-the-edge-part-1](http://railslab.newrelic.com/2009/10/23/episode-19-on-the-edge-part-1)
 * [https://rubyonrails.org/2009/10/22/community-highlights](https://rubyonrails.org/2009/10/22/community-highlights)
+* [https://www.shakacode.com/blog/eliminate-N-1-queries-with-bullet/](https://www.shakacode.com/blog/eliminate-N-1-queries-with-bullet/)
+* [https://reinteractive.com/articles/ruby-on-rails-community/elevating-your-code-quality-bullet-gem-and-query-prevention-in-testing](https://reinteractive.com/articles/ruby-on-rails-community/elevating-your-code-quality-bullet-gem-and-query-prevention-in-testing)
 
 ## Install
 
