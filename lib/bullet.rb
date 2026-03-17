@@ -123,7 +123,7 @@ module Bullet
     end
 
     def get_safelist_associations(type, class_name)
-      Array.wrap(@safelist[type][class_name])
+      Array.wrap(@safelist[type][class_name]).flat_map { |a| [a, a.to_s] }
     end
 
     def reset_safelist

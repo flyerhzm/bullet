@@ -115,6 +115,15 @@ describe Bullet do
         expect(Bullet.get_safelist_associations(:n_plus_one_query, 'Klass')).to include :department
       end
     end
+
+    context 'when association is registered as string (e.g., Action Text)' do
+      it 'returns both symbol and string forms to match either' do
+        Bullet.add_safelist(type: :unused_eager_loading, class_name: 'Note', association: :rich_text_content)
+        safelist = Bullet.get_safelist_associations(:unused_eager_loading, 'Note')
+        expect(safelist).to include(:rich_text_content)
+        expect(safelist).to include('rich_text_content')
+      end
+    end
   end
 
   describe '#delete_safelist' do
