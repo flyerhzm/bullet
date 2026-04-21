@@ -16,8 +16,8 @@ module Bullet
       require 'active_record'
       ::ActiveRecord::Base.extend(
         Module.new do
-          def find_by_sql(sql, binds = [], preparable: nil, allow_retry: false, &block)
-            result = super
+          def find_by_sql(*args, **kwargs, &block)
+            result = super(*args, **kwargs, &block)
             if Bullet.start?
               if result.is_a? Array
                 if result.size > 1
@@ -114,9 +114,9 @@ module Bullet
 
       ::ActiveRecord::Associations::JoinDependency.prepend(
         Module.new do
-          def instantiate(result_set, strict_loading_value, &block)
+          def instantiate(*args, **kwargs, &block)
             @bullet_eager_loadings = {}
-            records = super
+            records = super(*args, **kwargs, &block)
 
             if Bullet.start?
               @bullet_eager_loadings.each do |_klazz, eager_loadings_hash|
@@ -130,7 +130,8 @@ module Bullet
             records
           end
 
-          def construct(ar_parent, parent, row, seen, model_cache, strict_loading_value)
+          def construct(*args, **kwargs, &block)
+            ar_parent, parent, row = args
             if Bullet.start?
               unless ar_parent.nil?
                 parent.children.each do |node|
@@ -153,12 +154,13 @@ module Bullet
               end
             end
 
-            super
+            super(*args, **kwargs, &block)
           end
 
           # call join associations
-          def construct_model(record, node, row, model_cache, id, strict_loading_value)
-            result = super
+          def construct_model(*args, **kwargs, &block)
+            record, node = args
+            result = super(*args, **kwargs, &block)
 
             if Bullet.start?
               associations = [node.reflection.name]
