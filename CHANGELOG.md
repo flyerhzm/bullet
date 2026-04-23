@@ -1,4 +1,9 @@
-## Next Release
+## 8.1.1 (04/23/2026)
+
+* Fix ActiveRecord 8.1 patch-level method signature compatibility; test against Rails 8.1.3.
+* Handle string associations in safelist for Action Text
+* Enhance N+1 query detection by including caller stack in association calls
+* Update external links in README.md
 
 ## 8.1.0 (10/23/2025)
 
