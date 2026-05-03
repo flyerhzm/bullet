@@ -50,7 +50,7 @@ module Bullet
             if key_objects_overlap == k
               to_add << [k, associations]
             else
-              to_merge << [key_objects_overlap, (eager_loadings[k].dup << associations)]
+              to_merge << [key_objects_overlap, eager_loadings[k].dup.merge(Array.wrap(associations))]
 
               keys_without_objects = k - key_objects_overlap
               to_merge << [keys_without_objects, eager_loadings[k]]
