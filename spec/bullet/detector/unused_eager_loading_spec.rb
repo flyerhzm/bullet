@@ -122,6 +122,28 @@ module Bullet
           expect(UnusedEagerLoading.send(:eager_loadings)).to be_include([@post.bullet_key], :association2)
           expect(UnusedEagerLoading.send(:eager_loadings)).to be_include([@post2.bullet_key], :association1)
         end
+
+        it 'should merge each association element when associations is an Array (not the Array itself)' do
+          # Regression test: ActiveRecord::Associations::JoinDependency#instantiate
+          # passes the per-record association set as `to_a`, i.e. an Array. When
+          # the eager_loadings group splits on partial overlap, the merge branch
+          # must add each Array element to the existing Set rather than the whole
+          # Array as a single element. Otherwise similarly_associated's strict
+          # `value == associations` comparison stops matching, every read goes
+          # uncredited, and the preload is reported as unused.
+          UnusedEagerLoading.add_eager_loadings([@post, @post2], %i[association1 association2])
+          UnusedEagerLoading.add_eager_loadings([@post2], %i[association1 association2])
+
+          eager_loadings = UnusedEagerLoading.send(:eager_loadings)
+          expect(eager_loadings).to be_include([@post.bullet_key], :association1)
+          expect(eager_loadings).to be_include([@post.bullet_key], :association2)
+          expect(eager_loadings).to be_include([@post2.bullet_key], :association1)
+          expect(eager_loadings).to be_include([@post2.bullet_key], :association2)
+
+          eager_loadings.registry.each_value do |value|
+            expect(value).to all(be_a(Symbol))
+          end
+        end
       end
     end
   end
