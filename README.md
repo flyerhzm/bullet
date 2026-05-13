@@ -259,6 +259,8 @@ config.after_initialize do
 end
 ```
 
+**Note:** Controller and integration tests work automatically because Bullet's Rack middleware wraps each HTTP request with `Bullet.start_request` and `Bullet.end_request`. However, model tests and other tests that don't go through the Rack middleware (like direct model method calls) require manual wrapping with the test helper code below.
+
 Then wrap each test in the Bullet api.
 
 With RSpec:
