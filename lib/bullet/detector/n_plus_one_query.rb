@@ -19,6 +19,15 @@ module Bullet
           return unless object.bullet_primary_key_value
           return if inversed_objects.include?(object.bullet_key, associations)
 
+          # AR short-circuits a polymorphic belongs_to read to nil when the
+          # *_type column is nil — no SQL is issued, so this cannot be an N+1.
+          # Still record the call so a present preload isn't flagged as unused.
+          if optional_polymorphic_belongs_to_with_nil_type?(object, associations)
+            add_call_object_associations(object, associations)
+            call_stacks.add(object.bullet_key, caller_stack) if caller_stack
+            return
+          end
+
           add_call_object_associations(object, associations)
           call_stacks.add(object.bullet_key, caller_stack) if caller_stack
 
@@ -115,6 +124,19 @@ module Bullet
         end
 
         private
+
+        def optional_polymorphic_belongs_to_with_nil_type?(object, associations)
+          return false unless associations.is_a?(Symbol) || associations.is_a?(String)
+          return false unless object.class.respond_to?(:reflect_on_association)
+
+          reflection = object.class.reflect_on_association(associations.to_sym)
+          return false unless reflection
+          return false unless reflection.respond_to?(:polymorphic?) && reflection.polymorphic?
+          return false unless reflection.respond_to?(:foreign_type)
+
+          foreign_type = reflection.foreign_type
+          foreign_type && object.respond_to?(:[]) && object[foreign_type].nil?
+        end
 
         def create_notification(callers, klazz, associations)
           notify_associations = Array.wrap(associations) - Bullet.get_safelist_associations(:n_plus_one_query, klazz)
