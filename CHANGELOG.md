@@ -1,3 +1,7 @@
+## Unreleased
+
+* Skip N+1 detection for optional polymorphic `belongs_to` whose `*_type` column is nil. ActiveRecord short-circuits the reader to nil without issuing SQL, so the access cannot represent an N+1 query and preloading would be a no-op.
+
 ## 8.1.1 (04/23/2026)
 
 * Fix ActiveRecord 8.1 patch-level method signature compatibility; test against Rails 8.1.3.
