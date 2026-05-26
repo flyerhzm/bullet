@@ -134,7 +134,7 @@ module Bullet
         # call one to many associations
         alias_method :origin_load_target, :load_target
         def load_target
-          Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name) if Bullet.start? && !@inversed
+          Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name, inversed: @inversed) if Bullet.start?
           origin_load_target
         end
 
@@ -159,9 +159,9 @@ module Bullet
         def reader(force_reload = false)
           result = origin_reader(force_reload)
           if Bullet.start?
-            if @owner.class.name !~ /^HABTM_/ && !@inversed
-              Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name)
-              Bullet::Detector::NPlusOneQuery.add_possible_objects(result)
+            if @owner.class.name !~ /^HABTM_/
+              Bullet::Detector::NPlusOneQuery.call_association(@owner, @reflection.name, inversed: @inversed)
+              Bullet::Detector::NPlusOneQuery.add_possible_objects(result) unless @inversed
             end
           end
           result

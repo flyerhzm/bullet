@@ -202,7 +202,7 @@ module Bullet
                   end
                 end
               end
-              Bullet::Detector::NPlusOneQuery.call_association(owner, reflection.name) unless @inversed
+              Bullet::Detector::NPlusOneQuery.call_association(owner, reflection.name, inversed: @inversed)
               if records.first.class.name !~ /^HABTM_/
                 if records.size > 1
                   Bullet::Detector::NPlusOneQuery.add_possible_objects(records)
@@ -237,13 +237,14 @@ module Bullet
             result = super()
 
             if Bullet.start?
-              if owner.class.name !~ /^HABTM_/ && !@inversed
-                Bullet::Detector::NPlusOneQuery.call_association(owner, reflection.name)
-
-                if Bullet::Detector::NPlusOneQuery.impossible?(owner)
-                  Bullet::Detector::NPlusOneQuery.add_impossible_object(result) if result
-                else
-                  Bullet::Detector::NPlusOneQuery.add_possible_objects(result) if result
+              if owner.class.name !~ /^HABTM_/
+                Bullet::Detector::NPlusOneQuery.call_association(owner, reflection.name, inversed: @inversed)
+                unless @inversed
+                  if Bullet::Detector::NPlusOneQuery.impossible?(owner)
+                    Bullet::Detector::NPlusOneQuery.add_impossible_object(result) if result
+                  else
+                    Bullet::Detector::NPlusOneQuery.add_possible_objects(result) if result
+                  end
                 end
               end
             end
