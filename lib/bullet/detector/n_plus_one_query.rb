@@ -17,19 +17,14 @@ module Bullet
           return unless Bullet.start?
           return unless Bullet.n_plus_one_query_enable?
           return unless object.bullet_primary_key_value
-          return if inversed_objects.include?(object.bullet_key, associations)
 
-          # AR short-circuits a polymorphic belongs_to read to nil when the
-          # *_type column is nil — no SQL is issued, so this cannot be an N+1.
-          # Still record the call so a present preload isn't flagged as unused.
-          if optional_polymorphic_belongs_to_with_nil_type?(object, associations)
-            add_call_object_associations(object, associations)
-            call_stacks.add(object.bullet_key, caller_stack) if caller_stack
-            return
-          end
-
+          # Record before early-returns so legitimate reads that bypass SQL
+          # (inversed, nil-polymorphic) aren't flagged as unused preloads.
           add_call_object_associations(object, associations)
           call_stacks.add(object.bullet_key, caller_stack) if caller_stack
+
+          return if inversed_objects.include?(object.bullet_key, associations)
+          return if optional_polymorphic_belongs_to_with_nil_type?(object, associations)
 
           Bullet.debug(
             'Detector::NPlusOneQuery#call_association',
