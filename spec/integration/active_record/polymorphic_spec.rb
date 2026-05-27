@@ -51,6 +51,21 @@ if active_record?
         expect(Bullet::Detector::Association)
           .to be_detecting_unpreloaded_association_for(Role, :resource)
       end
+
+      it 'does not flag UnusedEagerLoading when an inversed polymorphic belongs_to is accessed' do
+        Post.preload(roles: :resource).each do |post|
+          post.roles.each { |role| role.resource }
+        end
+
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+
+        expect(Bullet::Detector::Association)
+          .not_to be_unused_preload_associations_for(Role, :resource)
+        expect(Bullet::Detector::Association)
+          .not_to be_has_unused_preload_associations
+        expect(Bullet::Detector::Association)
+          .not_to be_detecting_unpreloaded_association_for(Role, :resource)
+      end
     end
   end
 end
