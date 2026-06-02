@@ -1,5 +1,9 @@
 ## Unreleased
 
+## 8.1.3 (06/02/2026)
+
+* Handle inversed polymorphic belongs_to false positives
+
 ## 8.1.2 (05/25/2026)
 
 * Skip N+1 detection for optional polymorphic `belongs_to` whose `*_type` column is nil. ActiveRecord short-circuits the reader to nil without issuing SQL, so the access cannot represent an N+1 query and preloading would be a no-op.
