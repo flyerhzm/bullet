@@ -137,22 +137,33 @@ Bullet.add_safelist :type => :unused_eager_loading, :class_name => "Post", :asso
 Bullet.add_safelist :type => :counter_cache, :class_name => "Country", :association => :cities
 ```
 
+## Skip Bullet in specific actions
+
 If you want to skip bullet in some specific controller actions, you can
-do like
+use `Bullet.skip`, which is thread-safe and works correctly in multi-threaded
+environments like Puma.
 
 ```ruby
 class ApplicationController < ActionController::Base
   around_action :skip_bullet, if: -> { defined?(Bullet) }
 
   def skip_bullet
-    previous_value = Bullet.enable?
-    Bullet.enable = false
-    yield
-  ensure
-    Bullet.enable = previous_value
+    Bullet.skip { yield }
   end
 end
 ```
+
+For more granular control, you can also use `Bullet.pause` and `Bullet.resume`:
+
+```ruby
+Bullet.pause   # Temporarily disable detection for current thread
+Bullet.resume  # Re-enable detection for current thread
+Bullet.paused? # Check if detection is paused for current thread
+```
+
+**Note**: Do not toggle `Bullet.enable` at runtime, as it modifies a global
+flag that is not thread-safe. Use `Bullet.skip`, `Bullet.pause`, or
+`Bullet.start_request`/`Bullet.end_request` instead.
 
 ## Log
 

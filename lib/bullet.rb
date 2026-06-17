@@ -188,6 +188,26 @@ module Bullet
       enable? && Thread.current.thread_variable_get(:bullet_start)
     end
 
+    def pause
+      Thread.current.thread_variable_set(:bullet_start, false)
+    end
+
+    def resume
+      Thread.current.thread_variable_set(:bullet_start, true)
+    end
+
+    def paused?
+      enable? && !Thread.current.thread_variable_get(:bullet_start)
+    end
+
+    def skip
+      bullet_was_started = start?
+      pause if bullet_was_started
+      yield
+    ensure
+      resume if bullet_was_started
+    end
+
     def notification_collector
       Thread.current.thread_variable_get(:bullet_notification_collector)
     end

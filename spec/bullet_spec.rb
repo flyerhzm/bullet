@@ -82,6 +82,155 @@ describe Bullet do
     end
   end
 
+  describe '#pause and #resume' do
+    before(:each) do
+      Bullet.enable = true
+      Bullet.start_request
+    end
+
+    after(:each) do
+      Bullet.end_request
+    end
+
+    context 'when bullet is started' do
+      it 'should be able to pause and resume' do
+        expect(Bullet).to be_start
+        Bullet.pause
+        expect(Bullet).not_to be_start
+        expect(Bullet).to be_paused
+        Bullet.resume
+        expect(Bullet).to be_start
+        expect(Bullet).not_to be_paused
+      end
+    end
+
+    context 'thread safety' do
+      it 'should not affect other threads when paused' do
+        Bullet.pause
+        expect(Bullet).not_to be_start
+
+        other_thread_result = nil
+        Thread.new do
+          Bullet.start_request
+          other_thread_result = Bullet.start?
+          Bullet.end_request
+        end.join
+
+        expect(other_thread_result).to be true
+        expect(Bullet).not_to be_start
+      end
+
+      it 'should handle concurrent pause/resume correctly' do
+        restore_logs = []
+        threads = 10.times.map do |i|
+          sleep(0.1 * i)
+          Thread.new do
+            Bullet.start_request
+            was_started = Bullet.start?
+            Bullet.pause if was_started
+            sleep(0.2)
+            restore_logs << "thread #{Thread.current.object_id}: restore from #{Bullet.start?} to #{was_started}"
+            Bullet.resume if was_started
+            Bullet.end_request
+          end
+        end
+
+        threads.each(&:join)
+
+        # All threads should have restored correctly
+        restore_logs.each do |log|
+          expect(log).to match(/restore from false to true/)
+        end
+      end
+    end
+  end
+
+  describe '#skip' do
+    before(:each) do
+      Bullet.enable = true
+      Bullet.start_request
+    end
+
+    after(:each) do
+      Bullet.end_request
+    end
+
+    context 'when bullet is started' do
+      it 'should pause bullet during block execution' do
+        expect(Bullet).to be_start
+        Bullet.skip do
+          expect(Bullet).not_to be_start
+          expect(Bullet).to be_paused
+        end
+        expect(Bullet).to be_start
+        expect(Bullet).not_to be_paused
+      end
+    end
+
+    context 'when bullet is not started' do
+      before(:each) { Bullet.end_request }
+
+      it 'should not change bullet state' do
+        expect(Bullet).not_to be_start
+        Bullet.skip do
+          expect(Bullet).not_to be_start
+        end
+        expect(Bullet).not_to be_start
+      end
+    end
+
+    context 'thread safety' do
+      it 'should not affect other threads during skip' do
+        expect(Bullet).to be_start
+
+        other_thread_result = nil
+        thread = Thread.new do
+          Bullet.start_request
+          sleep(0.1)
+          other_thread_result = Bullet.start?
+          Bullet.end_request
+        end
+
+        Bullet.skip do
+          sleep(0.2)
+          expect(Bullet).not_to be_start
+        end
+
+        thread.join
+
+        expect(other_thread_result).to be true
+        expect(Bullet).to be_start
+      end
+
+      it 'should handle concurrent skip blocks correctly' do
+        restore_logs = []
+        threads = 10.times.map do |i|
+          sleep(0.1 * i)
+          Thread.new do
+            Bullet.start_request
+            Bullet.skip do
+              sleep(0.2)
+              restore_logs << "thread #{Thread.current.object_id}: Bullet.start? = #{Bullet.start?}"
+            end
+            restore_logs << "thread #{Thread.current.object_id}: after skip Bullet.start? = #{Bullet.start?}"
+            Bullet.end_request
+          end
+        end
+
+        threads.each(&:join)
+
+        # All threads should have been paused during skip and resumed after
+        restore_logs.each do |log|
+          if log.include?('Bullet.start? = false')
+            expect(log).to match(/Bullet\.start\? = false/)
+          elsif log.include?('after skip')
+            expect(log).to match(/after skip Bullet\.start\? = true/)
+          end
+        end
+      end
+    end
+  end
+
   describe '#debug' do
     before(:each) { $stdout = StringIO.new }
 
