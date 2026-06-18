@@ -296,6 +296,10 @@ describe Bullet do
   end
 
   describe '#footer_position' do
+    after(:each) do
+      Bullet.footer_position = nil
+    end
+
     it 'should be configurable' do
       Bullet.footer_position = 'top_right'
       expect(Bullet.footer_position).to eq('top_right')

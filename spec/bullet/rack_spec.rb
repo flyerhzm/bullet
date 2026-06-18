@@ -11,25 +11,25 @@ module Bullet
       it 'should be true if Content-Type is text/html and http body contains html tag' do
         headers = { 'Content-Type' => 'text/html' }
         response = double(body: '<html><head></head><body></body></html>')
-        expect(middleware).to be_html_request(headers, response)
+        expect(middleware.send(:html_request?, headers, response)).to be true
       end
 
       it 'should be true if Content-Type is text/html and http body contains html tag with attributes' do
         headers = { 'Content-Type' => 'text/html' }
         response = double(body: "<html attr='hello'><head></head><body></body></html>")
-        expect(middleware).to be_html_request(headers, response)
+        expect(middleware.send(:html_request?, headers, response)).to be true
       end
 
       it 'should be false if there is no Content-Type header' do
         headers = {}
         response = double(body: '<html><head></head><body></body></html>')
-        expect(middleware).not_to be_html_request(headers, response)
+        expect(middleware.send(:html_request?, headers, response)).to be false
       end
 
       it 'should be false if Content-Type is javascript' do
         headers = { 'Content-Type' => 'text/javascript' }
         response = double(body: '<html><head></head><body></body></html>')
-        expect(middleware).not_to be_html_request(headers, response)
+        expect(middleware.send(:html_request?, headers, response)).to be false
       end
     end
 
@@ -38,32 +38,32 @@ module Bullet
 
       it 'should return false if query_string is nil' do
         allow(request).to receive(:env).and_return({ 'QUERY_STRING' => nil })
-        expect(middleware.skip_html_injection?(request)).to be_falsey
+        expect(middleware.send(:skip_html_injection?, request)).to be_falsey
       end
 
       it 'should return false if query_string is empty' do
         allow(request).to receive(:env).and_return({ 'QUERY_STRING' => '' })
-        expect(middleware.skip_html_injection?(request)).to be_falsey
+        expect(middleware.send(:skip_html_injection?, request)).to be_falsey
       end
 
       it 'should return true if skip_html_injection parameter is true' do
         allow(request).to receive(:env).and_return({ 'QUERY_STRING' => 'skip_html_injection=true' })
-        expect(middleware.skip_html_injection?(request)).to be_truthy
+        expect(middleware.send(:skip_html_injection?, request)).to be_truthy
       end
 
       it 'should return false if skip_html_injection parameter is not true' do
         allow(request).to receive(:env).and_return({ 'QUERY_STRING' => 'skip_html_injection=false' })
-        expect(middleware.skip_html_injection?(request)).to be_falsey
+        expect(middleware.send(:skip_html_injection?, request)).to be_falsey
       end
 
       it 'should return false if skip_html_injection parameter is not present' do
         allow(request).to receive(:env).and_return({ 'QUERY_STRING' => 'other_param=value' })
-        expect(middleware.skip_html_injection?(request)).to be_falsey
+        expect(middleware.send(:skip_html_injection?, request)).to be_falsey
       end
 
       it 'should handle complex query strings' do
         allow(request).to receive(:env).and_return({ 'QUERY_STRING' => 'param1=value1&skip_html_injection=true&param2=value2' })
-        expect(middleware.skip_html_injection?(request)).to be_truthy
+        expect(middleware.send(:skip_html_injection?, request)).to be_truthy
       end
     end
 
@@ -356,7 +356,7 @@ module Bullet
       it 'should truncate headers to under 8kb' do
         long_header = ['a' * 1_024] * 10
         expected_res = (['a' * 1_024] * 7).to_json
-        expect(middleware.set_header({}, 'Dummy-Header', long_header)).to eq(expected_res)
+        expect(middleware.send(:set_header, {}, 'Dummy-Header', long_header)).to eq(expected_res)
       end
     end
 
@@ -370,14 +370,14 @@ module Bullet
         context 'when `body` returns an Array' do
           let(:body) { [body_string, 'random string'] }
           it 'should return the plain body string' do
-            expect(middleware.response_body(response)).to eq body_string
+            expect(middleware.send(:response_body, response)).to eq body_string
           end
         end
 
         context 'when `body` does not return an Array' do
           let(:body) { body_string }
           it 'should return the plain body string' do
-            expect(middleware.response_body(response)).to eq body_string
+            expect(middleware.send(:response_body, response)).to eq body_string
           end
         end
       end
@@ -386,7 +386,7 @@ module Bullet
         before { allow(response).to receive(:first).and_return(body_string) }
 
         it 'should return the plain body string' do
-          expect(middleware.response_body(response)).to eq body_string
+          expect(middleware.send(:response_body, response)).to eq body_string
         end
       end
 
@@ -398,7 +398,7 @@ module Bullet
           before { allow(response).to receive(:is_a?).with(::Rack::Files::Iterator) { true } }
 
           it 'should return nil' do
-            expect(middleware.response_body(response)).to be_nil
+            expect(middleware.send(:response_body, response)).to be_nil
           end
         end
       rescue LoadError
@@ -406,6 +406,10 @@ module Bullet
     end
 
     context '#footer_position_css' do
+      after(:each) do
+        Bullet.footer_position = nil
+      end
+
       it 'should generate bottom_left CSS by default' do
         expect(middleware.send(:footer_position_css)).to eq('left: 0px; bottom: 0px')
       end
@@ -427,6 +431,10 @@ module Bullet
     end
 
     context '#footer_border_radius' do
+      after(:each) do
+        Bullet.footer_position = nil
+      end
+
       it 'should generate bottom_left border radius by default' do
         expect(middleware.send(:footer_border_radius)).to eq('border-radius: 0px 8px 0px 0px')
       end
