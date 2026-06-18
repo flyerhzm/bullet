@@ -295,6 +295,17 @@ describe Bullet do
     end
   end
 
+  describe '#footer_position' do
+    it 'should be configurable' do
+      Bullet.footer_position = 'top_right'
+      expect(Bullet.footer_position).to eq('top_right')
+    end
+
+    it 'should default to bottom_left' do
+      expect(Bullet.footer_position).to eq('bottom_left')
+    end
+  end
+
   describe '#perform_out_of_channel_notifications' do
     let(:notification) { double }
 

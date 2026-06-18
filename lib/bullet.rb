@@ -42,6 +42,7 @@ module Bullet
                 :skip_html_injection
     attr_reader :safelist
     attr_accessor :add_footer,
+                  :footer_position,
                   :orm_patches_applied,
                   :skip_http_headers,
                   :always_append_html_body,
@@ -277,6 +278,10 @@ module Bullet
 
     def console_enabled?
       UniformNotifier.active_notifiers.include?(UniformNotifier::JavascriptConsole)
+    end
+
+    def footer_position
+      @footer_position || 'bottom_left'
     end
 
     def inject_into_page?

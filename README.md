@@ -69,6 +69,7 @@ config.after_initialize do
   Bullet.airbrake = true
   Bullet.rollbar = true
   Bullet.add_footer = true
+  Bullet.footer_position = 'bottom_left'  # or 'bottom_right', 'top_left', 'top_right'
   Bullet.skip_html_injection = false
   Bullet.skip_http_headers = false
   Bullet.stacktrace_includes = [ 'your_gem', 'your_middleware' ]
@@ -97,6 +98,7 @@ The code above will enable all of the Bullet notification systems:
 * `Bullet.airbrake`: add notifications to airbrake
 * `Bullet.rollbar`: add notifications to rollbar
 * `Bullet.add_footer`: adds the details in the bottom left corner of the page. Double click the footer or use close button to hide footer.
+* `Bullet.footer_position`: position of the footer on the page. Valid values are 'bottom_left' (default), 'bottom_right', 'top_left', or 'top_right'. This is useful when the default position clashes with browser UI elements like Chrome's URL preview.
 * `Bullet.skip_html_injection`: prevents Bullet from injecting code into the returned HTML. This must be false for receiving alerts, showing the footer or console logging.
 * `Bullet.skip_http_headers`: don't add headers to API requests, and remove the javascript that relies on them. Note that this prevents bullet from logging warnings to the browser console or updating the footer.
 * `Bullet.stacktrace_includes`: include paths with any of these substrings in the stack trace, even if they are not in your main app

@@ -76,8 +76,9 @@ module Bullet
 
     # Make footer styles work with ContentSecurityPolicy style-src as self
     def footer_style(nonce = nil)
+      position_css = footer_position_css
       css = <<~CSS
-        details#bullet-footer {cursor: pointer; position: fixed; left: 0px; bottom: 0px; z-index: 9999; background: #fdf2f2; color: #9b1c1c; font-size: 12px; border-radius: 0px 8px 0px 0px; border: 1px solid #9b1c1c;}
+        details#bullet-footer {cursor: pointer; position: fixed; #{position_css}; z-index: 9999; background: #fdf2f2; color: #9b1c1c; font-size: 12px; #{footer_border_radius}; border: 1px solid #9b1c1c;}
         details#bullet-footer summary {font-weight: 600; padding: 2px 8px;}
         details#bullet-footer div {padding: 8px; border-top: 1px solid #9b1c1c;}
       CSS
@@ -85,6 +86,38 @@ module Bullet
         %(<style type="text/css" nonce="#{nonce}">#{css}</style>)
       else
         %(<style type="text/css">#{css}</style>)
+      end
+    end
+
+    private
+
+    def footer_position_css
+      case Bullet.footer_position
+      when 'bottom_left'
+        'left: 0px; bottom: 0px'
+      when 'bottom_right'
+        'right: 0px; bottom: 0px'
+      when 'top_left'
+        'left: 0px; top: 0px'
+      when 'top_right'
+        'right: 0px; top: 0px'
+      else
+        'left: 0px; bottom: 0px'
+      end
+    end
+
+    def footer_border_radius
+      case Bullet.footer_position
+      when 'bottom_left'
+        'border-radius: 0px 8px 0px 0px'
+      when 'bottom_right'
+        'border-radius: 8px 0px 0px 0px'
+      when 'top_left'
+        'border-radius: 0px 0px 8px 0px'
+      when 'top_right'
+        'border-radius: 0px 0px 0px 8px'
+      else
+        'border-radius: 0px 8px 0px 0px'
       end
     end
 

@@ -404,5 +404,47 @@ module Bullet
       rescue LoadError
       end
     end
+
+    context '#footer_position_css' do
+      it 'should generate bottom_left CSS by default' do
+        expect(middleware.send(:footer_position_css)).to eq('left: 0px; bottom: 0px')
+      end
+
+      it 'should generate bottom_right CSS when configured' do
+        Bullet.footer_position = 'bottom_right'
+        expect(middleware.send(:footer_position_css)).to eq('right: 0px; bottom: 0px')
+      end
+
+      it 'should generate top_left CSS when configured' do
+        Bullet.footer_position = 'top_left'
+        expect(middleware.send(:footer_position_css)).to eq('left: 0px; top: 0px')
+      end
+
+      it 'should generate top_right CSS when configured' do
+        Bullet.footer_position = 'top_right'
+        expect(middleware.send(:footer_position_css)).to eq('right: 0px; top: 0px')
+      end
+    end
+
+    context '#footer_border_radius' do
+      it 'should generate bottom_left border radius by default' do
+        expect(middleware.send(:footer_border_radius)).to eq('border-radius: 0px 8px 0px 0px')
+      end
+
+      it 'should generate bottom_right border radius when configured' do
+        Bullet.footer_position = 'bottom_right'
+        expect(middleware.send(:footer_border_radius)).to eq('border-radius: 8px 0px 0px 0px')
+      end
+
+      it 'should generate top_left border radius when configured' do
+        Bullet.footer_position = 'top_left'
+        expect(middleware.send(:footer_border_radius)).to eq('border-radius: 0px 0px 8px 0px')
+      end
+
+      it 'should generate top_right border radius when configured' do
+        Bullet.footer_position = 'top_right'
+        expect(middleware.send(:footer_border_radius)).to eq('border-radius: 0px 0px 0px 8px')
+      end
+    end
   end
 end
