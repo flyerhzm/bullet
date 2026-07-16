@@ -109,6 +109,20 @@ module Bullet
               super
             end
           end
+
+          def through_preloaders
+            if Bullet.start? && !defined?(@through_preloaders)
+              preloaders = super
+              preloaders.each do |preloader|
+                reflection_name = preloader.send(:reflection).name
+                preloader.send(:owners).each do |owner|
+                  Bullet::Detector::NPlusOneQuery.call_association(owner, reflection_name)
+                end
+              end
+            else
+              super
+            end
+          end
         end
       )
 
