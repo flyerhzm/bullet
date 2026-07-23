@@ -92,14 +92,12 @@ if active_record?
         expect(Bullet::Detector::Association).to be_detecting_unpreloaded_association_for(Post, :comments)
       end
 
-      if ActiveRecord::VERSION::MAJOR != 4 && ActiveRecord::VERSION::MINOR != 0
-        it 'should not detect unused preload post => comment with empty?' do
-          Post.includes(:comments).each { |post| post.comments.empty? }
-          Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
-          expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
+      it 'should not detect unused preload post => comment with empty?' do
+        Post.includes(:comments).each { |post| post.comments.empty? }
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+        expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
 
-          expect(Bullet::Detector::Association).to be_completely_preloading_associations
-        end
+        expect(Bullet::Detector::Association).to be_completely_preloading_associations
       end
 
       it 'should not detect unused preload post => comment with count' do
@@ -118,21 +116,19 @@ if active_record?
         expect(Bullet::Detector::Association).to be_detecting_unpreloaded_association_for(Post, :comments)
       end
 
-      if defined?(ActiveRecord) && ActiveRecord::VERSION::MAJOR >= 5
-        it 'includes the association call site at the top of the n+1 call stack for empty?' do
-          Post.all.each { |post| post_comments_empty_call_site(post) }
-          Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+      it 'includes the association call site at the top of the n+1 call stack for empty?' do
+        Post.all.each { |post| post_comments_empty_call_site(post) }
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
 
-          notifications = Bullet.collected_n_plus_one_query_notifications
-          expect(notifications).not_to be_empty
+        notifications = Bullet.collected_n_plus_one_query_notifications
+        expect(notifications).not_to be_empty
 
-          body_with_caller = notifications.first.body_with_caller
-          lines = body_with_caller.split("\n")
-          call_stack_lines = lines.drop_while { |line| line != 'Call stack' }[1..]
-          first_location_line = call_stack_lines.first
+        body_with_caller = notifications.first.body_with_caller
+        lines = body_with_caller.split("\n")
+        call_stack_lines = lines.drop_while { |line| line != 'Call stack' }[1..]
+        first_location_line = call_stack_lines.first
 
-          expect(first_location_line).to match(/post_comments_empty_call_site/)
-        end
+        expect(first_location_line).to match(/post_comments_empty_call_site/)
       end
 
       context 'inside Fiber' do

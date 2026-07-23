@@ -33,7 +33,7 @@ Gem::Specification.new do |s|
   s.files = Dir.chdir(__dir__) do
     `git ls-files -z`.split("\x0").reject do |file|
       file.start_with?(*%w[.git .rspec Gemfile Guardfile Hacking Rakefile
-                           bullet.gemspec perf rails spec test.sh update.sh])
+                           bullet.gemspec perf rails spec test.sh])
     end
   end
   s.require_paths = ['lib']

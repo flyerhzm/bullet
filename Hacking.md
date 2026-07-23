@@ -5,11 +5,9 @@ it (hopefully) easier to extend or enhance the Bullet gem.
 
 ## General Control Flow aka. 10000 Meter View
 
-When Rails is initialized, Bullet will extend ActiveRecord (and if you're using
-Rails 2.x ActiveController too) with the relevant modules and methods found
-in lib/bullet/active_recordX.rb and lib/bullet/action_controller2.rb. If you're
-running Rails 3, Bullet will integrate itself as a middleware into the Rack
-stack, so ActionController does not need to be extended.
+When Rails is initialized, Bullet will extend ActiveRecord with the relevant
+modules and methods found in lib/bullet/active_recordX.rb. Bullet will also
+integrate itself as a middleware into the Rack stack.
 
 The ActiveRecord extensions will call methods in a given detector class, when
 certain methods are called.
