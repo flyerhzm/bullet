@@ -840,6 +840,14 @@ if active_record?
         expect(Bullet::Detector::Association).to be_completely_preloading_associations
         expect(Bullet::Detector::Association).to be_unused_preload_associations_for(Post, :comments)
       end
+
+      it 'should not detect used eager loading' do
+        Post.includes(:comments).each { |post| post.comments.map(&:name) }
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+        expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
+
+        expect(Bullet::Detector::Association).to be_completely_preloading_associations
+      end
     end
 
     context 'disable unused eager loading' do

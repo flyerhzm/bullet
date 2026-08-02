@@ -15,7 +15,7 @@ module Bullet
         #   if it is, keeps this unpreload associations and caller.
         def call_association(object, associations, caller_stack = nil, inversed: false)
           return unless Bullet.start?
-          return unless Bullet.n_plus_one_query_enable?
+          return unless Bullet.n_plus_one_query_enable? || Bullet.unused_eager_loading_enable?
           return unless object.bullet_primary_key_value
 
           # Record before early-returns so legitimate reads that bypass SQL

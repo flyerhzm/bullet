@@ -8,7 +8,7 @@ module Bullet
       class << self
         def add_object_associations(object, associations)
           return unless Bullet.start?
-          return if !Bullet.n_plus_one_query_enable? && !Bullet.unused_eager_loading_enable?
+          return unless Bullet.n_plus_one_query_enable? || Bullet.unused_eager_loading_enable?
           return unless object.bullet_primary_key_value
 
           Bullet.debug(
@@ -21,7 +21,7 @@ module Bullet
 
         def add_call_object_associations(object, associations)
           return unless Bullet.start?
-          return if !Bullet.n_plus_one_query_enable? && !Bullet.unused_eager_loading_enable?
+          return unless Bullet.n_plus_one_query_enable? || Bullet.unused_eager_loading_enable?
           return unless object.bullet_primary_key_value
 
           Bullet.debug(
