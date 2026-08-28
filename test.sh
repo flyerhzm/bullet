@@ -7,7 +7,3 @@ BUNDLE_GEMFILE=Gemfile.rails-7.1 bundle && BUNDLE_GEMFILE=Gemfile.rails-7.1 bund
 BUNDLE_GEMFILE=Gemfile.rails-7.0 bundle && BUNDLE_GEMFILE=Gemfile.rails-7.0 bundle exec rspec spec
 BUNDLE_GEMFILE=Gemfile.mongoid-9.0 bundle && BUNDLE_GEMFILE=Gemfile.mongoid-9.0 bundle exec rspec spec
 BUNDLE_GEMFILE=Gemfile.mongoid-8.0 bundle && BUNDLE_GEMFILE=Gemfile.mongoid-8.0 bundle exec rspec spec
-BUNDLE_GEMFILE=Gemfile.mongoid-7.0 bundle && BUNDLE_GEMFILE=Gemfile.mongoid-7.0 bundle exec rspec spec
-BUNDLE_GEMFILE=Gemfile.mongoid-6.0 bundle && BUNDLE_GEMFILE=Gemfile.mongoid-6.0 bundle exec rspec spec
-BUNDLE_GEMFILE=Gemfile.mongoid-5.0 bundle && BUNDLE_GEMFILE=Gemfile.mongoid-5.0 bundle exec rspec spec
-BUNDLE_GEMFILE=Gemfile.mongoid-4.0 bundle && BUNDLE_GEMFILE=Gemfile.mongoid-4.0 bundle exec rspec spec
