@@ -28,16 +28,9 @@ if !mongoid? && active_record?
       expect(Bullet.collected_counter_cache_notifications).to be_empty
     end
 
-    if ActiveRecord::VERSION::MAJOR > 4
-      it 'should not need counter cache for has_many through' do
-        Client.all.each { |client| client.firms.size }
-        expect(Bullet.collected_counter_cache_notifications).to be_empty
-      end
-    else
-      it 'should need counter cache for has_many through' do
-        Client.all.each { |client| client.firms.size }
-        expect(Bullet.collected_counter_cache_notifications).not_to be_empty
-      end
+    it 'should not need counter cache for has_many through' do
+      Client.all.each { |client| client.firms.size }
+      expect(Bullet.collected_counter_cache_notifications).to be_empty
     end
 
     it 'should not need counter cache with part of cities' do
@@ -76,16 +69,9 @@ if !mongoid? && active_record?
         expect(Bullet.collected_counter_cache_notifications).not_to be_empty
       end
 
-      if ActiveRecord::VERSION::MAJOR > 4
-        it 'should not need counter cache for has_many through' do
-          Client.all.each { |client| client.firms.count }
-          expect(Bullet.collected_counter_cache_notifications).to be_empty
-        end
-      else
-        it 'should need counter cache for has_many through' do
-          Client.all.each { |client| client.firms.count }
-          expect(Bullet.collected_counter_cache_notifications).not_to be_empty
-        end
+      it 'should not need counter cache for has_many through' do
+        Client.all.each { |client| client.firms.count }
+        expect(Bullet.collected_counter_cache_notifications).to be_empty
       end
     end
   end

@@ -13,22 +13,8 @@ module Bullet
     def active_record_version
       @active_record_version ||=
         begin
-          if active_record40?
-            'active_record4'
-          elsif active_record41?
-            'active_record41'
-          elsif active_record42?
-            'active_record42'
-          elsif active_record50?
-            'active_record5'
-          elsif active_record51?
-            'active_record5'
-          elsif active_record52?
-            'active_record52'
-          elsif active_record60?
-            'active_record60'
-          elsif active_record61?
-            'active_record61'
+          if active_record6_or_older?
+            raise "Bullet no longer supports active_record #{::ActiveRecord::VERSION::STRING}"
           elsif active_record70?
             'active_record70'
           elsif active_record71?
@@ -66,16 +52,8 @@ module Bullet
         end
     end
 
-    def active_record4?
-      active_record? && ::ActiveRecord::VERSION::MAJOR == 4
-    end
-
-    def active_record5?
-      active_record? && ::ActiveRecord::VERSION::MAJOR == 5
-    end
-
-    def active_record6?
-      active_record? && ::ActiveRecord::VERSION::MAJOR == 6
+    def active_record6_or_older?
+      active_record? && ::ActiveRecord::VERSION::MAJOR < 7
     end
 
     def active_record7?
@@ -84,38 +62,6 @@ module Bullet
 
     def active_record8?
       active_record? && ::ActiveRecord::VERSION::MAJOR == 8
-    end
-
-    def active_record40?
-      active_record4? && ::ActiveRecord::VERSION::MINOR == 0
-    end
-
-    def active_record41?
-      active_record4? && ::ActiveRecord::VERSION::MINOR == 1
-    end
-
-    def active_record42?
-      active_record4? && ::ActiveRecord::VERSION::MINOR == 2
-    end
-
-    def active_record50?
-      active_record5? && ::ActiveRecord::VERSION::MINOR == 0
-    end
-
-    def active_record51?
-      active_record5? && ::ActiveRecord::VERSION::MINOR == 1
-    end
-
-    def active_record52?
-      active_record5? && ::ActiveRecord::VERSION::MINOR == 2
-    end
-
-    def active_record60?
-      active_record6? && ::ActiveRecord::VERSION::MINOR == 0
-    end
-
-    def active_record61?
-      active_record6? && ::ActiveRecord::VERSION::MINOR == 1
     end
 
     def active_record70?
