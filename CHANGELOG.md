@@ -1,5 +1,14 @@
 ## Unreleased
 
+## 8.2.0 (08/29/2026)
+
+* Add thread-safe `Bullet.pause`, `Bullet.resume`, `Bullet.paused?`, and `Bullet.skip` APIs
+* Add configurable footer positioning
+* Fix unused eager loading false positives when N+1 detection is disabled
+* Fix unused eager loading false positives for conditional `has_many :through` associations
+* Fix Ruby 4.0 compatibility issues
+* Drop support for ActiveRecord versions older than 7 and Mongoid versions older than 8
+
 ## 8.1.3 (06/02/2026)
 
 * Handle inversed polymorphic belongs_to false positives
