@@ -578,6 +578,48 @@ if active_record?
       end
     end
 
+    context 'firm => active_clients (with condition)' do
+      it 'should detect non preload associations' do
+        Firm.all.each { |firm| firm.active_clients.map(&:name) }
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+        expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
+
+        expect(Bullet::Detector::Association).to be_detecting_unpreloaded_association_for(Firm, :active_clients)
+      end
+
+      it 'should detect preload associations' do
+        Firm.preload(:active_clients).each { |firm| firm.active_clients.map(&:name) }
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+        expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
+
+        expect(Bullet::Detector::Association).to be_completely_preloading_associations
+      end
+
+      it 'should detect eager load association' do
+        Firm.eager_load(:active_clients).each { |firm| firm.active_clients.map(&:name) }
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+        expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
+
+        expect(Bullet::Detector::Association).to be_completely_preloading_associations
+      end
+
+      it 'should not detect preload associations' do
+        Firm.all.map(&:name)
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+        expect(Bullet::Detector::Association).not_to be_has_unused_preload_associations
+
+        expect(Bullet::Detector::Association).to be_completely_preloading_associations
+      end
+
+      it 'should detect unused preload associations' do
+        Firm.includes(:active_clients).map(&:name)
+        Bullet::Detector::UnusedEagerLoading.check_unused_preload_associations
+        expect(Bullet::Detector::Association).to be_unused_preload_associations_for(Firm, :active_clients)
+
+        expect(Bullet::Detector::Association).to be_completely_preloading_associations
+      end
+    end
+
     context 'firm => clients => groups' do
       it 'should detect non preload associations' do
         Firm.all.each { |firm| firm.groups.map(&:name) }

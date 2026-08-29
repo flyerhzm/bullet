@@ -233,6 +233,7 @@ module Support
         create_table :relationships do |t|
           t.column :firm_id, :integer
           t.column :client_id, :integer
+          t.column :active, :boolean, default: true
         end
 
         create_table :students do |t|
