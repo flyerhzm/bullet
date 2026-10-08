@@ -115,6 +115,9 @@ module Support
     end
 
     def setup_db
+      # Rails 8.2+ reuses an existing pool when the config is unchanged, which
+      # would keep the old in-memory database around instead of starting fresh.
+      ActiveRecord::Base.remove_connection if ActiveRecord::Base.connected?
       ActiveRecord::Base.establish_connection(adapter: 'sqlite3', database: ':memory:')
 
       ActiveRecord::Schema.define(version: 1) do

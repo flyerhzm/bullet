@@ -1,5 +1,7 @@
 ## Unreleased
 
+* Add support for ActiveRecord 8.2
+
 ## 8.2.0 (08/29/2026)
 
 * Add thread-safe `Bullet.pause`, `Bullet.resume`, `Bullet.paused?`, and `Bullet.skip` APIs
