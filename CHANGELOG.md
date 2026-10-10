@@ -1,5 +1,7 @@
 ## Unreleased
 
+## 8.3.0 (10/10/2026)
+
 * Add support for ActiveRecord 8.2
 
 ## 8.2.0 (08/29/2026)
