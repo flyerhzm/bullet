@@ -2,7 +2,12 @@
 
 require 'rack/request'
 require 'json'
-require 'cgi'
+
+if RUBY_VERSION.to_i >= 4
+  require 'cgi/escape'
+else
+  require 'cgi'
+end
 
 module Bullet
   class Rack
