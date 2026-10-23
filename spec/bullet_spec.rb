@@ -2,6 +2,8 @@
 
 require 'spec_helper'
 
+using Bullet::Ext::Object
+
 describe Bullet do
   subject { Bullet }
 
@@ -78,6 +80,44 @@ describe Bullet do
 
       it 'should not be started' do
         expect(Bullet).not_to be_start
+      end
+    end
+
+    context 'with sibling fibers on one thread' do
+      before(:each) { Bullet.enable = true }
+
+      it 'should not end the request of another fiber', if: Fiber.respond_to?(:[]) do
+        fiber = Fiber.new do
+          Bullet.start_request
+          Fiber.yield
+          Bullet.start?
+        end
+        fiber.resume
+
+        Fiber.new do
+          Bullet.start_request
+          Bullet.end_request
+        end.resume
+
+        expect(fiber.resume).to be true
+      end
+
+      it 'should not share counter cache registries with another fiber', if: Fiber.respond_to?(:[]) do
+        post = Post.first
+
+        fiber = Fiber.new do
+          Bullet.start_request
+          Bullet::Detector::CounterCache.add_impossible_object(post)
+          Fiber.yield
+        end
+        fiber.resume
+
+        Fiber.new do
+          Bullet.start_request
+          expect(Bullet::Detector::CounterCache.impossible_objects).not_to be_include(post.bullet_key)
+        end.resume
+
+        fiber.resume
       end
     end
   end

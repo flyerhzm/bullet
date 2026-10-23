@@ -46,11 +46,11 @@ module Bullet
         end
 
         def possible_objects
-          Thread.current.thread_variable_get(:bullet_counter_possible_objects)
+          Bullet.state[:bullet_counter_possible_objects]
         end
 
         def impossible_objects
-          Thread.current.thread_variable_get(:bullet_counter_impossible_objects)
+          Bullet.state[:bullet_counter_impossible_objects]
         end
 
         private
