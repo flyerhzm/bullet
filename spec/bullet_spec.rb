@@ -80,6 +80,26 @@ describe Bullet do
         expect(Bullet).not_to be_start
       end
     end
+
+    context 'with sibling fibers on one thread' do
+      before(:each) { Bullet.enable = true }
+
+      it 'should not end the request of another fiber', if: Fiber.respond_to?(:[]) do
+        fiber = Fiber.new do
+          Bullet.start_request
+          Fiber.yield
+          Bullet.start?
+        end
+        fiber.resume
+
+        Fiber.new do
+          Bullet.start_request
+          Bullet.end_request
+        end.resume
+
+        expect(fiber.resume).to be true
+      end
+    end
   end
 
   describe '#pause and #resume' do

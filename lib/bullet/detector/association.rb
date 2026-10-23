@@ -36,7 +36,7 @@ module Bullet
         # that the objects may cause N+1 query.
         # e.g. { Post => ["Post:1", "Post:2"] }
         def possible_objects
-          Thread.current.thread_variable_get(:bullet_possible_objects)
+          Bullet.state[:bullet_possible_objects]
         end
 
         # impossible_objects keep the class to objects relationships
@@ -45,7 +45,7 @@ module Bullet
         # if find collection returns only one object, then the object is impossible object,
         # impossible_objects are used to avoid treating 1+1 query to N+1 query.
         def impossible_objects
-          Thread.current.thread_variable_get(:bullet_impossible_objects)
+          Bullet.state[:bullet_impossible_objects]
         end
 
         private
@@ -56,7 +56,7 @@ module Bullet
         # the object_associations keep all associations that may be or may no be
         # unpreload associations or unused preload associations.
         def object_associations
-          Thread.current.thread_variable_get(:bullet_object_associations)
+          Bullet.state[:bullet_object_associations]
         end
 
         # call_object_associations keep the object relationships
@@ -64,27 +64,27 @@ module Bullet
         # e.g. { "Post:1" => [:comments] }
         # they are used to detect unused preload associations.
         def call_object_associations
-          Thread.current.thread_variable_get(:bullet_call_object_associations)
+          Bullet.state[:bullet_call_object_associations]
         end
 
         # inversed_objects keeps object relationships
         # that association is inversed.
         # e.g. { "Comment:1" => ["post"] }
         def inversed_objects
-          Thread.current.thread_variable_get(:bullet_inversed_objects)
+          Bullet.state[:bullet_inversed_objects]
         end
 
         # eager_loadings keep the object relationships
         # that the associations are preloaded by find :include.
         # e.g. { ["Post:1", "Post:2"] => [:comments, :user] }
         def eager_loadings
-          Thread.current.thread_variable_get(:bullet_eager_loadings)
+          Bullet.state[:bullet_eager_loadings]
         end
 
         # call_stacks keeps stacktraces where querie-objects were called from.
         # e.g. { 'Object:111' => [SomeProject/app/controllers/...] }
         def call_stacks
-          Thread.current.thread_variable_get(:bullet_call_stacks)
+          Bullet.state[:bullet_call_stacks]
         end
       end
     end

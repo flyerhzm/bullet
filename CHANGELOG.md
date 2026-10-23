@@ -1,5 +1,7 @@
 ## Unreleased
 
+* Keep request state separate for sibling fibers on one thread
+
 ## 8.3.0 (10/10/2026)
 
 * Add support for ActiveRecord 8.2

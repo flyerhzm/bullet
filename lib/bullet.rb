@@ -149,56 +149,71 @@ module Bullet
       puts "[Bullet][#{title}] #{message}" if ENV['BULLET_DEBUG'] == 'true'
     end
 
-    def start_request
-      Thread.current.thread_variable_set(:bullet_start, true)
-      Thread.current.thread_variable_set(:bullet_notification_collector, Bullet::NotificationCollector.new)
-
-      Thread.current.thread_variable_set(:bullet_object_associations, Bullet::Registry::Base.new)
-      Thread.current.thread_variable_set(:bullet_call_object_associations, Bullet::Registry::Base.new)
-      Thread.current.thread_variable_set(:bullet_possible_objects, Bullet::Registry::Object.new)
-      Thread.current.thread_variable_set(:bullet_impossible_objects, Bullet::Registry::Object.new)
-      Thread.current.thread_variable_set(:bullet_inversed_objects, Bullet::Registry::Base.new)
-      Thread.current.thread_variable_set(:bullet_eager_loadings, Bullet::Registry::Association.new)
-      Thread.current.thread_variable_set(:bullet_call_stacks, Bullet::Registry::CallStack.new)
-
-      unless Thread.current.thread_variable_get(:bullet_counter_possible_objects)
-        Thread.current.thread_variable_set(:bullet_counter_possible_objects, Bullet::Registry::Object.new)
+    # Fiber storage reaches child fibers; start_request gives each request its own, and the owner check keeps it off new threads.
+    def state
+      unless Fiber.respond_to?(:[])
+        return Thread.current.thread_variable_get(:bullet_state) || Thread.current.thread_variable_set(:bullet_state, {})
       end
 
-      unless Thread.current.thread_variable_get(:bullet_counter_impossible_objects)
-        Thread.current.thread_variable_set(:bullet_counter_impossible_objects, Bullet::Registry::Object.new)
+      current = Fiber[:bullet_state]
+      return current if current && current[:owner].equal?(Thread.current)
+
+      Fiber[:bullet_state] = { owner: Thread.current }
+    end
+
+    def start_request
+      if Fiber.respond_to?(:[])
+        Fiber[:bullet_state] = state.slice(:owner, :bullet_counter_possible_objects, :bullet_counter_impossible_objects)
+      end
+      Bullet.state[:bullet_start] = true
+      Bullet.state[:bullet_notification_collector] = Bullet::NotificationCollector.new
+
+      Bullet.state[:bullet_object_associations] = Bullet::Registry::Base.new
+      Bullet.state[:bullet_call_object_associations] = Bullet::Registry::Base.new
+      Bullet.state[:bullet_possible_objects] = Bullet::Registry::Object.new
+      Bullet.state[:bullet_impossible_objects] = Bullet::Registry::Object.new
+      Bullet.state[:bullet_inversed_objects] = Bullet::Registry::Base.new
+      Bullet.state[:bullet_eager_loadings] = Bullet::Registry::Association.new
+      Bullet.state[:bullet_call_stacks] = Bullet::Registry::CallStack.new
+
+      unless Bullet.state[:bullet_counter_possible_objects]
+        Bullet.state[:bullet_counter_possible_objects] = Bullet::Registry::Object.new
+      end
+
+      unless Bullet.state[:bullet_counter_impossible_objects]
+        Bullet.state[:bullet_counter_impossible_objects] = Bullet::Registry::Object.new
       end
     end
 
     def end_request
-      Thread.current.thread_variable_set(:bullet_start, nil)
-      Thread.current.thread_variable_set(:bullet_notification_collector, nil)
+      Bullet.state[:bullet_start] = nil
+      Bullet.state[:bullet_notification_collector] = nil
 
-      Thread.current.thread_variable_set(:bullet_object_associations, nil)
-      Thread.current.thread_variable_set(:bullet_call_object_associations, nil)
-      Thread.current.thread_variable_set(:bullet_possible_objects, nil)
-      Thread.current.thread_variable_set(:bullet_impossible_objects, nil)
-      Thread.current.thread_variable_set(:bullet_inversed_objects, nil)
-      Thread.current.thread_variable_set(:bullet_eager_loadings, nil)
+      Bullet.state[:bullet_object_associations] = nil
+      Bullet.state[:bullet_call_object_associations] = nil
+      Bullet.state[:bullet_possible_objects] = nil
+      Bullet.state[:bullet_impossible_objects] = nil
+      Bullet.state[:bullet_inversed_objects] = nil
+      Bullet.state[:bullet_eager_loadings] = nil
 
-      Thread.current.thread_variable_set(:bullet_counter_possible_objects, nil)
-      Thread.current.thread_variable_set(:bullet_counter_impossible_objects, nil)
+      Bullet.state[:bullet_counter_possible_objects] = nil
+      Bullet.state[:bullet_counter_impossible_objects] = nil
     end
 
     def start?
-      enable? && Thread.current.thread_variable_get(:bullet_start)
+      enable? && Bullet.state[:bullet_start]
     end
 
     def pause
-      Thread.current.thread_variable_set(:bullet_start, false)
+      Bullet.state[:bullet_start] = false
     end
 
     def resume
-      Thread.current.thread_variable_set(:bullet_start, true)
+      Bullet.state[:bullet_start] = true
     end
 
     def paused?
-      enable? && !Thread.current.thread_variable_get(:bullet_start)
+      enable? && !Bullet.state[:bullet_start]
     end
 
     def skip
@@ -210,7 +225,7 @@ module Bullet
     end
 
     def notification_collector
-      Thread.current.thread_variable_get(:bullet_notification_collector)
+      Bullet.state[:bullet_notification_collector]
     end
 
     def notification?
