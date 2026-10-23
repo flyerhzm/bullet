@@ -39,10 +39,10 @@ module Bullet
                 :counter_cache_enable,
                 :stacktrace_includes,
                 :stacktrace_excludes,
-                :skip_html_injection
+                :skip_html_injection,
+                :footer_position
     attr_reader :safelist
     attr_accessor :add_footer,
-                  :footer_position,
                   :orm_patches_applied,
                   :skip_http_headers,
                   :always_append_html_body,
