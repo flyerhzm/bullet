@@ -163,7 +163,7 @@ module Bullet
 
     def start_request
       if Fiber.respond_to?(:[])
-        Fiber[:bullet_state] = state.slice(:owner, :bullet_counter_possible_objects, :bullet_counter_impossible_objects)
+        Fiber[:bullet_state] = state.slice(:owner)
       end
       Bullet.state[:bullet_start] = true
       Bullet.state[:bullet_notification_collector] = Bullet::NotificationCollector.new
