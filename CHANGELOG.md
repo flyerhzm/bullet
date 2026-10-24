@@ -1,5 +1,9 @@
 ## Unreleased
 
+## 8.3.1 (10/24/2026)
+
+* Avoid redefining the `footer_position` getter
+* Avoid the CGI loading warning on Ruby 4
 * Keep request state separate for sibling fibers on one thread
 
 ## 8.3.0 (10/10/2026)
@@ -17,7 +21,7 @@
 
 ## 8.1.3 (06/02/2026)
 
-* Handle inversed polymorphic belongs_to false positives
+* Handle inversed polymorphic `belongs_to` false positives
 
 ## 8.1.2 (05/25/2026)
 
